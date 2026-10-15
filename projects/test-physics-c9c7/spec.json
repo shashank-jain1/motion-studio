@@ -1,0 +1,342 @@
+{
+  "format": "16:9",
+  "fps": 30,
+  "style": "apple",
+  "theme": {
+    "colors": {
+      "accent": "#5b5bf7",
+      "accent2": "#ff5fa2"
+    }
+  },
+  "scenes": [
+    {
+      "id": "arc",
+      "duration": 3.6,
+      "background": {
+        "type": "solid",
+        "color": "#f4f5fb"
+      },
+      "layers": [
+        {
+          "type": "text",
+          "preset": "none",
+          "id": "headline",
+          "text": "Physics, not presets.",
+          "fontSize": 92,
+          "weight": 800,
+          "y": -400,
+          "start": 0.3,
+          "enter": {
+            "type": "reveal-up",
+            "duration": 0.7
+          }
+        },
+        {
+          "type": "card",
+          "id": "card",
+          "variant": "notification",
+          "title": "Orbit Pay",
+          "body": "₹2,400 received from Rahul",
+          "meta": "now",
+          "width": 620,
+          "path": {
+            "points": [
+              [
+                -1250,
+                520
+              ],
+              [
+                -560,
+                -300
+              ],
+              [
+                0,
+                -120
+              ]
+            ],
+            "duration": 1,
+            "ease": "expoOut"
+          },
+          "inertia": true,
+          "velocityFx": {
+            "blur": 1,
+            "stretch": 1
+          },
+          "shadow": true
+        },
+        {
+          "type": "text",
+          "preset": "none",
+          "id": "label",
+          "text": "follow-through",
+          "fontSize": 40,
+          "weight": 600,
+          "color": "$accent",
+          "x": 0,
+          "y": -10,
+          "parent": "card",
+          "lag": 0.1
+        },
+        {
+          "type": "shape",
+          "id": "ball",
+          "shape": "circle",
+          "width": 56,
+          "color": "$accent2",
+          "start": 0.6,
+          "path": {
+            "points": [
+              [
+                -860,
+                120
+              ],
+              [
+                -300,
+                40
+              ],
+              [
+                300,
+                120
+              ],
+              [
+                860,
+                40
+              ]
+            ],
+            "duration": 1.2,
+            "ease": "inOut"
+          },
+          "repeat": {
+            "count": 6,
+            "delay": 0.035,
+            "opacity": 0.6,
+            "scale": 0.92
+          }
+        },
+        {
+          "type": "shape",
+          "shape": "circle",
+          "width": 70,
+          "color": "$accent",
+          "x": -450,
+          "y": 270,
+          "start": 1.42,
+          "enter": {
+            "type": "grow",
+            "duration": 0.45
+          },
+          "inertia": true
+        },
+        {
+          "type": "shape",
+          "shape": "circle",
+          "width": 70,
+          "color": "$accent",
+          "x": -300,
+          "y": 270,
+          "start": 1.28,
+          "enter": {
+            "type": "grow",
+            "duration": 0.45
+          },
+          "inertia": true
+        },
+        {
+          "type": "shape",
+          "shape": "circle",
+          "width": 70,
+          "color": "$accent",
+          "x": -150,
+          "y": 270,
+          "start": 1.1400000000000001,
+          "enter": {
+            "type": "grow",
+            "duration": 0.45
+          },
+          "inertia": true
+        },
+        {
+          "type": "shape",
+          "shape": "circle",
+          "width": 70,
+          "color": "$accent2",
+          "x": 0,
+          "y": 270,
+          "start": 1,
+          "enter": {
+            "type": "grow",
+            "duration": 0.45
+          },
+          "inertia": true
+        },
+        {
+          "type": "shape",
+          "shape": "circle",
+          "width": 70,
+          "color": "$accent",
+          "x": 150,
+          "y": 270,
+          "start": 1.1400000000000001,
+          "enter": {
+            "type": "grow",
+            "duration": 0.45
+          },
+          "inertia": true
+        },
+        {
+          "type": "shape",
+          "shape": "circle",
+          "width": 70,
+          "color": "$accent",
+          "x": 300,
+          "y": 270,
+          "start": 1.28,
+          "enter": {
+            "type": "grow",
+            "duration": 0.45
+          },
+          "inertia": true
+        },
+        {
+          "type": "shape",
+          "shape": "circle",
+          "width": 70,
+          "color": "$accent",
+          "x": 450,
+          "y": 270,
+          "start": 1.42,
+          "enter": {
+            "type": "grow",
+            "duration": 0.45
+          },
+          "inertia": true
+        },
+        {
+          "type": "shape",
+          "id": "twos",
+          "shape": "star",
+          "width": 120,
+          "color": "#ffb020",
+          "x": 700,
+          "y": 380,
+          "stepRate": 12,
+          "animate": [
+            {
+              "t": 0,
+              "rotate": 0,
+              "x": -200
+            },
+            {
+              "t": 3.6,
+              "rotate": 360,
+              "x": 0,
+              "ease": "linear"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "build",
+      "duration": 3.2,
+      "transition": {
+        "type": "fade",
+        "duration": 0.3
+      },
+      "background": {
+        "type": "solid",
+        "color": "#0d0e14"
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": "rect",
+          "width": 900,
+          "height": 14,
+          "radius": 7,
+          "color": "$accent",
+          "y": -260,
+          "enter": {
+            "type": "unfold-x",
+            "duration": 0.6
+          },
+          "inertia": true
+        },
+        {
+          "type": "text",
+          "preset": "none",
+          "text": "drop-in-3d",
+          "fontSize": 120,
+          "weight": 800,
+          "color": "#ffffff",
+          "y": -120,
+          "start": 0.2,
+          "enter": {
+            "type": "drop-in-3d",
+            "duration": 0.8
+          },
+          "inertia": true
+        },
+        {
+          "type": "text",
+          "preset": "none",
+          "text": "reveal-left",
+          "fontSize": 64,
+          "weight": 600,
+          "color": "#a9abff",
+          "y": 20,
+          "start": 0.4,
+          "enter": {
+            "type": "reveal-left",
+            "duration": 0.6
+          }
+        },
+        {
+          "type": "card",
+          "variant": "pill",
+          "title": "Pay with Orbit",
+          "y": 220,
+          "anticipate": 0.15,
+          "inertia": true,
+          "velocityFx": {
+            "stretch": 1
+          },
+          "animate": [
+            {
+              "t": 0,
+              "x": -600
+            },
+            {
+              "t": 0.9,
+              "x": -600
+            },
+            {
+              "t": 1.5,
+              "x": 600,
+              "ease": "snap"
+            }
+          ]
+        },
+        {
+          "type": "shape",
+          "shape": "rect",
+          "width": 200,
+          "height": 200,
+          "radius": 40,
+          "color": "$accent2",
+          "x": -620,
+          "y": 380,
+          "enter": {
+            "type": "unfold-y",
+            "duration": 0.5
+          },
+          "exit": {
+            "type": "slide-down"
+          },
+          "duration": 2.6,
+          "inertia": true
+        }
+      ]
+    }
+  ]
+}

@@ -12,6 +12,7 @@ export const EASES = [
   "outQuint", "inOutQuint", "outCirc",
   "outElastic", "outBounce",
   "spring", "snappy", "bouncy", "smooth",
+  "expoOut", "quintOut", "snap", "m3Enter", "m3Exit", "carbonExpressive",
 ] as const;
 export const Ease = z.enum(EASES);
 
@@ -39,6 +40,8 @@ export const ENTER_PRESETS = [
   "zoom-in", "zoom-out", "blur-in", "pop", "flip-up", "flip-side", "swing", "spin-in",
   "whip-left", "whip-right", "whip-up", "whip-down", "clip-up", "clip-down", "clip-left", "clip-right",
   "iris", "stretch", "fly-in-3d", "drop-bounce",
+  // premium reveals: no opacity fade, the element is uncovered / built rather than faded in
+  "reveal-up", "reveal-down", "reveal-left", "reveal-right", "grow", "unfold-x", "unfold-y", "drop-in-3d",
 ] as const;
 
 export const Motion = z.object({
@@ -81,11 +84,33 @@ const commonLayer = {
   loop: Loop.optional(),
   motionBlur: z.union([z.boolean(), z.object({ samples: z.number().int().min(2).max(16).optional(), shutter: z.number().optional() })]).optional(),
   css: z.record(z.string(), z.any()).optional().describe("raw CSS escape hatch for the layer wrapper"),
+
+  // --- motion craft (v2) ---
+  inertia: z.union([z.boolean(), z.object({ amplitude: z.number().optional(), frequency: z.number().optional(), decay: z.number().optional() })]).optional()
+    .describe("velocity-aware overshoot after the enter/keyframes settle (Ebberts inertial bounce). Fast moves wobble more."),
+  anticipate: z.number().optional().describe("0..0.3: counter-move before the enter (and before big keyframe moves)"),
+  velocityFx: z.union([z.boolean(), z.object({ blur: z.number().optional(), stretch: z.number().optional() })]).optional()
+    .describe("directional motion blur + squash/stretch derived from per-frame velocity (default ON for blur; stretch opt-in)"),
+  path: z.object({
+    points: z.array(z.tuple([z.number(), z.number()])).min(2).describe("[[x,y],...] px from container center; position travels a smooth curve through them"),
+    start: z.number().optional(), duration: z.number().optional(), ease: Ease.optional(),
+    orient: z.boolean().optional().describe("rotate to face the direction of travel"),
+  }).optional().describe("motion along an arc/curve instead of straight x/y tweens"),
+  parent: z.string().optional().describe("id of a layer in the same scene/list; this layer inherits its animated offset"),
+  lag: z.number().optional().describe("seconds this layer lags behind its parent (follow-through), e.g. 0.08"),
+  repeat: z.object({
+    count: z.number().int().min(1).max(40),
+    delay: z.number().optional().describe("seconds of time offset per copy (echo/trail)"),
+    x: z.number().optional(), y: z.number().optional(), scale: z.number().optional(), rotate: z.number().optional(),
+    opacity: z.number().optional().describe("opacity multiplier per copy, e.g. 0.7 → falloff"),
+  }).optional().describe("repeater: N copies with per-copy transform/time offset (echoes, tunnels, bursts)"),
+  stepRate: z.number().optional().describe("animate on twos: quantize this layer's time to N fps (e.g. 12)"),
 };
 
 export const TEXT_PRESETS = [
   "none", "blur-rise", "mask-up", "pop", "flip", "typewriter", "scramble", "wave", "stretch",
   "tracking", "slide-words", "zoom-from-camera", "gradient-sweep", "drop-in", "skew-in", "glitch", "split-reveal",
+  "slot", "slice", "echo", "physics", "cascade-3d", "weight-wave",
 ] as const;
 
 export const TextLayer = z.object({
@@ -117,6 +142,10 @@ export const TextLayer = z.object({
     at: z.number().optional().describe("seconds after layer start when the highlight animates"),
   }).optional(),
   exitPreset: z.enum(["none", "fade", "blur-out", "rise-out", "drop-out", "scatter", "mask-down"]).optional(),
+  swap: z.object({ words: z.array(z.string()).min(1), every: z.number().optional().describe("seconds per word, default 0.7"), loop: z.boolean().optional() }).optional()
+    .describe("slot preset: the LAST word of `text` rolls through these alternatives in a masked box whose width springs to fit"),
+  fill: z.string().optional().describe("asset image/video shown THROUGH the letters (text as a window)"),
+  echoCount: z.number().int().optional().describe("echo preset: number of stacked repeats (DIA style), default 7"),
   exitAt: z.number().optional().describe("seconds after layer start when the text exit animation starts; default = end - 0.5"),
 });
 
@@ -281,6 +310,58 @@ export const CustomLayer = z.object({
   props: z.record(z.string(), z.any()).optional(),
 });
 
+/**
+ * Shape source strings (used by morph layers, logo morph-from, actors):
+ *  - library primitive / concept object: "circle", "square", "rounded-square", "pill", "triangle", "star", "heart", "hexagon",
+ *    "ring", "drop", "leaf", "bean", "pin", "bubble", "bolt", "arrow", "cloud", "shield", "check", "plus", "sparkle", "flame",
+ *    "house", "cup", "globe", "lock", "bag", "card", "coin", "phone", "play", "music", "eye", "sun", "moon", "wave", "spiral"
+ *  - "path:<d>"            raw SVG path data in a 1000×1000 box
+ *  - "svg:assets/x.svg"   an uploaded SVG (all parts), "svg:assets/x.svg#icon" | "#wordmark" | "#<partIndex>"
+ *  - "text:Hello"          the glyph outlines of a word (font/weight from the layer)
+ */
+export const ShapeSource = z.string();
+
+export const MorphLayer = z.object({
+  ...commonLayer,
+  type: z.literal("morph"),
+  shapes: z.array(z.object({
+    at: z.number().describe("seconds after layer start when this shape is fully formed"),
+    shape: ShapeSource,
+    fill: z.string().optional(), stroke: z.string().optional(), strokeWidth: z.number().optional(),
+    morph: z.number().optional().describe("seconds the morph INTO this shape takes (ends at `at`), default 0.7"),
+    ease: Ease.optional(),
+    twist: z.number().optional().describe("degrees of rotation added during the morph (hides crossfade feel), default 0"),
+    scale: z.number().optional(),
+  })).min(1),
+  fill: z.string().optional(),
+  gradient: z.array(z.string()).optional(),
+  stroke: z.string().optional(),
+  strokeWidth: z.number().optional(),
+  draw: z.boolean().optional().describe("first shape draws on as a stroke, then fills"),
+  goo: z.number().optional().describe("0..1 gooey/metaball merge filter strength during morphs"),
+  font: z.string().optional(), weight: z.number().optional(),
+});
+
+export const LOGO_MODES = [
+  "draw", "build", "assemble", "morph-from", "mask", "cascade", "glitch", "liquid", "window", "split", "trace", "pop",
+] as const;
+
+export const LogoLayer = z.object({
+  ...commonLayer,
+  type: z.literal("logo"),
+  src: z.string().describe("assets/<logo>.svg (analyzed on add_asset); PNG logos only support mask/pop/glitch"),
+  mode: z.enum(LOGO_MODES).optional().describe("how the logo is revealed, default build"),
+  from: ShapeSource.optional().describe("morph-from: the concept object the logo is born from"),
+  order: z.enum(["leftToRight", "topToBottom", "reading", "bySizeDesc", "radialOut", "angular", "document", "byColor"]).optional(),
+  revealDuration: z.number().optional().describe("seconds, default 1.4"),
+  stagger: z.number().optional(),
+  parts: z.enum(["all", "icon", "wordmark"]).optional(),
+  color: z.string().optional().describe("override fill for every part (e.g. white lockup on dark bg)"),
+  strokeColor: z.string().optional(),
+  windowSrc: z.string().optional().describe("window mode: image/video seen through the logo before it resolves"),
+  exitMode: z.enum(["none", "explode", "collapse", "draw-out", "fade"]).optional(),
+});
+
 export const DEVICE_MODELS = ["iphone", "android", "browser", "tablet"] as const;
 
 /** Recursive layer types (device screens and groups hold child layers). */
@@ -288,6 +369,7 @@ export type Layer =
   | z.infer<typeof TextLayer> | z.infer<typeof MediaLayer> | z.infer<typeof ShapeLayer> | z.infer<typeof PathLayer>
   | z.infer<typeof ParticlesLayer> | z.infer<typeof CardLayer> | z.infer<typeof CounterLayer> | z.infer<typeof CaptionsLayer>
   | z.infer<typeof CloudLayer> | z.infer<typeof ShaderLayer> | z.infer<typeof LottieLayer> | z.infer<typeof CustomLayer>
+  | z.infer<typeof MorphLayer> | z.infer<typeof LogoLayer>
   | DeviceLayerT | GroupLayerT;
 
 const commonLayerSchema = z.object(commonLayer);
@@ -323,7 +405,7 @@ export type GroupLayerT = Common & {
 export const LayerSchema: z.ZodType<Layer> = z.lazy(() =>
   z.discriminatedUnion("type", [
     TextLayer, MediaLayer, ShapeLayer, PathLayer, ParticlesLayer, CardLayer, CounterLayer,
-    CaptionsLayer, CloudLayer, ShaderLayer, LottieLayer, CustomLayer, DeviceLayer, GroupLayer,
+    CaptionsLayer, CloudLayer, ShaderLayer, LottieLayer, CustomLayer, MorphLayer, LogoLayer, DeviceLayer, GroupLayer,
   ]),
 ) as z.ZodType<Layer>;
 
@@ -392,14 +474,21 @@ export const TRANSITIONS = [
   "zoom-blur", "dreamy-zoom", "film-burn", "linear-blur", "zoom-in-out", "dissolve", "ripple",
   "crosswarp", "cross-zoom", "swap", "push-cut", "blur-slide",
   "whip", "zoom-through", "flash", "glitch",
+  // content-aware (v2): built from the scene's own elements
+  "expand", "zoom-into", "slice", "match",
 ] as const;
 
 export const TransitionSchema = z.object({
   type: z.enum(TRANSITIONS),
   duration: z.number().positive().optional().describe("seconds, default 0.5"),
   direction: z.enum(["left", "right", "up", "down"]).optional(),
-  color: z.string().optional().describe("flash color"),
+  color: z.string().optional().describe("flash color / expand fill color"),
   ease: Ease.optional(),
+  from: z.string().optional().describe("expand / zoom-into: id of a layer in the PREVIOUS scene whose position (and shape) the transition grows from"),
+  x: z.number().optional().describe("expand / zoom-into origin px from center (if no `from`)"),
+  y: z.number().optional(),
+  shape: z.enum(["circle", "rounded", "rect"]).optional().describe("expand / zoom-into window shape, default circle"),
+  slices: z.number().int().optional().describe("slice transition band count, default 6"),
 });
 
 export const FxSchema = z.object({
@@ -432,6 +521,31 @@ export const ThemeSchema = z.object({
   colors: z.record(z.string(), z.string()).optional().describe("named colors referenced as $name, e.g. bg, fg, accent, accent2, muted"),
 });
 
+/** A persistent hero element that lives ABOVE all scenes and survives every cut (shared-element continuity). */
+export const ActorSchema = z.object({
+  id: z.string(),
+  layer: z.lazy(() => LayerSchema).describe("any layer (morph, logo, shape, media, text…); its x/y/scale are driven by poses"),
+  poses: z.array(z.object({
+    scene: z.union([z.string(), z.number()]).describe("scene id or index"),
+    t: z.number().optional().describe("seconds into that scene, default 0"),
+    x: z.number().optional(), y: z.number().optional(), scale: z.number().optional(), rotate: z.number().optional(),
+    opacity: z.number().optional(), blur: z.number().optional(),
+    ease: Ease.optional(),
+  })).min(1),
+  from: z.union([z.string(), z.number()]).optional().describe("scene id/index where the actor appears (default first pose)"),
+  until: z.union([z.string(), z.number()]).optional().describe("scene id/index after which it disappears (default end)"),
+});
+
+export const ConceptSchema = z.object({
+  truth: z.string().optional().describe("one-line brand truth: <Brand> helps <who> <verb> <object>, feeling <adj>"),
+  metaphor: z.string().optional().describe("the visual metaphor and its structure (juxtaposition | fusion | replacement)"),
+  motif: z.string().optional().describe("the thread element that survives every cut and becomes the logo/payoff"),
+  verb: z.string().optional().describe("motion verb: connect, grow, protect, fast, clarify, transform, gather, open, flow…"),
+  hook: z.string().optional(),
+  arc: z.array(z.string()).optional().describe("beats: hook → tension → transformation → payoff → lockup"),
+  colorScript: z.array(z.string()).optional(),
+}).describe("director's concept (ignored by the renderer, required by the director workflow)");
+
 export const SpecSchema = z.object({
   version: z.literal(1).default(1),
   title: z.string().optional(),
@@ -450,6 +564,11 @@ export const SpecSchema = z.object({
   }).optional(),
   sfx: z.array(z.object({ src: z.string(), at: z.number(), volume: z.number().optional() })).optional(),
   fx: FxSchema.optional(),
+  concept: ConceptSchema.optional(),
+  bpm: z.number().optional().describe("enables \"beat:N\" time strings (N may be fractional); with beatOffset (s) for the first downbeat"),
+  beatOffset: z.number().optional(),
+  beats: z.array(z.number()).optional().describe("explicit beat times (s) from analyze_audio; preferred over bpm"),
+  actors: z.array(ActorSchema).optional(),
   scenes: z.array(SceneSchema).min(1),
 });
 export type Spec = z.infer<typeof SpecSchema>;

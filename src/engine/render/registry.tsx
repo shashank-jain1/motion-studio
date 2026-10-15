@@ -13,6 +13,8 @@ import { Counter } from "../kit/Counter";
 import { Captions } from "../kit/Captions";
 import { Cloud } from "../kit/Cloud";
 import { LottieView } from "../kit/Lottie";
+import { Morph } from "../kit/Morph";
+import { Logo } from "../kit/Logo";
 import { ContainerProvider, useContainer } from "../core/container";
 import { CUSTOM } from "../custom";
 import { LayerList } from "./LayerList";
@@ -55,5 +57,7 @@ export const renderLayerContent = (layer: Layer, t: number, duration: number): R
     case "lottie": return <LottieView layer={layer} t={t} duration={duration} />;
     case "group": return <Group layer={layer} duration={duration} />;
     case "custom": return <Custom layer={layer} t={t} duration={duration} />;
+    case "morph": return <Morph layer={layer} t={t} duration={duration} />;
+    case "logo": return <Logo layer={layer} t={t} duration={duration} />;
   }
 };

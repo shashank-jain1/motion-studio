@@ -1,13 +1,15 @@
 import React, { useMemo } from "react";
 import { AbsoluteFill, Audio, Sequence, interpolate, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { TransitionSeries, linearTiming } from "@remotion/transitions";
-import { SpecSchema, FORMATS, type Spec, type SpecInput } from "../spec/schema";
+import { SpecSchema, FORMATS, type Layer, type Scene, type Spec, type SpecInput } from "../spec/schema";
+import { preprocessSpecDetailed, sceneIndexOf, sceneTimeline } from "../spec/preprocess";
 import { DEFAULT_STYLE, STYLES } from "../spec/styles";
-import { EASING } from "../core/animate";
+import { EASING, evalKeyframes } from "../core/animate";
 import { RuntimeProvider, resolveColor, type RuntimeContext } from "../core/context";
 import { ChromaticWrap, FxOverlay } from "../kit/Fx";
-import { SceneView } from "./Scene";
-import { getPresentation, transitionSeconds } from "./transitions";
+import { SceneView, evalCamera } from "./Scene";
+import { getPresentation, transitionEase, transitionSeconds, type TransitionOrigin } from "./transitions";
+import { ActorsLayer, actorPoseAt, resolveActor, type ResolvedActor } from "./Actors";
 
 export type SpecVideoProps = { spec: SpecInput; assetBase?: string; projectId?: string };
 
@@ -16,14 +18,64 @@ export const resolveSize = (spec: Pick<Spec, "format" | "width" | "height">) => 
   return { width: spec.width ?? fw, height: spec.height ?? fh };
 };
 
-/** Total seconds: scenes minus transition overlaps. */
-export const specSeconds = (spec: Spec) =>
-  spec.scenes.reduce((acc, s, i) => acc + s.duration - (i > 0 ? transitionSeconds(s.transition) : 0), 0);
+/**
+ * Total seconds: scenes minus transition overlaps, counted in whole frames exactly as the TransitionSeries lays
+ * them out (so the composition never gains/loses a frame to rounding). Same as src/core computeTimeline up to rounding.
+ */
+export const specSeconds = (spec: Spec) => sceneTimeline(spec.scenes, spec.fps).totalFrames / spec.fps;
 
-export const parseSpec = (input: SpecInput): Spec => {
-  const r = SpecSchema.safeParse(input);
-  if (!r.success) throw new Error("Invalid spec: " + r.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; "));
+/** Validate a spec (beat-time strings like "beat:12" are converted to seconds first, see spec/preprocess.ts). */
+export const parseSpec = (input: SpecInput | unknown): Spec => {
+  const pre = preprocessSpecDetailed(input);
+  const r = SpecSchema.safeParse(pre.spec);
+  if (!r.success) {
+    throw new Error("Invalid spec: " + [...pre.errors, ...r.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`)].join("; "));
+  }
   return r.data;
+};
+
+// --- Content-aware transition origins -------------------------------------------------------
+
+type Found = { layer: Layer; x: number; y: number; start: number };
+const findLayer = (layers: Layer[], id: string, ox = 0, oy = 0, start = 0): Found | null => {
+  for (const l of layers) {
+    if (l.id === id) return { layer: l, x: ox, y: oy, start };
+    if (l.type === "group") {
+      const hit = findLayer(l.layers, id, ox + (l.x ?? 0), oy + (l.y ?? 0), start + (l.start ?? 0));
+      if (hit) return hit;
+    }
+  }
+  return null;
+};
+
+/** Approximate on-screen box of a layer (base size × scale), used as the origin of expand / zoom-into. */
+const layerBox = (l: Layer, frameW: number): { w: number; h: number } => {
+  if (l.type === "text") {
+    const fs = l.fontSize ?? 120;
+    const lines = (l.uppercase ? l.text.toUpperCase() : l.text).split("\n");
+    const longest = Math.max(...lines.map((s) => s.length));
+    const w = Math.min(l.maxWidth ?? l.width ?? Infinity, fs * 0.56 * longest, frameW * 0.9);
+    return { w, h: l.height ?? fs * (l.lineHeight ?? 1.08) * lines.length };
+  }
+  const w = l.width ?? (l.type === "shape" || l.type === "morph" || l.type === "logo" ? 200 : 400);
+  return { w, h: l.height ?? w };
+};
+
+const resolveOrigin = (prev: Scene, fromId: string, sceneLocalT: number, frameW: number): TransitionOrigin | null => {
+  const hit = findLayer(prev.layers, fromId);
+  if (!hit) return null;
+  const l = hit.layer;
+  const lt = sceneLocalT - hit.start - (l.start ?? 0);
+  const kf = evalKeyframes(l.animate, Math.max(0, lt));
+  const scale = (l.scale ?? 1) * (kf.scale ?? 1);
+  const x = hit.x + (l.x ?? 0) + (kf.x ?? 0);
+  const y = hit.y + (l.y ?? 0) + (kf.y ?? 0);
+  const box = layerBox(l, frameW);
+  // scene camera (top-level parallax: screen = zoom·(p − cam·depth))
+  const cam = evalCamera(prev.camera?.keyframes, sceneLocalT);
+  const depth = l.depth ?? 1;
+  const zoom = 1 + (cam.zoom - 1) * depth;
+  return { x: zoom * (x - cam.x * depth), y: zoom * (y - cam.y * depth), w: box.w * scale * zoom, h: box.h * scale * zoom };
 };
 
 /** Video-wide finishing FX (grain, vignette, letterbox…) on top of all scenes and transitions. */
@@ -57,15 +109,32 @@ export const SpecVideo: React.FC<SpecVideoProps> = ({ spec: input, assetBase, pr
     return staticFile(projectId ? `${projectId}/${clean}` : clean);
   };
 
+  const total = durationInFrames / fps;
+  const slots = sceneTimeline(spec.scenes, fps).scenes;
+  const actors: ResolvedActor[] = (spec.actors ?? [])
+    .map((a, i) => resolveActor(a, i, spec, slots, total))
+    .filter((a): a is ResolvedActor => !!a);
+
   const series: React.ReactNode[] = [];
   spec.scenes.forEach((scene, i) => {
     if (i > 0 && scene.transition) {
-      const pres = getPresentation(scene.transition, width, height, (c) => resolveColor(rt, c));
-      const secs = transitionSeconds(scene.transition);
+      const tr = scene.transition;
+      const secs = transitionSeconds(tr);
+      let origin: TransitionOrigin | undefined;
+      if (tr.from && (tr.type === "expand" || tr.type === "zoom-into")) {
+        const prev = spec.scenes[i - 1];
+        const localT = Math.max(0, prev.duration - secs); // where scene A is when the transition starts
+        origin = resolveOrigin(prev, tr.from, localT, width) ?? undefined;
+        if (!origin) {
+          const ai = sceneIndexOf(actors.map((a) => ({ id: a.actor.id })), tr.from);
+          if (ai >= 0) origin = actorPoseAt(actors[ai], slots[i].start);
+        }
+      }
+      const pres = getPresentation(tr, width, height, (c) => resolveColor(rt, c), origin);
       if (pres && secs > 0) {
         series.push(
           <TransitionSeries.Transition key={`t${i}`} presentation={pres}
-            timing={linearTiming({ durationInFrames: Math.max(1, Math.round(secs * fps)), easing: EASING[scene.transition.ease ?? "inOutQuint"] })} />,
+            timing={linearTiming({ durationInFrames: Math.max(1, Math.round(secs * fps)), easing: EASING[transitionEase(tr)] })} />,
         );
       }
     }
@@ -76,13 +145,13 @@ export const SpecVideo: React.FC<SpecVideoProps> = ({ spec: input, assetBase, pr
     );
   });
 
-  const total = durationInFrames / fps;
   const a = spec.audio;
   return (
     <RuntimeProvider value={rt}>
       <AbsoluteFill style={{ background: resolveColor(rt, "$bg") }}>
         <ChromaticWrap px={fx.chromatic ?? 0}>
           <TransitionSeries>{series}</TransitionSeries>
+          <ActorsLayer actors={actors} width={width} height={height} />
         </ChromaticWrap>
         <GlobalFx fx={{ ...fx, chromatic: undefined }} duration={total} />
         {a && (

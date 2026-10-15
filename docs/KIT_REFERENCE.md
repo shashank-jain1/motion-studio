@@ -10,9 +10,27 @@
   "sfx": [{ "src": "assets/whoosh.mp3", "at": 2.4 }],
   "fx": { "grain": 0.1, "vignette": 0.4, "chromatic": 2, "lightLeak": 0.3, "letterbox": 0.1, "scanlines": 0.2,
           "flashes": [{ "at": 3.0, "color": "#fff" }] },
+  "concept": { "truth": "…", "metaphor": "…", "motif": "…", "verb": "…", "hook": "…", "arc": ["…"], "colorScript": ["…"] },
+  "bpm": 120, "beatOffset": 0.0, "beats": [0.48, 0.98, …],     // enables "beat:N" / "bar:N" / "beats:N" time strings
+  "actors": [ Actor, … ],                                        // persistent elements above all scenes
   "scenes": [ Scene, … ]
 }
 ```
+
+**Beat times.** Anywhere a time in seconds is expected you may write `"beat:N"` (global beat, 0-based, fractional ok) or
+`"bar:N"` (= beat 4N). The engine converts them to the right local time. Scene `duration` may be `"beats:8"` (8 beats long).
+`"beat:N@apex"` on `enter.delay`/`start`/`at` shifts the move so it *lands* on the beat.
+
+**Actor** (shared element, survives cuts):
+```jsonc
+{ "id": "bean", "from": "hook", "until": "lockup",
+  "layer": { "type": "morph", "width": 220, "height": 220, "shapes": [ { "at": 0, "shape": "bean" }, { "at": 6.2, "shape": "cup" } ] },
+  "poses": [ { "scene": "hook", "t": 0, "x": 0, "y": -200, "scale": 1 },
+             { "scene": "pile", "t": 0.5, "x": -300, "y": 120, "scale": 0.6, "ease": "expoOut" },
+             { "scene": "lockup", "t": 0, "x": -260, "y": 0, "scale": 1.2 } ] }
+```
+Times inside `layer` are relative to the start of the `from` scene. Poses tween over the whole gap between them, so add a
+duplicate pose to hold.
 
 Colors: any CSS color or a theme token `$bg $fg $accent $accent2 $accent3 $muted $card`.
 Fonts: `$display`, `$body`, `$mono`, or one of: Anton, Archivo Black, Bebas Neue, Bricolage Grotesque, Bungee,
@@ -35,6 +53,11 @@ Press Start 2P, Righteous, Sora, Space Grotesk, Syne, Unbounded.
   "layers": [ Layer, … ] }
 ```
 
+**Content-aware transitions (preferred when an object exists):**
+`expand` (`from: "<layerId in previous scene>"` or `x/y`, `shape: circle|rounded|rect`, optional `color` = solid that expands first, the color script),
+`zoom-into` (log-space fly-through into `from`'s position; the next scene appears in a growing window),
+`slice` (`slices`, `direction`), and `match` (a hard graphic-match cut with 0 duration; align positions and sizes across the cut).
+
 **Transitions:** `cut` `fade` `slide` `wipe` `flip` `clock-wipe` `iris` `book-flip` `blur-slide` `push-cut` `swap`
 (CSS) · `zoom-blur` `dreamy-zoom` `film-burn` `linear-blur` `zoom-in-out` `dissolve` `ripple` `crosswarp`
 `cross-zoom` (WebGL) · `whip` `zoom-through` `flash` (+`color`) `glitch` (custom). `direction` applies to slide/wipe/flip/book-flip/blur-slide/whip.
@@ -50,7 +73,8 @@ Press Start 2P, Righteous, Sora, Space Grotesk, Syne, Unbounded.
 
 **Shaders:** aurora, liquid, plasma, silk, warp (hyperspace), tunnel, waves, dots (halftone), rays, noise, grid-floor, blobs.
 
-**Eases:** linear in out inOut outBack inBack inOutBack outExpo inExpo inOutExpo outQuint inOutQuint outCirc outElastic outBounce spring snappy bouncy smooth.
+**Eases:** linear in out inOut outBack inBack inOutBack outExpo inExpo inOutExpo outQuint inOutQuint outCirc outElastic outBounce spring snappy bouncy smooth,
+plus pro curves: `expoOut` (0.19,1,0.22,1) · `quintOut` · `snap` (0.15,0,0.1,1) · `m3Enter` · `m3Exit` · `carbonExpressive`.
 
 ## Common layer fields (every layer)
 
@@ -61,13 +85,25 @@ Press Start 2P, Righteous, Sora, Space Grotesk, Syne, Unbounded.
 `loop`: `{ "type": "float|pulse|wiggle|spin|sway|breathe|bob|shake|orbit", "amplitude": 12, "speed": 0.5 }` ·
 `motionBlur: true | {samples, shutter}` · `css` (raw CSS for the layer wrapper).
 
+**Motion craft (v2, on every layer):**
+- `inertia: true | {amplitude, frequency, decay}`: velocity-aware overshoot when the enter or keyframes land. Fast moves wobble more.
+- `anticipate: 0.1`: counter-move before the enter or a big keyframe move.
+- `velocityFx: true | {blur, stretch}`: directional motion blur is ON by default above a speed threshold. `stretch` adds squash and stretch along velocity.
+- `path: { points: [[x,y], …], start, duration, ease, orient }`: travel on a smooth arc through points (use for any move > 300px).
+- `parent: "<id>"`, `lag: 0.08`: follow-through. This layer inherits the parent's animated offset, delayed.
+- `repeat: { count, delay, x, y, scale, rotate, opacity }`: echoes, trails, tunnels, bursts.
+- `stepRate: 12`: animate on twos (handmade feel).
+
 **Enter/exit presets:** none fade rise drop slide-left slide-right slide-up slide-down zoom-in zoom-out blur-in pop flip-up flip-side swing spin-in
-whip-left whip-right whip-up whip-down (directional blur) clip-up clip-down clip-left clip-right iris stretch fly-in-3d drop-bounce.
+whip-left whip-right whip-up whip-down (directional blur) clip-up clip-down clip-left clip-right iris stretch fly-in-3d drop-bounce,
+and premium no-fade reveals: **reveal-up reveal-down reveal-left reveal-right grow unfold-x unfold-y drop-in-3d** (use these for hero elements).
 
 ## Layer types
 
 **text**: `text` (\n for lines), `preset`: blur-rise mask-up pop flip typewriter scramble wave stretch tracking slide-words
-zoom-from-camera gradient-sweep drop-in skew-in glitch split-reveal none · `by`: char|word|line · `stagger`, `unitDuration` ·
+zoom-from-camera gradient-sweep drop-in skew-in glitch split-reveal none, **slot** (needs `swap: {words, every}`; the last word rolls through alternatives),
+**slice** (bands lock together), **echo** (DIA stacked repeats, `echoCount`), **physics** (per-glyph drop and bounce), **cascade-3d**, **weight-wave** ·
+`fill: "assets/x.jpg|mp4"` (footage seen through the letters) · `by`: char|word|line · `stagger`, `unitDuration` ·
 `fontSize` (default 120), `font`, `weight`, `italic`, `color`, `gradient: [..]`, `letterSpacing` (em), `lineHeight`, `align`, `maxWidth`,
 `uppercase`, `stroke: {color,width}`, `glow`, `highlight: { words: [..], color, style: color|marker|underline|box, at }`,
 `exitPreset`: fade blur-out rise-out drop-out scatter mask-down, `exitAt`.
@@ -100,6 +136,17 @@ Screen sizes: iPhone at height 800 ≈ 390×800 → inner screen ≈ 363×773.
 **shader**: `shader`, `colors`, `speed`, `intensity` (layer version of the shader background; sized by width/height).
 
 **lottie**: `src` (assets/x.json), `speed`, `loopAnim`.
+
+**morph**: `shapes: [{ at, shape, fill?, stroke?, strokeWidth?, morph: 0.7, ease?, twist?, scale? }]`, plus `fill`, `gradient`, `stroke`, `strokeWidth`,
+`draw` (first shape strokes on, then fills), `goo` (0..1 liquid merge), `font`/`weight` (for `text:` shapes), `width`/`height` (box, default 400).
+**Shape sources:** library objects: circle square rounded-square pill triangle star heart hexagon ring drop leaf bean pin bubble bolt arrow cloud
+shield check plus sparkle flame house cup globe lock bag card coin phone play music eye sun moon wave spiral ·
+`path:<d>` (1000×1000 box) · `svg:assets/logo.svg` (all parts) `#icon` `#wordmark` `#<partId>` · `text:Word` (glyph outlines).
+
+**logo**: `src: "assets/logo.svg"`, `mode`: draw | build | assemble | morph-from (`from: <shape source>`) | mask | cascade | glitch | liquid |
+window (`windowSrc`) | split | trace | pop · `order`: leftToRight topToBottom reading bySizeDesc radialOut angular document byColor ·
+`revealDuration` (default 1.4) · `stagger` · `parts`: all|icon|wordmark · `color` (override fill) · `strokeColor` · `exitMode`: explode|collapse|draw-out|fade ·
+`height` (default 300). The final frame is pixel-exact brand art. Run `analyze_logo` to get suggested modes for a given logo.
 
 **group**: `layers: [...]`, `perspective`: transform several layers together (e.g. a 3D-tilted cluster).
 

@@ -7,11 +7,14 @@ import crypto from "node:crypto";
 import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
 import type { ZodIssue } from "zod";
-import { FORMATS, SceneSchema, SpecSchema, type Spec, type SpecInput } from "../engine/spec/schema";
+import { FORMATS, SpecSchema, type Spec, type SpecInput } from "../engine/spec/schema";
+import { preprocessSpec, preprocessSpecDetailed, sceneTimeline, ZERO_LENGTH_TRANSITIONS } from "../engine/spec/preprocess";
 import { STYLES } from "../engine/spec/styles";
 import { PROJECTS_DIR, CUSTOM_DIR } from "./paths";
 import { FONT_NAMES, isKnownFont } from "./fontNames";
 import { probeAsset, type AssetInfo } from "./probe";
+import { analyzeLogoFile, isLogoJson } from "./logo";
+import { syncGlyphs } from "./glyphs";
 
 export type Format = keyof typeof FORMATS;
 
@@ -115,7 +118,7 @@ export const readSpec = (id: string): SpecInput | null => {
 export const loadSpec = (id: string): Spec => {
   const raw = readSpec(id);
   if (!raw) throw new Error(`Project "${id}" has no spec yet. Write one with set_spec.`);
-  const parsed = SpecSchema.safeParse(raw);
+  const parsed = SpecSchema.safeParse(preprocessSpec(raw));
   if (!parsed.success) throw new Error(`spec.json is invalid:\n${formatIssues(parsed.error.issues).join("\n")}`);
   const spec = parsed.data;
   if (!spec.format && !(spec.width && spec.height)) spec.format = getProject(id).format;
@@ -123,7 +126,7 @@ export const loadSpec = (id: string): Spec => {
 };
 
 const transitionSeconds = (t: { type: string; duration?: number } | undefined): number => {
-  if (!t || t.type === "none" || t.type === "cut") return 0;
+  if (!t || ZERO_LENGTH_TRANSITIONS.has(t.type)) return 0;
   return t.duration ?? DEFAULT_TRANSITION_SECONDS;
 };
 
@@ -133,17 +136,13 @@ export type TimelineScene = { index: number; id?: string; start: number; end: nu
  * Scene start times on the global timeline. A transition on scene i (i > 0) overlaps it with scene i-1
  * by the transition duration (default 0.5s; "cut"/"none" = 0). Scene 0's transition is ignored.
  */
-export const computeTimeline = (spec: Pick<SpecInput, "scenes">): { total: number; scenes: TimelineScene[] } => {
-  const scenes: TimelineScene[] = [];
-  let cursor = 0;
-  spec.scenes.forEach((s, index) => {
-    // Same math as the engine's specSeconds (src/engine/render/SpecVideo.tsx) — keep them in sync.
-    const overlapIn = index === 0 ? 0 : transitionSeconds(s.transition);
-    const start = Math.max(0, cursor - overlapIn);
-    scenes.push({ index, id: s.id, start, end: start + s.duration, duration: s.duration, overlapIn });
-    cursor = start + s.duration;
-  });
-  return { total: Math.round(cursor * 1000) / 1000, scenes };
+export const computeTimeline = (input: Pick<SpecInput, "scenes"> & { fps?: number }): { total: number; scenes: TimelineScene[] } => {
+  // Same frame-exact math as the engine (beat strings resolved first) — shared via src/engine/spec/preprocess.ts.
+  const spec = preprocessSpec(input) as Pick<Spec, "scenes"> & { fps?: number };
+  const fps = spec.fps ?? 30;
+  const tl = sceneTimeline(spec.scenes, fps);
+  const scenes = tl.scenes.map((s) => ({ index: s.index, id: s.id, start: s.start, end: s.end, duration: s.end - s.start, overlapIn: s.overlapIn }));
+  return { total: Math.round((tl.totalFrames / fps) * 1000) / 1000, scenes };
 };
 
 export const specDurationSeconds = (spec: Pick<SpecInput, "scenes">): number => computeTimeline(spec).total;
@@ -276,7 +275,9 @@ const specWarnings = (id: string, spec: Spec): string[] => {
 /** Validate without writing. */
 export const validateSpec = (id: string, input: unknown): ValidationResult => {
   getProject(id);
-  const parsed = SpecSchema.safeParse(input);
+  const pre = preprocessSpecDetailed(input);
+  if (pre.errors.length) return { ok: false, errors: pre.errors, warnings: [], written: false };
+  const parsed = SpecSchema.safeParse(pre.spec);
   if (!parsed.success) return { ok: false, errors: formatIssues(parsed.error.issues), warnings: [], written: false };
   return { ok: true, durationSeconds: specDurationSeconds(parsed.data), warnings: specWarnings(id, parsed.data), written: false };
 };
@@ -284,8 +285,9 @@ export const validateSpec = (id: string, input: unknown): ValidationResult => {
 /**
  * Validate and, if valid, write spec.json (stored as given — defaults are applied at render time),
  * except that the project's format is filled in when the spec specifies no format/size.
+ * After writing, outlines for "text:" shape sources are added to glyphs.json (problems become warnings).
  */
-export const writeSpec = (id: string, input: unknown): ValidationResult => {
+export const writeSpec = async (id: string, input: unknown): Promise<ValidationResult> => {
   const res = validateSpec(id, input);
   if (!res.ok) return res;
   const spec = { ...(input as Record<string, unknown>) };
@@ -297,29 +299,30 @@ export const writeSpec = (id: string, input: unknown): ValidationResult => {
     if (title !== undefined) ordered.title = title;
     ordered.format = getProject(id).format;
     writeJson(specPath(id), { ...ordered, ...rest });
-    return { ...res, written: true };
+  } else writeJson(specPath(id), spec);
+  const glyphWarnings = await syncSpecGlyphs(id, input);
+  return { ...res, warnings: [...res.warnings, ...glyphWarnings], written: true };
+};
+
+const syncSpecGlyphs = async (id: string, input: unknown): Promise<string[]> => {
+  try {
+    const parsed = SpecSchema.safeParse(preprocessSpec(input));
+    if (!parsed.success) return [];
+    return (await syncGlyphs(projectDir(id), parsed.data as unknown as Record<string, unknown>)).warnings;
+  } catch (e) {
+    return [`glyphs: ${(e as Error).message}`];
   }
-  writeJson(specPath(id), spec);
-  return { ...res, written: true };
 };
 
 /** Replace scene `index` (0-based; index === scenes.length appends) and validate the whole spec before writing. */
-export const updateScene = (id: string, index: number, scene: unknown): ValidationResult => {
+export const updateScene = async (id: string, index: number, scene: unknown): Promise<ValidationResult> => {
   const raw = readSpec(id);
   if (!raw) throw new Error(`Project "${id}" has no spec yet. Write one with set_spec first.`);
   const scenes = [...(raw.scenes ?? [])];
   if (!Number.isInteger(index) || index < 0 || index > scenes.length) {
     throw new Error(`Scene index ${index} out of range (spec has ${scenes.length} scenes; use ${scenes.length} to append)`);
   }
-  const sceneCheck = SceneSchema.safeParse(scene);
-  if (!sceneCheck.success) {
-    return {
-      ok: false,
-      errors: formatIssues(sceneCheck.error.issues.map((i) => ({ ...i, path: ["scenes", index, ...i.path] }))),
-      warnings: [],
-      written: false,
-    };
-  }
+  // Validated as part of the whole spec (beat strings need the full timeline to resolve).
   scenes[index] = scene as SpecInput["scenes"][number];
   return writeSpec(id, { ...raw, scenes });
 };
@@ -385,7 +388,7 @@ export const listAssets = async (id: string): Promise<AssetInfo[]> => {
   const dir = assetsDir(id);
   if (!fs.existsSync(dir)) return [];
   const cache = readMetaCache(id);
-  const files = fs.readdirSync(dir, { withFileTypes: true }).filter((e) => e.isFile() && !e.name.startsWith(".")).map((e) => e.name).sort();
+  const files = fs.readdirSync(dir, { withFileTypes: true }).filter((e) => e.isFile() && !e.name.startsWith(".") && !isLogoJson(e.name)).map((e) => e.name).sort();
   const out: AssetInfo[] = [];
   for (const f of files) out.push(await getAssetInfo(id, f, cache));
   // Drop stale cache entries and persist.
@@ -408,7 +411,7 @@ export const addAsset = async (id: string, src: { path?: string; url?: string; n
     if (!path.extname(filename)) filename += path.extname(from).toLowerCase();
     filename = uniqueTarget(dir, filename);
     fs.copyFileSync(from, path.join(dir, filename));
-    return getAssetInfo(id, filename);
+    return withLogoAnalysis(await getAssetInfo(id, filename));
   }
 
   const url = new URL(src.url!);
@@ -438,7 +441,18 @@ export const addAsset = async (id: string, src: { path?: string; url?: string; n
     fs.rmSync(tmp, { force: true });
     throw e;
   }
-  return getAssetInfo(id, filename);
+  return withLogoAnalysis(await getAssetInfo(id, filename));
+};
+
+/** SVG assets get `<file>.logo.json` (parts, groups, orders, palette, kit) next to them. Never fails the import. */
+const withLogoAnalysis = (info: AssetInfo): AssetInfo => {
+  if (path.extname(info.file).toLowerCase() !== ".svg") return info;
+  try {
+    analyzeLogoFile(info.file, info.path);
+  } catch (e) {
+    console.error(`[motion-studio] logo analysis failed for ${info.path}: ${(e as Error).message}`);
+  }
+  return info;
 };
 
 export const deleteProject = (id: string): void => {

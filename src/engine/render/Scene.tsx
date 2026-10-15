@@ -13,7 +13,7 @@ type CamKf = NonNullable<NonNullable<Scene["camera"]>["keyframes"]>[number];
 const CAM_PROPS = ["zoom", "x", "y", "rotate", "rotateX", "rotateY"] as const;
 const CAM_DEFAULT = { zoom: 1, x: 0, y: 0, rotate: 0, rotateX: 0, rotateY: 0 };
 
-const evalCamera = (kfs: CamKf[] | undefined, t: number) => {
+export const evalCamera = (kfs: CamKf[] | undefined, t: number) => {
   const out = { ...CAM_DEFAULT };
   if (!kfs?.length) return out;
   const sorted = [...kfs].sort((a, b) => a.t - b.t);

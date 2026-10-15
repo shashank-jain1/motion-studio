@@ -39,7 +39,7 @@ pnpm cli render <projectId> --final
 
 ## MCP tools
 
-`get_guide`, `list_styles`, `create_project`, `list_projects`, `get_project`, `add_asset`, `analyze_audio`, `set_spec`,
+`get_guide`, `list_styles`, `create_project`, `list_projects`, `get_project`, `add_asset`, `analyze_logo`, `analyze_audio`, `set_spec`,
 `get_spec`, `update_scene`, `preview_frames`, `render_video`, `write_custom_component`, `list_custom_components`,
 `open_studio_hint`.
 

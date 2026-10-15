@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { Img } from "remotion";
-import { getLength, getPointAtLength, getTangentAtLength, scalePath } from "@remotion/paths";
+import { getBoundingBox, getLength, getPointAtLength, getTangentAtLength, scalePath, translatePath } from "@remotion/paths";
 import type { z } from "zod";
 import type { PathLayer } from "../spec/schema";
 import { progress } from "../core/animate";
@@ -30,7 +30,13 @@ export const PathDraw: React.FC<Props> = ({ layer, t }) => {
   const W = layer.width ?? box.width;
   const H = layer.height ?? box.height;
   const raw = layer.d ?? PATH_PRESETS[layer.preset ?? "swoosh"];
-  const d = useMemo(() => scalePath(raw, W / 1000, H / 1000), [raw, W, H]);
+  // @remotion/paths scalePath scales around the bbox corner but shifts back by the UNSCALED offset,
+  // so compensate to get a true scale about the 1000-box origin.
+  const d = useMemo(() => {
+    const sx = W / 1000, sy = H / 1000;
+    const bb = getBoundingBox(raw);
+    return translatePath(scalePath(raw, sx, sy), bb.x1 * (sx - 1), bb.y1 * (sy - 1));
+  }, [raw, W, H]);
   const len = useMemo(() => getLength(d), [d]);
   const p = progress(t, layer.drawStart ?? 0, layer.drawDuration ?? 1.2, layer.ease, "inOutQuint");
   const sw = layer.strokeWidth ?? 10;

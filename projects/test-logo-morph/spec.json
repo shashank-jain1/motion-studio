@@ -1,0 +1,1987 @@
+{
+  "format": "16:9",
+  "fps": 30,
+  "title": "Logo + morph showcase",
+  "theme": {
+    "colors": {
+      "accent": "#e8743b",
+      "ink": "#3a2218"
+    }
+  },
+  "scenes": [
+    {
+      "id": "library",
+      "duration": 1.5,
+      "background": {
+        "type": "solid",
+        "color": "#14161b"
+      },
+      "layers": [
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": -787.5,
+          "y": -420,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "circle",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": -562.5,
+          "y": -420,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "square",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": -337.5,
+          "y": -420,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "rounded-square",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": -112.5,
+          "y": -420,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "pill",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": 112.5,
+          "y": -420,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "triangle",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": 337.5,
+          "y": -420,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "star",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": 562.5,
+          "y": -420,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "heart",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": 787.5,
+          "y": -420,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "hexagon",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": -787.5,
+          "y": -215,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "ring",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": -562.5,
+          "y": -215,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "drop",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": -337.5,
+          "y": -215,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "leaf",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": -112.5,
+          "y": -215,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "bean",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": 112.5,
+          "y": -215,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "pin",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": 337.5,
+          "y": -215,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "bubble",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": 562.5,
+          "y": -215,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "bolt",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": 787.5,
+          "y": -215,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "arrow",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": -787.5,
+          "y": -10,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "cloud",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": -562.5,
+          "y": -10,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "shield",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": -337.5,
+          "y": -10,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "check",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": -112.5,
+          "y": -10,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "plus",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": 112.5,
+          "y": -10,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "sparkle",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": 337.5,
+          "y": -10,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "flame",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": 562.5,
+          "y": -10,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "house",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": 787.5,
+          "y": -10,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "cup",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": -787.5,
+          "y": 195,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "globe",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": -562.5,
+          "y": 195,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "lock",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": -337.5,
+          "y": 195,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "bag",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": -112.5,
+          "y": 195,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "card",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": 112.5,
+          "y": 195,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "coin",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": 337.5,
+          "y": 195,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "phone",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": 562.5,
+          "y": 195,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "play",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": 787.5,
+          "y": 195,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "music",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": -787.5,
+          "y": 400,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "eye",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": -562.5,
+          "y": 400,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "sun",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": -337.5,
+          "y": 400,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "moon",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": -112.5,
+          "y": 400,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "wave",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 170,
+          "height": 170,
+          "x": 112.5,
+          "y": 400,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "spiral",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "circle",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": -787.5,
+          "y": -322
+        },
+        {
+          "type": "text",
+          "text": "square",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": -562.5,
+          "y": -322
+        },
+        {
+          "type": "text",
+          "text": "rounded-square",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": -337.5,
+          "y": -322
+        },
+        {
+          "type": "text",
+          "text": "pill",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": -112.5,
+          "y": -322
+        },
+        {
+          "type": "text",
+          "text": "triangle",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": 112.5,
+          "y": -322
+        },
+        {
+          "type": "text",
+          "text": "star",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": 337.5,
+          "y": -322
+        },
+        {
+          "type": "text",
+          "text": "heart",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": 562.5,
+          "y": -322
+        },
+        {
+          "type": "text",
+          "text": "hexagon",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": 787.5,
+          "y": -322
+        },
+        {
+          "type": "text",
+          "text": "ring",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": -787.5,
+          "y": -117
+        },
+        {
+          "type": "text",
+          "text": "drop",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": -562.5,
+          "y": -117
+        },
+        {
+          "type": "text",
+          "text": "leaf",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": -337.5,
+          "y": -117
+        },
+        {
+          "type": "text",
+          "text": "bean",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": -112.5,
+          "y": -117
+        },
+        {
+          "type": "text",
+          "text": "pin",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": 112.5,
+          "y": -117
+        },
+        {
+          "type": "text",
+          "text": "bubble",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": 337.5,
+          "y": -117
+        },
+        {
+          "type": "text",
+          "text": "bolt",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": 562.5,
+          "y": -117
+        },
+        {
+          "type": "text",
+          "text": "arrow",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": 787.5,
+          "y": -117
+        },
+        {
+          "type": "text",
+          "text": "cloud",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": -787.5,
+          "y": 88
+        },
+        {
+          "type": "text",
+          "text": "shield",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": -562.5,
+          "y": 88
+        },
+        {
+          "type": "text",
+          "text": "check",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": -337.5,
+          "y": 88
+        },
+        {
+          "type": "text",
+          "text": "plus",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": -112.5,
+          "y": 88
+        },
+        {
+          "type": "text",
+          "text": "sparkle",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": 112.5,
+          "y": 88
+        },
+        {
+          "type": "text",
+          "text": "flame",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": 337.5,
+          "y": 88
+        },
+        {
+          "type": "text",
+          "text": "house",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": 562.5,
+          "y": 88
+        },
+        {
+          "type": "text",
+          "text": "cup",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": 787.5,
+          "y": 88
+        },
+        {
+          "type": "text",
+          "text": "globe",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": -787.5,
+          "y": 293
+        },
+        {
+          "type": "text",
+          "text": "lock",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": -562.5,
+          "y": 293
+        },
+        {
+          "type": "text",
+          "text": "bag",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": -337.5,
+          "y": 293
+        },
+        {
+          "type": "text",
+          "text": "card",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": -112.5,
+          "y": 293
+        },
+        {
+          "type": "text",
+          "text": "coin",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": 112.5,
+          "y": 293
+        },
+        {
+          "type": "text",
+          "text": "phone",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": 337.5,
+          "y": 293
+        },
+        {
+          "type": "text",
+          "text": "play",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": 562.5,
+          "y": 293
+        },
+        {
+          "type": "text",
+          "text": "music",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": 787.5,
+          "y": 293
+        },
+        {
+          "type": "text",
+          "text": "eye",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": -787.5,
+          "y": 498
+        },
+        {
+          "type": "text",
+          "text": "sun",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": -562.5,
+          "y": 498
+        },
+        {
+          "type": "text",
+          "text": "moon",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": -337.5,
+          "y": 498
+        },
+        {
+          "type": "text",
+          "text": "wave",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": -112.5,
+          "y": 498
+        },
+        {
+          "type": "text",
+          "text": "spiral",
+          "fontSize": 18,
+          "color": "#8a8f98",
+          "x": 112.5,
+          "y": 498
+        }
+      ]
+    },
+    {
+      "id": "library-detail",
+      "duration": 1,
+      "background": {
+        "type": "solid",
+        "color": "#14161b"
+      },
+      "layers": [
+        {
+          "type": "morph",
+          "width": 250,
+          "height": 250,
+          "x": -750,
+          "y": -165,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "heart",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 250,
+          "height": 250,
+          "x": -450,
+          "y": -165,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "cloud",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 250,
+          "height": 250,
+          "x": -150,
+          "y": -165,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "moon",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 250,
+          "height": 250,
+          "x": 150,
+          "y": -165,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "flame",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 250,
+          "height": 250,
+          "x": 450,
+          "y": -165,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "cup",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 250,
+          "height": 250,
+          "x": 750,
+          "y": -165,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "bean",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 250,
+          "height": 250,
+          "x": -750,
+          "y": 165,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "leaf",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 250,
+          "height": 250,
+          "x": -450,
+          "y": 165,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "pin",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 250,
+          "height": 250,
+          "x": -150,
+          "y": 165,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "globe",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 250,
+          "height": 250,
+          "x": 150,
+          "y": 165,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "lock",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 250,
+          "height": 250,
+          "x": 450,
+          "y": 165,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "bubble",
+              "fill": "#f4efe6"
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 250,
+          "height": 250,
+          "x": 750,
+          "y": 165,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "star",
+              "fill": "#f4efe6"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chain",
+      "duration": 6.6,
+      "background": {
+        "type": "solid",
+        "color": "#f6efe6"
+      },
+      "layers": [
+        {
+          "type": "morph",
+          "width": 560,
+          "height": 560,
+          "goo": 0.6,
+          "shapes": [
+            {
+              "at": 0.9,
+              "shape": "circle",
+              "fill": "#e8743b",
+              "morph": 0.9
+            },
+            {
+              "at": 1.9,
+              "shape": "bean",
+              "fill": "#3a2218",
+              "twist": 25
+            },
+            {
+              "at": 3,
+              "shape": "cup",
+              "fill": "#3a2218"
+            },
+            {
+              "at": 4.2,
+              "shape": "text:Brew",
+              "fill": "#3a2218",
+              "morph": 0.8
+            },
+            {
+              "at": 5.4,
+              "shape": "svg:assets/brew-logo.svg",
+              "morph": 0.8
+            }
+          ],
+          "draw": true
+        },
+        {
+          "type": "text",
+          "text": "morph chain",
+          "fontSize": 26,
+          "color": "#9a8b7d",
+          "y": 420,
+          "letterSpacing": 0.2,
+          "uppercase": true
+        }
+      ]
+    },
+    {
+      "id": "tour",
+      "duration": 3.4,
+      "background": {
+        "type": "solid",
+        "color": "#14161b"
+      },
+      "layers": [
+        {
+          "type": "morph",
+          "width": 250,
+          "height": 250,
+          "x": -420,
+          "y": -320,
+          "shapes": [
+            {
+              "at": 0.2,
+              "shape": "circle",
+              "fill": "#ff7a59",
+              "morph": 0.6,
+              "twist": 0
+            },
+            {
+              "at": 1.2,
+              "shape": "star",
+              "fill": "#ffc145",
+              "morph": 0.6,
+              "twist": 0
+            },
+            {
+              "at": 2.2,
+              "shape": "heart",
+              "fill": "#5ad1a8",
+              "morph": 0.6,
+              "twist": 30
+            },
+            {
+              "at": 3.2,
+              "shape": "drop",
+              "fill": "#58a6ff",
+              "morph": 0.6,
+              "twist": 0
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 250,
+          "height": 250,
+          "x": 0,
+          "y": -320,
+          "shapes": [
+            {
+              "at": 0.2,
+              "shape": "square",
+              "fill": "#ffc145",
+              "morph": 0.6,
+              "twist": 0
+            },
+            {
+              "at": 1.2,
+              "shape": "hexagon",
+              "fill": "#5ad1a8",
+              "morph": 0.6,
+              "twist": 0
+            },
+            {
+              "at": 2.2,
+              "shape": "shield",
+              "fill": "#58a6ff",
+              "morph": 0.6,
+              "twist": 30
+            },
+            {
+              "at": 3.2,
+              "shape": "house",
+              "fill": "#c58cff",
+              "morph": 0.6,
+              "twist": 0
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 250,
+          "height": 250,
+          "x": 420,
+          "y": -320,
+          "shapes": [
+            {
+              "at": 0.2,
+              "shape": "sun",
+              "fill": "#5ad1a8",
+              "morph": 0.6,
+              "twist": 0
+            },
+            {
+              "at": 1.2,
+              "shape": "moon",
+              "fill": "#58a6ff",
+              "morph": 0.6,
+              "twist": 0
+            },
+            {
+              "at": 2.2,
+              "shape": "sparkle",
+              "fill": "#c58cff",
+              "morph": 0.6,
+              "twist": 30
+            },
+            {
+              "at": 3.2,
+              "shape": "flame",
+              "fill": "#ff6fa8",
+              "morph": 0.6,
+              "twist": 0
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 250,
+          "height": 250,
+          "x": -420,
+          "y": 0,
+          "shapes": [
+            {
+              "at": 0.2,
+              "shape": "pin",
+              "fill": "#58a6ff",
+              "morph": 0.6,
+              "twist": 0
+            },
+            {
+              "at": 1.2,
+              "shape": "globe",
+              "fill": "#c58cff",
+              "morph": 0.6,
+              "twist": 0
+            },
+            {
+              "at": 2.2,
+              "shape": "bubble",
+              "fill": "#ff6fa8",
+              "morph": 0.6,
+              "twist": 30
+            },
+            {
+              "at": 3.2,
+              "shape": "cloud",
+              "fill": "#f6efe6",
+              "morph": 0.6,
+              "twist": 0
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 250,
+          "height": 250,
+          "x": 0,
+          "y": 0,
+          "shapes": [
+            {
+              "at": 0.2,
+              "shape": "leaf",
+              "fill": "#c58cff",
+              "morph": 0.6,
+              "twist": 0
+            },
+            {
+              "at": 1.2,
+              "shape": "bean",
+              "fill": "#ff6fa8",
+              "morph": 0.6,
+              "twist": 0
+            },
+            {
+              "at": 2.2,
+              "shape": "cup",
+              "fill": "#f6efe6",
+              "morph": 0.6,
+              "twist": 30
+            },
+            {
+              "at": 3.2,
+              "shape": "coin",
+              "fill": "#9be15d",
+              "morph": 0.6,
+              "twist": 0
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 250,
+          "height": 250,
+          "x": 420,
+          "y": 0,
+          "shapes": [
+            {
+              "at": 0.2,
+              "shape": "lock",
+              "fill": "#ff6fa8",
+              "morph": 0.6,
+              "twist": 0
+            },
+            {
+              "at": 1.2,
+              "shape": "bag",
+              "fill": "#f6efe6",
+              "morph": 0.6,
+              "twist": 0
+            },
+            {
+              "at": 2.2,
+              "shape": "card",
+              "fill": "#9be15d",
+              "morph": 0.6,
+              "twist": 30
+            },
+            {
+              "at": 3.2,
+              "shape": "phone",
+              "fill": "#ffd27a",
+              "morph": 0.6,
+              "twist": 0
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 250,
+          "height": 250,
+          "x": -420,
+          "y": 320,
+          "shapes": [
+            {
+              "at": 0.2,
+              "shape": "play",
+              "fill": "#f6efe6",
+              "morph": 0.6,
+              "twist": 0
+            },
+            {
+              "at": 1.2,
+              "shape": "arrow",
+              "fill": "#9be15d",
+              "morph": 0.6,
+              "twist": 0
+            },
+            {
+              "at": 2.2,
+              "shape": "check",
+              "fill": "#ffd27a",
+              "morph": 0.6,
+              "twist": 30
+            },
+            {
+              "at": 3.2,
+              "shape": "plus",
+              "fill": "#ff7a59",
+              "morph": 0.6,
+              "twist": 0
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 250,
+          "height": 250,
+          "x": 0,
+          "y": 320,
+          "shapes": [
+            {
+              "at": 0.2,
+              "shape": "eye",
+              "fill": "#9be15d",
+              "morph": 0.6,
+              "twist": 0
+            },
+            {
+              "at": 1.2,
+              "shape": "music",
+              "fill": "#ffd27a",
+              "morph": 0.6,
+              "twist": 0
+            },
+            {
+              "at": 2.2,
+              "shape": "wave",
+              "fill": "#ff7a59",
+              "morph": 0.6,
+              "twist": 30
+            },
+            {
+              "at": 3.2,
+              "shape": "spiral",
+              "fill": "#ffc145",
+              "morph": 0.6,
+              "twist": 0
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 250,
+          "height": 250,
+          "x": 420,
+          "y": 320,
+          "shapes": [
+            {
+              "at": 0.2,
+              "shape": "ring",
+              "fill": "#ffd27a",
+              "morph": 0.6,
+              "twist": 0
+            },
+            {
+              "at": 1.2,
+              "shape": "pill",
+              "fill": "#ff7a59",
+              "morph": 0.6,
+              "twist": 0
+            },
+            {
+              "at": 2.2,
+              "shape": "triangle",
+              "fill": "#ffc145",
+              "morph": 0.6,
+              "twist": 30
+            },
+            {
+              "at": 3.2,
+              "shape": "bolt",
+              "fill": "#5ad1a8",
+              "morph": 0.6,
+              "twist": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "draw",
+      "duration": 3,
+      "background": {
+        "type": "solid",
+        "color": "#f6efe6"
+      },
+      "layers": [
+        {
+          "type": "logo",
+          "src": "assets/brew-logo.svg",
+          "mode": "draw",
+          "height": 300
+        },
+        {
+          "type": "text",
+          "text": "draw",
+          "fontSize": 26,
+          "color": "#9a8b7d",
+          "y": 420,
+          "letterSpacing": 0.2,
+          "uppercase": true
+        }
+      ]
+    },
+    {
+      "id": "build",
+      "duration": 3,
+      "background": {
+        "type": "solid",
+        "color": "#f6efe6"
+      },
+      "layers": [
+        {
+          "type": "logo",
+          "src": "assets/brew-logo.svg",
+          "mode": "build",
+          "height": 300
+        },
+        {
+          "type": "text",
+          "text": "build",
+          "fontSize": 26,
+          "color": "#9a8b7d",
+          "y": 420,
+          "letterSpacing": 0.2,
+          "uppercase": true
+        }
+      ]
+    },
+    {
+      "id": "assemble",
+      "duration": 3,
+      "background": {
+        "type": "solid",
+        "color": "#f6efe6"
+      },
+      "layers": [
+        {
+          "type": "logo",
+          "src": "assets/brew-logo.svg",
+          "mode": "assemble",
+          "height": 300
+        },
+        {
+          "type": "text",
+          "text": "assemble",
+          "fontSize": 26,
+          "color": "#9a8b7d",
+          "y": 420,
+          "letterSpacing": 0.2,
+          "uppercase": true
+        }
+      ]
+    },
+    {
+      "id": "morph-from",
+      "duration": 3,
+      "background": {
+        "type": "solid",
+        "color": "#f6efe6"
+      },
+      "layers": [
+        {
+          "type": "logo",
+          "src": "assets/brew-logo.svg",
+          "mode": "morph-from",
+          "height": 300,
+          "from": "bean"
+        },
+        {
+          "type": "text",
+          "text": "morph-from",
+          "fontSize": 26,
+          "color": "#9a8b7d",
+          "y": 420,
+          "letterSpacing": 0.2,
+          "uppercase": true
+        }
+      ]
+    },
+    {
+      "id": "mask",
+      "duration": 3,
+      "background": {
+        "type": "solid",
+        "color": "#f6efe6"
+      },
+      "layers": [
+        {
+          "type": "logo",
+          "src": "assets/brew-logo.svg",
+          "mode": "mask",
+          "height": 300
+        },
+        {
+          "type": "text",
+          "text": "mask",
+          "fontSize": 26,
+          "color": "#9a8b7d",
+          "y": 420,
+          "letterSpacing": 0.2,
+          "uppercase": true
+        }
+      ]
+    },
+    {
+      "id": "cascade",
+      "duration": 3,
+      "background": {
+        "type": "solid",
+        "color": "#f6efe6"
+      },
+      "layers": [
+        {
+          "type": "logo",
+          "src": "assets/brew-logo.svg",
+          "mode": "cascade",
+          "height": 300
+        },
+        {
+          "type": "text",
+          "text": "cascade",
+          "fontSize": 26,
+          "color": "#9a8b7d",
+          "y": 420,
+          "letterSpacing": 0.2,
+          "uppercase": true
+        }
+      ]
+    },
+    {
+      "id": "glitch",
+      "duration": 3,
+      "background": {
+        "type": "solid",
+        "color": "#f6efe6"
+      },
+      "layers": [
+        {
+          "type": "logo",
+          "src": "assets/brew-logo.svg",
+          "mode": "glitch",
+          "height": 300
+        },
+        {
+          "type": "text",
+          "text": "glitch",
+          "fontSize": 26,
+          "color": "#9a8b7d",
+          "y": 420,
+          "letterSpacing": 0.2,
+          "uppercase": true
+        }
+      ]
+    },
+    {
+      "id": "liquid",
+      "duration": 3,
+      "background": {
+        "type": "solid",
+        "color": "#f6efe6"
+      },
+      "layers": [
+        {
+          "type": "logo",
+          "src": "assets/brew-logo.svg",
+          "mode": "liquid",
+          "height": 300
+        },
+        {
+          "type": "text",
+          "text": "liquid",
+          "fontSize": 26,
+          "color": "#9a8b7d",
+          "y": 420,
+          "letterSpacing": 0.2,
+          "uppercase": true
+        }
+      ]
+    },
+    {
+      "id": "window",
+      "duration": 3,
+      "background": {
+        "type": "solid",
+        "color": "#f6efe6"
+      },
+      "layers": [
+        {
+          "type": "logo",
+          "src": "assets/brew-logo.svg",
+          "mode": "window",
+          "height": 300,
+          "windowSrc": "assets/window.jpg"
+        },
+        {
+          "type": "text",
+          "text": "window",
+          "fontSize": 26,
+          "color": "#9a8b7d",
+          "y": 420,
+          "letterSpacing": 0.2,
+          "uppercase": true
+        }
+      ]
+    },
+    {
+      "id": "split",
+      "duration": 3,
+      "background": {
+        "type": "solid",
+        "color": "#f6efe6"
+      },
+      "layers": [
+        {
+          "type": "logo",
+          "src": "assets/brew-logo.svg",
+          "mode": "split",
+          "height": 300
+        },
+        {
+          "type": "text",
+          "text": "split",
+          "fontSize": 26,
+          "color": "#9a8b7d",
+          "y": 420,
+          "letterSpacing": 0.2,
+          "uppercase": true
+        }
+      ]
+    },
+    {
+      "id": "trace",
+      "duration": 3,
+      "background": {
+        "type": "solid",
+        "color": "#f6efe6"
+      },
+      "layers": [
+        {
+          "type": "logo",
+          "src": "assets/brew-logo.svg",
+          "mode": "trace",
+          "height": 300
+        },
+        {
+          "type": "text",
+          "text": "trace",
+          "fontSize": 26,
+          "color": "#9a8b7d",
+          "y": 420,
+          "letterSpacing": 0.2,
+          "uppercase": true
+        }
+      ]
+    },
+    {
+      "id": "pop",
+      "duration": 3,
+      "background": {
+        "type": "solid",
+        "color": "#f6efe6"
+      },
+      "layers": [
+        {
+          "type": "logo",
+          "src": "assets/brew-logo.svg",
+          "mode": "pop",
+          "height": 300
+        },
+        {
+          "type": "text",
+          "text": "pop",
+          "fontSize": 26,
+          "color": "#9a8b7d",
+          "y": 420,
+          "letterSpacing": 0.2,
+          "uppercase": true
+        }
+      ]
+    },
+    {
+      "id": "raster",
+      "duration": 3,
+      "background": {
+        "type": "solid",
+        "color": "#f6efe6"
+      },
+      "layers": [
+        {
+          "type": "logo",
+          "src": "assets/brew-logo.png",
+          "mode": "mask",
+          "height": 150,
+          "y": -280
+        },
+        {
+          "type": "logo",
+          "src": "assets/brew-logo.png",
+          "mode": "glitch",
+          "height": 150,
+          "y": -80
+        },
+        {
+          "type": "logo",
+          "src": "assets/brew-logo.png",
+          "mode": "pop",
+          "height": 150,
+          "y": 120
+        },
+        {
+          "type": "logo",
+          "src": "assets/brew-logo.png",
+          "mode": "draw",
+          "height": 110,
+          "y": 300
+        }
+      ]
+    },
+    {
+      "id": "parts",
+      "duration": 3,
+      "background": {
+        "type": "solid",
+        "color": "#1b120d"
+      },
+      "layers": [
+        {
+          "type": "logo",
+          "src": "assets/brew-logo.svg",
+          "mode": "build",
+          "parts": "icon",
+          "height": 280,
+          "x": -330,
+          "color": "#f6efe6"
+        },
+        {
+          "type": "logo",
+          "src": "assets/brew-logo.svg",
+          "mode": "cascade",
+          "parts": "wordmark",
+          "height": 160,
+          "x": 260,
+          "color": "#f2b25c"
+        }
+      ]
+    },
+    {
+      "id": "orbit",
+      "duration": 3,
+      "background": {
+        "type": "solid",
+        "color": "#101218"
+      },
+      "layers": [
+        {
+          "type": "logo",
+          "src": "assets/orbit-logo.svg",
+          "mode": "draw",
+          "height": 240,
+          "x": -600,
+          "y": -230
+        },
+        {
+          "type": "logo",
+          "src": "assets/orbit-logo.svg",
+          "mode": "morph-from",
+          "from": "sun",
+          "height": 240,
+          "x": -200,
+          "y": -230
+        },
+        {
+          "type": "logo",
+          "src": "assets/orbit-logo.svg",
+          "mode": "build",
+          "height": 240,
+          "x": 200,
+          "y": -230
+        },
+        {
+          "type": "logo",
+          "src": "assets/orbit-logo.svg",
+          "mode": "trace",
+          "height": 240,
+          "x": 600,
+          "y": -230
+        },
+        {
+          "type": "logo",
+          "src": "assets/orbit-logo.svg",
+          "mode": "assemble",
+          "height": 240,
+          "x": -600,
+          "y": 200
+        },
+        {
+          "type": "logo",
+          "src": "assets/orbit-logo.svg",
+          "mode": "liquid",
+          "height": 240,
+          "x": -200,
+          "y": 200
+        },
+        {
+          "type": "morph",
+          "width": 240,
+          "height": 240,
+          "x": 200,
+          "y": 200,
+          "shapes": [
+            {
+              "at": 0.3,
+              "shape": "heart",
+              "fill": "#ff5fa2"
+            },
+            {
+              "at": 1.3,
+              "shape": "svg:assets/orbit-logo.svg",
+              "morph": 0.9
+            }
+          ]
+        },
+        {
+          "type": "morph",
+          "width": 240,
+          "height": 240,
+          "x": 600,
+          "y": 200,
+          "shapes": [
+            {
+              "at": 0.3,
+              "shape": "svg:assets/orbit-logo.svg#0"
+            },
+            {
+              "at": 1.3,
+              "shape": "text:Orbit",
+              "fill": "#f6efe6",
+              "morph": 0.9
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "exit-explode",
+      "duration": 2.2,
+      "background": {
+        "type": "solid",
+        "color": "#f6efe6"
+      },
+      "layers": [
+        {
+          "type": "logo",
+          "src": "assets/brew-logo.svg",
+          "mode": "pop",
+          "height": 300,
+          "exitMode": "explode",
+          "revealDuration": 0.6
+        },
+        {
+          "type": "text",
+          "text": "exit explode",
+          "fontSize": 26,
+          "color": "#9a8b7d",
+          "y": 420,
+          "letterSpacing": 0.2,
+          "uppercase": true
+        }
+      ]
+    },
+    {
+      "id": "exit-collapse",
+      "duration": 2.2,
+      "background": {
+        "type": "solid",
+        "color": "#f6efe6"
+      },
+      "layers": [
+        {
+          "type": "logo",
+          "src": "assets/brew-logo.svg",
+          "mode": "pop",
+          "height": 300,
+          "exitMode": "collapse",
+          "revealDuration": 0.6
+        },
+        {
+          "type": "text",
+          "text": "exit collapse",
+          "fontSize": 26,
+          "color": "#9a8b7d",
+          "y": 420,
+          "letterSpacing": 0.2,
+          "uppercase": true
+        }
+      ]
+    },
+    {
+      "id": "exit-draw-out",
+      "duration": 2.2,
+      "background": {
+        "type": "solid",
+        "color": "#f6efe6"
+      },
+      "layers": [
+        {
+          "type": "logo",
+          "src": "assets/brew-logo.svg",
+          "mode": "pop",
+          "height": 300,
+          "exitMode": "draw-out",
+          "revealDuration": 0.6
+        },
+        {
+          "type": "text",
+          "text": "exit draw-out",
+          "fontSize": 26,
+          "color": "#9a8b7d",
+          "y": 420,
+          "letterSpacing": 0.2,
+          "uppercase": true
+        }
+      ]
+    },
+    {
+      "id": "exit-fade",
+      "duration": 2.2,
+      "background": {
+        "type": "solid",
+        "color": "#f6efe6"
+      },
+      "layers": [
+        {
+          "type": "logo",
+          "src": "assets/brew-logo.svg",
+          "mode": "pop",
+          "height": 300,
+          "exitMode": "fade",
+          "revealDuration": 0.6
+        },
+        {
+          "type": "text",
+          "text": "exit fade",
+          "fontSize": 26,
+          "color": "#9a8b7d",
+          "y": 420,
+          "letterSpacing": 0.2,
+          "uppercase": true
+        }
+      ]
+    }
+  ]
+}

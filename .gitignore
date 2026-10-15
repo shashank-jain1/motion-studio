@@ -3,3 +3,5 @@ out
 .cache
 projects/*/renders
 scratch-smoke
+projects/*/previews
+projects/*/renders

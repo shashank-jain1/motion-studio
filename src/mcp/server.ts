@@ -30,6 +30,7 @@ import {
   type ValidationResult,
 } from "../core/projects";
 import { thumbnail } from "../core/probe";
+import { ensureLogoAnalysis, logoJsonPath, logoSummary, renderLogoPreviewPng, LOGO_ORDERS, type LogoBrief } from "../core/logo";
 import { analyzeAudio } from "../core/audio";
 import { renderFrames, renderVideo } from "../core/render";
 import { listCustomComponents, readCustomComponent, writeCustomComponent } from "../core/custom";
@@ -133,6 +134,10 @@ const autoTimes = (projectId: string): { times: number[]; labels: Map<number, st
     if (list.length > 9) list = Array.from({ length: 9 }, (_, i) => tl.scenes[Math.round((i * (tl.scenes.length - 1)) / 8)]);
     for (const s of list) pts.push({ t: s.start + s.overlapIn + (s.duration - s.overlapIn) * 0.5, label: `${sceneName(s.index)} mid` });
   }
+  // In-betweens are where craft shows: sample the middle of every transition (up to 6).
+  const trans = tl.scenes.filter((s) => s.index > 0 && s.overlapIn > 0).slice(0, 6);
+  for (const s of trans) pts.push({ t: s.start + s.overlapIn * 0.5, label: `transition into ${sceneName(s.index)} @50%` });
+  pts.sort((a, b) => a.t - b.t);
   const labels = new Map<number, string>();
   const times: number[] = [];
   for (const p of pts) {
@@ -276,6 +281,58 @@ server.registerTool(
       }
     }
     if (info.kind === "audio") content.push(text(`Tip: call analyze_audio {projectId, asset: "${info.path}"} to get BPM, beats and the drop for beat-synced cuts.`));
+    if (path.extname(file).toLowerCase() === ".svg") {
+      try {
+        const a = ensureLogoAnalysis(file, info.path);
+        content.push(
+          text(
+            `Logo analysis (saved as ${info.path}.logo.json; use {"type":"logo","src":"${info.path}"} layers):\n` +
+              JSON.stringify(logoSummary(a), null, 2) +
+              `\nCall analyze_logo {projectId, asset: "${info.path}"} for a numbered part map and brand-aware mode ranking.`,
+          ),
+        );
+      } catch (e) {
+        content.push(text(`Logo analysis failed: ${(e as Error).message}. The SVG can still be used as an image or with logo mode mask/pop/glitch.`));
+      }
+    }
+    return { content };
+  }),
+);
+
+server.registerTool(
+  "analyze_logo",
+  {
+    title: "Analyze logo",
+    description:
+      "Break an SVG logo asset into animatable parts: islands with holes (counters), icon vs wordmark groups, stagger orders, " +
+      "palette with roles, geometry kit (stroke weight, corner radius, angles, symmetry) and a ranked list of logo reveal modes " +
+      "(LogoLayer.mode) with reasons. Pass the brand's verb/values/industry to add meaning-driven scoring. Also returns an image " +
+      "of the parts colored by `order` (red = first … violet = last) and labelled with their part ids (\"svg:assets/x.svg#<id>\").",
+    inputSchema: {
+      projectId: z.string(),
+      asset: z.string().describe('SVG asset path like "assets/logo.svg" (or just the filename)'),
+      order: z.enum(LOGO_ORDERS).optional().describe("order used to color the preview, default bySizeDesc"),
+      verb: z.string().optional().describe("brand motion verb, e.g. connect, grow, protect, flow"),
+      values: z.array(z.string()).optional().describe("brand adjectives, e.g. playful, premium, secure"),
+      industry: z.string().optional().describe("e.g. fintech, food, logistics, media, saas, fashion"),
+      force: z.boolean().optional().describe("re-analyze even if a cached .logo.json exists"),
+    },
+  },
+  safe(async ({ projectId, asset, order, verb, values, industry, force }) => {
+    const fileName = asset.replace(/^\.?\/?assets\//, "");
+    const info = await getAssetInfo(projectId, fileName);
+    if (path.extname(info.file).toLowerCase() !== ".svg") {
+      throw new Error(`${info.path} is not an SVG. Raster logos only support logo modes mask/pop/glitch (vectorize it to SVG to unlock the rest).`);
+    }
+    const a = ensureLogoAnalysis(info.file, info.path, { force });
+    const brief: LogoBrief = { verb, values, industry };
+    const content: Content[] = [json(logoSummary(a, brief, path.relative(getProject(projectId).dir, logoJsonPath(info.file))))];
+    try {
+      content.push(text(`Part map colored by ${order ?? "bySizeDesc"} (red first → violet last); dashed outline = wordmark glyph:`));
+      content.push(image(await renderLogoPreviewPng(a, order ?? "bySizeDesc", 640), "image/png"));
+    } catch (e) {
+      console.error(`[motion-studio] logo preview failed: ${(e as Error).message}`);
+    }
     return { content };
   }),
 );
@@ -313,7 +370,7 @@ server.registerTool(
     },
   },
   safe(async ({ projectId, spec }) => {
-    const res = writeSpec(projectId, parseMaybeJson(spec, "spec"));
+    const res = await writeSpec(projectId, parseMaybeJson(spec, "spec"));
     return { content: [text(formatValidation(res))], isError: !res.ok };
   }),
 );
@@ -340,7 +397,7 @@ server.registerTool(
     },
   },
   safe(async ({ projectId, index, scene }) => {
-    const res = updateScene(projectId, index, parseMaybeJson(scene, "scene"));
+    const res = await updateScene(projectId, index, parseMaybeJson(scene, "scene"));
     return { content: [text(formatValidation(res))], isError: !res.ok };
   }),
 );
