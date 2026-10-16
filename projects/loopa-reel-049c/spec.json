@@ -1,0 +1,390 @@
+{
+  "title": "Loopa — split bills, stay friends",
+  "format": "9:16",
+  "fps": 30,
+  "style": "apple",
+  "theme": {
+    "fonts": {
+      "display": "Sora",
+      "body": "Inter"
+    },
+    "colors": {
+      "bg": "#14213d",
+      "fg": "#fff7ef",
+      "accent": "#ff5a5f",
+      "accent2": "#2ec4b6",
+      "muted": "#9aa3b8",
+      "card": "#ffffff",
+      "navy": "#14213d",
+      "cream": "#fff7ef",
+      "gold": "#ffd166"
+    }
+  },
+  "fx": {
+    "grain": 0.06
+  },
+  "concept": {
+    "truth": "Loopa helps friends split bills instantly, feeling fair and light.",
+    "metaphor": "fusion — the bill is one coin; splitting it fairly turns it into two interlocking rings, which ARE the Loopa logo",
+    "motif": "a gold coin (actor) that survives every cut and splits into the logo's two rings",
+    "verb": "split → connect",
+    "hook": "a coin slams down while a ₹2,400 counter spins up",
+    "arc": [
+      "hook: dinner was ₹2,400",
+      "tension: who owes what? (chaos of guesses)",
+      "transformation: the coin splits into two rings, cream relief",
+      "payoff: the rings take their place in the logo",
+      "lockup: wordmark cascades + tagline + CTA"
+    ],
+    "colorScript": [
+      "navy",
+      "navy + noise",
+      "cream relief",
+      "cream + coral/teal"
+    ]
+  },
+  "actors": [
+    {
+      "id": "coin",
+      "from": "hook",
+      "until": "lockup",
+      "layer": {
+        "type": "morph",
+        "width": 420,
+        "height": 420,
+        "enter": {
+          "type": "drop-in-3d",
+          "duration": 0.6
+        },
+        "inertia": true,
+        "shapes": [
+          {
+            "at": 0,
+            "shape": "coin",
+            "fill": "$gold"
+          },
+          {
+            "at": 5.7,
+            "shape": "svg:assets/loopa-logo.svg#icon",
+            "morph": 0.9
+          }
+        ]
+      },
+      "poses": [
+        {
+          "scene": "hook",
+          "t": 0,
+          "x": 0,
+          "y": -260,
+          "scale": 0.9
+        },
+        {
+          "scene": "chaos",
+          "t": 0.5,
+          "x": 0,
+          "y": -380,
+          "scale": 0.6,
+          "move": 0.6
+        },
+        {
+          "scene": "split",
+          "t": 0.5,
+          "x": 0,
+          "y": -220,
+          "scale": 1.2,
+          "move": 0.6
+        },
+        {
+          "scene": "lockup",
+          "t": 0.9,
+          "snapTo": "lockup-logo",
+          "move": 0.9
+        }
+      ]
+    }
+  ],
+  "scenes": [
+    {
+      "id": "hook",
+      "duration": 2.2,
+      "background": [
+        {
+          "type": "solid",
+          "color": "$navy"
+        },
+        {
+          "type": "spotlight",
+          "base": "transparent",
+          "color": "#22345c",
+          "y": -260,
+          "size": 0.8
+        }
+      ],
+      "camera": {
+        "keyframes": [
+          {
+            "t": 0,
+            "zoom": 1
+          },
+          {
+            "t": 2.2,
+            "zoom": 1.05,
+            "ease": "inOut"
+          }
+        ],
+        "punch": [
+          1.25
+        ]
+      },
+      "layers": [
+        {
+          "type": "counter",
+          "from": 0,
+          "to": 2400,
+          "prefix": "₹",
+          "locale": "en-IN",
+          "countDelay": 0.3,
+          "countDuration": 0.9,
+          "fontSize": 210,
+          "weight": 800,
+          "color": "$cream",
+          "y": 90
+        },
+        {
+          "type": "text",
+          "text": "dinner for four.",
+          "preset": "blur-rise",
+          "fontSize": 64,
+          "weight": 500,
+          "font": "$body",
+          "color": "$muted",
+          "y": 240,
+          "start": 0.8
+        }
+      ]
+    },
+    {
+      "id": "chaos",
+      "duration": 2.6,
+      "transition": {
+        "type": "match"
+      },
+      "background": {
+        "type": "solid",
+        "color": "$navy"
+      },
+      "camera": {
+        "keyframes": [
+          {
+            "t": 0,
+            "zoom": 1.02
+          },
+          {
+            "t": 2.6,
+            "zoom": 1.08,
+            "ease": "inOut"
+          }
+        ],
+        "shake": {
+          "amount": 5,
+          "start": 0.2,
+          "duration": 1.6,
+          "speed": 4
+        }
+      },
+      "layers": [
+        {
+          "type": "cloud",
+          "arrangement": "scatter",
+          "seed": 4,
+          "itemSize": 110,
+          "avoidCenter": {
+            "width": 860,
+            "height": 1120
+          },
+          "items": [
+            {
+              "text": "₹600?"
+            },
+            {
+              "text": "₹750?"
+            },
+            {
+              "text": "₹410?"
+            },
+            {
+              "text": "₹1,200?"
+            },
+            {
+              "text": "₹0?"
+            },
+            {
+              "text": "₹999?"
+            },
+            {
+              "text": "₹520?"
+            },
+            {
+              "text": "₹830?"
+            }
+          ],
+          "width": 1000,
+          "height": 1780
+        },
+        {
+          "type": "text",
+          "text": "Who owes\nwhat?",
+          "preset": "scramble",
+          "fontSize": 150,
+          "weight": 800,
+          "color": "$cream",
+          "y": 130,
+          "start": 0.2
+        }
+      ]
+    },
+    {
+      "id": "split",
+      "duration": 3.4,
+      "transition": {
+        "type": "expand",
+        "from": "coin",
+        "color": "$cream",
+        "duration": 0.6
+      },
+      "background": {
+        "type": "solid",
+        "color": "$cream"
+      },
+      "camera": {
+        "keyframes": [
+          {
+            "t": 0,
+            "zoom": 1
+          },
+          {
+            "t": 3.4,
+            "zoom": 1.05,
+            "ease": "inOut"
+          }
+        ]
+      },
+      "layers": [
+        {
+          "type": "text",
+          "text": "Split it\nin one tap.",
+          "preset": "mask-up",
+          "fontSize": 120,
+          "weight": 800,
+          "color": "$navy",
+          "y": 170,
+          "start": 1,
+          "highlight": {
+            "words": [
+              "tap."
+            ],
+            "color": "$accent",
+            "at": 1.6
+          }
+        },
+        {
+          "type": "card",
+          "variant": "notification",
+          "icon": "💸",
+          "title": "Loopa",
+          "body": "Rahul paid you ₹600",
+          "meta": "now",
+          "width": 760,
+          "fontSize": 30,
+          "y": -580,
+          "start": 1.9,
+          "enter": {
+            "type": "drop",
+            "duration": 0.6
+          },
+          "inertia": true
+        }
+      ]
+    },
+    {
+      "id": "lockup",
+      "duration": 4.2,
+      "transition": {
+        "type": "match"
+      },
+      "background": {
+        "type": "solid",
+        "color": "$cream"
+      },
+      "camera": {
+        "keyframes": [
+          {
+            "t": 0,
+            "zoom": 1.04
+          },
+          {
+            "t": 4.2,
+            "zoom": 1,
+            "ease": "outQuint"
+          }
+        ],
+        "punch": [
+          1
+        ]
+      },
+      "layers": [
+        {
+          "type": "logo",
+          "src": "assets/loopa-logo.svg",
+          "parts": "wordmark",
+          "mode": "cascade",
+          "start": 0.7,
+          "id": "lockup-logo",
+          "frame": "full",
+          "height": 200,
+          "y": -120
+        },
+        {
+          "type": "particles",
+          "preset": "confetti",
+          "start": 1,
+          "originX": -177,
+          "originY": -120,
+          "colors": [
+            "$accent",
+            "$accent2",
+            "$gold"
+          ],
+          "count": 70
+        },
+        {
+          "type": "text",
+          "text": "Split bills. Stay friends.",
+          "preset": "blur-rise",
+          "fontSize": 62,
+          "weight": 600,
+          "font": "$body",
+          "color": "$navy",
+          "y": 60,
+          "start": 1.4
+        },
+        {
+          "type": "card",
+          "variant": "button",
+          "title": "Get Loopa — it's free",
+          "accent": "$accent",
+          "color": "#ffffff",
+          "fontSize": 50,
+          "y": 230,
+          "start": 1.9,
+          "press": 3.1,
+          "enter": {
+            "type": "grow",
+            "duration": 0.5
+          },
+          "inertia": true
+        }
+      ]
+    }
+  ]
+}

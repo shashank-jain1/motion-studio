@@ -9,7 +9,8 @@ import { RuntimeProvider, resolveColor, type RuntimeContext } from "../core/cont
 import { ChromaticWrap, FxOverlay } from "../kit/Fx";
 import { SceneView, evalCamera } from "./Scene";
 import { getPresentation, transitionEase, transitionSeconds, type TransitionOrigin } from "./transitions";
-import { ActorsLayer, actorPoseAt, resolveActor, type ResolvedActor } from "./Actors";
+import { ActorsLayer, actorPoseAt, findSnapLayer, resolveActor, type ResolvedActor, type SnapCtx } from "./Actors";
+import { type LogoAnalysis, logoJsonPath, useJsonAssets } from "../shapes/resolve";
 
 export type SpecVideoProps = { spec: SpecInput; assetBase?: string; projectId?: string };
 
@@ -109,11 +110,35 @@ export const SpecVideo: React.FC<SpecVideoProps> = ({ spec: input, assetBase, pr
     return staticFile(projectId ? `${projectId}/${clean}` : clean);
   };
 
+  return (
+    <RuntimeProvider value={rt}>
+      <SpecBody spec={spec} rt={rt} fx={fx} asset={asset} />
+    </RuntimeProvider>
+  );
+};
+
+/** Everything that needs the runtime context (asset/JSON loading for actor snapTo, scenes, actors, audio). */
+const SpecBody: React.FC<{ spec: Spec; rt: RuntimeContext; fx: Record<string, any>; asset: (src: string) => string }> = ({ spec, rt, fx, asset }) => {
+  const { fps, width, height, durationInFrames } = useVideoConfig();
+
+  // Logo analyses needed by actor poses that snapTo a logo layer
+  const snapLogoSrcs = useMemo(() => {
+    const out = new Set<string>();
+    for (const a of spec.actors ?? []) for (const p of a.poses) {
+      if (!p.snapTo) continue;
+      const hit = findSnapLayer(spec.scenes, Math.max(0, sceneIndexOf(spec.scenes, p.scene)), p.snapTo);
+      if (hit?.layer.type === "logo" && /\.svg(\?|#|$)/i.test(hit.layer.src)) out.add(hit.layer.src);
+    }
+    return [...out];
+  }, [spec]);
+  const logos = useJsonAssets(snapLogoSrcs.map(logoJsonPath));
   const total = durationInFrames / fps;
-  const slots = sceneTimeline(spec.scenes, fps).scenes;
-  const actors: ResolvedActor[] = (spec.actors ?? [])
-    .map((a, i) => resolveActor(a, i, spec, slots, total))
-    .filter((a): a is ResolvedActor => !!a);
+  const slots = useMemo(() => sceneTimeline(spec.scenes, fps).scenes, [spec, fps]);
+  // Resolved once per spec (+ when logo analyses arrive): snapTo can emit one keyframe per frame while following a camera.
+  const actors: ResolvedActor[] = useMemo(() => {
+    const snap: SnapCtx = { fps, getLogo: (src) => (logos.ready ? logos.get<LogoAnalysis>(logoJsonPath(src)) : null) };
+    return (spec.actors ?? []).map((a, i) => resolveActor(a, i, spec, slots, total, snap)).filter((a): a is ResolvedActor => !!a);
+  }, [spec, slots, total, fps, logos.ready]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const series: React.ReactNode[] = [];
   spec.scenes.forEach((scene, i) => {
@@ -147,7 +172,6 @@ export const SpecVideo: React.FC<SpecVideoProps> = ({ spec: input, assetBase, pr
 
   const a = spec.audio;
   return (
-    <RuntimeProvider value={rt}>
       <AbsoluteFill style={{ background: resolveColor(rt, "$bg") }}>
         <ChromaticWrap px={fx.chromatic ?? 0}>
           <TransitionSeries>{series}</TransitionSeries>
@@ -167,6 +191,5 @@ export const SpecVideo: React.FC<SpecVideoProps> = ({ spec: input, assetBase, pr
           <Sequence key={i} from={Math.round(s.at * fps)} layout="none"><Audio src={asset(s.src)} volume={s.volume ?? 1} /></Sequence>
         ))}
       </AbsoluteFill>
-    </RuntimeProvider>
   );
 };

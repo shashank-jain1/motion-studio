@@ -78,7 +78,7 @@ const res = await writeSpec(id, {
       camera: { keyframes: [{ t: 0, zoom: 1.04 }, { t: 2.5, zoom: 1, ease: "inOut" }], shake: { amount: 4, start: 0.3, duration: 0.6 } },
       layers: [
         ...beans,
-        { type: "text", text: "Same bitter\nroutine.", preset: "mask-up", fontSize: 120, weight: 700, color: "$muted", y: 330, start: 0.6 },
+        { type: "text", text: "Same bitter\nroutine.", preset: "mask-up", fontSize: 120, weight: 700, color: "$muted", y: 270, start: 0.6 },
       ],
     },
     {
@@ -90,7 +90,7 @@ const res = await writeSpec(id, {
           color: CREAM, strokeWidth: 14, drawStart: 1.0, drawDuration: 1.3, trail: 0.55, ease: "inOut",
           repeat: { count: 3, delay: 0.18, x: 60, opacity: 0.85 } },
         { type: "text", text: "Coffee that\nshows up fresh.", preset: "slot", swap: { words: ["fresh.", "on time.", "every week."], every: 0.7 },
-          fontSize: 104, weight: 800, color: CREAM, y: 300, start: 0.5 },
+          fontSize: 104, weight: 800, color: CREAM, y: 270, start: 0.5 },
         { type: "particles", preset: "dust", colors: [CREAM], count: 40 },
       ],
     },

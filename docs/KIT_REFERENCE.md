@@ -29,8 +29,18 @@
              { "scene": "pile", "t": 0.5, "x": -300, "y": 120, "scale": 0.6, "ease": "expoOut" },
              { "scene": "lockup", "t": 0, "x": -260, "y": 0, "scale": 1.2 } ] }
 ```
-Times inside `layer` are relative to the start of the `from` scene. Poses tween over the whole gap between them, so add a
-duplicate pose to hold.
+Times inside `layer` are relative to the start of the `from` scene. Each pose's `move` (default 1.0s) is how long the move INTO it
+takes, ending at its `t`; before that the actor holds the previous pose (hold → decisive move). Use a large `move` to glide the whole gap.
+
+**Handing an actor off to the logo (seamless payoff): `snapTo`.** Give the lockup logo layer an `id`, and end the actor on a pose
+`{ "scene": "lockup", "t": 0.9, "snapTo": "<logoLayerId>#icon", "move": 0.9 }`. The engine computes x/y/scale so the actor lands
+pixel-exactly on that part slot (`#icon`, `#wordmark`, `#<partId>`; omit `#…` to use whatever logo subset the actor's morph is showing),
+then keeps following it through the scene's camera moves (`follow: false` to stop). Typical lockup:
+```jsonc
+// actor's last morph shape: { "at": 5.7, "shape": "svg:assets/logo.svg#icon" }   (no fill → keeps brand colors)
+{ "id": "lockup-logo", "type": "logo", "src": "assets/logo.svg", "parts": "wordmark", "frame": "full", "mode": "cascade", "height": 200, "y": -120 }
+```
+`frame: "full"` lays a partial logo layer out as the whole logo, so you position the complete lockup once and the icon slot is where the actor snaps.
 
 Colors: any CSS color or a theme token `$bg $fg $accent $accent2 $accent3 $muted $card`.
 Fonts: `$display`, `$body`, `$mono`, or one of: Anton, Archivo Black, Bebas Neue, Bricolage Grotesque, Bungee,
@@ -146,7 +156,7 @@ shield check plus sparkle flame house cup globe lock bag card coin phone play mu
 **logo**: `src: "assets/logo.svg"`, `mode`: draw | build | assemble | morph-from (`from: <shape source>`) | mask | cascade | glitch | liquid |
 window (`windowSrc`) | split | trace | pop · `order`: leftToRight topToBottom reading bySizeDesc radialOut angular document byColor ·
 `revealDuration` (default 1.4) · `stagger` · `parts`: all|icon|wordmark · `color` (override fill) · `strokeColor` · `exitMode`: explode|collapse|draw-out|fade ·
-`height` (default 300). The final frame is pixel-exact brand art. Run `analyze_logo` to get suggested modes for a given logo.
+`height` (default 300), `frame: "full"|"parts"` (lay out as the whole logo even when showing a subset, for actor snapTo). The final frame is pixel-exact brand art. Run `analyze_logo` to get suggested modes for a given logo.
 
 **group**: `layers: [...]`, `perspective`: transform several layers together (e.g. a 3D-tilted cluster).
 

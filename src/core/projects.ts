@@ -8,6 +8,7 @@ import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
 import type { ZodIssue } from "zod";
 import { FORMATS, SpecSchema, type Spec, type SpecInput } from "../engine/spec/schema";
+import { craftWarnings } from "./craft";
 import { preprocessSpec, preprocessSpecDetailed, sceneTimeline, ZERO_LENGTH_TRANSITIONS } from "../engine/spec/preprocess";
 import { STYLES } from "../engine/spec/styles";
 import { PROJECTS_DIR, CUSTOM_DIR } from "./paths";
@@ -269,6 +270,7 @@ const specWarnings = (id: string, spec: Spec): string[] => {
   if (spec.scenes[0]?.transition && transitionSeconds(spec.scenes[0].transition) > 0) {
     warnings.push(`scenes[0].transition: a transition on the first scene has nothing to transition from and is ignored`);
   }
+  warnings.push(...craftWarnings(spec));
   return warnings;
 };
 

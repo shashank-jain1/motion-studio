@@ -397,7 +397,7 @@
           "fontSize": 120,
           "weight": 700,
           "color": "$muted",
-          "y": 330,
+          "y": 270,
           "start": 0.6
         }
       ]
@@ -473,7 +473,7 @@
           "fontSize": 104,
           "weight": 800,
           "color": "#fff4e6",
-          "y": 300,
+          "y": 270,
           "start": 0.5
         },
         {

@@ -68,7 +68,8 @@ dominant angles and symmetry**, plus suggested reveal modes. Use them everywhere
 | Want | Use |
 |---|---|
 | A becomes B | `morph` layer (`shapes: [{at, shape}]`: library objects, `svg:` logo parts, `text:` glyphs); `twist` 10–30° hides crossfade feel; `goo` for liquid merges |
-| One object persists across cuts | `spec.actors` with `poses` per scene (shared-element continuity) |
+| One object persists across cuts | `spec.actors` with `poses` per scene (shared-element continuity); poses hold, then move (`move`, default 1s) |
+| Motif lands in the logo | last actor pose `snapTo: "<logoLayerId>#icon"` + logo layer `parts: "wordmark", frame: "full"`. Pixel-exact, follows the camera |
 | Object becomes the next scene | `transition: {type: "expand", from: "<layerId>", shape: "circle", color}` |
 | Fly through a dot, letter or screen into the next world | `transition: {type: "zoom-into", from: "<layerId>"}` |
 | Hard cut that rhymes (circle → sun) | `transition: {type: "match"}` plus identical position and size across the cut |
@@ -155,5 +156,6 @@ Frame 0 already moves and is readable. No fade from black, no logo sting.
 - **Tension (1.5–5s).** The bean multiplies into a messy pile (`repeat` + `cloud scatter`). Grey palette, slow push.
 - **Transformation (5–11s).** One bean lifts; its crease draws a steam curve (`path` draw). Steam rises into a cup (`morph` bean → cup)
   while the background `expand`s from the cup in warm brown. "Great coffee, on autopilot." (`mask-up`).
-- **Payoff (11–12.5s).** The cup morphs into the logo's "O" (`morph` → `svg:assets/logo.svg#2`), and the other letters `cascade` beside it.
+- **Payoff (11–12.5s).** The cup morphs into the logo's "O" (`morph` → `svg:assets/logo.svg#2`) and snaps into its slot
+  (`snapTo: "logo#2"` on a `parts: "wordmark", frame: "full"` logo layer), while the other letters `cascade` beside it.
 - **Lockup (12.5–15s).** Logo + "Start your first bag →" button card, held. The bean actor returns to its frame-0 pose for a loop seam.

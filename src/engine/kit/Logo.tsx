@@ -16,6 +16,7 @@ import { useContainer } from "../core/container";
 import { type BBox, type GPath, areaCentroid, interiorPoint, lengthTable, lengthTableFromPts, parsePath, polylines, splitSubpaths, strokeOutline, unionBBox } from "../shapes/geom";
 import { type LogoAnalysis, type LogoOrder, type LogoPart, fitRaw, logoJsonPath, resolveRaw, selectLogoParts, sourceAssets, useFontKey, useJsonAssets } from "../shapes/resolve";
 import { type MultiMorph, prepMultiMorph } from "../shapes/morph";
+import { logoBoxSize, logoView } from "../shapes/logoLayout";
 import { mixColor, settleEase } from "./Morph";
 
 type Props = { layer: z.infer<typeof LogoLayer>; t: number; duration: number };
@@ -152,11 +153,7 @@ export const Logo: React.FC<Props> = ({ layer, t, duration }) => {
       };
     });
     const bb = unionBBox(parts.map((p) => p.bbox));
-    const [vx0, vy0, vw0, vh0] = logo.viewBox;
-    const pad = Math.max(bb.w, bb.h) * 0.04;
-    const view: BBox = (layer.parts ?? "all") === "all" && vw0 > 0 && vh0 > 0
-      ? { x: vx0, y: vy0, w: vw0, h: vh0 }
-      : { x: bb.x - pad, y: bb.y - pad, w: bb.w + 2 * pad, h: bb.h + 2 * pad };
+    const view: BBox = logoView(logo, layer.parts, layer.frame); // shared with actor snapTo
     const orderName: LogoOrder = layer.order ?? DEFAULT_ORDER[requested] ?? "bySizeDesc";
     const ids = new Set(parts.map((p) => p.id));
     const ord = (logo.orders?.[orderName] ?? []).filter((id) => ids.has(id));
@@ -164,23 +161,11 @@ export const Logo: React.FC<Props> = ({ layer, t, duration }) => {
     const rank = new Map(ord.map((id, i) => [id, i]));
     const center = areaCentroid(parts.flatMap((p) => parsePath(p.d)));
     return { parts, bb, view, rank, n: parts.length, center: { x: center.cx, y: center.cy } };
-  }, [vector, logo, layer.parts, overridePaint, layer.order, requested, uid]);
+  }, [vector, logo, layer.parts, layer.frame, overridePaint, layer.order, requested, uid]);
 
   // ---------------- sizing
   const view: BBox | null = prep ? prep.view : imgSize ? { x: 0, y: 0, w: imgSize.w, h: imgSize.h } : null;
-  const aspect = view ? view.w / view.h : 1;
-  let W: number, H: number;
-  if (layer.width && layer.height) {
-    W = layer.width;
-    H = layer.height;
-  } else if (layer.width) {
-    W = layer.width;
-    H = W / aspect;
-  } else {
-    H = layer.height ?? 300;
-    W = H * aspect;
-  }
-  const k = view ? Math.min(W / view.w, H / view.h) : 1; // px per view unit
+  const { W, H, k } = view ? logoBoxSize(layer, view) : { W: layer.width ?? 300, H: layer.height ?? 300, k: 1 }; // k = px per view unit
 
   // mode resolution (raster fallbacks)
   const mode: Mode = vector ? requested : RASTER_MODES.has(requested) ? requested : "mask";

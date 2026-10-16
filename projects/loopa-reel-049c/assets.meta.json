@@ -1,0 +1,22 @@
+{
+  "loopa-logo.svg": {
+    "mtimeMs": 1792124647840.6936,
+    "size": 3138,
+    "info": {
+      "path": "assets/loopa-logo.svg",
+      "file": "/home/shashank/motion-studio/projects/loopa-reel-049c/assets/loopa-logo.svg",
+      "kind": "image",
+      "sizeBytes": 3138,
+      "width": 100,
+      "height": 100,
+      "hasAlpha": true,
+      "palette": [
+        "#13223b",
+        "#2cb5a8",
+        "#0e172a",
+        "#f2565a",
+        "#945858"
+      ]
+    }
+  }
+}

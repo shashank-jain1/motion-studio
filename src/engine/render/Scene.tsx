@@ -34,12 +34,9 @@ export const evalCamera = (kfs: CamKf[] | undefined, t: number) => {
   return out;
 };
 
-const SceneBody: React.FC<{ scene: Scene }> = ({ scene }) => {
-  const frame = useCurrentFrame();
-  const { fps, width, height } = useVideoConfig();
-  const t = frame / fps;
+/** Full camera state of a scene at local time t (keyframes + zoom punches + shake). Pure — also used by actor snapTo. */
+export const cameraAt = (scene: Pick<Scene, "camera" | "duration">, t: number) => {
   const cam = evalCamera(scene.camera?.keyframes, t);
-
   // Zoom punches (beat hits): quick in, smooth settle
   for (const at of scene.camera?.punch ?? []) {
     const dt = t - at;
@@ -56,6 +53,18 @@ const SceneBody: React.FC<{ scene: Scene }> = ({ scene }) => {
       cam.rotate += noise2D("sr", t * sp, 0) * amt * 0.06;
     }
   }
+  return cam;
+};
+
+/** Whether a scene's camera ever moves (snapped actors only need per-frame tracking if it does). */
+export const cameraMoves = (scene: Pick<Scene, "camera">) =>
+  !!(scene.camera?.keyframes?.length || scene.camera?.punch?.length || scene.camera?.shake);
+
+const SceneBody: React.FC<{ scene: Scene }> = ({ scene }) => {
+  const frame = useCurrentFrame();
+  const { fps, width, height } = useVideoConfig();
+  const t = frame / fps;
+  const cam = cameraAt(scene, t);
 
   const rot3d = cam.rotateX || cam.rotateY || cam.rotate
     ? `rotateX(${cam.rotateX}deg) rotateY(${cam.rotateY}deg) rotate(${cam.rotate}deg)` : undefined;

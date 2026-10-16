@@ -813,6 +813,45 @@ const collectDrawables = (root: INode, warnings: string[]): { drawables: Drawabl
 
 type RawPart = Omit<Part, "id" | "holeIds" | "kind"> & { outer: Sub; holes: Sub[]; srcIndex: number };
 
+/**
+ * Font glyphs (and many hand-drawn marks) are built from OVERLAPPING contours of one element — an "l" stem plus its
+ * flag, an "a" bowl plus its stem. Visually that is one shape, so merge overlapping outers of the same element into a
+ * single part (winding is already normalized: outers clockwise, holes counter-clockwise → renders right under nonzero).
+ */
+const mergeOverlapping = (parts: RawPart[], dec: number): RawPart[] => {
+  if (parts.length < 2) return parts;
+  const overlaps = (a: RawPart, b: RawPart) => {
+    const A = a.bbox, B = b.bbox;
+    if (A.x > B.x + B.w || B.x > A.x + A.w || A.y > B.y + B.h || B.y > A.y + A.h) return false;
+    // a point counts only if it is in the other part's FILLED area (inside its outer, outside its holes)
+    const inFill = (pt: Pt, q: RawPart) => pointInPoly(pt, q.outer.poly) && !q.holes.some((h) => pointInPoly(pt, h.poly));
+    return a.outer.poly.some((pt) => inFill(pt, b)) || b.outer.poly.some((pt) => inFill(pt, a));
+  };
+  const parent = parts.map((_, i) => i);
+  const find = (i: number): number => (parent[i] === i ? i : (parent[i] = find(parent[i])));
+  for (let i = 0; i < parts.length; i++) for (let j = i + 1; j < parts.length; j++) if (overlaps(parts[i], parts[j])) parent[find(j)] = find(i);
+  const groups = new Map<number, RawPart[]>();
+  parts.forEach((p, i) => { const r = find(i); if (!groups.has(r)) groups.set(r, []); groups.get(r)!.push(p); });
+  return [...groups.values()].map((g) => {
+    if (g.length === 1) return g[0];
+    const main = [...g].sort((a, b) => b.area - a.area)[0];
+    const x0 = Math.min(...g.map((p) => p.bbox.x)), y0 = Math.min(...g.map((p) => p.bbox.y));
+    const x1 = Math.max(...g.map((p) => p.bbox.x + p.bbox.w)), y1 = Math.max(...g.map((p) => p.bbox.y + p.bbox.h));
+    const area = g.reduce((acc, p) => acc + p.area, 0);
+    const centroid: Pt = [g.reduce((acc, p) => acc + p.centroid[0] * p.area, 0) / (area || 1), g.reduce((acc, p) => acc + p.centroid[1] * p.area, 0) / (area || 1)];
+    return {
+      ...main,
+      d: g.map((p) => p.d).join(""),
+      fillRule: "nonzero" as const,
+      area, centroid,
+      bbox: { x: x0, y: y0, w: x1 - x0, h: y1 - y0 },
+      length: g.reduce((acc, p) => acc + p.length, 0),
+      holes: g.flatMap((p) => p.holes),
+    };
+  });
+  void dec;
+};
+
 const buildParts = (drawables: Drawable[], vb: [number, number, number, number], dec: number, warnings: string[]): RawPart[] => {
   const maxDim = Math.max(vb[2], vb[3]) || 1;
   const tol = maxDim / 500;
@@ -857,6 +896,7 @@ const buildParts = (drawables: Drawable[], vb: [number, number, number, number],
         if (parent) holesOf.get(parent)!.push(h);
       }
       // keep document order of outers
+      const local: RawPart[] = [];
       for (const o0 of subs.filter((s) => role.get(s) === "outer")) {
         const outer = o0.area < 0 ? reverseSub(o0) : o0;
         const holes = holesOf.get(o0)!.map((h) => (h.area > 0 ? reverseSub(h) : h));
@@ -874,7 +914,7 @@ const buildParts = (drawables: Drawable[], vb: [number, number, number, number],
         const bbox = bboxOf(outer);
         const centroid: Pt = area > 1e-9 ? [cx / A, cy / A] : oc.c;
         const maxSide = Math.max(bbox.w, bbox.h) || 1;
-        out.push({
+        local.push({
           d: [outer, ...holes].map((s) => subToD({ ...s, closed: true }, dec)).join(""),
           fill: dr.fill.hex,
           fillRule: dr.fillRule,
@@ -890,6 +930,7 @@ const buildParts = (drawables: Drawable[], vb: [number, number, number, number],
           ...extras,
         });
       }
+      out.push(...mergeOverlapping(local, dec));
       return;
     }
 
@@ -1000,7 +1041,7 @@ const detectWordmark = (parts: Part[]): Set<number> => {
     const mh = median(hs);
     const mb = median(mem.map((k) => bottom(parts[k])));
     const onBase = mem.filter((k) => Math.abs(bottom(parts[k]) - mb) < 0.12 * mh);
-    if (onBase.length / mem.length < 0.6 || onBase.length < 3) continue;
+    if (onBase.length < 3) continue;
     // members: glyphs on the baseline, plus descenders (top aligned with a baseline glyph, bottom a bit below the baseline)
     const tops = onBase.map((k) => parts[k].bbox.y);
     const members = mem.filter((k) => {
