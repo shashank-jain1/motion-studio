@@ -12,7 +12,9 @@ import { Hono, type Context } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { streamSSE } from "hono/streaming";
 import { serve } from "@hono/node-server";
-import { ROOT, PROJECTS_DIR } from "../core/paths";
+import { ROOT, PROJECTS_DIR, LIBRARY_DIR } from "../core/paths";
+import { ensureSfxLibrary } from "../../scripts/gen-sfx";
+import { ensureBaked } from "../../scripts/sfx-bake";
 import { FORMATS, type SpecInput } from "../engine/spec/schema";
 import { addAsset, createProject, deleteProject, getAssetInfo, getProject, listAssets, listProjects, readSpec, validateSpec, writeSpec, type ValidationResult } from "../core/projects";
 import { ensureLogoAnalysis, isLogoJson, logoJsonPath, logoSummary, renderLogoPreviewPng } from "../core/logo";
@@ -43,6 +45,8 @@ import {
   validateSignup,
   type User,
 } from "./auth";
+import { adaptTargets, type Format } from "../engine/spec/reflow";
+import { createProjectFromTemplate, getTemplate, listTemplates, templateFile } from "../core/templates";
 import { cancelJob, cancelProjectJobs, enqueueRenderJob, getJobFor, initJobs, isTerminal, listJobs, subscribe, type Job, type JobEvent } from "./jobs";
 import { backendError } from "./render";
 import { toolPolicyFor } from "./scope";
@@ -264,6 +268,7 @@ const renderInfo = (projectId: string, r: RenderRecord): RenderInfo => ({
   ...(r.seconds !== undefined ? { seconds: r.seconds } : {}),
   ...(r.width !== undefined ? { width: r.width } : {}),
   ...(r.height !== undefined ? { height: r.height } : {}),
+  ...(r.format ? { format: r.format } : {}),
 });
 
 const assetOut = (projectId: string, a: { file?: string; path: string } & Record<string, unknown>) => {
@@ -279,14 +284,37 @@ app.get("/api/projects", (c) => {
 });
 
 app.post("/api/projects", async (c) => {
-  const body = await readJson<{ name?: unknown; format?: unknown }>(c);
+  const body = await readJson<{ name?: unknown; format?: unknown; template?: unknown }>(c);
   if (typeof body.name !== "string" || !body.name.trim()) throw new HttpError(400, "name is required");
   if (body.format !== undefined && (typeof body.format !== "string" || !(body.format in FORMATS))) {
     throw new HttpError(400, `format must be one of ${Object.keys(FORMATS).join(", ")}`);
   }
+  if (body.template !== undefined) {
+    // Start from a template: its spec + assets are copied in (reflowed when another canvas was picked).
+    if (typeof body.template !== "string" || !getTemplate(body.template)) throw new HttpError(400, `Unknown template "${String(body.template)}"`);
+    let p;
+    try {
+      p = await createProjectFromTemplate({ name: body.name.trim(), template: body.template, format: body.format as Format | undefined });
+    } catch (e) {
+      throw new HttpError(500, (e as Error).message);
+    }
+    recordProjectOwner(userOf(c), p.id);
+    const meta = listProjects().find((x) => x.id === p.id);
+    return c.json(card({ ...p, updatedAt: meta?.updatedAt ?? p.createdAt, hasSpec: true }), 201);
+  }
   const p = createProject({ name: body.name.trim(), format: body.format as keyof typeof FORMATS | undefined });
   recordProjectOwner(userOf(c), p.id);
   return c.json(card({ ...p, updatedAt: p.createdAt, hasSpec: false }), 201);
+});
+
+// ---------------------------------------------------------------- templates
+
+app.get("/api/templates", (c) => c.json(listTemplates()));
+
+app.get("/api/templates/:slug", (c) => {
+  const t = getTemplate(c.req.param("slug"));
+  if (!t) throw new HttpError(404, `Template "${c.req.param("slug")}" not found`);
+  return c.json({ ...t.meta, spec: t.spec });
 });
 
 app.get("/api/projects/:id", async (c) => {
@@ -480,16 +508,42 @@ app.post("/api/projects/:id/preview", async (c) => {
   });
 });
 
-app.post("/api/projects/:id/render", async (c) => {
-  const p = requireProject(c);
-  const body = await readJson<{ quality?: unknown }>(c).catch(() => ({}) as Record<string, unknown>);
+const renderBody = async (c: Context) => {
+  const body = await readJson<{ quality?: unknown; format?: unknown }>(c).catch(() => ({}) as Record<string, unknown>);
   const quality = body.quality ?? "draft";
   if (quality !== "draft" && quality !== "final") throw new HttpError(400, 'quality must be "draft" or "final"');
-  if (!readSpec(p.id)) throw new HttpError(409, "Project has no spec yet");
-  const unsafe = await specSafetyErrors(readSpec(p.id));
+  if (body.format !== undefined && (typeof body.format !== "string" || !(body.format in FORMATS))) {
+    throw new HttpError(400, `format must be one of ${Object.keys(FORMATS).join(", ")}`);
+  }
+  return { quality: quality as "draft" | "final", format: body.format as Format | undefined };
+};
+
+const renderableSpec = async (projectId: string) => {
+  const spec = readSpec(projectId);
+  if (!spec) throw new HttpError(409, "Project has no spec yet");
+  const unsafe = await specSafetyErrors(spec);
   if (unsafe.length) throw new HttpError(400, unsafe.join("\n"));
-  const job = enqueueRenderJob({ user: userOf(c), projectId: p.id, quality });
+  return spec;
+};
+
+app.post("/api/projects/:id/render", async (c) => {
+  const p = requireProject(c);
+  const { quality, format } = await renderBody(c);
+  await renderableSpec(p.id);
+  const job = enqueueRenderJob({ user: userOf(c), projectId: p.id, quality, ...(format ? { format } : {}) });
   return c.json({ job }, 202);
+});
+
+/** Batch export: one job per adapt target (the master format + spec.formats). */
+app.post("/api/projects/:id/render-all", async (c) => {
+  const p = requireProject(c);
+  const { quality } = await renderBody(c);
+  const spec = await renderableSpec(p.id);
+  const targets = adaptTargets({ ...spec, format: spec.format ?? p.format } as never);
+  const user = userOf(c);
+  // every job carries its format (the master's reflow is the identity) so queues and filenames say which is which
+  const jobs = targets.map((f) => enqueueRenderJob({ user, projectId: p.id, quality, format: f }));
+  return c.json({ jobs, formats: targets }, 202);
 });
 
 // ---------------------------------------------------------------- jobs
@@ -628,6 +682,45 @@ app.get("/api/connect", (c) => {
 
 app.all("/api/*", (c) => c.json({ error: `Not found: ${c.req.method} ${c.req.path}` }, 404));
 
+// ---------------------------------------------------------------- built-in library (public)
+
+/** Generated SFX (scripts/gen-sfx.ts) for the web Player: `libraryBase = ${origin}/library`. Not user data → no auth. */
+const LIB_HEADERS = { "Cache-Control": "public, max-age=86400", "Access-Control-Allow-Origin": "*", "X-Content-Type-Options": "nosniff" };
+app.get("/library/sfx/:file{(recorded/)?[a-z0-9-]+\\.(wav|json)}", (c) => {
+  const file = c.req.param("file");
+  if (!/^(recorded\/)?[a-z0-9-]+\.(wav|json)$/.test(file)) return c.json({ error: "Not found" }, 404);
+  const abs = safeResolve(path.join(LIBRARY_DIR, "sfx"), file);
+  const res = abs ? fileResponse(abs, c.req.raw, LIB_HEADERS) : null;
+  return res ?? c.json({ error: "Not found" }, 404);
+});
+/** Planned sound cues: rendered from the recipe in `?r=` on first request, then served from the cache (scripts/sfx-bake.ts). */
+app.get("/library/bake/:file", (c) => {
+  let abs: string | null = null;
+  try {
+    abs = ensureBaked(`bake/${c.req.param("file")}`, new URL(c.req.url).searchParams);
+  } catch (e) {
+    return c.json({ error: `Bad sound recipe: ${(e as Error).message}` }, 400);
+  }
+  const res = abs ? fileResponse(abs, c.req.raw, { ...LIB_HEADERS, "Cache-Control": "public, max-age=31536000, immutable" }) : null;
+  return res ?? c.json({ error: "Not found" }, 404);
+});
+
+// ---------------------------------------------------------------- templates (public: posters, assets, glyphs)
+
+app.get("/templates/:slug/*", (c) => {
+  const slug = c.req.param("slug");
+  const prefix = `/templates/${slug}/`;
+  let rel: string;
+  try {
+    rel = decodeURIComponent(c.req.path.slice(c.req.path.indexOf(prefix) + prefix.length));
+  } catch {
+    return c.json({ error: "Bad path" }, 400);
+  }
+  const abs = templateFile(slug, rel);
+  const sandbox: Record<string, string> = { "Cache-Control": "public, max-age=300", "X-Content-Type-Options": "nosniff", ...(IS_HOSTED ? { "Content-Security-Policy": "sandbox; default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'" } : {}) };
+  return (abs && fileResponse(abs, c.req.raw, sandbox)) || c.json({ error: "Not found" }, 404);
+});
+
 // ---------------------------------------------------------------- files
 
 app.get("/files/:projectId/*", (c) => {
@@ -692,6 +785,7 @@ if (isMain) {
   const owned = syncProjectOwnership();
   if (owned.assigned.length) console.error(`[motion-studio] assigned ${owned.assigned.length} unowned project folder(s) to the ${IS_HOSTED ? "first account" : "local owner"}`);
   initJobs();
+  ensureSfxLibrary();
   if (IS_HOSTED && !process.env.MOTION_STUDIO_PUBLIC_URL) console.error(`[motion-studio] WARNING: hosted mode without MOTION_STUDIO_PUBLIC_URL (using ${PUBLIC_URL}); OAuth / links will be wrong`);
   if (IS_HOSTED && !PUBLIC_URL.startsWith("https://")) console.error("[motion-studio] WARNING: hosted mode over plain http: session cookies are not marked Secure");
   const be = backendError(RENDER_BACKEND);

@@ -1,6 +1,10 @@
 import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Player, type PlayerRef } from "@remotion/player";
 import { SpecVideo } from "../../../src/engine/render/SpecVideo";
+import { FORMATS } from "../../../src/engine/spec/schema";
+import { SAFE_ZONES, adaptTargets, reflowSpec, type Format } from "../../../src/engine/spec/reflow";
+import { api } from "../api";
+import { useToast } from "../components/Toast";
 import { useStudio } from "./context";
 import { useBus, type SafeMode } from "./bus";
 import { ASPECT, fmtDate, fmtTC } from "../lib/format";
@@ -61,25 +65,38 @@ export const PlayerPane = () => {
     };
   }, [player, bus]);
 
-  // Player input: the last spec that parsed (an invalid draft keeps the previous one; the overlay explains)
-  const playerSpec = info?.raw ?? null;
+  // Player input: the last spec that parsed (an invalid draft keeps the previous one; the overlay explains).
+  // Viewing another format plays the REFLOWED film (spec/reflow.ts, same function the renderer uses).
+  const master = (info?.spec.format ?? s.project.format) as Format;
+  const viewFormat = useBus(bus, (b) => b.viewFormat) as Format | null;
+  const fmt: Format = viewFormat ?? master;
+  const view = useMemo(() => {
+    if (!info) return null;
+    if (fmt === master) return { spec: info.raw, width: info.width, height: info.height };
+    try {
+      const [width, height] = FORMATS[fmt];
+      return { spec: reflowSpec({ ...info.spec, format: master }, fmt) as unknown as Record<string, unknown>, width, height };
+    } catch {
+      return { spec: info.raw, width: info.width, height: info.height };
+    }
+  }, [info, fmt, master]);
+  const playerSpec = view?.spec ?? null;
   const inputProps = useMemo(() => ({ spec: playerSpec as never, assetBase: `${location.origin}/files/${id}`, projectId: id }), [playerSpec, id]);
 
   const fit = useMemo(() => {
-    if (!info || !box.w || !box.h) return null;
+    if (!view || !box.w || !box.h) return null;
     const padX = 56, padY = 40;
-    const sc = Math.min((box.w - padX * 2) / info.width, (box.h - padY * 2) / info.height);
-    return { w: Math.max(1, Math.floor(info.width * sc)), h: Math.max(1, Math.floor(info.height * sc)) };
-  }, [info, box]);
+    const sc = Math.min((box.w - padX * 2) / view.width, (box.h - padY * 2) / view.height);
+    return { w: Math.max(1, Math.floor(view.width * sc)), h: Math.max(1, Math.floor(view.height * sc)) };
+  }, [view, box]);
 
   const loop = useBus(bus, (b) => b.loop);
   const rate = useBus(bus, (b) => b.rate);
   const safe = useBus(bus, (b) => b.safe);
-  const fmt = info?.spec.format ?? s.project.format;
 
   return (
     <div className="viewer">
-      <ViewerHead format={fmt} />
+      <ViewerHead format={fmt} master={master} />
       <div className="stage" ref={stageRef}>
         {info && playerSpec && fit && (
           <div className="stage-frame" style={{ width: fit.w, height: fit.h }}>
@@ -88,10 +105,11 @@ export const PlayerPane = () => {
               ref={setPlayer}
               component={SpecVideo}
               inputProps={inputProps}
+              key={fmt}
               durationInFrames={info.durationInFrames}
               fps={info.fps}
-              compositionWidth={info.width}
-              compositionHeight={info.height}
+              compositionWidth={view!.width}
+              compositionHeight={view!.height}
               style={{ width: fit.w, height: fit.h }}
               controls={false}
               loop={loop}
@@ -104,7 +122,8 @@ export const PlayerPane = () => {
               renderLoading={() => <div className="player-loading"><Spinner size={16} /></div>}
               errorFallback={({ error }) => <div className="player-crash"><IconAlert size={16} /><span className="mono">{error.message}</span></div>}
             />
-            {safe !== "off" && <SafeOverlay mode={safe} w={info.width} h={info.height} />}
+            {safe !== "off" && <SafeOverlay mode={safe} w={view!.width} h={view!.height} format={fmt} />}
+            {fmt !== master && <span className="reflow-tag mono" aria-hidden>REFLOW {master} → {fmt}</span>}
           </div>
         )}
         {!liveSpec && <EmptyStage format={s.project.format} name={s.project.name} running={s.chatRunning} />}
@@ -117,13 +136,66 @@ export const PlayerPane = () => {
 
 const SAFE_OPTIONS: { value: SafeMode; label: string; vertical?: boolean }[] = [
   { value: "off", label: "Off" },
+  { value: "core", label: "Core" },
   { value: "title", label: "Title" },
   { value: "tiktok", label: "TikTok", vertical: true },
   { value: "reels", label: "Reels", vertical: true },
   { value: "shorts", label: "Shorts", vertical: true },
 ];
 
-const ViewerHead = ({ format }: { format: string }) => {
+const VIEW_FORMATS: Format[] = ["16:9", "9:16", "1:1", "4:5"];
+
+/**
+ * Format switcher: previews the film reflowed to each canvas; the master is marked M; formats that export with the film
+ * (spec.formats) carry a dot. "Add format" toggles the viewed format in spec.formats (saved like any spec edit).
+ */
+const FormatSwitch = ({ format, master }: { format: Format; master: Format }) => {
+  const { bus, info, liveSpec, id, dirty, applyServerSpec } = useStudio();
+  const toast = useToast();
+  const [busy, setBusy] = useState(false);
+  const targets = info ? adaptTargets({ ...info.spec, format: master }) : [master];
+  const opts = [...new Set<Format>([master, ...VIEW_FORMATS])];
+  const inExport = targets.includes(format);
+  const toggle = async () => {
+    if (!liveSpec || busy) return;
+    if (dirty) { toast.info("Save the spec first", "Adding a format edits spec.formats — press ⌘S, then try again."); return; }
+    const cur = ((liveSpec.formats as Format[] | undefined) ?? []).filter((f) => f !== master);
+    const next = cur.includes(format) ? cur.filter((f) => f !== format) : [...cur, format];
+    const spec = { ...liveSpec, formats: next.length ? next : undefined };
+    if (!next.length) delete (spec as Record<string, unknown>).formats;
+    setBusy(true);
+    try {
+      const r = await api.saveSpec(id, spec);
+      if (!r.ok) throw new Error(r.errors[0]);
+      applyServerSpec(spec, r.timeline);
+      toast.success(cur.includes(format) ? `Removed ${format} from exports` : `${format} added to exports`, next.length ? `Exports: ${[master, ...next].join(" · ")}` : `Exports: ${master} only`);
+    } catch (e) {
+      toast.error("Couldn't update formats", (e as Error).message);
+    } finally { setBusy(false); }
+  };
+  return (
+    <>
+      <span className="label dim">Format</span>
+      <div className="segmented sm fmt-switch" role="radiogroup" aria-label="Preview format">
+        {opts.map((f) => (
+          <button key={f} type="button" role="radio" aria-checked={format === f} className={format === f ? "is-active" : ""} disabled={!info}
+            title={f === master ? `${f} · master (authored)` : `${f} · reflowed${targets.includes(f) ? " · exports" : ""}`}
+            onClick={() => { bus.viewFormat = f === master ? null : f; if (bus.safe === "tiktok" || bus.safe === "reels" || bus.safe === "shorts") bus.safe = (ASPECT[f] ?? 1) < 1 ? bus.safe : "core"; bus.emit(); }}>
+            {f}{f === master ? <i className="fmt-m">M</i> : targets.includes(f) ? <i className="fmt-dot" /> : null}
+          </button>
+        ))}
+      </div>
+      {format !== master && (
+        <button type="button" className={`btn xs ${inExport ? "ghost" : ""}`} onClick={toggle} disabled={busy || !info} aria-pressed={inExport}
+          title={inExport ? `Stop exporting ${format}` : `Export ${format} too (adds it to spec.formats)`}>
+          {busy ? <Spinner size={12} /> : inExport ? "✓ In export" : `+ Add ${format}`}
+        </button>
+      )}
+    </>
+  );
+};
+
+const ViewerHead = ({ format, master }: { format: Format; master: Format }) => {
   const { bus, info, chatRunning } = useStudio();
   const safe = useBus(bus, (b) => b.safe);
   const playing = useBus(bus, (b) => b.playing);
@@ -134,6 +206,8 @@ const ViewerHead = ({ format }: { format: string }) => {
       <span className="label">Viewer</span>
       {(playing || chatRunning) && <span className="onair"><TallyDot />{playing ? "PLAY" : "DIRECTING"}</span>}
       <span className="spacer" />
+      <FormatSwitch format={format} master={master} />
+      <span className="viewer-sep" aria-hidden />
       <span className="label dim">Safe</span>
       <div className="segmented sm" role="radiogroup" aria-label="Safe-zone overlay (S)">
         {opts.map((o) => (
@@ -153,11 +227,33 @@ const PLATFORM: Record<"tiktok" | "reels" | "shorts", { name: string; clear: [nu
 };
 
 /** Hairline safe-zone overlay in composition coordinates. */
-const SafeOverlay = ({ mode, w, h }: { mode: SafeMode; w: number; h: number }) => {
-  const k = w / 1080; // stroke/label scale
+const SafeOverlay = ({ mode, w, h, format }: { mode: SafeMode; w: number; h: number; format: Format }) => {
+  const k = Math.min(w, h) / 1080; // stroke/label scale
   const label = (x: number, y: number, t: string, anchor: "start" | "end" = "start") => (
     <text x={x} y={y} textAnchor={anchor} fontFamily="Geist Mono, monospace" fontSize={22 * k} letterSpacing={2 * k} fill="#ECE8DF" opacity={0.85}>{t}</text>
   );
+  if (mode === "core") {
+    // the universal safe rect the reflow keeps critical content in (spec/reflow.ts SAFE_ZONES)
+    const z = SAFE_ZONES[format] ?? SAFE_ZONES["16:9"];
+    const sx = w / FORMATS[format][0], sy = h / FORMATS[format][1];
+    const r = { x: w / 2 + z.l * sx, y: h / 2 + z.t * sy, w: (z.r - z.l) * sx, h: (z.b - z.t) * sy };
+    return (
+      <svg className="safe-overlay" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" aria-hidden>
+        <defs>
+          <pattern id="hatch-core" width={14 * k} height={14 * k} patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <rect width={14 * k} height={14 * k} fill="rgba(13,13,11,0.22)" />
+            <line x1="0" y1="0" x2="0" y2={14 * k} stroke="#ECE8DF" strokeOpacity={0.14} strokeWidth={3 * k} />
+          </pattern>
+          <mask id="m-core"><rect width={w} height={h} fill="white" /><rect x={r.x} y={r.y} width={r.w} height={r.h} fill="black" /></mask>
+        </defs>
+        <rect width={w} height={h} fill="url(#hatch-core)" mask="url(#m-core)" />
+        <rect x={r.x} y={r.y} width={r.w} height={r.h} fill="none" stroke="#ECE8DF" strokeOpacity={0.85} strokeWidth={2 * k} strokeDasharray={`${12 * k} ${8 * k}`} />
+        <path d={`M${w / 2 - 30 * k} ${h / 2}h${60 * k}M${w / 2} ${h / 2 - 30 * k}v${60 * k}`} stroke="#ECE8DF" strokeOpacity={0.6} strokeWidth={2 * k} />
+        {label(r.x + 12 * k, r.y + 32 * k, `CORE SAFE · ${format}`)}
+        {label(r.x + r.w - 12 * k, r.y + r.h - 14 * k, `${z.r - z.l}×${z.b - z.t}`, "end")}
+      </svg>
+    );
+  }
   if (mode === "title") {
     const a = { x: w * 0.05, y: h * 0.05, w: w * 0.9, h: h * 0.9 };
     const t = { x: w * 0.1, y: h * 0.1, w: w * 0.8, h: h * 0.8 };

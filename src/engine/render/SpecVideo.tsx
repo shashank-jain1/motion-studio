@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { AbsoluteFill, Audio, Sequence, interpolate, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { TransitionSeries, linearTiming } from "@remotion/transitions";
 import { SpecSchema, FORMATS, type Layer, type Scene, type Spec, type SpecInput } from "../spec/schema";
 import { preprocessSpecDetailed, sceneIndexOf, sceneTimeline } from "../spec/preprocess";
@@ -11,8 +11,15 @@ import { SceneView, evalCamera } from "./Scene";
 import { getPresentation, transitionEase, transitionSeconds, type TransitionOrigin } from "./transitions";
 import { ActorsLayer, actorPoseAt, findSnapLayer, resolveActor, type ResolvedActor, type SnapCtx } from "./Actors";
 import { type LogoAnalysis, logoJsonPath, useJsonAssets } from "../shapes/resolve";
+import { SoundTrack } from "../audio/SoundTrack";
 
-export type SpecVideoProps = { spec: SpecInput; assetBase?: string; projectId?: string };
+export type SpecVideoProps = {
+  spec: SpecInput;
+  assetBase?: string;
+  projectId?: string;
+  /** Base URL of the built-in library: "sfx:<name>" → `${libraryBase}/sfx/<name>.wav` (renders: `${assetServer}/_library`, web: `${origin}/library`) */
+  libraryBase?: string;
+};
 
 export const resolveSize = (spec: Pick<Spec, "format" | "width" | "height">) => {
   const [fw, fh] = FORMATS[spec.format ?? "16:9"];
@@ -90,7 +97,7 @@ const ErrorCard: React.FC<{ message: string }> = ({ message }) => (
   <AbsoluteFill style={{ background: "#1a0010", color: "#ff8fb1", fontFamily: "monospace", fontSize: 28, padding: 60, whiteSpace: "pre-wrap" }}>{message}</AbsoluteFill>
 );
 
-export const SpecVideo: React.FC<SpecVideoProps> = ({ spec: input, assetBase, projectId }) => {
+export const SpecVideo: React.FC<SpecVideoProps> = ({ spec: input, assetBase, projectId, libraryBase }) => {
   const { fps, width, height, durationInFrames } = useVideoConfig();
   const parsed = useMemo(() => { try { return { spec: parseSpec(input) }; } catch (e) { return { error: (e as Error).message }; } }, [input]);
   if ("error" in parsed) return <ErrorCard message={parsed.error!} />;
@@ -100,7 +107,7 @@ export const SpecVideo: React.FC<SpecVideoProps> = ({ spec: input, assetBase, pr
   const rt: RuntimeContext = {
     colors: { ...style.colors, ...(spec.theme?.colors ?? {}) },
     fonts: { ...style.fonts, ...(spec.theme?.fonts ?? {}) } as RuntimeContext["fonts"],
-    assetBase, projectId, width, height, fps,
+    assetBase, projectId, libraryBase, width, height, fps,
   };
   const fx = { ...(style.fx ?? {}), ...(spec.fx ?? {}) };
   const asset = (src: string) => {
@@ -170,7 +177,6 @@ const SpecBody: React.FC<{ spec: Spec; rt: RuntimeContext; fx: Record<string, an
     );
   });
 
-  const a = spec.audio;
   return (
       <AbsoluteFill style={{ background: resolveColor(rt, "$bg") }}>
         <ChromaticWrap px={fx.chromatic ?? 0}>
@@ -178,18 +184,7 @@ const SpecBody: React.FC<{ spec: Spec; rt: RuntimeContext; fx: Record<string, an
           <ActorsLayer actors={actors} width={width} height={height} />
         </ChromaticWrap>
         <GlobalFx fx={{ ...fx, chromatic: undefined }} duration={total} />
-        {a && (
-          <Audio src={asset(a.src)} trimBefore={a.trimStart ? Math.round(a.trimStart * fps) : undefined}
-            volume={(f) => {
-              const s = f / fps;
-              const fin = a.fadeIn ? interpolate(s, [0, a.fadeIn], [0, 1], { extrapolateRight: "clamp" }) : 1;
-              const fout = a.fadeOut ? interpolate(s, [total - a.fadeOut, total], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }) : 1;
-              return (a.volume ?? 1) * fin * fout;
-            }} />
-        )}
-        {spec.sfx?.map((s, i) => (
-          <Sequence key={i} from={Math.round(s.at * fps)} layout="none"><Audio src={asset(s.src)} volume={s.volume ?? 1} /></Sequence>
-        ))}
+        <SoundTrack spec={spec} slots={slots} total={total} asset={asset} assetBase={rt.assetBase} libraryBase={rt.libraryBase} />
       </AbsoluteFill>
   );
 };

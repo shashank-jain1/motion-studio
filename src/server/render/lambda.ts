@@ -16,9 +16,13 @@ import path from "node:path";
 import crypto from "node:crypto";
 import { getProject } from "../../core/projects";
 import { FORMATS, type Spec } from "../../engine/spec/schema";
+import { masterFormat, reflowSpec } from "../../engine/spec/reflow";
 import { computeTimeline } from "../../core/projects";
 import type { RenderRecord } from "../../core/tools";
 import { getSecret, LAMBDA_CONFIG_FILE } from "../config";
+import { LIBRARY_DIR } from "../../core/paths";
+import { SFX_DIR, ensureSfxLibrary } from "../../../scripts/gen-sfx";
+import { soundFilesForSpec } from "../../../scripts/sfx-bake";
 import { contentType } from "../files";
 import { toRenderOutput, type RenderBackend } from "./types";
 
@@ -95,6 +99,19 @@ const projectUploadFiles = (dir: string): string[] => {
   return out;
 };
 
+/** Built-in SFX ("sfx:" cues / auto sound), uploaded next to the assets under `_library/` (HEAD-cached like assets):
+ * the library files the spec references plus every planned cue, pre-baked (scripts/sfx-bake.ts). */
+const librarySfxFiles = (spec: Spec): string[] => {
+  if (!spec.sound && !spec.sfx?.some((s) => s.src.startsWith("sfx:"))) return [];
+  ensureSfxLibrary();
+  try {
+    return soundFilesForSpec(spec).map((rel) => `_library/${rel}`);
+  } catch (e) {
+    console.error(`[motion-studio] sound pre-bake failed: ${(e as Error).message}`);
+    return fs.readdirSync(SFX_DIR).filter((f) => f.endsWith(".wav")).map((f) => `_library/sfx/${f}`);
+  }
+};
+
 const specSize = (spec: Spec, scale: number) => {
   const s = spec as Spec & { width?: number; height?: number; format?: keyof typeof FORMATS };
   const [w, h] = s.width && s.height ? [s.width, s.height] : FORMATS[s.format ?? "16:9"];
@@ -104,7 +121,9 @@ const specSize = (spec: Spec, scale: number) => {
 export const lambdaBackend: RenderBackend = {
   name: "lambda",
   concurrency: Math.max(1, Number(process.env.LAMBDA_CONCURRENCY ?? 4)),
-  async render(job, spec, onProgress, signal) {
+  async render(job, master, onProgress, signal) {
+    const spec = job.format ? reflowSpec(master, job.format) : master;
+    const format = job.format ?? masterFormat(master);
     const err = lambdaConfigError();
     if (err) throw new Error(err);
     const cfg = readLambdaConfig()!;
@@ -117,10 +136,10 @@ export const lambdaBackend: RenderBackend = {
     onProgress({ progress: 0, stage: "uploading assets" });
     const { client: s3, sdk } = getAwsClient({ region, service: "s3" });
     const prefix = assetPrefix(job.projectId);
-    const files = projectUploadFiles(project.dir);
+    const files = [...projectUploadFiles(project.dir), ...librarySfxFiles(spec)];
     for (const [i, rel] of files.entries()) {
       if (signal.aborted) throw abortError();
-      const abs = path.join(project.dir, rel);
+      const abs = rel.startsWith("_library/") ? path.join(LIBRARY_DIR, rel.slice("_library/".length)) : path.join(project.dir, rel);
       const st = fs.statSync(abs);
       const Key = `${prefix}/${rel}`;
       const mtime = String(Math.round(st.mtimeMs));
@@ -158,7 +177,7 @@ export const lambdaBackend: RenderBackend = {
       functionName: cfg.functionName,
       serveUrl: cfg.serveUrl,
       composition: COMPOSITION_ID,
-      inputProps: { spec, assetBase, projectId: job.projectId },
+      inputProps: { spec, assetBase, projectId: job.projectId, libraryBase: `${assetBase}/_library` },
       codec: "h264",
       crf: quality === "final" ? 18 : 28,
       scale,
@@ -203,7 +222,7 @@ export const lambdaBackend: RenderBackend = {
     const rendersDir = path.join(project.dir, "renders");
     fs.mkdirSync(rendersDir, { recursive: true });
     const stamp = new Date().toISOString().replace(/[:.]/g, "-").replace("T", "_").slice(0, 19);
-    const outPath = path.join(rendersDir, `${stamp}-${quality}.mp4`);
+    const outPath = path.join(rendersDir, `${stamp}-${quality}-${format.replace(":", "x")}.mp4`);
     const { sizeInBytes } = await downloadMedia({ region, bucketName, renderId, outPath, signal });
     const { width, height } = specSize(spec, scale);
     const record: RenderRecord = {
@@ -216,6 +235,7 @@ export const lambdaBackend: RenderBackend = {
       height,
       fps: spec.fps,
       renderSeconds: Math.round((Date.now() - t0) / 100) / 10,
+      format,
     };
     try {
       fs.writeFileSync(`${outPath}.json`, JSON.stringify(record, null, 2) + "\n");

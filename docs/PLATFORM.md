@@ -115,3 +115,26 @@ panel with the MCP URL, claude.ai steps and the Claude Code config snippet, rend
 `Dockerfile` (node:22-bookworm-slim, Chromium deps for Remotion, ffmpeg, pnpm, build web, `MOTION_STUDIO_MODE=hosted`),
 `docker-compose.yml` (app + Caddy for automatic HTTPS, volume for `data/` and `projects/`), `Caddyfile`, and `docs/DEPLOY.md`
 (VPS steps, env vars, Lambda setup, and "Add to claude.ai: Settings → Connectors → Add custom connector → `${PUBLIC_URL}/mcp`").
+
+## One spec → every platform
+- `spec.format` is the master format. `spec.formats[]` lists the extra formats to adapt to. `layer.adapt["9:16"] = {...}` overrides are applied last.
+- `reflowSpec(spec, target)` (src/engine/spec/reflow.ts) re-lays out each scene:
+  - fill layers stretch to the new canvas;
+  - content clusters restack: going 16:9 → 9:16, rows become a column or a balanced grid; going 9:16 → 16:9, tall stacks become [copy | visual] columns;
+  - on verticals, text keeps hooks ≥80px and body text ≥48px;
+  - critical content is clamped into SAFE_ZONES.
+- The renderer, the Player and the tests all use this same function.
+
+| Method & path | Body | Returns |
+|---|---|---|
+| `POST /api/projects` | `{ name, format?, template? }` | card. With `template`, the template's spec and assets are copied in; a different `format` gives a reflowed master |
+| `GET /api/templates` | — | `TemplateMeta[]` `{slug,title,niche,description,format,formats,durationSeconds,tags,poster}` |
+| `GET /api/templates/:slug` | — | `TemplateMeta & { spec }` |
+| `GET /templates/:slug/{poster.jpg,glyphs.json,assets/*}` | — | public files (template thumbnails use `assetBase=/templates/<slug>`) |
+| `POST /api/projects/:id/render` | `{ quality, format? }` | `{ job }`. With `format`, the reflowed film is rendered |
+| `POST /api/projects/:id/render-all` | `{ quality }` | `{ jobs: Job[], formats }`, one job per format |
+
+- `Job.format?` and `RenderInfo.format?` are set on every format-aware render. Filenames are `<stamp>-<quality>-<aspect>.mp4`, e.g. `…-draft-9x16.mp4`.
+- DB migration 3 adds `jobs.format`; NULL means the master format.
+- MCP: `preview_frames { format? }` and `render_video { format?, all_formats? }`.
+- CLI: `--format=16:9`.

@@ -5,7 +5,7 @@ import type { PlayerRef } from "@remotion/player";
  * Tiny external store bridging the Remotion Player and everything that follows it (timeline playhead, time readouts).
  * High-frequency consumers (the playhead) subscribe and write to the DOM directly; low-frequency ones use the hooks.
  */
-export type SafeMode = "off" | "title" | "tiktok" | "reels" | "shorts";
+export type SafeMode = "off" | "core" | "title" | "tiktok" | "reels" | "shorts";
 
 export class PlayerBus {
   player: PlayerRef | null = null;
@@ -18,6 +18,8 @@ export class PlayerBus {
   /** Shuttle rate (J/K/L): negative plays in reverse. The Player reads it as its playbackRate. */
   rate = 1;
   safe: SafeMode = "off";
+  /** Viewer format (null = the film's master format); other formats play the reflowed film. */
+  viewFormat: string | null = null;
   private subs = new Set<() => void>();
   private version = 0;
 

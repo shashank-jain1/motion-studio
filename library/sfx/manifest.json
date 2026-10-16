@@ -1,0 +1,1252 @@
+{
+  "version": 4,
+  "sampleRate": 48000,
+  "channels": 2,
+  "targetLufs": -16,
+  "sounds": [
+    {
+      "name": "whoosh-short",
+      "file": "whoosh-short.wav",
+      "source": "synth",
+      "category": "whoosh.short",
+      "material": [
+        "air"
+      ],
+      "palette": [
+        "tech",
+        "hype",
+        "playful",
+        "minimal"
+      ],
+      "palettes": [
+        "tech",
+        "hype",
+        "playful",
+        "minimal"
+      ],
+      "durationSec": 0.45,
+      "peakAt": 0.26,
+      "weight": 0.08,
+      "speed": 0.39,
+      "brightness": 0.98,
+      "tonal": false,
+      "loudness": -16,
+      "sharpness": 0.53,
+      "flatness": 0.3,
+      "world": "abstract",
+      "emotions": [],
+      "group": "whoosh-short",
+      "license": "original",
+      "v1category": "whoosh",
+      "description": "Fast, tight air whoosh for quick moves and whip transitions (0.45 s)."
+    },
+    {
+      "name": "whoosh-long",
+      "file": "whoosh-long.wav",
+      "source": "synth",
+      "category": "whoosh.long",
+      "material": [
+        "air"
+      ],
+      "palette": [
+        "cinematic",
+        "luxury"
+      ],
+      "palettes": [
+        "cinematic",
+        "luxury"
+      ],
+      "durationSec": 1.1,
+      "peakAt": 0.72,
+      "weight": 0.82,
+      "speed": 0.2,
+      "brightness": 0.16,
+      "tonal": false,
+      "loudness": -16,
+      "sharpness": 0.29,
+      "flatness": 0.032,
+      "world": "abstract",
+      "emotions": [],
+      "group": "whoosh-long",
+      "license": "original",
+      "v1category": "whoosh",
+      "description": "Big, slow cinematic pass-by with a low body — long camera moves, scene transitions (1.1 s)."
+    },
+    {
+      "name": "whoosh-air",
+      "file": "whoosh-air.wav",
+      "source": "synth",
+      "category": "whoosh.medium",
+      "material": [
+        "air"
+      ],
+      "palette": [
+        "minimal",
+        "luxury",
+        "cinematic"
+      ],
+      "palettes": [
+        "minimal",
+        "luxury",
+        "cinematic"
+      ],
+      "durationSec": 0.7,
+      "peakAt": 0.42,
+      "weight": 0.1,
+      "speed": 0.26,
+      "brightness": 1,
+      "tonal": false,
+      "loudness": -16,
+      "sharpness": 0.14,
+      "flatness": 0.846,
+      "world": "abstract",
+      "emotions": [],
+      "group": "whoosh-air",
+      "license": "original",
+      "v1category": "whoosh",
+      "description": "Soft, breathy, high air whoosh — elegant slides and fades (0.7 s)."
+    },
+    {
+      "name": "whoosh-deep",
+      "file": "whoosh-deep.wav",
+      "source": "synth",
+      "category": "whoosh.long",
+      "material": [
+        "air"
+      ],
+      "palette": [
+        "cinematic",
+        "hype"
+      ],
+      "palettes": [
+        "cinematic",
+        "hype"
+      ],
+      "durationSec": 0.9,
+      "peakAt": 0.6,
+      "weight": 0.85,
+      "speed": 0.31,
+      "brightness": 0,
+      "tonal": false,
+      "loudness": -18.3,
+      "sharpness": 0.69,
+      "flatness": 0.006,
+      "world": "abstract",
+      "emotions": [],
+      "group": "whoosh-deep",
+      "license": "original",
+      "v1category": "whoosh",
+      "description": "Heavy whoosh with a sub rumble — zoom-throughs, big reveals, hype cuts (0.9 s)."
+    },
+    {
+      "name": "swoosh-up",
+      "file": "swoosh-up.wav",
+      "source": "synth",
+      "category": "whoosh.short",
+      "material": [
+        "air"
+      ],
+      "palette": [
+        "playful",
+        "tech",
+        "hype"
+      ],
+      "palettes": [
+        "playful",
+        "tech",
+        "hype"
+      ],
+      "durationSec": 0.55,
+      "peakAt": 0.4,
+      "weight": 0.11,
+      "speed": 0.39,
+      "brightness": 0.89,
+      "tonal": false,
+      "loudness": -16,
+      "sharpness": 0.28,
+      "flatness": 0.412,
+      "world": "abstract",
+      "emotions": [],
+      "group": "swoosh-up",
+      "license": "original",
+      "v1category": "whoosh",
+      "description": "Rising swoosh (filter + whistle climb) that slams into its apex — zoom-into / leading into a cut (0.55 s)."
+    },
+    {
+      "name": "swoosh-down",
+      "file": "swoosh-down.wav",
+      "source": "synth",
+      "category": "whoosh.short",
+      "material": [
+        "air"
+      ],
+      "palette": [
+        "playful",
+        "tech",
+        "minimal"
+      ],
+      "palettes": [
+        "playful",
+        "tech",
+        "minimal"
+      ],
+      "durationSec": 0.55,
+      "peakAt": 0.14,
+      "weight": 0.15,
+      "speed": 0.3,
+      "brightness": 0.85,
+      "tonal": false,
+      "loudness": -16,
+      "sharpness": 0.21,
+      "flatness": 0.347,
+      "world": "abstract",
+      "emotions": [],
+      "group": "swoosh-down",
+      "license": "original",
+      "v1category": "whoosh",
+      "description": "Falling swoosh — drops, exits, things settling down (0.55 s)."
+    },
+    {
+      "name": "impact-deep",
+      "file": "impact-deep.wav",
+      "source": "synth",
+      "category": "impact.heavy",
+      "material": [
+        "synthetic"
+      ],
+      "palette": [
+        "cinematic",
+        "hype"
+      ],
+      "palettes": [
+        "cinematic",
+        "hype"
+      ],
+      "durationSec": 2.2,
+      "peakAt": 0.004,
+      "weight": 1,
+      "speed": 0,
+      "brightness": 0.01,
+      "tonal": true,
+      "pitchHz": 90.6,
+      "loudness": -16,
+      "sharpness": 0.48,
+      "flatness": 0.011,
+      "world": "abstract",
+      "emotions": [],
+      "group": "impact-deep",
+      "license": "original",
+      "v1category": "impact",
+      "description": "Trailer hit: sub drop + noise crack + long hall tail — logo lockups, hero slams (2.2 s)."
+    },
+    {
+      "name": "impact-punch",
+      "file": "impact-punch.wav",
+      "source": "synth",
+      "category": "impact.medium",
+      "material": [
+        "synthetic"
+      ],
+      "palette": [
+        "hype",
+        "tech",
+        "playful"
+      ],
+      "palettes": [
+        "hype",
+        "tech",
+        "playful"
+      ],
+      "durationSec": 0.7,
+      "peakAt": 0.003,
+      "weight": 0.89,
+      "speed": 0.14,
+      "brightness": 0.04,
+      "tonal": false,
+      "loudness": -16,
+      "sharpness": 0.42,
+      "flatness": 0.013,
+      "world": "abstract",
+      "emotions": [],
+      "group": "impact-punch",
+      "license": "original",
+      "v1category": "impact",
+      "description": "Tight, punchy hit (kick + crack) — camera punches, type slams on the beat (0.7 s)."
+    },
+    {
+      "name": "impact-soft",
+      "file": "impact-soft.wav",
+      "source": "synth",
+      "category": "impact.light",
+      "material": [
+        "synthetic"
+      ],
+      "palette": [
+        "luxury",
+        "minimal",
+        "cinematic"
+      ],
+      "palettes": [
+        "luxury",
+        "minimal",
+        "cinematic"
+      ],
+      "durationSec": 1,
+      "peakAt": 0.006,
+      "weight": 0.96,
+      "speed": 0.08,
+      "brightness": 0,
+      "tonal": true,
+      "pitchHz": 77.4,
+      "loudness": -16,
+      "sharpness": 0.48,
+      "flatness": 0,
+      "world": "abstract",
+      "emotions": [],
+      "group": "impact-soft",
+      "license": "original",
+      "v1category": "impact",
+      "description": "Rounded, polished low hit with a plate tail — match cuts, elegant landings (1.0 s)."
+    },
+    {
+      "name": "thud-soft",
+      "file": "thud-soft.wav",
+      "source": "synth",
+      "category": "impact.light",
+      "material": [
+        "synthetic"
+      ],
+      "palette": [
+        "minimal",
+        "playful",
+        "luxury"
+      ],
+      "palettes": [
+        "minimal",
+        "playful",
+        "luxury"
+      ],
+      "durationSec": 0.45,
+      "peakAt": 0.005,
+      "weight": 0.84,
+      "speed": 0.27,
+      "brightness": 0,
+      "tonal": true,
+      "pitchHz": 89.1,
+      "loudness": -16,
+      "sharpness": 0.46,
+      "flatness": 0,
+      "world": "abstract",
+      "emotions": [],
+      "group": "thud-soft",
+      "license": "original",
+      "v1category": "impact",
+      "description": "Muffled felt thud — small type slams, objects landing (0.45 s)."
+    },
+    {
+      "name": "hit-slam",
+      "file": "hit-slam.wav",
+      "source": "synth",
+      "category": "impact.heavy",
+      "material": [
+        "synthetic"
+      ],
+      "palette": [
+        "hype",
+        "tech",
+        "cinematic"
+      ],
+      "palettes": [
+        "hype",
+        "tech",
+        "cinematic"
+      ],
+      "durationSec": 0.8,
+      "peakAt": 0.003,
+      "weight": 0.85,
+      "speed": 0.13,
+      "brightness": 0.16,
+      "tonal": false,
+      "loudness": -16,
+      "sharpness": 0.43,
+      "flatness": 0.03,
+      "world": "abstract",
+      "emotions": [],
+      "group": "hit-slam",
+      "license": "original",
+      "v1category": "impact",
+      "description": "Type slam: punchy low hit + bright snap layer, cuts through music (0.8 s)."
+    },
+    {
+      "name": "boom-sub",
+      "file": "boom-sub.wav",
+      "source": "synth",
+      "category": "sub.boom",
+      "material": [
+        "air"
+      ],
+      "palette": [
+        "cinematic",
+        "hype"
+      ],
+      "palettes": [
+        "cinematic",
+        "hype"
+      ],
+      "durationSec": 2.6,
+      "peakAt": 0.006,
+      "weight": 1,
+      "speed": 0,
+      "brightness": 0,
+      "tonal": true,
+      "pitchHz": 67.1,
+      "loudness": -16,
+      "sharpness": 0.12,
+      "flatness": 0,
+      "world": "abstract",
+      "emotions": [],
+      "group": "boom-sub",
+      "license": "original",
+      "v1category": "bass",
+      "description": "Long sub boom with rumble — camera shake, earthquakes, drops (2.6 s)."
+    },
+    {
+      "name": "drop-bass",
+      "file": "drop-bass.wav",
+      "source": "synth",
+      "category": "sub.boom",
+      "material": [
+        "air"
+      ],
+      "palette": [
+        "hype",
+        "tech"
+      ],
+      "palettes": [
+        "hype",
+        "tech"
+      ],
+      "durationSec": 1.6,
+      "peakAt": 0.004,
+      "weight": 1,
+      "speed": 0,
+      "brightness": 0,
+      "tonal": true,
+      "pitchHz": 113.1,
+      "loudness": -16,
+      "sharpness": 0.44,
+      "flatness": 0.001,
+      "world": "abstract",
+      "emotions": [],
+      "group": "drop-bass",
+      "license": "original",
+      "v1category": "bass",
+      "description": "808-style bass dive with saturation (audible on phone speakers) — beat drops, hype reveals (1.6 s)."
+    },
+    {
+      "name": "riser-short",
+      "file": "riser-short.wav",
+      "source": "synth",
+      "category": "riser",
+      "material": [
+        "air"
+      ],
+      "palette": [
+        "hype",
+        "tech",
+        "cinematic"
+      ],
+      "palettes": [
+        "hype",
+        "tech",
+        "cinematic"
+      ],
+      "durationSec": 1,
+      "peakAt": 0.97,
+      "weight": 0.41,
+      "speed": 0.22,
+      "brightness": 0.8,
+      "tonal": false,
+      "loudness": -16,
+      "sharpness": 0.5,
+      "flatness": 0.402,
+      "world": "abstract",
+      "emotions": [],
+      "group": "riser-short",
+      "license": "original",
+      "v1category": "riser",
+      "description": "1 s tension riser (noise + detuned pitch climb) that peaks on the cut — lead-ins, zoom-throughs."
+    },
+    {
+      "name": "riser-long",
+      "file": "riser-long.wav",
+      "source": "synth",
+      "category": "riser",
+      "material": [
+        "air"
+      ],
+      "palette": [
+        "cinematic",
+        "hype"
+      ],
+      "palettes": [
+        "cinematic",
+        "hype"
+      ],
+      "durationSec": 2.4,
+      "peakAt": 2.33,
+      "weight": 0.65,
+      "speed": 0.03,
+      "brightness": 0.72,
+      "tonal": false,
+      "loudness": -16,
+      "sharpness": 0.43,
+      "flatness": 0.436,
+      "world": "abstract",
+      "emotions": [],
+      "group": "riser-long",
+      "license": "original",
+      "v1category": "riser",
+      "description": "2.4 s build-up riser — long anticipation before a reveal or drop."
+    },
+    {
+      "name": "reverse-swell",
+      "file": "reverse-swell.wav",
+      "source": "synth",
+      "category": "riser",
+      "material": [
+        "air"
+      ],
+      "palette": [
+        "cinematic",
+        "luxury",
+        "minimal"
+      ],
+      "palettes": [
+        "cinematic",
+        "luxury",
+        "minimal"
+      ],
+      "durationSec": 1.4,
+      "peakAt": 1.3,
+      "weight": 0.12,
+      "speed": 0.03,
+      "brightness": 1,
+      "tonal": false,
+      "loudness": -16,
+      "sharpness": 0.81,
+      "flatness": 0.155,
+      "world": "abstract",
+      "emotions": [],
+      "group": "reverse-swell",
+      "license": "original",
+      "v1category": "riser",
+      "description": "Reverse cymbal/reverb swell sucking into the cut — expands, mask reveals, film burns (1.4 s)."
+    },
+    {
+      "name": "click-ui",
+      "file": "click-ui.wav",
+      "source": "synth",
+      "category": "ui.click",
+      "material": [
+        "digital"
+      ],
+      "palette": [
+        "tech",
+        "minimal",
+        "luxury",
+        "playful",
+        "cinematic",
+        "hype"
+      ],
+      "palettes": [
+        "tech",
+        "minimal",
+        "luxury",
+        "playful",
+        "cinematic",
+        "hype"
+      ],
+      "durationSec": 0.08,
+      "peakAt": 0.002,
+      "weight": 0.17,
+      "speed": 0.9,
+      "brightness": 0.62,
+      "tonal": false,
+      "loudness": -24.2,
+      "sharpness": 1,
+      "flatness": 0.063,
+      "world": "abstract",
+      "emotions": [],
+      "group": "click-ui",
+      "license": "original",
+      "v1category": "ui",
+      "description": "Crisp, small UI click — button presses, toggles (0.08 s)."
+    },
+    {
+      "name": "tap-soft",
+      "file": "tap-soft.wav",
+      "source": "synth",
+      "category": "ui.click",
+      "material": [
+        "digital"
+      ],
+      "palette": [
+        "minimal",
+        "luxury",
+        "playful"
+      ],
+      "palettes": [
+        "minimal",
+        "luxury",
+        "playful"
+      ],
+      "durationSec": 0.12,
+      "peakAt": 0.003,
+      "weight": 0.35,
+      "speed": 0.63,
+      "brightness": 0.23,
+      "tonal": true,
+      "pitchHz": 349.1,
+      "loudness": -16.4,
+      "sharpness": 0.88,
+      "flatness": 0,
+      "world": "abstract",
+      "emotions": [],
+      "group": "tap-soft",
+      "license": "original",
+      "v1category": "ui",
+      "description": "Soft, rounded fingertip tap — gentle UI moments, cards settling (0.12 s)."
+    },
+    {
+      "name": "pop-bubble",
+      "file": "pop-bubble.wav",
+      "source": "synth",
+      "category": "ui.pop",
+      "material": [
+        "digital"
+      ],
+      "palette": [
+        "playful",
+        "minimal"
+      ],
+      "palettes": [
+        "playful",
+        "minimal"
+      ],
+      "durationSec": 0.18,
+      "peakAt": 0.006,
+      "weight": 0.3,
+      "speed": 0.52,
+      "brightness": 0.36,
+      "tonal": false,
+      "loudness": -16,
+      "sharpness": 0.69,
+      "flatness": 0,
+      "world": "abstract",
+      "emotions": [],
+      "group": "pop-bubble",
+      "license": "original",
+      "v1category": "ui",
+      "description": "Round bubble pop (upward pitch bloop) — chat bubbles, stickers, checkmarks (0.18 s)."
+    },
+    {
+      "name": "pop-snap",
+      "file": "pop-snap.wav",
+      "source": "synth",
+      "category": "ui.pop",
+      "material": [
+        "digital"
+      ],
+      "palette": [
+        "tech",
+        "hype",
+        "playful",
+        "cinematic"
+      ],
+      "palettes": [
+        "tech",
+        "hype",
+        "playful",
+        "cinematic"
+      ],
+      "durationSec": 0.14,
+      "peakAt": 0.002,
+      "weight": 0.1,
+      "speed": 0.86,
+      "brightness": 0.79,
+      "tonal": false,
+      "loudness": -20.9,
+      "sharpness": 1,
+      "flatness": 0.185,
+      "world": "abstract",
+      "emotions": [],
+      "group": "pop-snap",
+      "license": "original",
+      "v1category": "ui",
+      "description": "Dry finger-snap pop — checkmarks, icons snapping in, logo parts (0.14 s)."
+    },
+    {
+      "name": "notification-ping",
+      "file": "notification-ping.wav",
+      "source": "synth",
+      "category": "magic.chime",
+      "material": [
+        "glass"
+      ],
+      "palette": [
+        "tech",
+        "minimal",
+        "playful",
+        "luxury"
+      ],
+      "palettes": [
+        "tech",
+        "minimal",
+        "playful",
+        "luxury"
+      ],
+      "durationSec": 0.8,
+      "peakAt": 0.004,
+      "weight": 0.39,
+      "speed": 0.08,
+      "brightness": 0.5,
+      "tonal": true,
+      "pitchHz": 446.5,
+      "loudness": -16,
+      "sharpness": 0.06,
+      "flatness": 0,
+      "world": "abstract",
+      "emotions": [],
+      "group": "notification-ping",
+      "license": "original",
+      "v1category": "chime",
+      "description": "Two-tone phone notification ping — notification / toast cards (0.8 s)."
+    },
+    {
+      "name": "tick-mech",
+      "file": "tick-mech.wav",
+      "source": "synth",
+      "category": "ui.tick",
+      "material": [
+        "digital"
+      ],
+      "palette": [
+        "cinematic",
+        "playful",
+        "minimal",
+        "luxury"
+      ],
+      "palettes": [
+        "cinematic",
+        "playful",
+        "minimal",
+        "luxury"
+      ],
+      "durationSec": 0.05,
+      "peakAt": 0.002,
+      "weight": 0.08,
+      "speed": 1,
+      "brightness": 0.83,
+      "tonal": false,
+      "loudness": -22.8,
+      "sharpness": 1,
+      "flatness": 0.159,
+      "world": "abstract",
+      "emotions": [],
+      "group": "tick-mech",
+      "license": "original",
+      "v1category": "tick",
+      "description": "Mechanical counter / clock tick — number roll-ups (0.05 s)."
+    },
+    {
+      "name": "tick-digital",
+      "file": "tick-digital.wav",
+      "source": "synth",
+      "category": "ui.tick",
+      "material": [
+        "digital"
+      ],
+      "palette": [
+        "tech",
+        "hype"
+      ],
+      "palettes": [
+        "tech",
+        "hype"
+      ],
+      "durationSec": 0.05,
+      "peakAt": 0.002,
+      "weight": 0.13,
+      "speed": 0.9,
+      "brightness": 0.72,
+      "tonal": false,
+      "loudness": -16,
+      "sharpness": 1,
+      "flatness": 0.002,
+      "world": "abstract",
+      "emotions": [],
+      "group": "tick-digital",
+      "license": "original",
+      "v1category": "tick",
+      "description": "Short digital bleep tick — data counters, HUDs (0.05 s)."
+    },
+    {
+      "name": "ding-success",
+      "file": "ding-success.wav",
+      "source": "synth",
+      "category": "magic.chime",
+      "material": [
+        "glass"
+      ],
+      "palette": [
+        "tech",
+        "playful",
+        "minimal",
+        "hype"
+      ],
+      "palettes": [
+        "tech",
+        "playful",
+        "minimal",
+        "hype"
+      ],
+      "durationSec": 1.4,
+      "peakAt": 0.004,
+      "weight": 0.42,
+      "speed": 0,
+      "brightness": 0.59,
+      "tonal": true,
+      "pitchHz": 263,
+      "loudness": -16,
+      "sharpness": 0.06,
+      "flatness": 0,
+      "world": "abstract",
+      "emotions": [],
+      "group": "ding-success",
+      "license": "original",
+      "v1category": "chime",
+      "description": "Bright two-note success ding — counter reaching its final value, task done (1.4 s)."
+    },
+    {
+      "name": "chime-bright",
+      "file": "chime-bright.wav",
+      "source": "synth",
+      "category": "magic.chime",
+      "material": [
+        "glass"
+      ],
+      "palette": [
+        "luxury",
+        "cinematic",
+        "playful"
+      ],
+      "palettes": [
+        "luxury",
+        "cinematic",
+        "playful"
+      ],
+      "durationSec": 1.8,
+      "peakAt": 0.004,
+      "weight": 0.47,
+      "speed": 0,
+      "brightness": 0.47,
+      "tonal": true,
+      "pitchHz": 164.6,
+      "loudness": -16,
+      "sharpness": 0.1,
+      "flatness": 0,
+      "world": "abstract",
+      "emotions": [],
+      "group": "chime-bright",
+      "license": "original",
+      "v1category": "chime",
+      "description": "Glassy three-note chime with a shimmer tail — premium lockups, reveals (1.8 s)."
+    },
+    {
+      "name": "glitch-crackle",
+      "file": "glitch-crackle.wav",
+      "source": "synth",
+      "category": "digital.glitch",
+      "material": [
+        "digital"
+      ],
+      "palette": [
+        "tech",
+        "hype",
+        "cinematic"
+      ],
+      "palettes": [
+        "tech",
+        "hype",
+        "cinematic"
+      ],
+      "durationSec": 0.6,
+      "peakAt": 0.004,
+      "weight": 0.24,
+      "speed": 0.33,
+      "brightness": 0.76,
+      "tonal": false,
+      "loudness": -16,
+      "sharpness": 0.12,
+      "flatness": 0.361,
+      "world": "abstract",
+      "emotions": [],
+      "group": "glitch-crackle",
+      "license": "original",
+      "v1category": "glitch",
+      "description": "Digital crackle: gated bit-crushed noise and buzz fragments — glitch transitions & text (0.6 s)."
+    },
+    {
+      "name": "glitch-stutter",
+      "file": "glitch-stutter.wav",
+      "source": "synth",
+      "category": "digital.glitch",
+      "material": [
+        "digital"
+      ],
+      "palette": [
+        "hype",
+        "tech"
+      ],
+      "palettes": [
+        "hype",
+        "tech"
+      ],
+      "durationSec": 0.5,
+      "peakAt": 0.004,
+      "weight": 0.62,
+      "speed": 0.74,
+      "brightness": 0.29,
+      "tonal": false,
+      "loudness": -16,
+      "sharpness": 0.54,
+      "flatness": 0.03,
+      "world": "abstract",
+      "emotions": [],
+      "group": "glitch-stutter",
+      "license": "original",
+      "v1category": "glitch",
+      "description": "Tape-stop stutter: a buzzy chord grain repeated faster and faster — hype glitch cuts (0.5 s)."
+    },
+    {
+      "name": "data-burst",
+      "file": "data-burst.wav",
+      "source": "synth",
+      "category": "digital.glitch",
+      "material": [
+        "digital"
+      ],
+      "palette": [
+        "tech",
+        "hype"
+      ],
+      "palettes": [
+        "tech",
+        "hype"
+      ],
+      "durationSec": 0.45,
+      "peakAt": 0.004,
+      "weight": 0.28,
+      "speed": 0.54,
+      "brightness": 0.47,
+      "tonal": false,
+      "loudness": -16,
+      "sharpness": 0.89,
+      "flatness": 0.006,
+      "world": "abstract",
+      "emotions": [],
+      "group": "data-burst",
+      "license": "original",
+      "v1category": "glitch",
+      "description": "Rapid computer bleeps (quantized random pitches) — scramble text, data, HUD builds (0.45 s)."
+    },
+    {
+      "name": "shimmer",
+      "file": "shimmer.wav",
+      "source": "synth",
+      "category": "magic.shimmer",
+      "material": [
+        "glass"
+      ],
+      "palette": [
+        "luxury",
+        "cinematic",
+        "minimal",
+        "playful"
+      ],
+      "palettes": [
+        "luxury",
+        "cinematic",
+        "minimal",
+        "playful"
+      ],
+      "durationSec": 1.4,
+      "peakAt": 0.51,
+      "weight": 0.35,
+      "speed": 0,
+      "brightness": 0.75,
+      "tonal": true,
+      "pitchHz": 261.6,
+      "loudness": -16,
+      "sharpness": 0.16,
+      "flatness": 0,
+      "world": "abstract",
+      "emotions": [],
+      "group": "shimmer",
+      "license": "original",
+      "v1category": "magic",
+      "description": "Airy shimmer cloud of glassy partials — logo draws, sparkles, magical reveals (1.4 s, apex 0.51 s)."
+    },
+    {
+      "name": "sparkle-up",
+      "file": "sparkle-up.wav",
+      "source": "synth",
+      "category": "magic.shimmer",
+      "material": [
+        "glass"
+      ],
+      "palette": [
+        "playful",
+        "luxury",
+        "hype"
+      ],
+      "palettes": [
+        "playful",
+        "luxury",
+        "hype"
+      ],
+      "durationSec": 0.9,
+      "peakAt": 0.46,
+      "weight": 0.26,
+      "speed": 0.07,
+      "brightness": 0.7,
+      "tonal": true,
+      "pitchHz": 329.9,
+      "loudness": -16,
+      "sharpness": 0.26,
+      "flatness": 0,
+      "world": "abstract",
+      "emotions": [],
+      "group": "sparkle-up",
+      "license": "original",
+      "v1category": "magic",
+      "description": "Rising arpeggio of tiny glints — confetti, bursts, success moments (0.9 s, apex 0.46 s)."
+    },
+    {
+      "name": "morph-wobble",
+      "file": "morph-wobble.wav",
+      "source": "synth",
+      "category": "liquid.morph",
+      "material": [
+        "glass"
+      ],
+      "palette": [
+        "playful",
+        "tech",
+        "minimal",
+        "cinematic",
+        "luxury",
+        "hype"
+      ],
+      "palettes": [
+        "playful",
+        "tech",
+        "minimal",
+        "cinematic",
+        "luxury",
+        "hype"
+      ],
+      "durationSec": 0.7,
+      "peakAt": 0.42,
+      "weight": 0.38,
+      "speed": 0.18,
+      "brightness": 0.46,
+      "tonal": false,
+      "loudness": -16,
+      "sharpness": 0.05,
+      "flatness": 0,
+      "world": "abstract",
+      "emotions": [],
+      "group": "morph-wobble",
+      "license": "original",
+      "v1category": "magic",
+      "description": "Liquid FM wobble with a filter sweep, apex at the moment the new shape forms — morphs, blobs (0.7 s)."
+    },
+    {
+      "name": "slide-paper",
+      "file": "slide-paper.wav",
+      "source": "synth",
+      "category": "foley.paper",
+      "material": [
+        "synthetic"
+      ],
+      "palette": [
+        "minimal",
+        "luxury",
+        "playful",
+        "cinematic"
+      ],
+      "palettes": [
+        "minimal",
+        "luxury",
+        "playful",
+        "cinematic"
+      ],
+      "durationSec": 0.45,
+      "peakAt": 0.2,
+      "weight": 0.16,
+      "speed": 0.3,
+      "brightness": 0.78,
+      "tonal": false,
+      "loudness": -16,
+      "sharpness": 0.16,
+      "flatness": 0.39,
+      "world": "abstract",
+      "emotions": [],
+      "group": "slide-paper",
+      "license": "original",
+      "v1category": "foley",
+      "description": "Paper / card slide friction — slice transitions, cards sliding, page flips (0.45 s)."
+    },
+    {
+      "name": "typewriter-key",
+      "file": "typewriter-key.wav",
+      "source": "synth",
+      "category": "foley.typing",
+      "material": [
+        "synthetic"
+      ],
+      "palette": [
+        "minimal",
+        "cinematic",
+        "playful"
+      ],
+      "palettes": [
+        "minimal",
+        "cinematic",
+        "playful"
+      ],
+      "durationSec": 0.09,
+      "peakAt": 0.002,
+      "weight": 0.25,
+      "speed": 0.79,
+      "brightness": 0.46,
+      "tonal": true,
+      "pitchHz": 220.7,
+      "loudness": -22.1,
+      "sharpness": 1,
+      "flatness": 0.044,
+      "world": "abstract",
+      "emotions": [],
+      "group": "typewriter-key",
+      "license": "original",
+      "v1category": "foley",
+      "description": "Single typewriter key strike — typewriter text, one per character (0.09 s)."
+    },
+    {
+      "name": "camera-shutter",
+      "file": "camera-shutter.wav",
+      "source": "synth",
+      "category": "foley.camera",
+      "material": [
+        "synthetic"
+      ],
+      "palette": [
+        "minimal",
+        "playful",
+        "cinematic",
+        "luxury"
+      ],
+      "palettes": [
+        "minimal",
+        "playful",
+        "cinematic",
+        "luxury"
+      ],
+      "durationSec": 0.25,
+      "peakAt": 0.002,
+      "weight": 0.16,
+      "speed": 0.55,
+      "brightness": 0.73,
+      "tonal": false,
+      "loudness": -21.2,
+      "sharpness": 1,
+      "flatness": 0.205,
+      "world": "abstract",
+      "emotions": [],
+      "group": "camera-shutter",
+      "license": "original",
+      "v1category": "foley",
+      "description": "Mechanical camera shutter (two-blade click) — photo reveals, snapshots, flashes (0.25 s)."
+    },
+    {
+      "name": "heartbeat-low",
+      "file": "heartbeat-low.wav",
+      "source": "synth",
+      "category": "foley.misc",
+      "material": [
+        "synthetic"
+      ],
+      "palette": [
+        "cinematic",
+        "minimal"
+      ],
+      "palettes": [
+        "cinematic",
+        "minimal"
+      ],
+      "durationSec": 0.9,
+      "peakAt": 0.006,
+      "weight": 0.9,
+      "speed": 0.19,
+      "brightness": 0,
+      "tonal": true,
+      "pitchHz": 58.1,
+      "loudness": -16,
+      "sharpness": 0.54,
+      "flatness": 0,
+      "world": "abstract",
+      "emotions": [],
+      "group": "heartbeat-low",
+      "license": "original",
+      "v1category": "foley",
+      "description": "Low lub-dub heartbeat — suspense, waiting beats, health/fitness (0.9 s; second beat at 0.28 s)."
+    },
+    {
+      "name": "cash-register",
+      "file": "cash-register.wav",
+      "source": "synth",
+      "category": "foley.coins",
+      "material": [
+        "synthetic"
+      ],
+      "palette": [
+        "playful",
+        "hype",
+        "tech"
+      ],
+      "palettes": [
+        "playful",
+        "hype",
+        "tech"
+      ],
+      "durationSec": 0.9,
+      "peakAt": 0.004,
+      "weight": 0.31,
+      "speed": 0.05,
+      "brightness": 0.75,
+      "tonal": true,
+      "pitchHz": 214.6,
+      "loudness": -16,
+      "sharpness": 0.06,
+      "flatness": 0,
+      "world": "abstract",
+      "emotions": [],
+      "group": "cash-register",
+      "license": "original",
+      "v1category": "foley",
+      "description": "Coin clink + small till bell — prices, savings, payments, sales counters (0.9 s)."
+    }
+  ]
+}

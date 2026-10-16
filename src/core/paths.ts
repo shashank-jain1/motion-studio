@@ -14,3 +14,5 @@ export const CUSTOM_DIR = path.join(ENGINE_DIR, "custom");
 export const CACHE_DIR = path.join(ROOT, ".cache");
 export const BUNDLE_CACHE_DIR = path.join(CACHE_DIR, "bundle");
 export const DOCS_DIR = path.join(ROOT, "docs");
+/** Built-in media library (generated SFX in library/sfx). Served to renders at `${assetServer}/_library/…` and by the web server at `/library/…`. */
+export const LIBRARY_DIR = path.resolve(process.env.MOTION_STUDIO_LIBRARY || path.join(ROOT, "library"));

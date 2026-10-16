@@ -6,15 +6,19 @@ import { Lightbox, TallyDot } from "../components/ui";
 import { IconClose, IconDownload, IconGrid, IconRecord, Spinner } from "../components/Icons";
 import { basename, fmtBytes, fmtClock, fmtDuration, fmtRelative } from "../lib/format";
 import { isActive, useJobs } from "../lib/jobs";
+import { adaptTargets, type Format } from "../../../src/engine/spec/reflow";
 
 export const RendersPanel = () => {
-  const { id, renders, addRender, info, dirty } = useStudio();
+  const { id, renders, addRender, info, dirty, project } = useStudio();
   const toast = useToast();
-  const { jobs, error: queueError, start, cancel } = useJobs(id, {
-    onDone: (j, out) => { addRender(out); toast.success(`${j.quality === "final" ? "Final" : "Draft"} render ready`, basename(out.file)); },
+  const { jobs, error: queueError, start, startAll, cancel } = useJobs(id, {
+    onDone: (j, out) => { addRender(out); toast.success(`${j.quality === "final" ? "Final" : "Draft"} render ready${j.format ?? out.format ? ` · ${j.format ?? out.format}` : ""}`, basename(out.file)); },
     onError: (_j, m) => toast.error("Render failed", m),
   });
-  const [starting, setStarting] = useState<"draft" | "final" | null>(null);
+  const [starting, setStarting] = useState<"draft" | "final" | "all" | null>(null);
+  const [allQuality, setAllQuality] = useState<"draft" | "final">("final");
+  const master = (info?.spec.format ?? project.format) as Format;
+  const targets = info ? adaptTargets({ ...info.spec, format: master }) : [master];
   const [sheet, setSheet] = useState<{ sheetUrl: string | null; frames: { time: number; url: string; label: string }[] } | null>(null);
   const [sheetBusy, setSheetBusy] = useState(false);
   const [lb, setLb] = useState<number | null>(null);
@@ -32,6 +36,16 @@ export const RendersPanel = () => {
     if (dirty) toast.info("Rendering the saved spec", "Unsaved editor changes aren't included — press ⌘S first.");
     setStarting(quality);
     try { await start(id, quality); } catch (e) { toast.error("Couldn't queue render", (e as Error).message); } finally { setStarting(null); }
+  };
+
+  const exportAll = async () => {
+    if (starting) return;
+    if (dirty) toast.info("Rendering the saved spec", "Unsaved editor changes aren't included — press ⌘S first.");
+    setStarting("all");
+    try {
+      const js = await startAll(id, allQuality);
+      toast.info(`Queued ${js.length} ${allQuality} render${js.length === 1 ? "" : "s"}`, targets.join(" · "));
+    } catch (e) { toast.error("Couldn't queue renders", (e as Error).message); } finally { setStarting(null); }
   };
 
   const contactSheet = async () => {
@@ -56,12 +70,31 @@ export const RendersPanel = () => {
         </button>
       </div>
 
+      <div className="export-all">
+        <div className="export-all-head">
+          <span className="label">Every platform</span>
+          <span className="spacer" />
+          <div className="segmented sm" role="radiogroup" aria-label="Export quality">
+            {(["draft", "final"] as const).map((q) => (
+              <button key={q} type="button" role="radio" aria-checked={allQuality === q} className={allQuality === q ? "is-active" : ""} onClick={() => setAllQuality(q)}>{q === "draft" ? "Draft" : "Final"}</button>
+            ))}
+          </div>
+        </div>
+        <div className="export-all-formats mono" aria-label="Formats in this export">
+          {targets.map((f) => <span key={f} className={`fmt-chip ${f === master ? "is-master" : ""}`} title={f === master ? "master (authored)" : "reflowed"}>{f}{f === master ? <i>M</i> : null}</span>)}
+          {targets.length === 1 && <span className="dim small">Add formats from the Viewer's format switcher</span>}
+        </div>
+        <button className="btn sm export-all-btn" onClick={exportAll} disabled={!!starting || !info}>
+          {starting === "all" ? <Spinner size={12} /> : <IconRecord size={12} />}Export all formats<span className="mono dim">{String(targets.length).padStart(2, "0")}</span>
+        </button>
+      </div>
+
       {queueError && <div className="callout warn small">{queueError}</div>}
       {live.map((j) => <JobCard key={j.id} j={j} onCancel={() => cancel(j.id).then(() => toast.info("Render canceled")).catch((e) => toast.error("Couldn't cancel", (e as Error).message))} />)}
       {recent.map((j) => (
         <div key={j.id} className={`job-line st-${j.status}`}>
           <span className="mono">{j.status === "error" ? "FAILED" : "CANCELED"}</span>
-          <span className="mono dim">{j.quality.toUpperCase()}</span>
+          <span className="mono dim">{j.quality.toUpperCase()}{j.format ? ` · ${j.format}` : ""}</span>
           <span className="ellipsis dim" title={j.error}>{j.error ?? fmtRelative(j.finishedAt ?? j.createdAt)}</span>
         </div>
       ))}
@@ -111,6 +144,7 @@ const JobCard = ({ j, onCancel }: { j: Job; onCancel: () => void }) => {
       <div className="job-head">
         {queued ? <i className="st-dot" /> : <TallyDot />}
         <span className="mono">{queued ? "QUEUED" : "RENDERING"} · {j.quality.toUpperCase()}</span>
+        {j.format && <span className="fmt-chip mono">{j.format}</span>}
         {queued && j.position != null && <span className="mono dim">POS {String(j.position).padStart(2, "0")}</span>}
         <span className="spacer" />
         <span className="mono job-pct">{queued ? "--" : `${Math.round(j.progress * 100)}`}<span className="dim">%</span></span>
@@ -134,6 +168,7 @@ const RenderItem = ({ r, n }: { r: RenderInfo; n: number }) => (
     <div className="render-meta">
       <span className="mono take">TK{String(n).padStart(2, "0")}</span>
       <span className={`tag ${r.quality === "final" ? "tally" : ""}`}>{r.quality}</span>
+      {r.format && <span className="fmt-chip mono">{r.format}</span>}
       <span className="mono dim small ellipsis grow">{[r.seconds != null ? fmtDuration(r.seconds) : null, r.width && r.height ? `${r.width}×${r.height}` : null, fmtBytes(r.sizeBytes)].filter(Boolean).join(" · ")}</span>
       <span className="dim small nowrap" title={r.createdAt}>{fmtRelative(r.createdAt)}</span>
       <a className="icon-btn ghost xs" href={r.url} download={basename(r.file)} title="Download MP4" aria-label="Download MP4"><IconDownload size={14} /></a>

@@ -9,6 +9,7 @@ export const localBackend: RenderBackend = {
     onProgress({ progress: 0, stage: "starting" });
     const { record } = await runRender(job.projectId, {
       quality: job.quality,
+      format: job.format,
       signal,
       onWait: () => onProgress({ progress: 0, stage: "waiting for renderer" }),
       onProgress: (p) => onProgress({ progress: p.progress, stage: p.stage === "muxing" ? "muxing" : "rendering" }),

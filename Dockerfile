@@ -45,11 +45,14 @@ COPY --chown=node:node package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.
 COPY --chown=node:node src ./src
 COPY --chown=node:node docs ./docs
 COPY --chown=node:node scripts ./scripts
+COPY --chown=node:node library ./library
 RUN mkdir -p /app/data /app/projects /app/.cache && chown -R node:node /app/data /app/projects /app/.cache
 
 USER node
 # Download Remotion's Chrome Headless Shell at build time (not on the first render).
 RUN node_modules/.bin/remotion browser ensure
+# Synthesize the built-in SFX library (library/sfx/*.wav, ~2 s; also regenerated on boot if missing).
+RUN node_modules/.bin/tsx scripts/gen-sfx.ts
 
 EXPOSE 4310
 VOLUME ["/app/data", "/app/projects"]

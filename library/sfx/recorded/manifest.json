@@ -1,0 +1,9161 @@
+{
+ "version": 2,
+ "sounds": [
+  {
+   "name": "blip-1",
+   "file": "recorded/blip-1.wav",
+   "source": "recorded",
+   "category": "digital.blip",
+   "material": [
+    "digital"
+   ],
+   "weight": 0.38,
+   "speed": 0.54,
+   "brightness": 0.22,
+   "tonal": true,
+   "pitchHz": 297.2,
+   "peakAt": 0.005,
+   "durationSec": 0.4,
+   "loudness": -16,
+   "sharpness": 0.46,
+   "flatness": 0,
+   "world": "abstract",
+   "palettes": [
+    "tech",
+    "playful",
+    "hype"
+   ],
+   "emotions": [
+    "digital",
+    "gamey"
+   ],
+   "group": "blip",
+   "license": "CC0-1.0",
+   "description": "digital.blip (digital)"
+  },
+  {
+   "name": "blip-2",
+   "file": "recorded/blip-2.wav",
+   "source": "recorded",
+   "category": "digital.blip",
+   "material": [
+    "digital"
+   ],
+   "weight": 0.41,
+   "speed": 0.63,
+   "brightness": 0.17,
+   "tonal": true,
+   "pitchHz": 295.4,
+   "peakAt": 0.1,
+   "durationSec": 0.53,
+   "loudness": -16,
+   "sharpness": 0.45,
+   "flatness": 0,
+   "world": "abstract",
+   "palettes": [
+    "tech",
+    "playful",
+    "hype"
+   ],
+   "emotions": [
+    "digital",
+    "gamey"
+   ],
+   "group": "blip",
+   "license": "CC0-1.0",
+   "description": "digital.blip (digital)"
+  },
+  {
+   "name": "blip-3",
+   "file": "recorded/blip-3.wav",
+   "source": "recorded",
+   "category": "digital.blip",
+   "material": [
+    "digital"
+   ],
+   "weight": 0.37,
+   "speed": 0.33,
+   "brightness": 0.29,
+   "tonal": true,
+   "pitchHz": 487.4,
+   "peakAt": 0.063,
+   "durationSec": 0.358,
+   "loudness": -16,
+   "sharpness": 0.13,
+   "flatness": 0,
+   "world": "abstract",
+   "palettes": [
+    "tech",
+    "playful",
+    "hype"
+   ],
+   "emotions": [
+    "digital",
+    "gamey"
+   ],
+   "group": "blip",
+   "license": "CC0-1.0",
+   "description": "digital.blip (digital)"
+  },
+  {
+   "name": "glitch-1",
+   "file": "recorded/glitch-1.wav",
+   "source": "recorded",
+   "category": "digital.glitch",
+   "material": [
+    "digital"
+   ],
+   "weight": 0.51,
+   "speed": 0.94,
+   "brightness": 0.58,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.027,
+   "loudness": -23.4,
+   "sharpness": 0.97,
+   "flatness": 0.134,
+   "world": "abstract",
+   "palettes": [
+    "tech",
+    "hype"
+   ],
+   "emotions": [
+    "disruption"
+   ],
+   "group": "glitch",
+   "license": "CC0-1.0",
+   "description": "digital.glitch (digital)"
+  },
+  {
+   "name": "glitch-2",
+   "file": "recorded/glitch-2.wav",
+   "source": "recorded",
+   "category": "digital.glitch",
+   "material": [
+    "digital"
+   ],
+   "weight": 0.34,
+   "speed": 1,
+   "brightness": 0.78,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.012,
+   "loudness": -23.3,
+   "sharpness": 0.78,
+   "flatness": 0.143,
+   "world": "abstract",
+   "palettes": [
+    "tech",
+    "hype"
+   ],
+   "emotions": [
+    "disruption"
+   ],
+   "group": "glitch",
+   "license": "CC0-1.0",
+   "description": "digital.glitch (digital)"
+  },
+  {
+   "name": "glitch-3",
+   "file": "recorded/glitch-3.wav",
+   "source": "recorded",
+   "category": "digital.glitch",
+   "material": [
+    "digital"
+   ],
+   "weight": 0.1,
+   "speed": 1,
+   "brightness": 0.82,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.02,
+   "loudness": -22.9,
+   "sharpness": 0.68,
+   "flatness": 0.037,
+   "world": "abstract",
+   "palettes": [
+    "tech",
+    "hype"
+   ],
+   "emotions": [
+    "disruption"
+   ],
+   "group": "glitch",
+   "license": "CC0-1.0",
+   "description": "digital.glitch (digital)"
+  },
+  {
+   "name": "power-up-1",
+   "file": "recorded/power-up-1.wav",
+   "source": "recorded",
+   "category": "digital.powerup",
+   "material": [
+    "digital"
+   ],
+   "weight": 0.15,
+   "speed": 0.62,
+   "brightness": 0.74,
+   "tonal": true,
+   "pitchHz": 1103.4,
+   "peakAt": 0.245,
+   "durationSec": 0.37,
+   "loudness": -16,
+   "sharpness": 0.49,
+   "flatness": 0.001,
+   "world": "abstract",
+   "palettes": [
+    "playful",
+    "hype"
+   ],
+   "emotions": [
+    "delight",
+    "gamey"
+   ],
+   "group": "power-up",
+   "license": "CC0-1.0",
+   "description": "digital.powerup (digital)"
+  },
+  {
+   "name": "power-up-2",
+   "file": "recorded/power-up-2.wav",
+   "source": "recorded",
+   "category": "digital.powerup",
+   "material": [
+    "digital"
+   ],
+   "weight": 0.15,
+   "speed": 0.63,
+   "brightness": 0.76,
+   "tonal": true,
+   "pitchHz": 1476.9,
+   "peakAt": 0.27,
+   "durationSec": 0.404,
+   "loudness": -16,
+   "sharpness": 0.49,
+   "flatness": 0.001,
+   "world": "abstract",
+   "palettes": [
+    "playful",
+    "hype"
+   ],
+   "emotions": [
+    "delight",
+    "gamey"
+   ],
+   "group": "power-up",
+   "license": "CC0-1.0",
+   "description": "digital.powerup (digital)"
+  },
+  {
+   "name": "power-up-3",
+   "file": "recorded/power-up-3.wav",
+   "source": "recorded",
+   "category": "digital.powerup",
+   "material": [
+    "digital"
+   ],
+   "weight": 0.21,
+   "speed": 0.65,
+   "brightness": 0.66,
+   "tonal": true,
+   "pitchHz": 627.5,
+   "peakAt": 0.005,
+   "durationSec": 0.676,
+   "loudness": -16,
+   "sharpness": 0.51,
+   "flatness": 0,
+   "world": "abstract",
+   "palettes": [
+    "playful",
+    "hype"
+   ],
+   "emotions": [
+    "delight",
+    "gamey"
+   ],
+   "group": "power-up",
+   "license": "CC0-1.0",
+   "description": "digital.powerup (digital)"
+  },
+  {
+   "name": "zap-1",
+   "file": "recorded/zap-1.wav",
+   "source": "recorded",
+   "category": "digital.zap",
+   "material": [
+    "digital"
+   ],
+   "weight": 0.47,
+   "speed": 0.1,
+   "brightness": 0.31,
+   "tonal": true,
+   "pitchHz": 459.3,
+   "peakAt": 0.01,
+   "durationSec": 0.8,
+   "loudness": -16,
+   "sharpness": 0.44,
+   "flatness": 0,
+   "world": "abstract",
+   "palettes": [
+    "tech",
+    "hype"
+   ],
+   "emotions": [
+    "charge"
+   ],
+   "group": "zap",
+   "license": "CC0-1.0",
+   "description": "digital.zap (digital)"
+  },
+  {
+   "name": "zap-2",
+   "file": "recorded/zap-2.wav",
+   "source": "recorded",
+   "category": "digital.zap",
+   "material": [
+    "digital"
+   ],
+   "weight": 0.44,
+   "speed": 0.08,
+   "brightness": 0.32,
+   "tonal": true,
+   "pitchHz": 455,
+   "peakAt": 0.233,
+   "durationSec": 0.8,
+   "loudness": -16,
+   "sharpness": 0.11,
+   "flatness": 0,
+   "world": "abstract",
+   "palettes": [
+    "tech",
+    "hype"
+   ],
+   "emotions": [
+    "charge"
+   ],
+   "group": "zap",
+   "license": "CC0-1.0",
+   "description": "digital.zap (digital)"
+  },
+  {
+   "name": "shutter-1",
+   "file": "recorded/shutter-1.wav",
+   "source": "recorded",
+   "category": "foley.camera",
+   "material": [
+    "plastic",
+    "metal-thin"
+   ],
+   "weight": 0.14,
+   "speed": 0.56,
+   "brightness": 0.83,
+   "tonal": false,
+   "peakAt": 0.263,
+   "durationSec": 0.424,
+   "loudness": -19.5,
+   "sharpness": 1,
+   "flatness": 0.468,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "snapshot"
+   ],
+   "group": "shutter",
+   "license": "CC0-1.0",
+   "description": "foley.camera (plastic/metal-thin)"
+  },
+  {
+   "name": "shutter-2",
+   "file": "recorded/shutter-2.wav",
+   "source": "recorded",
+   "category": "foley.camera",
+   "material": [
+    "plastic",
+    "metal-thin"
+   ],
+   "weight": 0.09,
+   "speed": 0.55,
+   "brightness": 0.89,
+   "tonal": false,
+   "peakAt": 0.238,
+   "durationSec": 0.348,
+   "loudness": -21.6,
+   "sharpness": 1,
+   "flatness": 0.34,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "snapshot"
+   ],
+   "group": "shutter",
+   "license": "CC0-1.0",
+   "description": "foley.camera (plastic/metal-thin)"
+  },
+  {
+   "name": "shutter-b-1",
+   "file": "recorded/shutter-b-1.wav",
+   "source": "recorded",
+   "category": "foley.camera",
+   "material": [
+    "metal-thin"
+   ],
+   "weight": 0.59,
+   "speed": 0.23,
+   "brightness": 0.47,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.45,
+   "loudness": -16,
+   "sharpness": 0.7,
+   "flatness": 0.015,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "snapshot"
+   ],
+   "group": "shutter-b",
+   "license": "CC0-1.0",
+   "description": "foley.camera (metal-thin)"
+  },
+  {
+   "name": "coin-1",
+   "file": "recorded/coin-1.wav",
+   "source": "recorded",
+   "category": "foley.coins",
+   "material": [
+    "metal-thin",
+    "coins"
+   ],
+   "weight": 0.03,
+   "speed": 0.66,
+   "brightness": 1,
+   "tonal": true,
+   "pitchHz": 889.7,
+   "peakAt": 0.13,
+   "durationSec": 0.272,
+   "loudness": -17.1,
+   "sharpness": 1,
+   "flatness": 0.043,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "hype",
+    "tech"
+   ],
+   "emotions": [
+    "reward",
+    "delight"
+   ],
+   "group": "coin",
+   "license": "CC0-1.0",
+   "description": "foley.coins (metal-thin/coins)"
+  },
+  {
+   "name": "coin-2",
+   "file": "recorded/coin-2.wav",
+   "source": "recorded",
+   "category": "foley.coins",
+   "material": [
+    "metal-thin",
+    "coins"
+   ],
+   "weight": 0.03,
+   "speed": 0.86,
+   "brightness": 1,
+   "tonal": false,
+   "peakAt": 0.095,
+   "durationSec": 0.24,
+   "loudness": -20.1,
+   "sharpness": 1,
+   "flatness": 0.141,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "hype",
+    "tech"
+   ],
+   "emotions": [
+    "reward",
+    "delight"
+   ],
+   "group": "coin",
+   "license": "CC0-1.0",
+   "description": "foley.coins (metal-thin/coins)"
+  },
+  {
+   "name": "coin-3",
+   "file": "recorded/coin-3.wav",
+   "source": "recorded",
+   "category": "foley.coins",
+   "material": [
+    "metal-thin",
+    "coins"
+   ],
+   "weight": 0.03,
+   "speed": 0.77,
+   "brightness": 1,
+   "tonal": false,
+   "peakAt": 0.12,
+   "durationSec": 0.325,
+   "loudness": -17.2,
+   "sharpness": 1,
+   "flatness": 0.221,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "hype",
+    "tech"
+   ],
+   "emotions": [
+    "reward",
+    "delight"
+   ],
+   "group": "coin",
+   "license": "CC0-1.0",
+   "description": "foley.coins (metal-thin/coins)"
+  },
+  {
+   "name": "coin-clink-1",
+   "file": "recorded/coin-clink-1.wav",
+   "source": "recorded",
+   "category": "foley.coins",
+   "material": [
+    "metal-thin",
+    "coins"
+   ],
+   "weight": 0.05,
+   "speed": 0.68,
+   "brightness": 1,
+   "tonal": false,
+   "peakAt": 0.065,
+   "durationSec": 0.535,
+   "loudness": -22.3,
+   "sharpness": 1,
+   "flatness": 0.036,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "tech",
+    "minimal",
+    "luxury"
+   ],
+   "emotions": [
+    "reward",
+    "tactile"
+   ],
+   "group": "coin-clink",
+   "license": "CC0-1.0",
+   "description": "foley.coins (metal-thin/coins)"
+  },
+  {
+   "name": "coin-clink-2",
+   "file": "recorded/coin-clink-2.wav",
+   "source": "recorded",
+   "category": "foley.coins",
+   "material": [
+    "metal-thin",
+    "coins"
+   ],
+   "weight": 0.02,
+   "speed": 0.77,
+   "brightness": 1,
+   "tonal": false,
+   "peakAt": 0.01,
+   "durationSec": 0.16,
+   "loudness": -23.6,
+   "sharpness": 1,
+   "flatness": 0.057,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "tech",
+    "minimal",
+    "luxury"
+   ],
+   "emotions": [
+    "reward",
+    "tactile"
+   ],
+   "group": "coin-clink",
+   "license": "CC0-1.0",
+   "description": "foley.coins (metal-thin/coins)"
+  },
+  {
+   "name": "coin-clink-3",
+   "file": "recorded/coin-clink-3.wav",
+   "source": "recorded",
+   "category": "foley.coins",
+   "material": [
+    "metal-thin",
+    "coins"
+   ],
+   "weight": 0.06,
+   "speed": 0.79,
+   "brightness": 1,
+   "tonal": false,
+   "peakAt": 0.38,
+   "durationSec": 0.7,
+   "loudness": -22.6,
+   "sharpness": 1,
+   "flatness": 0.033,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "tech",
+    "minimal",
+    "luxury"
+   ],
+   "emotions": [
+    "reward",
+    "tactile"
+   ],
+   "group": "coin-clink",
+   "license": "CC0-1.0",
+   "description": "foley.coins (metal-thin/coins)"
+  },
+  {
+   "name": "coin-clink-4",
+   "file": "recorded/coin-clink-4.wav",
+   "source": "recorded",
+   "category": "foley.coins",
+   "material": [
+    "metal-thin",
+    "coins"
+   ],
+   "weight": 0.03,
+   "speed": 0.94,
+   "brightness": 1,
+   "tonal": false,
+   "peakAt": 0.16,
+   "durationSec": 0.34,
+   "loudness": -21.9,
+   "sharpness": 1,
+   "flatness": 0.055,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "tech",
+    "minimal",
+    "luxury"
+   ],
+   "emotions": [
+    "reward",
+    "tactile"
+   ],
+   "group": "coin-clink",
+   "license": "CC0-1.0",
+   "description": "foley.coins (metal-thin/coins)"
+  },
+  {
+   "name": "coin-drop-1",
+   "file": "recorded/coin-drop-1.wav",
+   "source": "recorded",
+   "category": "foley.coins",
+   "material": [
+    "metal-thin",
+    "coins"
+   ],
+   "weight": 0.18,
+   "speed": 0.68,
+   "brightness": 0.71,
+   "tonal": false,
+   "peakAt": 0.01,
+   "durationSec": 0.544,
+   "loudness": -16,
+   "sharpness": 1,
+   "flatness": 0.087,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "tech",
+    "minimal"
+   ],
+   "emotions": [
+    "reward"
+   ],
+   "group": "coin-drop",
+   "license": "CC0-1.0",
+   "description": "foley.coins (metal-thin/coins)"
+  },
+  {
+   "name": "desk-tick-1",
+   "file": "recorded/desk-tick-1.wav",
+   "source": "recorded",
+   "category": "foley.desk",
+   "material": [
+    "paper",
+    "plastic"
+   ],
+   "weight": 0.06,
+   "speed": 0.72,
+   "brightness": 1,
+   "tonal": false,
+   "peakAt": 0.265,
+   "durationSec": 0.461,
+   "loudness": -17.6,
+   "sharpness": 1,
+   "flatness": 0.18,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "tech",
+    "playful"
+   ],
+   "emotions": [
+    "tactile",
+    "precise"
+   ],
+   "group": "desk-tick",
+   "license": "CC0-1.0",
+   "description": "foley.desk (paper/plastic)"
+  },
+  {
+   "name": "desk-tick-2",
+   "file": "recorded/desk-tick-2.wav",
+   "source": "recorded",
+   "category": "foley.desk",
+   "material": [
+    "paper",
+    "plastic"
+   ],
+   "weight": 0.04,
+   "speed": 0.74,
+   "brightness": 1,
+   "tonal": false,
+   "peakAt": 0.03,
+   "durationSec": 0.292,
+   "loudness": -25.5,
+   "sharpness": 1,
+   "flatness": 0.348,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "tech",
+    "playful"
+   ],
+   "emotions": [
+    "tactile",
+    "precise"
+   ],
+   "group": "desk-tick",
+   "license": "CC0-1.0",
+   "description": "foley.desk (paper/plastic)"
+  },
+  {
+   "name": "desk-tick-3",
+   "file": "recorded/desk-tick-3.wav",
+   "source": "recorded",
+   "category": "foley.desk",
+   "material": [
+    "paper",
+    "plastic"
+   ],
+   "weight": 0.05,
+   "speed": 0.82,
+   "brightness": 1,
+   "tonal": false,
+   "peakAt": 0.065,
+   "durationSec": 0.5,
+   "loudness": -23.6,
+   "sharpness": 1,
+   "flatness": 0.163,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "tech",
+    "playful"
+   ],
+   "emotions": [
+    "tactile",
+    "precise"
+   ],
+   "group": "desk-tick",
+   "license": "CC0-1.0",
+   "description": "foley.desk (paper/plastic)"
+  },
+  {
+   "name": "keys-jingle-1",
+   "file": "recorded/keys-jingle-1.wav",
+   "source": "recorded",
+   "category": "foley.keys",
+   "material": [
+    "metal-thin"
+   ],
+   "weight": 0.09,
+   "speed": 0.45,
+   "brightness": 1,
+   "tonal": false,
+   "peakAt": 0.378,
+   "durationSec": 0.8,
+   "loudness": -18.6,
+   "sharpness": 1,
+   "flatness": 0.232,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "playful"
+   ],
+   "emotions": [
+    "tactile",
+    "everyday"
+   ],
+   "group": "keys-jingle",
+   "license": "CC0-1.0",
+   "description": "foley.keys (metal-thin)"
+  },
+  {
+   "name": "keys-jingle-2",
+   "file": "recorded/keys-jingle-2.wav",
+   "source": "recorded",
+   "category": "foley.keys",
+   "material": [
+    "metal-thin"
+   ],
+   "weight": 0.05,
+   "speed": 0.65,
+   "brightness": 1,
+   "tonal": false,
+   "peakAt": 0.093,
+   "durationSec": 0.528,
+   "loudness": -16.4,
+   "sharpness": 1,
+   "flatness": 0.166,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "playful"
+   ],
+   "emotions": [
+    "tactile",
+    "everyday"
+   ],
+   "group": "keys-jingle",
+   "license": "CC0-1.0",
+   "description": "foley.keys (metal-thin)"
+  },
+  {
+   "name": "keys-jingle-3",
+   "file": "recorded/keys-jingle-3.wav",
+   "source": "recorded",
+   "category": "foley.keys",
+   "material": [
+    "metal-thin"
+   ],
+   "weight": 0.07,
+   "speed": 0.7,
+   "brightness": 1,
+   "tonal": false,
+   "peakAt": 0.545,
+   "durationSec": 0.721,
+   "loudness": -19.5,
+   "sharpness": 1,
+   "flatness": 0.329,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "playful"
+   ],
+   "emotions": [
+    "tactile",
+    "everyday"
+   ],
+   "group": "keys-jingle",
+   "license": "CC0-1.0",
+   "description": "foley.keys (metal-thin)"
+  },
+  {
+   "name": "card-fan-1",
+   "file": "recorded/card-fan-1.wav",
+   "source": "recorded",
+   "category": "foley.paper",
+   "material": [
+    "paper"
+   ],
+   "weight": 0.44,
+   "speed": 0.7,
+   "brightness": 0.62,
+   "tonal": false,
+   "peakAt": 0.575,
+   "durationSec": 0.721,
+   "loudness": -18.7,
+   "sharpness": 1,
+   "flatness": 0.183,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "minimal"
+   ],
+   "emotions": [
+    "tactile",
+    "reveal"
+   ],
+   "group": "card-fan",
+   "license": "CC0-1.0",
+   "description": "foley.paper (paper)"
+  },
+  {
+   "name": "card-fan-2",
+   "file": "recorded/card-fan-2.wav",
+   "source": "recorded",
+   "category": "foley.paper",
+   "material": [
+    "paper"
+   ],
+   "weight": 0.38,
+   "speed": 0.53,
+   "brightness": 0.78,
+   "tonal": false,
+   "peakAt": 1.043,
+   "durationSec": 1.305,
+   "loudness": -22.4,
+   "sharpness": 1,
+   "flatness": 0.162,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "minimal"
+   ],
+   "emotions": [
+    "tactile",
+    "reveal"
+   ],
+   "group": "card-fan",
+   "license": "CC0-1.0",
+   "description": "foley.paper (paper)"
+  },
+  {
+   "name": "card-slide-1",
+   "file": "recorded/card-slide-1.wav",
+   "source": "recorded",
+   "category": "foley.paper",
+   "material": [
+    "paper",
+    "cardboard"
+   ],
+   "weight": 0.67,
+   "speed": 0.77,
+   "brightness": 0.32,
+   "tonal": false,
+   "peakAt": 0.065,
+   "durationSec": 0.584,
+   "loudness": -21.7,
+   "sharpness": 1,
+   "flatness": 0.059,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "playful",
+    "luxury",
+    "tech"
+   ],
+   "emotions": [
+    "tactile"
+   ],
+   "group": "card-slide",
+   "license": "CC0-1.0",
+   "description": "foley.paper (paper/cardboard)"
+  },
+  {
+   "name": "card-slide-2",
+   "file": "recorded/card-slide-2.wav",
+   "source": "recorded",
+   "category": "foley.paper",
+   "material": [
+    "paper",
+    "cardboard"
+   ],
+   "weight": 0.61,
+   "speed": 0.74,
+   "brightness": 0.46,
+   "tonal": false,
+   "peakAt": 0.08,
+   "durationSec": 0.598,
+   "loudness": -21.6,
+   "sharpness": 1,
+   "flatness": 0.119,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "playful",
+    "luxury",
+    "tech"
+   ],
+   "emotions": [
+    "tactile"
+   ],
+   "group": "card-slide",
+   "license": "CC0-1.0",
+   "description": "foley.paper (paper/cardboard)"
+  },
+  {
+   "name": "card-slide-3",
+   "file": "recorded/card-slide-3.wav",
+   "source": "recorded",
+   "category": "foley.paper",
+   "material": [
+    "paper",
+    "cardboard"
+   ],
+   "weight": 0.58,
+   "speed": 0.65,
+   "brightness": 0.55,
+   "tonal": false,
+   "peakAt": 0.12,
+   "durationSec": 0.601,
+   "loudness": -24.8,
+   "sharpness": 0.92,
+   "flatness": 0.212,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "playful",
+    "luxury",
+    "tech"
+   ],
+   "emotions": [
+    "tactile"
+   ],
+   "group": "card-slide",
+   "license": "CC0-1.0",
+   "description": "foley.paper (paper/cardboard)"
+  },
+  {
+   "name": "card-slide-4",
+   "file": "recorded/card-slide-4.wav",
+   "source": "recorded",
+   "category": "foley.paper",
+   "material": [
+    "paper",
+    "cardboard"
+   ],
+   "weight": 0.38,
+   "speed": 0.54,
+   "brightness": 0.51,
+   "tonal": false,
+   "peakAt": 0.338,
+   "durationSec": 0.632,
+   "loudness": -24.9,
+   "sharpness": 1,
+   "flatness": 0.105,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "playful",
+    "luxury",
+    "tech"
+   ],
+   "emotions": [
+    "tactile"
+   ],
+   "group": "card-slide",
+   "license": "CC0-1.0",
+   "description": "foley.paper (paper/cardboard)"
+  },
+  {
+   "name": "crumple-1",
+   "file": "recorded/crumple-1.wav",
+   "source": "recorded",
+   "category": "foley.paper",
+   "material": [
+    "paper"
+   ],
+   "weight": 0.16,
+   "speed": 0.11,
+   "brightness": 0.96,
+   "tonal": false,
+   "peakAt": 0.453,
+   "durationSec": 0.9,
+   "loudness": -16.4,
+   "sharpness": 0.21,
+   "flatness": 0.653,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "minimal"
+   ],
+   "emotions": [
+    "rejection",
+    "tactile"
+   ],
+   "group": "crumple",
+   "license": "CC0-1.0",
+   "description": "foley.paper (paper)"
+  },
+  {
+   "name": "paper-rustle-1",
+   "file": "recorded/paper-rustle-1.wav",
+   "source": "recorded",
+   "category": "foley.paper",
+   "material": [
+    "paper"
+   ],
+   "weight": 0.11,
+   "speed": 0.47,
+   "brightness": 0.83,
+   "tonal": false,
+   "peakAt": 0.193,
+   "durationSec": 0.421,
+   "loudness": -18.3,
+   "sharpness": 1,
+   "flatness": 0.308,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "playful",
+    "luxury"
+   ],
+   "emotions": [
+    "tactile"
+   ],
+   "group": "paper-rustle",
+   "license": "CC0-1.0",
+   "description": "foley.paper (paper)"
+  },
+  {
+   "name": "paper-rustle-2",
+   "file": "recorded/paper-rustle-2.wav",
+   "source": "recorded",
+   "category": "foley.paper",
+   "material": [
+    "paper"
+   ],
+   "weight": 0.11,
+   "speed": 0.34,
+   "brightness": 0.9,
+   "tonal": false,
+   "peakAt": 0.178,
+   "durationSec": 0.532,
+   "loudness": -16,
+   "sharpness": 0.47,
+   "flatness": 0.506,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "playful",
+    "luxury"
+   ],
+   "emotions": [
+    "tactile"
+   ],
+   "group": "paper-rustle",
+   "license": "CC0-1.0",
+   "description": "foley.paper (paper)"
+  },
+  {
+   "name": "paper-rustle-3",
+   "file": "recorded/paper-rustle-3.wav",
+   "source": "recorded",
+   "category": "foley.paper",
+   "material": [
+    "paper"
+   ],
+   "weight": 0.12,
+   "speed": 0.35,
+   "brightness": 0.9,
+   "tonal": false,
+   "peakAt": 0.148,
+   "durationSec": 0.579,
+   "loudness": -16,
+   "sharpness": 0.86,
+   "flatness": 0.37,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "playful",
+    "luxury"
+   ],
+   "emotions": [
+    "tactile"
+   ],
+   "group": "paper-rustle",
+   "license": "CC0-1.0",
+   "description": "foley.paper (paper)"
+  },
+  {
+   "name": "plastic-crinkle-1",
+   "file": "recorded/plastic-crinkle-1.wav",
+   "source": "recorded",
+   "category": "foley.plastic",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.11,
+   "speed": 0.58,
+   "brightness": 0.88,
+   "tonal": false,
+   "peakAt": 0.145,
+   "durationSec": 0.5,
+   "loudness": -24.4,
+   "sharpness": 1,
+   "flatness": 0.598,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "minimal"
+   ],
+   "emotions": [
+    "tactile"
+   ],
+   "group": "plastic-crinkle",
+   "license": "CC0-1.0",
+   "description": "foley.plastic (plastic)"
+  },
+  {
+   "name": "plastic-crinkle-2",
+   "file": "recorded/plastic-crinkle-2.wav",
+   "source": "recorded",
+   "category": "foley.plastic",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.09,
+   "speed": 0.59,
+   "brightness": 0.92,
+   "tonal": false,
+   "peakAt": 0.125,
+   "durationSec": 0.402,
+   "loudness": -30.1,
+   "sharpness": 1,
+   "flatness": 0.481,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "minimal"
+   ],
+   "emotions": [
+    "tactile"
+   ],
+   "group": "plastic-crinkle",
+   "license": "CC0-1.0",
+   "description": "foley.plastic (plastic)"
+  },
+  {
+   "name": "plastic-crinkle-3",
+   "file": "recorded/plastic-crinkle-3.wav",
+   "source": "recorded",
+   "category": "foley.plastic",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.07,
+   "speed": 0.7,
+   "brightness": 0.93,
+   "tonal": false,
+   "peakAt": 0.025,
+   "durationSec": 0.368,
+   "loudness": -29.1,
+   "sharpness": 1,
+   "flatness": 0.724,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "minimal"
+   ],
+   "emotions": [
+    "tactile"
+   ],
+   "group": "plastic-crinkle",
+   "license": "CC0-1.0",
+   "description": "foley.plastic (plastic)"
+  },
+  {
+   "name": "key-1",
+   "file": "recorded/key-1.wav",
+   "source": "recorded",
+   "category": "foley.typing",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.16,
+   "speed": 0.72,
+   "brightness": 0.74,
+   "tonal": false,
+   "peakAt": 0.035,
+   "durationSec": 0.2,
+   "loudness": -24.7,
+   "sharpness": 1,
+   "flatness": 0.099,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "process",
+    "human"
+   ],
+   "group": "key",
+   "license": "CC0-1.0",
+   "description": "foley.typing (plastic)"
+  },
+  {
+   "name": "key-2",
+   "file": "recorded/key-2.wav",
+   "source": "recorded",
+   "category": "foley.typing",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.25,
+   "speed": 0.49,
+   "brightness": 0.67,
+   "tonal": false,
+   "peakAt": 0.015,
+   "durationSec": 0.2,
+   "loudness": -19.7,
+   "sharpness": 1,
+   "flatness": 0.138,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "process",
+    "human"
+   ],
+   "group": "key",
+   "license": "CC0-1.0",
+   "description": "foley.typing (plastic)"
+  },
+  {
+   "name": "key-3",
+   "file": "recorded/key-3.wav",
+   "source": "recorded",
+   "category": "foley.typing",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.19,
+   "speed": 0.58,
+   "brightness": 0.7,
+   "tonal": false,
+   "peakAt": 0.01,
+   "durationSec": 0.2,
+   "loudness": -20.9,
+   "sharpness": 1,
+   "flatness": 0.091,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "process",
+    "human"
+   ],
+   "group": "key",
+   "license": "CC0-1.0",
+   "description": "foley.typing (plastic)"
+  },
+  {
+   "name": "key-4",
+   "file": "recorded/key-4.wav",
+   "source": "recorded",
+   "category": "foley.typing",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.22,
+   "speed": 0.55,
+   "brightness": 0.64,
+   "tonal": false,
+   "peakAt": 0.005,
+   "durationSec": 0.186,
+   "loudness": -23.2,
+   "sharpness": 1,
+   "flatness": 0.117,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "process",
+    "human"
+   ],
+   "group": "key",
+   "license": "CC0-1.0",
+   "description": "foley.typing (plastic)"
+  },
+  {
+   "name": "bell-strike-1",
+   "file": "recorded/bell-strike-1.wav",
+   "source": "recorded",
+   "category": "impact.heavy",
+   "material": [
+    "metal"
+   ],
+   "weight": 0.59,
+   "speed": 0.06,
+   "brightness": 0.28,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 1.248,
+   "loudness": -17,
+   "sharpness": 1,
+   "flatness": 0,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "hype"
+   ],
+   "emotions": [
+    "resonant",
+    "power"
+   ],
+   "group": "bell-strike",
+   "license": "CC0-1.0",
+   "description": "impact.heavy (metal)"
+  },
+  {
+   "name": "bell-strike-2",
+   "file": "recorded/bell-strike-2.wav",
+   "source": "recorded",
+   "category": "impact.heavy",
+   "material": [
+    "metal"
+   ],
+   "weight": 0.51,
+   "speed": 0.35,
+   "brightness": 0.19,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.697,
+   "loudness": -18,
+   "sharpness": 1,
+   "flatness": 0,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "hype"
+   ],
+   "emotions": [
+    "resonant",
+    "power"
+   ],
+   "group": "bell-strike",
+   "license": "CC0-1.0",
+   "description": "impact.heavy (metal)"
+  },
+  {
+   "name": "bell-strike-3",
+   "file": "recorded/bell-strike-3.wav",
+   "source": "recorded",
+   "category": "impact.heavy",
+   "material": [
+    "metal"
+   ],
+   "weight": 0.47,
+   "speed": 0.35,
+   "brightness": 0.26,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.654,
+   "loudness": -18.7,
+   "sharpness": 0.98,
+   "flatness": 0,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "hype"
+   ],
+   "emotions": [
+    "resonant",
+    "power"
+   ],
+   "group": "bell-strike",
+   "license": "CC0-1.0",
+   "description": "impact.heavy (metal)"
+  },
+  {
+   "name": "ceramic-hit-1",
+   "file": "recorded/ceramic-hit-1.wav",
+   "source": "recorded",
+   "category": "impact.heavy",
+   "material": [
+    "ceramic"
+   ],
+   "weight": 0.69,
+   "speed": 0.5,
+   "brightness": 0.3,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.486,
+   "loudness": -20.9,
+   "sharpness": 0.85,
+   "flatness": 0.044,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "minimal"
+   ],
+   "emotions": [
+    "solid"
+   ],
+   "group": "ceramic-hit",
+   "license": "CC0-1.0",
+   "description": "impact.heavy (ceramic)"
+  },
+  {
+   "name": "ceramic-hit-2",
+   "file": "recorded/ceramic-hit-2.wav",
+   "source": "recorded",
+   "category": "impact.heavy",
+   "material": [
+    "ceramic"
+   ],
+   "weight": 0.79,
+   "speed": 0.39,
+   "brightness": 0.07,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.349,
+   "loudness": -18.1,
+   "sharpness": 0.56,
+   "flatness": 0.018,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "minimal"
+   ],
+   "emotions": [
+    "solid"
+   ],
+   "group": "ceramic-hit",
+   "license": "CC0-1.0",
+   "description": "impact.heavy (ceramic)"
+  },
+  {
+   "name": "ceramic-hit-3",
+   "file": "recorded/ceramic-hit-3.wav",
+   "source": "recorded",
+   "category": "impact.heavy",
+   "material": [
+    "ceramic"
+   ],
+   "weight": 0.7,
+   "speed": 0.49,
+   "brightness": 0.28,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.494,
+   "loudness": -18.3,
+   "sharpness": 0.68,
+   "flatness": 0.056,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "minimal"
+   ],
+   "emotions": [
+    "solid"
+   ],
+   "group": "ceramic-hit",
+   "license": "CC0-1.0",
+   "description": "impact.heavy (ceramic)"
+  },
+  {
+   "name": "crunch-1",
+   "file": "recorded/crunch-1.wav",
+   "source": "recorded",
+   "category": "impact.heavy",
+   "material": [
+    "stone"
+   ],
+   "weight": 0.82,
+   "speed": 0.12,
+   "brightness": 0.22,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.777,
+   "loudness": -16,
+   "sharpness": 0.61,
+   "flatness": 0.047,
+   "world": "abstract",
+   "palettes": [
+    "hype",
+    "cinematic"
+   ],
+   "emotions": [
+    "power",
+    "shock"
+   ],
+   "group": "crunch",
+   "license": "CC0-1.0",
+   "description": "impact.heavy (stone)"
+  },
+  {
+   "name": "crunch-2",
+   "file": "recorded/crunch-2.wav",
+   "source": "recorded",
+   "category": "impact.heavy",
+   "material": [
+    "stone"
+   ],
+   "weight": 0.94,
+   "speed": 0,
+   "brightness": 0.14,
+   "tonal": false,
+   "peakAt": 0.043,
+   "durationSec": 1.3,
+   "loudness": -16,
+   "sharpness": 0.67,
+   "flatness": 0.033,
+   "world": "abstract",
+   "palettes": [
+    "hype",
+    "cinematic"
+   ],
+   "emotions": [
+    "power",
+    "shock"
+   ],
+   "group": "crunch",
+   "license": "CC0-1.0",
+   "description": "impact.heavy (stone)"
+  },
+  {
+   "name": "glass-thud-1",
+   "file": "recorded/glass-thud-1.wav",
+   "source": "recorded",
+   "category": "impact.heavy",
+   "material": [
+    "glass"
+   ],
+   "weight": 0.71,
+   "speed": 0.49,
+   "brightness": 0.21,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.238,
+   "loudness": -21.4,
+   "sharpness": 1,
+   "flatness": 0,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "minimal",
+    "luxury",
+    "tech"
+   ],
+   "emotions": [
+    "solid",
+    "premium"
+   ],
+   "group": "glass-thud",
+   "license": "CC0-1.0",
+   "description": "impact.heavy (glass)"
+  },
+  {
+   "name": "glass-thud-2",
+   "file": "recorded/glass-thud-2.wav",
+   "source": "recorded",
+   "category": "impact.heavy",
+   "material": [
+    "glass"
+   ],
+   "weight": 0.71,
+   "speed": 0.54,
+   "brightness": 0.23,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.429,
+   "loudness": -22.4,
+   "sharpness": 1,
+   "flatness": 0,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "minimal",
+    "luxury",
+    "tech"
+   ],
+   "emotions": [
+    "solid",
+    "premium"
+   ],
+   "group": "glass-thud",
+   "license": "CC0-1.0",
+   "description": "impact.heavy (glass)"
+  },
+  {
+   "name": "glass-thud-3",
+   "file": "recorded/glass-thud-3.wav",
+   "source": "recorded",
+   "category": "impact.heavy",
+   "material": [
+    "glass"
+   ],
+   "weight": 0.72,
+   "speed": 0.79,
+   "brightness": 0.16,
+   "tonal": true,
+   "pitchHz": 680.9,
+   "peakAt": 0,
+   "durationSec": 0.396,
+   "loudness": -21.8,
+   "sharpness": 1,
+   "flatness": 0,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "minimal",
+    "luxury",
+    "tech"
+   ],
+   "emotions": [
+    "solid",
+    "premium"
+   ],
+   "group": "glass-thud",
+   "license": "CC0-1.0",
+   "description": "impact.heavy (glass)"
+  },
+  {
+   "name": "gong-1",
+   "file": "recorded/gong-1.wav",
+   "source": "recorded",
+   "category": "impact.heavy",
+   "material": [
+    "metal"
+   ],
+   "weight": 0.49,
+   "speed": 0.19,
+   "brightness": 0.29,
+   "tonal": true,
+   "peakAt": 0.088,
+   "durationSec": 0.952,
+   "loudness": -16,
+   "sharpness": 0.36,
+   "flatness": 0.001,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic"
+   ],
+   "emotions": [
+    "resonant",
+    "epic"
+   ],
+   "group": "gong",
+   "license": "CC0-1.0",
+   "description": "impact.heavy (metal)"
+  },
+  {
+   "name": "metal-hit-1",
+   "file": "recorded/metal-hit-1.wav",
+   "source": "recorded",
+   "category": "impact.heavy",
+   "material": [
+    "metal"
+   ],
+   "weight": 0.65,
+   "speed": 0.77,
+   "brightness": 0.29,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.165,
+   "loudness": -21.1,
+   "sharpness": 1,
+   "flatness": 0.003,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "hype"
+   ],
+   "emotions": [
+    "power",
+    "solid"
+   ],
+   "group": "metal-hit",
+   "license": "CC0-1.0",
+   "description": "impact.heavy (metal)"
+  },
+  {
+   "name": "metal-hit-2",
+   "file": "recorded/metal-hit-2.wav",
+   "source": "recorded",
+   "category": "impact.heavy",
+   "material": [
+    "metal"
+   ],
+   "weight": 0.64,
+   "speed": 0.7,
+   "brightness": 0.32,
+   "tonal": true,
+   "pitchHz": 1215.2,
+   "peakAt": 0,
+   "durationSec": 0.204,
+   "loudness": -20.6,
+   "sharpness": 1,
+   "flatness": 0.002,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "hype"
+   ],
+   "emotions": [
+    "power",
+    "solid"
+   ],
+   "group": "metal-hit",
+   "license": "CC0-1.0",
+   "description": "impact.heavy (metal)"
+  },
+  {
+   "name": "metal-hit-3",
+   "file": "recorded/metal-hit-3.wav",
+   "source": "recorded",
+   "category": "impact.heavy",
+   "material": [
+    "metal"
+   ],
+   "weight": 0.66,
+   "speed": 0.79,
+   "brightness": 0.27,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.131,
+   "loudness": -21.4,
+   "sharpness": 1,
+   "flatness": 0.001,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "hype"
+   ],
+   "emotions": [
+    "power",
+    "solid"
+   ],
+   "group": "metal-hit",
+   "license": "CC0-1.0",
+   "description": "impact.heavy (metal)"
+  },
+  {
+   "name": "metal-slam-1",
+   "file": "recorded/metal-slam-1.wav",
+   "source": "recorded",
+   "category": "impact.heavy",
+   "material": [
+    "metal"
+   ],
+   "weight": 0.75,
+   "speed": 0.26,
+   "brightness": 0.3,
+   "tonal": false,
+   "peakAt": 0.043,
+   "durationSec": 0.782,
+   "loudness": -16,
+   "sharpness": 0.72,
+   "flatness": 0.052,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "hype"
+   ],
+   "emotions": [
+    "power",
+    "industrial"
+   ],
+   "group": "metal-slam",
+   "license": "CC0-1.0",
+   "description": "impact.heavy (metal)"
+  },
+  {
+   "name": "metal-slam-2",
+   "file": "recorded/metal-slam-2.wav",
+   "source": "recorded",
+   "category": "impact.heavy",
+   "material": [
+    "metal"
+   ],
+   "weight": 0.71,
+   "speed": 0.35,
+   "brightness": 0.31,
+   "tonal": false,
+   "peakAt": 0.05,
+   "durationSec": 0.632,
+   "loudness": -16.4,
+   "sharpness": 0.66,
+   "flatness": 0.047,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "hype"
+   ],
+   "emotions": [
+    "power",
+    "industrial"
+   ],
+   "group": "metal-slam",
+   "license": "CC0-1.0",
+   "description": "impact.heavy (metal)"
+  },
+  {
+   "name": "punch-heavy-1",
+   "file": "recorded/punch-heavy-1.wav",
+   "source": "recorded",
+   "category": "impact.heavy",
+   "material": [
+    "body"
+   ],
+   "weight": 0.84,
+   "speed": 0.32,
+   "brightness": 0,
+   "tonal": false,
+   "peakAt": 0.02,
+   "durationSec": 0.546,
+   "loudness": -17.5,
+   "sharpness": 0.7,
+   "flatness": 0,
+   "world": "hyper-real",
+   "palettes": [
+    "hype",
+    "cinematic",
+    "tech"
+   ],
+   "emotions": [
+    "power",
+    "energy"
+   ],
+   "group": "punch-heavy",
+   "license": "CC0-1.0",
+   "description": "impact.heavy (body)"
+  },
+  {
+   "name": "punch-heavy-2",
+   "file": "recorded/punch-heavy-2.wav",
+   "source": "recorded",
+   "category": "impact.heavy",
+   "material": [
+    "body"
+   ],
+   "weight": 0.83,
+   "speed": 0.36,
+   "brightness": 0,
+   "tonal": false,
+   "peakAt": 0.02,
+   "durationSec": 0.462,
+   "loudness": -17,
+   "sharpness": 0.67,
+   "flatness": 0,
+   "world": "hyper-real",
+   "palettes": [
+    "hype",
+    "cinematic",
+    "tech"
+   ],
+   "emotions": [
+    "power",
+    "energy"
+   ],
+   "group": "punch-heavy",
+   "license": "CC0-1.0",
+   "description": "impact.heavy (body)"
+  },
+  {
+   "name": "punch-heavy-3",
+   "file": "recorded/punch-heavy-3.wav",
+   "source": "recorded",
+   "category": "impact.heavy",
+   "material": [
+    "body"
+   ],
+   "weight": 0.82,
+   "speed": 0.4,
+   "brightness": 0,
+   "tonal": true,
+   "pitchHz": 97.6,
+   "peakAt": 0.015,
+   "durationSec": 0.41,
+   "loudness": -16,
+   "sharpness": 0.64,
+   "flatness": 0,
+   "world": "hyper-real",
+   "palettes": [
+    "hype",
+    "cinematic",
+    "tech"
+   ],
+   "emotions": [
+    "power",
+    "energy"
+   ],
+   "group": "punch-heavy",
+   "license": "CC0-1.0",
+   "description": "impact.heavy (body)"
+  },
+  {
+   "name": "scifi-metal-1",
+   "file": "recorded/scifi-metal-1.wav",
+   "source": "recorded",
+   "category": "impact.heavy",
+   "material": [
+    "metal"
+   ],
+   "weight": 0.8,
+   "speed": 0.52,
+   "brightness": 0.04,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.508,
+   "loudness": -18.1,
+   "sharpness": 1,
+   "flatness": 0,
+   "world": "abstract",
+   "palettes": [
+    "cinematic",
+    "hype",
+    "tech"
+   ],
+   "emotions": [
+    "power",
+    "industrial"
+   ],
+   "group": "scifi-metal",
+   "license": "CC0-1.0",
+   "description": "impact.heavy (metal)"
+  },
+  {
+   "name": "scifi-metal-2",
+   "file": "recorded/scifi-metal-2.wav",
+   "source": "recorded",
+   "category": "impact.heavy",
+   "material": [
+    "metal"
+   ],
+   "weight": 0.81,
+   "speed": 0.59,
+   "brightness": 0,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.471,
+   "loudness": -19.5,
+   "sharpness": 1,
+   "flatness": 0,
+   "world": "abstract",
+   "palettes": [
+    "cinematic",
+    "hype",
+    "tech"
+   ],
+   "emotions": [
+    "power",
+    "industrial"
+   ],
+   "group": "scifi-metal",
+   "license": "CC0-1.0",
+   "description": "impact.heavy (metal)"
+  },
+  {
+   "name": "scifi-metal-3",
+   "file": "recorded/scifi-metal-3.wav",
+   "source": "recorded",
+   "category": "impact.heavy",
+   "material": [
+    "metal"
+   ],
+   "weight": 0.71,
+   "speed": 0.62,
+   "brightness": 0.08,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.39,
+   "loudness": -19.4,
+   "sharpness": 1,
+   "flatness": 0,
+   "world": "abstract",
+   "palettes": [
+    "cinematic",
+    "hype",
+    "tech"
+   ],
+   "emotions": [
+    "power",
+    "industrial"
+   ],
+   "group": "scifi-metal",
+   "license": "CC0-1.0",
+   "description": "impact.heavy (metal)"
+  },
+  {
+   "name": "soft-boom-1",
+   "file": "recorded/soft-boom-1.wav",
+   "source": "recorded",
+   "category": "impact.heavy",
+   "material": [
+    "cloth",
+    "cardboard"
+   ],
+   "weight": 0.83,
+   "speed": 0.39,
+   "brightness": 0,
+   "tonal": true,
+   "pitchHz": 102.2,
+   "peakAt": 0,
+   "durationSec": 0.527,
+   "loudness": -16.4,
+   "sharpness": 0.83,
+   "flatness": 0,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "weight",
+    "calm"
+   ],
+   "group": "soft-boom",
+   "license": "CC0-1.0",
+   "description": "impact.heavy (cloth/cardboard)"
+  },
+  {
+   "name": "soft-boom-2",
+   "file": "recorded/soft-boom-2.wav",
+   "source": "recorded",
+   "category": "impact.heavy",
+   "material": [
+    "cloth",
+    "cardboard"
+   ],
+   "weight": 0.83,
+   "speed": 0.4,
+   "brightness": 0,
+   "tonal": true,
+   "pitchHz": 74.5,
+   "peakAt": 0.01,
+   "durationSec": 0.541,
+   "loudness": -16.9,
+   "sharpness": 1,
+   "flatness": 0,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "weight",
+    "calm"
+   ],
+   "group": "soft-boom",
+   "license": "CC0-1.0",
+   "description": "impact.heavy (cloth/cardboard)"
+  },
+  {
+   "name": "soft-boom-3",
+   "file": "recorded/soft-boom-3.wav",
+   "source": "recorded",
+   "category": "impact.heavy",
+   "material": [
+    "cloth",
+    "cardboard"
+   ],
+   "weight": 0.83,
+   "speed": 0.39,
+   "brightness": 0,
+   "tonal": true,
+   "pitchHz": 87,
+   "peakAt": 0,
+   "durationSec": 0.498,
+   "loudness": -16.6,
+   "sharpness": 0.72,
+   "flatness": 0,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "weight",
+    "calm"
+   ],
+   "group": "soft-boom",
+   "license": "CC0-1.0",
+   "description": "impact.heavy (cloth/cardboard)"
+  },
+  {
+   "name": "wood-thud-1",
+   "file": "recorded/wood-thud-1.wav",
+   "source": "recorded",
+   "category": "impact.heavy",
+   "material": [
+    "wood"
+   ],
+   "weight": 0.79,
+   "speed": 0.72,
+   "brightness": 0,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.31,
+   "loudness": -19.7,
+   "sharpness": 1,
+   "flatness": 0,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "minimal"
+   ],
+   "emotions": [
+    "warm",
+    "power"
+   ],
+   "group": "wood-thud",
+   "license": "CC0-1.0",
+   "description": "impact.heavy (wood)"
+  },
+  {
+   "name": "book-close-1",
+   "file": "recorded/book-close-1.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "paper",
+    "cardboard"
+   ],
+   "weight": 0.36,
+   "speed": 0.52,
+   "brightness": 0.33,
+   "tonal": false,
+   "peakAt": 0.07,
+   "durationSec": 0.227,
+   "loudness": -21.2,
+   "sharpness": 1,
+   "flatness": 0.033,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "cinematic"
+   ],
+   "emotions": [
+    "solid"
+   ],
+   "group": "book-close",
+   "license": "CC0-1.0",
+   "description": "impact.light (paper/cardboard)"
+  },
+  {
+   "name": "book-close-2",
+   "file": "recorded/book-close-2.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "paper",
+    "cardboard"
+   ],
+   "weight": 0.64,
+   "speed": 0.68,
+   "brightness": 0.32,
+   "tonal": false,
+   "peakAt": 0.058,
+   "durationSec": 0.151,
+   "loudness": -23.5,
+   "sharpness": 1,
+   "flatness": 0.058,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "cinematic"
+   ],
+   "emotions": [
+    "solid"
+   ],
+   "group": "book-close",
+   "license": "CC0-1.0",
+   "description": "impact.light (paper/cardboard)"
+  },
+  {
+   "name": "book-place-1",
+   "file": "recorded/book-place-1.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "paper",
+    "cardboard"
+   ],
+   "weight": 0.29,
+   "speed": 0.65,
+   "brightness": 0.43,
+   "tonal": false,
+   "peakAt": 0.06,
+   "durationSec": 0.238,
+   "loudness": -18.5,
+   "sharpness": 1,
+   "flatness": 0.069,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury",
+    "cinematic"
+   ],
+   "emotions": [
+    "gentle",
+    "solid"
+   ],
+   "group": "book-place",
+   "license": "CC0-1.0",
+   "description": "impact.light (paper/cardboard)"
+  },
+  {
+   "name": "book-place-2",
+   "file": "recorded/book-place-2.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "paper",
+    "cardboard"
+   ],
+   "weight": 0.32,
+   "speed": 0.58,
+   "brightness": 0.43,
+   "tonal": false,
+   "peakAt": 0.08,
+   "durationSec": 0.27,
+   "loudness": -17.6,
+   "sharpness": 1,
+   "flatness": 0.051,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury",
+    "cinematic"
+   ],
+   "emotions": [
+    "gentle",
+    "solid"
+   ],
+   "group": "book-place",
+   "license": "CC0-1.0",
+   "description": "impact.light (paper/cardboard)"
+  },
+  {
+   "name": "book-place-3",
+   "file": "recorded/book-place-3.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "paper",
+    "cardboard"
+   ],
+   "weight": 0.29,
+   "speed": 0.55,
+   "brightness": 0.48,
+   "tonal": false,
+   "peakAt": 0.03,
+   "durationSec": 0.246,
+   "loudness": -18.7,
+   "sharpness": 1,
+   "flatness": 0.087,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury",
+    "cinematic"
+   ],
+   "emotions": [
+    "gentle",
+    "solid"
+   ],
+   "group": "book-place",
+   "license": "CC0-1.0",
+   "description": "impact.light (paper/cardboard)"
+  },
+  {
+   "name": "card-place-1",
+   "file": "recorded/card-place-1.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "paper",
+    "cardboard"
+   ],
+   "weight": 0.22,
+   "speed": 0.77,
+   "brightness": 0.79,
+   "tonal": false,
+   "peakAt": 0.195,
+   "durationSec": 0.314,
+   "loudness": -25.2,
+   "sharpness": 1,
+   "flatness": 0.286,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "playful",
+    "luxury",
+    "tech"
+   ],
+   "emotions": [
+    "tactile",
+    "gentle"
+   ],
+   "group": "card-place",
+   "license": "CC0-1.0",
+   "description": "impact.light (paper/cardboard)"
+  },
+  {
+   "name": "card-place-2",
+   "file": "recorded/card-place-2.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "paper",
+    "cardboard"
+   ],
+   "weight": 0.5,
+   "speed": 0.74,
+   "brightness": 0.68,
+   "tonal": false,
+   "peakAt": 0.455,
+   "durationSec": 0.874,
+   "loudness": -25.6,
+   "sharpness": 1,
+   "flatness": 0.254,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "playful",
+    "luxury",
+    "tech"
+   ],
+   "emotions": [
+    "tactile",
+    "gentle"
+   ],
+   "group": "card-place",
+   "license": "CC0-1.0",
+   "description": "impact.light (paper/cardboard)"
+  },
+  {
+   "name": "card-place-3",
+   "file": "recorded/card-place-3.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "paper",
+    "cardboard"
+   ],
+   "weight": 0.36,
+   "speed": 0.65,
+   "brightness": 0.74,
+   "tonal": false,
+   "peakAt": 0.32,
+   "durationSec": 0.601,
+   "loudness": -23.1,
+   "sharpness": 1,
+   "flatness": 0.26,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "playful",
+    "luxury",
+    "tech"
+   ],
+   "emotions": [
+    "tactile",
+    "gentle"
+   ],
+   "group": "card-place",
+   "license": "CC0-1.0",
+   "description": "impact.light (paper/cardboard)"
+  },
+  {
+   "name": "ceramic-tap-1",
+   "file": "recorded/ceramic-tap-1.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "ceramic"
+   ],
+   "weight": 0.47,
+   "speed": 0.53,
+   "brightness": 0.53,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.616,
+   "loudness": -21.2,
+   "sharpness": 0.92,
+   "flatness": 0.145,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury",
+    "playful"
+   ],
+   "emotions": [
+    "tactile",
+    "warm"
+   ],
+   "group": "ceramic-tap",
+   "license": "CC0-1.0",
+   "description": "impact.light (ceramic)"
+  },
+  {
+   "name": "ceramic-tap-2",
+   "file": "recorded/ceramic-tap-2.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "ceramic"
+   ],
+   "weight": 0.47,
+   "speed": 0.56,
+   "brightness": 0.51,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.51,
+   "loudness": -20.4,
+   "sharpness": 1,
+   "flatness": 0.125,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury",
+    "playful"
+   ],
+   "emotions": [
+    "tactile",
+    "warm"
+   ],
+   "group": "ceramic-tap",
+   "license": "CC0-1.0",
+   "description": "impact.light (ceramic)"
+  },
+  {
+   "name": "ceramic-tap-3",
+   "file": "recorded/ceramic-tap-3.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "ceramic"
+   ],
+   "weight": 0.47,
+   "speed": 0.53,
+   "brightness": 0.51,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.608,
+   "loudness": -21.6,
+   "sharpness": 1,
+   "flatness": 0.124,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury",
+    "playful"
+   ],
+   "emotions": [
+    "tactile",
+    "warm"
+   ],
+   "group": "ceramic-tap",
+   "license": "CC0-1.0",
+   "description": "impact.light (ceramic)"
+  },
+  {
+   "name": "chip-lay-1",
+   "file": "recorded/chip-lay-1.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.06,
+   "speed": 0.79,
+   "brightness": 0.89,
+   "tonal": false,
+   "peakAt": 0.005,
+   "durationSec": 0.13,
+   "loudness": -22.1,
+   "sharpness": 1,
+   "flatness": 0.144,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "tactile"
+   ],
+   "group": "chip-lay",
+   "license": "CC0-1.0",
+   "description": "impact.light (plastic)"
+  },
+  {
+   "name": "chip-lay-2",
+   "file": "recorded/chip-lay-2.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.04,
+   "speed": 0.82,
+   "brightness": 0.96,
+   "tonal": false,
+   "peakAt": 0.08,
+   "durationSec": 0.227,
+   "loudness": -27.2,
+   "sharpness": 1,
+   "flatness": 0.211,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "tactile"
+   ],
+   "group": "chip-lay",
+   "license": "CC0-1.0",
+   "description": "impact.light (plastic)"
+  },
+  {
+   "name": "clap-1",
+   "file": "recorded/clap-1.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "body"
+   ],
+   "weight": 0.12,
+   "speed": 0.9,
+   "brightness": 0.88,
+   "tonal": false,
+   "peakAt": 0.005,
+   "durationSec": 0.7,
+   "loudness": -27.5,
+   "sharpness": 1,
+   "flatness": 0.293,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "hype"
+   ],
+   "emotions": [
+    "human",
+    "delight"
+   ],
+   "group": "clap",
+   "license": "CC0-1.0",
+   "description": "impact.light (body)"
+  },
+  {
+   "name": "glass-clink-1",
+   "file": "recorded/glass-clink-1.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "glass"
+   ],
+   "weight": 0.11,
+   "speed": 0.4,
+   "brightness": 0.87,
+   "tonal": false,
+   "peakAt": 0.033,
+   "durationSec": 0.328,
+   "loudness": -16,
+   "sharpness": 0.52,
+   "flatness": 0.074,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "minimal",
+    "luxury",
+    "tech"
+   ],
+   "emotions": [
+    "premium",
+    "bright"
+   ],
+   "group": "glass-clink",
+   "license": "CC0-1.0",
+   "description": "impact.light (glass)"
+  },
+  {
+   "name": "glass-clink-2",
+   "file": "recorded/glass-clink-2.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "glass"
+   ],
+   "weight": 0.09,
+   "speed": 0.51,
+   "brightness": 0.91,
+   "tonal": false,
+   "peakAt": 0.1,
+   "durationSec": 0.376,
+   "loudness": -19.9,
+   "sharpness": 1,
+   "flatness": 0.176,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "minimal",
+    "luxury",
+    "tech"
+   ],
+   "emotions": [
+    "premium",
+    "bright"
+   ],
+   "group": "glass-clink",
+   "license": "CC0-1.0",
+   "description": "impact.light (glass)"
+  },
+  {
+   "name": "glass-clink-3",
+   "file": "recorded/glass-clink-3.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "glass"
+   ],
+   "weight": 0.15,
+   "speed": 0.34,
+   "brightness": 0.88,
+   "tonal": true,
+   "pitchHz": 116.8,
+   "peakAt": 0.015,
+   "durationSec": 0.522,
+   "loudness": -16,
+   "sharpness": 0.78,
+   "flatness": 0.033,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "minimal",
+    "luxury",
+    "tech"
+   ],
+   "emotions": [
+    "premium",
+    "bright"
+   ],
+   "group": "glass-clink",
+   "license": "CC0-1.0",
+   "description": "impact.light (glass)"
+  },
+  {
+   "name": "glass-hit-1",
+   "file": "recorded/glass-hit-1.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "glass"
+   ],
+   "weight": 0.09,
+   "speed": 0.47,
+   "brightness": 0.9,
+   "tonal": false,
+   "peakAt": 0.005,
+   "durationSec": 0.196,
+   "loudness": -17.1,
+   "sharpness": 0.88,
+   "flatness": 0.045,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "minimal",
+    "luxury",
+    "tech"
+   ],
+   "emotions": [
+    "bright",
+    "fragile"
+   ],
+   "group": "glass-hit",
+   "license": "CC0-1.0",
+   "description": "impact.light (glass)"
+  },
+  {
+   "name": "glass-hit-2",
+   "file": "recorded/glass-hit-2.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "glass"
+   ],
+   "weight": 0.09,
+   "speed": 0.41,
+   "brightness": 0.92,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.254,
+   "loudness": -16,
+   "sharpness": 0.6,
+   "flatness": 0.096,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "minimal",
+    "luxury",
+    "tech"
+   ],
+   "emotions": [
+    "bright",
+    "fragile"
+   ],
+   "group": "glass-hit",
+   "license": "CC0-1.0",
+   "description": "impact.light (glass)"
+  },
+  {
+   "name": "glass-tap-1",
+   "file": "recorded/glass-tap-1.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "glass"
+   ],
+   "weight": 0.21,
+   "speed": 0.63,
+   "brightness": 0.57,
+   "tonal": true,
+   "pitchHz": 82.9,
+   "peakAt": 0,
+   "durationSec": 0.164,
+   "loudness": -18.3,
+   "sharpness": 0.87,
+   "flatness": 0.001,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "minimal",
+    "luxury",
+    "tech"
+   ],
+   "emotions": [
+    "premium",
+    "precise",
+    "fragile"
+   ],
+   "group": "glass-tap",
+   "license": "CC0-1.0",
+   "description": "impact.light (glass)"
+  },
+  {
+   "name": "glass-tap-2",
+   "file": "recorded/glass-tap-2.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "glass"
+   ],
+   "weight": 0.21,
+   "speed": 0.63,
+   "brightness": 0.6,
+   "tonal": true,
+   "pitchHz": 1136.4,
+   "peakAt": 0,
+   "durationSec": 0.207,
+   "loudness": -17.2,
+   "sharpness": 0.84,
+   "flatness": 0.001,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "minimal",
+    "luxury",
+    "tech"
+   ],
+   "emotions": [
+    "premium",
+    "precise",
+    "fragile"
+   ],
+   "group": "glass-tap",
+   "license": "CC0-1.0",
+   "description": "impact.light (glass)"
+  },
+  {
+   "name": "glass-tap-3",
+   "file": "recorded/glass-tap-3.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "glass"
+   ],
+   "weight": 0.22,
+   "speed": 0.63,
+   "brightness": 0.57,
+   "tonal": true,
+   "pitchHz": 109.2,
+   "peakAt": 0,
+   "durationSec": 0.207,
+   "loudness": -16.3,
+   "sharpness": 1,
+   "flatness": 0.005,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "minimal",
+    "luxury",
+    "tech"
+   ],
+   "emotions": [
+    "premium",
+    "precise",
+    "fragile"
+   ],
+   "group": "glass-tap",
+   "license": "CC0-1.0",
+   "description": "impact.light (glass)"
+  },
+  {
+   "name": "glass-ting-1",
+   "file": "recorded/glass-ting-1.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "glass"
+   ],
+   "weight": 0.15,
+   "speed": 0.58,
+   "brightness": 0.71,
+   "tonal": true,
+   "pitchHz": 1391.3,
+   "peakAt": 0.01,
+   "durationSec": 0.224,
+   "loudness": -16,
+   "sharpness": 0.82,
+   "flatness": 0.001,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "minimal",
+    "luxury",
+    "tech"
+   ],
+   "emotions": [
+    "premium",
+    "delight"
+   ],
+   "group": "glass-ting",
+   "license": "CC0-1.0",
+   "description": "impact.light (glass)"
+  },
+  {
+   "name": "glass-ting-2",
+   "file": "recorded/glass-ting-2.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "glass"
+   ],
+   "weight": 0.08,
+   "speed": 0.6,
+   "brightness": 0.86,
+   "tonal": true,
+   "pitchHz": 943.1,
+   "peakAt": 0.02,
+   "durationSec": 0.156,
+   "loudness": -16.9,
+   "sharpness": 0.87,
+   "flatness": 0.016,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "minimal",
+    "luxury",
+    "tech"
+   ],
+   "emotions": [
+    "premium",
+    "delight"
+   ],
+   "group": "glass-ting",
+   "license": "CC0-1.0",
+   "description": "impact.light (glass)"
+  },
+  {
+   "name": "glass-ting-3",
+   "file": "recorded/glass-ting-3.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "glass"
+   ],
+   "weight": 0.14,
+   "speed": 0.54,
+   "brightness": 0.79,
+   "tonal": true,
+   "pitchHz": 1902.2,
+   "peakAt": 0.01,
+   "durationSec": 0.488,
+   "loudness": -16,
+   "sharpness": 0.82,
+   "flatness": 0.009,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "minimal",
+    "luxury",
+    "tech"
+   ],
+   "emotions": [
+    "premium",
+    "delight"
+   ],
+   "group": "glass-ting",
+   "license": "CC0-1.0",
+   "description": "impact.light (glass)"
+  },
+  {
+   "name": "hand-drum-1",
+   "file": "recorded/hand-drum-1.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "body",
+    "wood"
+   ],
+   "weight": 0.32,
+   "speed": 0.58,
+   "brightness": 0.31,
+   "tonal": true,
+   "pitchHz": 361.8,
+   "peakAt": 0.015,
+   "durationSec": 0.188,
+   "loudness": -17.2,
+   "sharpness": 0.59,
+   "flatness": 0.003,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "minimal"
+   ],
+   "emotions": [
+    "warm",
+    "human"
+   ],
+   "group": "hand-drum",
+   "license": "CC0-1.0",
+   "description": "impact.light (body/wood)"
+  },
+  {
+   "name": "hand-drum-2",
+   "file": "recorded/hand-drum-2.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "body",
+    "wood"
+   ],
+   "weight": 0.3,
+   "speed": 0.58,
+   "brightness": 0.38,
+   "tonal": false,
+   "peakAt": 0.01,
+   "durationSec": 0.242,
+   "loudness": -17.5,
+   "sharpness": 1,
+   "flatness": 0.001,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "minimal"
+   ],
+   "emotions": [
+    "warm",
+    "human"
+   ],
+   "group": "hand-drum",
+   "license": "CC0-1.0",
+   "description": "impact.light (body/wood)"
+  },
+  {
+   "name": "hand-drum-3",
+   "file": "recorded/hand-drum-3.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "body",
+    "wood"
+   ],
+   "weight": 0.24,
+   "speed": 0.56,
+   "brightness": 0.5,
+   "tonal": false,
+   "peakAt": 0.005,
+   "durationSec": 0.216,
+   "loudness": -18.2,
+   "sharpness": 0.66,
+   "flatness": 0.053,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "minimal"
+   ],
+   "emotions": [
+    "warm",
+    "human"
+   ],
+   "group": "hand-drum",
+   "license": "CC0-1.0",
+   "description": "impact.light (body/wood)"
+  },
+  {
+   "name": "leather-1",
+   "file": "recorded/leather-1.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "leather",
+    "cloth"
+   ],
+   "weight": 0.73,
+   "speed": 0.44,
+   "brightness": 0.16,
+   "tonal": false,
+   "peakAt": 0.138,
+   "durationSec": 0.326,
+   "loudness": -17.4,
+   "sharpness": 0.66,
+   "flatness": 0.012,
+   "world": "hyper-real",
+   "palettes": [
+    "luxury",
+    "minimal",
+    "cinematic"
+   ],
+   "emotions": [
+    "soft",
+    "warm"
+   ],
+   "group": "leather",
+   "license": "CC0-1.0",
+   "description": "impact.light (leather/cloth)"
+  },
+  {
+   "name": "leather-2",
+   "file": "recorded/leather-2.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "leather",
+    "cloth"
+   ],
+   "weight": 0.37,
+   "speed": 0.62,
+   "brightness": 0.4,
+   "tonal": false,
+   "peakAt": 0.1,
+   "durationSec": 0.23,
+   "loudness": -24,
+   "sharpness": 1,
+   "flatness": 0.081,
+   "world": "hyper-real",
+   "palettes": [
+    "luxury",
+    "minimal",
+    "cinematic"
+   ],
+   "emotions": [
+    "soft",
+    "warm"
+   ],
+   "group": "leather",
+   "license": "CC0-1.0",
+   "description": "impact.light (leather/cloth)"
+  },
+  {
+   "name": "metal-tick-1",
+   "file": "recorded/metal-tick-1.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "metal-thin"
+   ],
+   "weight": 0.18,
+   "speed": 0.58,
+   "brightness": 0.68,
+   "tonal": true,
+   "pitchHz": 129.8,
+   "peakAt": 0,
+   "durationSec": 0.249,
+   "loudness": -16,
+   "sharpness": 0.81,
+   "flatness": 0.003,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "precise",
+    "premium"
+   ],
+   "group": "metal-tick",
+   "license": "CC0-1.0",
+   "description": "impact.light (metal-thin)"
+  },
+  {
+   "name": "metal-tick-2",
+   "file": "recorded/metal-tick-2.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "metal-thin"
+   ],
+   "weight": 0.16,
+   "speed": 0.6,
+   "brightness": 0.73,
+   "tonal": true,
+   "pitchHz": 186.5,
+   "peakAt": 0,
+   "durationSec": 0.233,
+   "loudness": -17,
+   "sharpness": 0.85,
+   "flatness": 0.002,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "precise",
+    "premium"
+   ],
+   "group": "metal-tick",
+   "license": "CC0-1.0",
+   "description": "impact.light (metal-thin)"
+  },
+  {
+   "name": "metal-tick-3",
+   "file": "recorded/metal-tick-3.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "metal-thin"
+   ],
+   "weight": 0.18,
+   "speed": 0.62,
+   "brightness": 0.68,
+   "tonal": true,
+   "pitchHz": 150.5,
+   "peakAt": 0,
+   "durationSec": 0.211,
+   "loudness": -16.8,
+   "sharpness": 0.95,
+   "flatness": 0.002,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "precise",
+    "premium"
+   ],
+   "group": "metal-tick",
+   "license": "CC0-1.0",
+   "description": "impact.light (metal-thin)"
+  },
+  {
+   "name": "soft-thud-1",
+   "file": "recorded/soft-thud-1.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "cloth",
+    "cardboard"
+   ],
+   "weight": 0.77,
+   "speed": 0.74,
+   "brightness": 0,
+   "tonal": true,
+   "pitchHz": 105.6,
+   "peakAt": 0,
+   "durationSec": 0.115,
+   "loudness": -19.5,
+   "sharpness": 1,
+   "flatness": 0,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "gentle",
+    "calm"
+   ],
+   "group": "soft-thud",
+   "license": "CC0-1.0",
+   "description": "impact.light (cloth/cardboard)"
+  },
+  {
+   "name": "soft-thud-2",
+   "file": "recorded/soft-thud-2.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "cloth",
+    "cardboard"
+   ],
+   "weight": 0.77,
+   "speed": 0.74,
+   "brightness": 0,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.18,
+   "loudness": -17.9,
+   "sharpness": 0.97,
+   "flatness": 0,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "gentle",
+    "calm"
+   ],
+   "group": "soft-thud",
+   "license": "CC0-1.0",
+   "description": "impact.light (cloth/cardboard)"
+  },
+  {
+   "name": "soft-thud-3",
+   "file": "recorded/soft-thud-3.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "cloth",
+    "cardboard"
+   ],
+   "weight": 0.77,
+   "speed": 0.72,
+   "brightness": 0,
+   "tonal": true,
+   "pitchHz": 90.3,
+   "peakAt": 0,
+   "durationSec": 0.132,
+   "loudness": -19,
+   "sharpness": 1,
+   "flatness": 0,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "gentle",
+    "calm"
+   ],
+   "group": "soft-thud",
+   "license": "CC0-1.0",
+   "description": "impact.light (cloth/cardboard)"
+  },
+  {
+   "name": "soft-thump-1",
+   "file": "recorded/soft-thump-1.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "organic"
+   ],
+   "weight": 0.81,
+   "speed": 0.45,
+   "brightness": 0,
+   "tonal": false,
+   "peakAt": 0.108,
+   "durationSec": 0.402,
+   "loudness": -17.7,
+   "sharpness": 0.68,
+   "flatness": 0.001,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "playful"
+   ],
+   "emotions": [
+    "gentle",
+    "organic"
+   ],
+   "group": "soft-thump",
+   "license": "CC0-1.0",
+   "description": "impact.light (organic)"
+  },
+  {
+   "name": "soft-thump-2",
+   "file": "recorded/soft-thump-2.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "organic"
+   ],
+   "weight": 0.8,
+   "speed": 0.47,
+   "brightness": 0,
+   "tonal": false,
+   "peakAt": 0.048,
+   "durationSec": 0.374,
+   "loudness": -16.9,
+   "sharpness": 0.67,
+   "flatness": 0.001,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "playful"
+   ],
+   "emotions": [
+    "gentle",
+    "organic"
+   ],
+   "group": "soft-thump",
+   "license": "CC0-1.0",
+   "description": "impact.light (organic)"
+  },
+  {
+   "name": "soft-thump-3",
+   "file": "recorded/soft-thump-3.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "organic"
+   ],
+   "weight": 0.72,
+   "speed": 0.47,
+   "brightness": 0.2,
+   "tonal": false,
+   "peakAt": 0.045,
+   "durationSec": 0.406,
+   "loudness": -20.5,
+   "sharpness": 0.68,
+   "flatness": 0.005,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "playful"
+   ],
+   "emotions": [
+    "gentle",
+    "organic"
+   ],
+   "group": "soft-thump",
+   "license": "CC0-1.0",
+   "description": "impact.light (organic)"
+  },
+  {
+   "name": "stone-tick-1",
+   "file": "recorded/stone-tick-1.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "stone"
+   ],
+   "weight": 0.1,
+   "speed": 0.86,
+   "brightness": 0.83,
+   "tonal": false,
+   "peakAt": 0.005,
+   "durationSec": 0.204,
+   "loudness": -23.3,
+   "sharpness": 1,
+   "flatness": 0.151,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "cinematic"
+   ],
+   "emotions": [
+    "tactile",
+    "precise"
+   ],
+   "group": "stone-tick",
+   "license": "CC0-1.0",
+   "description": "impact.light (stone)"
+  },
+  {
+   "name": "stone-tick-2",
+   "file": "recorded/stone-tick-2.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "stone"
+   ],
+   "weight": 0.1,
+   "speed": 0.9,
+   "brightness": 0.83,
+   "tonal": false,
+   "peakAt": 0.05,
+   "durationSec": 0.27,
+   "loudness": -25,
+   "sharpness": 1,
+   "flatness": 0.108,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "cinematic"
+   ],
+   "emotions": [
+    "tactile",
+    "precise"
+   ],
+   "group": "stone-tick",
+   "license": "CC0-1.0",
+   "description": "impact.light (stone)"
+  },
+  {
+   "name": "stone-tick-3",
+   "file": "recorded/stone-tick-3.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "stone"
+   ],
+   "weight": 0.11,
+   "speed": 0.79,
+   "brightness": 0.78,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.098,
+   "loudness": -23.4,
+   "sharpness": 1,
+   "flatness": 0.104,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "cinematic"
+   ],
+   "emotions": [
+    "tactile",
+    "precise"
+   ],
+   "group": "stone-tick",
+   "license": "CC0-1.0",
+   "description": "impact.light (stone)"
+  },
+  {
+   "name": "tap-generic-1",
+   "file": "recorded/tap-generic-1.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.65,
+   "speed": 0.82,
+   "brightness": 0.27,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.115,
+   "loudness": -22.5,
+   "sharpness": 1,
+   "flatness": 0.001,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "precise",
+    "gentle"
+   ],
+   "group": "tap-generic",
+   "license": "CC0-1.0",
+   "description": "impact.light (plastic)"
+  },
+  {
+   "name": "tap-generic-2",
+   "file": "recorded/tap-generic-2.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.55,
+   "speed": 0.74,
+   "brightness": 0.31,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.161,
+   "loudness": -22.5,
+   "sharpness": 1,
+   "flatness": 0.001,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "precise",
+    "gentle"
+   ],
+   "group": "tap-generic",
+   "license": "CC0-1.0",
+   "description": "impact.light (plastic)"
+  },
+  {
+   "name": "tap-generic-3",
+   "file": "recorded/tap-generic-3.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.65,
+   "speed": 0.77,
+   "brightness": 0.29,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.135,
+   "loudness": -22.3,
+   "sharpness": 1,
+   "flatness": 0.001,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "precise",
+    "gentle"
+   ],
+   "group": "tap-generic",
+   "license": "CC0-1.0",
+   "description": "impact.light (plastic)"
+  },
+  {
+   "name": "wood-block-1",
+   "file": "recorded/wood-block-1.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "wood"
+   ],
+   "weight": 0.39,
+   "speed": 0.43,
+   "brightness": 0.22,
+   "tonal": true,
+   "pitchHz": 365.1,
+   "peakAt": 0.02,
+   "durationSec": 0.358,
+   "loudness": -16,
+   "sharpness": 0.64,
+   "flatness": 0,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "playful"
+   ],
+   "emotions": [
+    "warm",
+    "organic"
+   ],
+   "group": "wood-block",
+   "license": "CC0-1.0",
+   "description": "impact.light (wood)"
+  },
+  {
+   "name": "wood-block-2",
+   "file": "recorded/wood-block-2.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "wood"
+   ],
+   "weight": 0.25,
+   "speed": 0.42,
+   "brightness": 0.55,
+   "tonal": false,
+   "peakAt": 0.005,
+   "durationSec": 0.346,
+   "loudness": -16.1,
+   "sharpness": 0.56,
+   "flatness": 0.012,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "playful"
+   ],
+   "emotions": [
+    "warm",
+    "organic"
+   ],
+   "group": "wood-block",
+   "license": "CC0-1.0",
+   "description": "impact.light (wood)"
+  },
+  {
+   "name": "wood-block-3",
+   "file": "recorded/wood-block-3.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "wood"
+   ],
+   "weight": 0.25,
+   "speed": 0.43,
+   "brightness": 0.53,
+   "tonal": false,
+   "peakAt": 0.005,
+   "durationSec": 0.334,
+   "loudness": -18.9,
+   "sharpness": 0.8,
+   "flatness": 0.008,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "playful"
+   ],
+   "emotions": [
+    "warm",
+    "organic"
+   ],
+   "group": "wood-block",
+   "license": "CC0-1.0",
+   "description": "impact.light (wood)"
+  },
+  {
+   "name": "wood-snap-1",
+   "file": "recorded/wood-snap-1.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "wood"
+   ],
+   "weight": 0.4,
+   "speed": 0.68,
+   "brightness": 0.21,
+   "tonal": false,
+   "peakAt": 0.02,
+   "durationSec": 0.162,
+   "loudness": -20.9,
+   "sharpness": 1,
+   "flatness": 0.004,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "playful"
+   ],
+   "emotions": [
+    "warm"
+   ],
+   "group": "wood-snap",
+   "license": "CC0-1.0",
+   "description": "impact.light (wood)"
+  },
+  {
+   "name": "wood-snap-2",
+   "file": "recorded/wood-snap-2.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "wood"
+   ],
+   "weight": 0.58,
+   "speed": 0.54,
+   "brightness": 0.3,
+   "tonal": false,
+   "peakAt": 0.01,
+   "durationSec": 0.254,
+   "loudness": -21.8,
+   "sharpness": 1,
+   "flatness": 0.018,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "playful"
+   ],
+   "emotions": [
+    "warm"
+   ],
+   "group": "wood-snap",
+   "license": "CC0-1.0",
+   "description": "impact.light (wood)"
+  },
+  {
+   "name": "wood-tap-1",
+   "file": "recorded/wood-tap-1.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "wood"
+   ],
+   "weight": 0.51,
+   "speed": 0.72,
+   "brightness": 0.17,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.263,
+   "loudness": -23.3,
+   "sharpness": 1,
+   "flatness": 0,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "playful",
+    "cinematic"
+   ],
+   "emotions": [
+    "warm",
+    "organic"
+   ],
+   "group": "wood-tap",
+   "license": "CC0-1.0",
+   "description": "impact.light (wood)"
+  },
+  {
+   "name": "wood-tap-2",
+   "file": "recorded/wood-tap-2.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "wood"
+   ],
+   "weight": 0.55,
+   "speed": 0.72,
+   "brightness": 0.15,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.263,
+   "loudness": -23.1,
+   "sharpness": 1,
+   "flatness": 0,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "playful",
+    "cinematic"
+   ],
+   "emotions": [
+    "warm",
+    "organic"
+   ],
+   "group": "wood-tap",
+   "license": "CC0-1.0",
+   "description": "impact.light (wood)"
+  },
+  {
+   "name": "wood-tap-3",
+   "file": "recorded/wood-tap-3.wav",
+   "source": "recorded",
+   "category": "impact.light",
+   "material": [
+    "wood"
+   ],
+   "weight": 0.45,
+   "speed": 0.72,
+   "brightness": 0.22,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.263,
+   "loudness": -23.7,
+   "sharpness": 1,
+   "flatness": 0,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "playful",
+    "cinematic"
+   ],
+   "emotions": [
+    "warm",
+    "organic"
+   ],
+   "group": "wood-tap",
+   "license": "CC0-1.0",
+   "description": "impact.light (wood)"
+  },
+  {
+   "name": "ceramic-knock-1",
+   "file": "recorded/ceramic-knock-1.wav",
+   "source": "recorded",
+   "category": "impact.medium",
+   "material": [
+    "ceramic"
+   ],
+   "weight": 0.67,
+   "speed": 0.48,
+   "brightness": 0.36,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.584,
+   "loudness": -21.3,
+   "sharpness": 0.74,
+   "flatness": 0.046,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury"
+   ],
+   "emotions": [
+    "tactile",
+    "solid"
+   ],
+   "group": "ceramic-knock",
+   "license": "CC0-1.0",
+   "description": "impact.medium (ceramic)"
+  },
+  {
+   "name": "ceramic-knock-2",
+   "file": "recorded/ceramic-knock-2.wav",
+   "source": "recorded",
+   "category": "impact.medium",
+   "material": [
+    "ceramic"
+   ],
+   "weight": 0.66,
+   "speed": 0.47,
+   "brightness": 0.4,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.616,
+   "loudness": -19.8,
+   "sharpness": 0.78,
+   "flatness": 0.077,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury"
+   ],
+   "emotions": [
+    "tactile",
+    "solid"
+   ],
+   "group": "ceramic-knock",
+   "license": "CC0-1.0",
+   "description": "impact.medium (ceramic)"
+  },
+  {
+   "name": "ceramic-knock-3",
+   "file": "recorded/ceramic-knock-3.wav",
+   "source": "recorded",
+   "category": "impact.medium",
+   "material": [
+    "ceramic"
+   ],
+   "weight": 0.66,
+   "speed": 0.51,
+   "brightness": 0.36,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.515,
+   "loudness": -21,
+   "sharpness": 0.97,
+   "flatness": 0.062,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury"
+   ],
+   "emotions": [
+    "tactile",
+    "solid"
+   ],
+   "group": "ceramic-knock",
+   "license": "CC0-1.0",
+   "description": "impact.medium (ceramic)"
+  },
+  {
+   "name": "clank-1",
+   "file": "recorded/clank-1.wav",
+   "source": "recorded",
+   "category": "impact.medium",
+   "material": [
+    "metal"
+   ],
+   "weight": 0.34,
+   "speed": 0.29,
+   "brightness": 0.44,
+   "tonal": false,
+   "peakAt": 0.025,
+   "durationSec": 0.576,
+   "loudness": -17.8,
+   "sharpness": 0.66,
+   "flatness": 0.005,
+   "world": "hyper-real",
+   "palettes": [
+    "tech",
+    "cinematic"
+   ],
+   "emotions": [
+    "industrial",
+    "tactile"
+   ],
+   "group": "clank",
+   "license": "CC0-1.0",
+   "description": "impact.medium (metal)"
+  },
+  {
+   "name": "clank-2",
+   "file": "recorded/clank-2.wav",
+   "source": "recorded",
+   "category": "impact.medium",
+   "material": [
+    "metal"
+   ],
+   "weight": 0.29,
+   "speed": 0.56,
+   "brightness": 0.44,
+   "tonal": false,
+   "peakAt": 0.08,
+   "durationSec": 0.396,
+   "loudness": -20.1,
+   "sharpness": 0.88,
+   "flatness": 0.003,
+   "world": "hyper-real",
+   "palettes": [
+    "tech",
+    "cinematic"
+   ],
+   "emotions": [
+    "industrial",
+    "tactile"
+   ],
+   "group": "clank",
+   "license": "CC0-1.0",
+   "description": "impact.medium (metal)"
+  },
+  {
+   "name": "clank-3",
+   "file": "recorded/clank-3.wav",
+   "source": "recorded",
+   "category": "impact.medium",
+   "material": [
+    "metal"
+   ],
+   "weight": 0.32,
+   "speed": 0.42,
+   "brightness": 0.44,
+   "tonal": false,
+   "peakAt": 0.005,
+   "durationSec": 0.282,
+   "loudness": -18.9,
+   "sharpness": 0.85,
+   "flatness": 0.054,
+   "world": "hyper-real",
+   "palettes": [
+    "tech",
+    "cinematic"
+   ],
+   "emotions": [
+    "industrial",
+    "tactile"
+   ],
+   "group": "clank",
+   "license": "CC0-1.0",
+   "description": "impact.medium (metal)"
+  },
+  {
+   "name": "glass-knock-1",
+   "file": "recorded/glass-knock-1.wav",
+   "source": "recorded",
+   "category": "impact.medium",
+   "material": [
+    "glass"
+   ],
+   "weight": 0.63,
+   "speed": 0.45,
+   "brightness": 0.36,
+   "tonal": true,
+   "pitchHz": 112.8,
+   "peakAt": 0,
+   "durationSec": 0.54,
+   "loudness": -20.4,
+   "sharpness": 1,
+   "flatness": 0.001,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "minimal",
+    "luxury",
+    "tech"
+   ],
+   "emotions": [
+    "premium",
+    "solid"
+   ],
+   "group": "glass-knock",
+   "license": "CC0-1.0",
+   "description": "impact.medium (glass)"
+  },
+  {
+   "name": "glass-knock-2",
+   "file": "recorded/glass-knock-2.wav",
+   "source": "recorded",
+   "category": "impact.medium",
+   "material": [
+    "glass"
+   ],
+   "weight": 0.64,
+   "speed": 0.45,
+   "brightness": 0.4,
+   "tonal": true,
+   "pitchHz": 530.7,
+   "peakAt": 0,
+   "durationSec": 0.54,
+   "loudness": -20.4,
+   "sharpness": 1,
+   "flatness": 0.002,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "minimal",
+    "luxury",
+    "tech"
+   ],
+   "emotions": [
+    "premium",
+    "solid"
+   ],
+   "group": "glass-knock",
+   "license": "CC0-1.0",
+   "description": "impact.medium (glass)"
+  },
+  {
+   "name": "glass-knock-3",
+   "file": "recorded/glass-knock-3.wav",
+   "source": "recorded",
+   "category": "impact.medium",
+   "material": [
+    "glass"
+   ],
+   "weight": 0.56,
+   "speed": 0.45,
+   "brightness": 0.41,
+   "tonal": true,
+   "pitchHz": 73.5,
+   "peakAt": 0,
+   "durationSec": 0.54,
+   "loudness": -20.1,
+   "sharpness": 1,
+   "flatness": 0.002,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "minimal",
+    "luxury",
+    "tech"
+   ],
+   "emotions": [
+    "premium",
+    "solid"
+   ],
+   "group": "glass-knock",
+   "license": "CC0-1.0",
+   "description": "impact.medium (glass)"
+  },
+  {
+   "name": "glass-shatter-1",
+   "file": "recorded/glass-shatter-1.wav",
+   "source": "recorded",
+   "category": "impact.medium",
+   "material": [
+    "glass"
+   ],
+   "weight": 0.09,
+   "speed": 0.52,
+   "brightness": 0.94,
+   "tonal": false,
+   "peakAt": 0.005,
+   "durationSec": 0.368,
+   "loudness": -16.2,
+   "sharpness": 1,
+   "flatness": 0.134,
+   "world": "hyper-real",
+   "palettes": [
+    "hype",
+    "cinematic"
+   ],
+   "emotions": [
+    "shock",
+    "energy"
+   ],
+   "group": "glass-shatter",
+   "license": "CC0-1.0",
+   "description": "impact.medium (glass)"
+  },
+  {
+   "name": "glass-shatter-2",
+   "file": "recorded/glass-shatter-2.wav",
+   "source": "recorded",
+   "category": "impact.medium",
+   "material": [
+    "glass"
+   ],
+   "weight": 0.11,
+   "speed": 0.32,
+   "brightness": 0.93,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.416,
+   "loudness": -19.1,
+   "sharpness": 0.81,
+   "flatness": 0.112,
+   "world": "hyper-real",
+   "palettes": [
+    "hype",
+    "cinematic"
+   ],
+   "emotions": [
+    "shock",
+    "energy"
+   ],
+   "group": "glass-shatter",
+   "license": "CC0-1.0",
+   "description": "impact.medium (glass)"
+  },
+  {
+   "name": "metal-clang-1",
+   "file": "recorded/metal-clang-1.wav",
+   "source": "recorded",
+   "category": "impact.medium",
+   "material": [
+    "metal"
+   ],
+   "weight": 0.33,
+   "speed": 0.42,
+   "brightness": 0.44,
+   "tonal": false,
+   "peakAt": 0.025,
+   "durationSec": 0.458,
+   "loudness": -17.1,
+   "sharpness": 0.75,
+   "flatness": 0.028,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "hype",
+    "tech"
+   ],
+   "emotions": [
+    "solid",
+    "industrial"
+   ],
+   "group": "metal-clang",
+   "license": "CC0-1.0",
+   "description": "impact.medium (metal)"
+  },
+  {
+   "name": "metal-clang-2",
+   "file": "recorded/metal-clang-2.wav",
+   "source": "recorded",
+   "category": "impact.medium",
+   "material": [
+    "metal"
+   ],
+   "weight": 0.37,
+   "speed": 0.34,
+   "brightness": 0.4,
+   "tonal": false,
+   "peakAt": 0.01,
+   "durationSec": 0.468,
+   "loudness": -17.7,
+   "sharpness": 0.71,
+   "flatness": 0.028,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "hype",
+    "tech"
+   ],
+   "emotions": [
+    "solid",
+    "industrial"
+   ],
+   "group": "metal-clang",
+   "license": "CC0-1.0",
+   "description": "impact.medium (metal)"
+  },
+  {
+   "name": "metal-clang-3",
+   "file": "recorded/metal-clang-3.wav",
+   "source": "recorded",
+   "category": "impact.medium",
+   "material": [
+    "metal"
+   ],
+   "weight": 0.45,
+   "speed": 0.36,
+   "brightness": 0.3,
+   "tonal": false,
+   "peakAt": 0.025,
+   "durationSec": 0.59,
+   "loudness": -20.2,
+   "sharpness": 0.95,
+   "flatness": 0.007,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "hype",
+    "tech"
+   ],
+   "emotions": [
+    "solid",
+    "industrial"
+   ],
+   "group": "metal-clang",
+   "license": "CC0-1.0",
+   "description": "impact.medium (metal)"
+  },
+  {
+   "name": "metal-knock-1",
+   "file": "recorded/metal-knock-1.wav",
+   "source": "recorded",
+   "category": "impact.medium",
+   "material": [
+    "metal-thin",
+    "metal"
+   ],
+   "weight": 0.3,
+   "speed": 0.72,
+   "brightness": 0.46,
+   "tonal": true,
+   "pitchHz": 211.9,
+   "peakAt": 0,
+   "durationSec": 0.141,
+   "loudness": -20.5,
+   "sharpness": 1,
+   "flatness": 0.001,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "precise",
+    "solid"
+   ],
+   "group": "metal-knock",
+   "license": "CC0-1.0",
+   "description": "impact.medium (metal-thin/metal)"
+  },
+  {
+   "name": "metal-knock-2",
+   "file": "recorded/metal-knock-2.wav",
+   "source": "recorded",
+   "category": "impact.medium",
+   "material": [
+    "metal-thin",
+    "metal"
+   ],
+   "weight": 0.34,
+   "speed": 0.79,
+   "brightness": 0.45,
+   "tonal": true,
+   "pitchHz": 206.2,
+   "peakAt": 0,
+   "durationSec": 0.116,
+   "loudness": -23.5,
+   "sharpness": 1,
+   "flatness": 0.001,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "precise",
+    "solid"
+   ],
+   "group": "metal-knock",
+   "license": "CC0-1.0",
+   "description": "impact.medium (metal-thin/metal)"
+  },
+  {
+   "name": "metal-knock-3",
+   "file": "recorded/metal-knock-3.wav",
+   "source": "recorded",
+   "category": "impact.medium",
+   "material": [
+    "metal-thin",
+    "metal"
+   ],
+   "weight": 0.32,
+   "speed": 0.79,
+   "brightness": 0.47,
+   "tonal": true,
+   "pitchHz": 1014.6,
+   "peakAt": 0,
+   "durationSec": 0.107,
+   "loudness": -23,
+   "sharpness": 1,
+   "flatness": 0.001,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "precise",
+    "solid"
+   ],
+   "group": "metal-knock",
+   "license": "CC0-1.0",
+   "description": "impact.medium (metal-thin/metal)"
+  },
+  {
+   "name": "punch-1",
+   "file": "recorded/punch-1.wav",
+   "source": "recorded",
+   "category": "impact.medium",
+   "material": [
+    "body"
+   ],
+   "weight": 0.67,
+   "speed": 0.51,
+   "brightness": 0.11,
+   "tonal": false,
+   "peakAt": 0.02,
+   "durationSec": 0.314,
+   "loudness": -16.3,
+   "sharpness": 0.73,
+   "flatness": 0,
+   "world": "hyper-real",
+   "palettes": [
+    "hype",
+    "tech",
+    "playful"
+   ],
+   "emotions": [
+    "energy",
+    "confident"
+   ],
+   "group": "punch",
+   "license": "CC0-1.0",
+   "description": "impact.medium (body)"
+  },
+  {
+   "name": "punch-2",
+   "file": "recorded/punch-2.wav",
+   "source": "recorded",
+   "category": "impact.medium",
+   "material": [
+    "body"
+   ],
+   "weight": 0.64,
+   "speed": 0.52,
+   "brightness": 0.12,
+   "tonal": false,
+   "peakAt": 0.015,
+   "durationSec": 0.298,
+   "loudness": -16,
+   "sharpness": 0.66,
+   "flatness": 0,
+   "world": "hyper-real",
+   "palettes": [
+    "hype",
+    "tech",
+    "playful"
+   ],
+   "emotions": [
+    "energy",
+    "confident"
+   ],
+   "group": "punch",
+   "license": "CC0-1.0",
+   "description": "impact.medium (body)"
+  },
+  {
+   "name": "punch-3",
+   "file": "recorded/punch-3.wav",
+   "source": "recorded",
+   "category": "impact.medium",
+   "material": [
+    "body"
+   ],
+   "weight": 0.59,
+   "speed": 0.51,
+   "brightness": 0.13,
+   "tonal": false,
+   "peakAt": 0.02,
+   "durationSec": 0.33,
+   "loudness": -16,
+   "sharpness": 0.67,
+   "flatness": 0,
+   "world": "hyper-real",
+   "palettes": [
+    "hype",
+    "tech",
+    "playful"
+   ],
+   "emotions": [
+    "energy",
+    "confident"
+   ],
+   "group": "punch",
+   "license": "CC0-1.0",
+   "description": "impact.medium (body)"
+  },
+  {
+   "name": "thud-1",
+   "file": "recorded/thud-1.wav",
+   "source": "recorded",
+   "category": "impact.medium",
+   "material": [
+    "cardboard"
+   ],
+   "weight": 0.42,
+   "speed": 0.39,
+   "brightness": 0.45,
+   "tonal": false,
+   "peakAt": 0.005,
+   "durationSec": 0.32,
+   "loudness": -19.3,
+   "sharpness": 1,
+   "flatness": 0.101,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "solid"
+   ],
+   "group": "thud",
+   "license": "CC0-1.0",
+   "description": "impact.medium (cardboard)"
+  },
+  {
+   "name": "thud-2",
+   "file": "recorded/thud-2.wav",
+   "source": "recorded",
+   "category": "impact.medium",
+   "material": [
+    "cardboard"
+   ],
+   "weight": 0.72,
+   "speed": 0.45,
+   "brightness": 0.21,
+   "tonal": false,
+   "peakAt": 0.015,
+   "durationSec": 0.454,
+   "loudness": -16,
+   "sharpness": 0.74,
+   "flatness": 0.032,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "solid"
+   ],
+   "group": "thud",
+   "license": "CC0-1.0",
+   "description": "impact.medium (cardboard)"
+  },
+  {
+   "name": "thud-3",
+   "file": "recorded/thud-3.wav",
+   "source": "recorded",
+   "category": "impact.medium",
+   "material": [
+    "cardboard"
+   ],
+   "weight": 0.39,
+   "speed": 0.6,
+   "brightness": 0.52,
+   "tonal": false,
+   "peakAt": 0.015,
+   "durationSec": 0.324,
+   "loudness": -19.9,
+   "sharpness": 1,
+   "flatness": 0.093,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "solid"
+   ],
+   "group": "thud",
+   "license": "CC0-1.0",
+   "description": "impact.medium (cardboard)"
+  },
+  {
+   "name": "wood-hit-1",
+   "file": "recorded/wood-hit-1.wav",
+   "source": "recorded",
+   "category": "impact.medium",
+   "material": [
+    "wood"
+   ],
+   "weight": 0.75,
+   "speed": 0.56,
+   "brightness": 0.08,
+   "tonal": false,
+   "peakAt": 0.095,
+   "durationSec": 0.268,
+   "loudness": -16.7,
+   "sharpness": 1,
+   "flatness": 0,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "cinematic"
+   ],
+   "emotions": [
+    "warm",
+    "solid"
+   ],
+   "group": "wood-hit",
+   "license": "CC0-1.0",
+   "description": "impact.medium (wood)"
+  },
+  {
+   "name": "wood-hit-2",
+   "file": "recorded/wood-hit-2.wav",
+   "source": "recorded",
+   "category": "impact.medium",
+   "material": [
+    "wood"
+   ],
+   "weight": 0.68,
+   "speed": 0.44,
+   "brightness": 0.2,
+   "tonal": false,
+   "peakAt": 0.01,
+   "durationSec": 0.326,
+   "loudness": -16.3,
+   "sharpness": 0.75,
+   "flatness": 0.004,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "cinematic"
+   ],
+   "emotions": [
+    "warm",
+    "solid"
+   ],
+   "group": "wood-hit",
+   "license": "CC0-1.0",
+   "description": "impact.medium (wood)"
+  },
+  {
+   "name": "wood-knock-1",
+   "file": "recorded/wood-knock-1.wav",
+   "source": "recorded",
+   "category": "impact.medium",
+   "material": [
+    "wood"
+   ],
+   "weight": 0.74,
+   "speed": 0.62,
+   "brightness": 0.07,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.33,
+   "loudness": -19.7,
+   "sharpness": 1,
+   "flatness": 0,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "playful",
+    "cinematic"
+   ],
+   "emotions": [
+    "warm",
+    "solid"
+   ],
+   "group": "wood-knock",
+   "license": "CC0-1.0",
+   "description": "impact.medium (wood)"
+  },
+  {
+   "name": "wood-knock-2",
+   "file": "recorded/wood-knock-2.wav",
+   "source": "recorded",
+   "category": "impact.medium",
+   "material": [
+    "wood"
+   ],
+   "weight": 0.77,
+   "speed": 0.62,
+   "brightness": 0.06,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.33,
+   "loudness": -19.6,
+   "sharpness": 1,
+   "flatness": 0,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "playful",
+    "cinematic"
+   ],
+   "emotions": [
+    "warm",
+    "solid"
+   ],
+   "group": "wood-knock",
+   "license": "CC0-1.0",
+   "description": "impact.medium (wood)"
+  },
+  {
+   "name": "wood-knock-3",
+   "file": "recorded/wood-knock-3.wav",
+   "source": "recorded",
+   "category": "impact.medium",
+   "material": [
+    "wood"
+   ],
+   "weight": 0.63,
+   "speed": 0.62,
+   "brightness": 0.09,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.33,
+   "loudness": -19.8,
+   "sharpness": 1,
+   "flatness": 0,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "playful",
+    "cinematic"
+   ],
+   "emotions": [
+    "warm",
+    "solid"
+   ],
+   "group": "wood-knock",
+   "license": "CC0-1.0",
+   "description": "impact.medium (wood)"
+  },
+  {
+   "name": "bubble-1",
+   "file": "recorded/bubble-1.wav",
+   "source": "recorded",
+   "category": "liquid.bubble",
+   "material": [
+    "liquid"
+   ],
+   "weight": 0.37,
+   "speed": 0.27,
+   "brightness": 0.39,
+   "tonal": false,
+   "peakAt": 0.088,
+   "durationSec": 0.566,
+   "loudness": -16,
+   "sharpness": 0.93,
+   "flatness": 0.005,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "minimal"
+   ],
+   "emotions": [
+    "playful",
+    "organic"
+   ],
+   "group": "bubble",
+   "license": "CC0-1.0",
+   "description": "liquid.bubble (liquid)"
+  },
+  {
+   "name": "bubble-2",
+   "file": "recorded/bubble-2.wav",
+   "source": "recorded",
+   "category": "liquid.bubble",
+   "material": [
+    "liquid"
+   ],
+   "weight": 0.28,
+   "speed": 0.41,
+   "brightness": 0.4,
+   "tonal": false,
+   "peakAt": 0.163,
+   "durationSec": 0.274,
+   "loudness": -16,
+   "sharpness": 0.97,
+   "flatness": 0,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "minimal"
+   ],
+   "emotions": [
+    "playful",
+    "organic"
+   ],
+   "group": "bubble",
+   "license": "CC0-1.0",
+   "description": "liquid.bubble (liquid)"
+  },
+  {
+   "name": "bubble-3",
+   "file": "recorded/bubble-3.wav",
+   "source": "recorded",
+   "category": "liquid.bubble",
+   "material": [
+    "liquid"
+   ],
+   "weight": 0.2,
+   "speed": 0.26,
+   "brightness": 0.79,
+   "tonal": false,
+   "peakAt": 0.11,
+   "durationSec": 0.542,
+   "loudness": -20.8,
+   "sharpness": 0.9,
+   "flatness": 0.147,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "minimal"
+   ],
+   "emotions": [
+    "playful",
+    "organic"
+   ],
+   "group": "bubble",
+   "license": "CC0-1.0",
+   "description": "liquid.bubble (liquid)"
+  },
+  {
+   "name": "bubble-pop-1",
+   "file": "recorded/bubble-pop-1.wav",
+   "source": "recorded",
+   "category": "liquid.bubble",
+   "material": [
+    "liquid"
+   ],
+   "weight": 0.3,
+   "speed": 0.52,
+   "brightness": 0.38,
+   "tonal": false,
+   "peakAt": 0.093,
+   "durationSec": 0.305,
+   "loudness": -20.1,
+   "sharpness": 1,
+   "flatness": 0,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "minimal"
+   ],
+   "emotions": [
+    "playful"
+   ],
+   "group": "bubble-pop",
+   "license": "CC0-1.0",
+   "description": "liquid.bubble (liquid)"
+  },
+  {
+   "name": "bubble-pop-2",
+   "file": "recorded/bubble-pop-2.wav",
+   "source": "recorded",
+   "category": "liquid.bubble",
+   "material": [
+    "liquid"
+   ],
+   "weight": 0.36,
+   "speed": 0.34,
+   "brightness": 0.33,
+   "tonal": false,
+   "peakAt": 0.07,
+   "durationSec": 0.418,
+   "loudness": -16,
+   "sharpness": 0.74,
+   "flatness": 0,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "minimal"
+   ],
+   "emotions": [
+    "playful"
+   ],
+   "group": "bubble-pop",
+   "license": "CC0-1.0",
+   "description": "liquid.bubble (liquid)"
+  },
+  {
+   "name": "bubble-pop-3",
+   "file": "recorded/bubble-pop-3.wav",
+   "source": "recorded",
+   "category": "liquid.bubble",
+   "material": [
+    "liquid"
+   ],
+   "weight": 0.28,
+   "speed": 0.36,
+   "brightness": 0.48,
+   "tonal": false,
+   "peakAt": 0.243,
+   "durationSec": 0.394,
+   "loudness": -16.5,
+   "sharpness": 1,
+   "flatness": 0,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "minimal"
+   ],
+   "emotions": [
+    "playful"
+   ],
+   "group": "bubble-pop",
+   "license": "CC0-1.0",
+   "description": "liquid.bubble (liquid)"
+  },
+  {
+   "name": "goo-1",
+   "file": "recorded/goo-1.wav",
+   "source": "recorded",
+   "category": "liquid.drop",
+   "material": [
+    "liquid"
+   ],
+   "weight": 0.09,
+   "speed": 0.63,
+   "brightness": 0.88,
+   "tonal": false,
+   "peakAt": 0.095,
+   "durationSec": 0.332,
+   "loudness": -26.1,
+   "sharpness": 1,
+   "flatness": 0.107,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "minimal",
+    "tech"
+   ],
+   "emotions": [
+    "organic",
+    "playful"
+   ],
+   "group": "goo",
+   "license": "CC0-1.0",
+   "description": "liquid.drop (liquid)"
+  },
+  {
+   "name": "goo-2",
+   "file": "recorded/goo-2.wav",
+   "source": "recorded",
+   "category": "liquid.drop",
+   "material": [
+    "liquid"
+   ],
+   "weight": 0.11,
+   "speed": 0.53,
+   "brightness": 0.84,
+   "tonal": false,
+   "peakAt": 0.035,
+   "durationSec": 0.316,
+   "loudness": -22.8,
+   "sharpness": 1,
+   "flatness": 0.297,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "minimal",
+    "tech"
+   ],
+   "emotions": [
+    "organic",
+    "playful"
+   ],
+   "group": "goo",
+   "license": "CC0-1.0",
+   "description": "liquid.drop (liquid)"
+  },
+  {
+   "name": "goo-3",
+   "file": "recorded/goo-3.wav",
+   "source": "recorded",
+   "category": "liquid.drop",
+   "material": [
+    "liquid"
+   ],
+   "weight": 0.19,
+   "speed": 0.82,
+   "brightness": 0.65,
+   "tonal": false,
+   "peakAt": 0.105,
+   "durationSec": 0.398,
+   "loudness": -21,
+   "sharpness": 1,
+   "flatness": 0.104,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "minimal",
+    "tech"
+   ],
+   "emotions": [
+    "organic",
+    "playful"
+   ],
+   "group": "goo",
+   "license": "CC0-1.0",
+   "description": "liquid.drop (liquid)"
+  },
+  {
+   "name": "goo-4",
+   "file": "recorded/goo-4.wav",
+   "source": "recorded",
+   "category": "liquid.drop",
+   "material": [
+    "liquid"
+   ],
+   "weight": 0.12,
+   "speed": 0.65,
+   "brightness": 0.82,
+   "tonal": false,
+   "peakAt": 0.185,
+   "durationSec": 0.366,
+   "loudness": -25.1,
+   "sharpness": 1,
+   "flatness": 0.192,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "minimal",
+    "tech"
+   ],
+   "emotions": [
+    "organic",
+    "playful"
+   ],
+   "group": "goo",
+   "license": "CC0-1.0",
+   "description": "liquid.drop (liquid)"
+  },
+  {
+   "name": "plop-1",
+   "file": "recorded/plop-1.wav",
+   "source": "recorded",
+   "category": "liquid.drop",
+   "material": [
+    "liquid"
+   ],
+   "weight": 0.22,
+   "speed": 0.9,
+   "brightness": 0.53,
+   "tonal": false,
+   "peakAt": 0.005,
+   "durationSec": 0.158,
+   "loudness": -26.1,
+   "sharpness": 1,
+   "flatness": 0.014,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "minimal"
+   ],
+   "emotions": [
+    "playful"
+   ],
+   "group": "plop",
+   "license": "CC0-1.0",
+   "description": "liquid.drop (liquid)"
+  },
+  {
+   "name": "plop-2",
+   "file": "recorded/plop-2.wav",
+   "source": "recorded",
+   "category": "liquid.drop",
+   "material": [
+    "liquid"
+   ],
+   "weight": 0.27,
+   "speed": 0.77,
+   "brightness": 0.46,
+   "tonal": true,
+   "pitchHz": 651.3,
+   "peakAt": 0.075,
+   "durationSec": 0.206,
+   "loudness": -20.8,
+   "sharpness": 1,
+   "flatness": 0.015,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "minimal"
+   ],
+   "emotions": [
+    "playful"
+   ],
+   "group": "plop",
+   "license": "CC0-1.0",
+   "description": "liquid.drop (liquid)"
+  },
+  {
+   "name": "slime-1",
+   "file": "recorded/slime-1.wav",
+   "source": "recorded",
+   "category": "liquid.drop",
+   "material": [
+    "liquid"
+   ],
+   "weight": 0.18,
+   "speed": 1,
+   "brightness": 0.67,
+   "tonal": false,
+   "peakAt": 0.41,
+   "durationSec": 0.5,
+   "loudness": -19.6,
+   "sharpness": 1,
+   "flatness": 0.007,
+   "world": "abstract",
+   "palettes": [
+    "playful",
+    "tech"
+   ],
+   "emotions": [
+    "playful"
+   ],
+   "group": "slime",
+   "license": "CC0-1.0",
+   "description": "liquid.drop (liquid)"
+  },
+  {
+   "name": "splash-1",
+   "file": "recorded/splash-1.wav",
+   "source": "recorded",
+   "category": "liquid.splash",
+   "material": [
+    "liquid"
+   ],
+   "weight": 0.13,
+   "speed": 0.62,
+   "brightness": 0.84,
+   "tonal": false,
+   "peakAt": 0.02,
+   "durationSec": 0.566,
+   "loudness": -22.6,
+   "sharpness": 1,
+   "flatness": 0.291,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "minimal",
+    "cinematic"
+   ],
+   "emotions": [
+    "fresh",
+    "energy"
+   ],
+   "group": "splash",
+   "license": "CC0-1.0",
+   "description": "liquid.splash (liquid)"
+  },
+  {
+   "name": "splash-2",
+   "file": "recorded/splash-2.wav",
+   "source": "recorded",
+   "category": "liquid.splash",
+   "material": [
+    "liquid"
+   ],
+   "weight": 0.11,
+   "speed": 0.42,
+   "brightness": 0.88,
+   "tonal": false,
+   "peakAt": 0.085,
+   "durationSec": 0.398,
+   "loudness": -17.1,
+   "sharpness": 0.75,
+   "flatness": 0.288,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "minimal",
+    "cinematic"
+   ],
+   "emotions": [
+    "fresh",
+    "energy"
+   ],
+   "group": "splash",
+   "license": "CC0-1.0",
+   "description": "liquid.splash (liquid)"
+  },
+  {
+   "name": "splash-3",
+   "file": "recorded/splash-3.wav",
+   "source": "recorded",
+   "category": "liquid.splash",
+   "material": [
+    "liquid"
+   ],
+   "weight": 0.14,
+   "speed": 0.39,
+   "brightness": 0.84,
+   "tonal": false,
+   "peakAt": 0.14,
+   "durationSec": 0.408,
+   "loudness": -20.7,
+   "sharpness": 1,
+   "flatness": 0.312,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "minimal",
+    "cinematic"
+   ],
+   "emotions": [
+    "fresh",
+    "energy"
+   ],
+   "group": "splash",
+   "license": "CC0-1.0",
+   "description": "liquid.splash (liquid)"
+  },
+  {
+   "name": "chime-1",
+   "file": "recorded/chime-1.wav",
+   "source": "recorded",
+   "category": "magic.chime",
+   "material": [
+    "glass",
+    "digital"
+   ],
+   "weight": 0.46,
+   "speed": 0.16,
+   "brightness": 0.42,
+   "tonal": true,
+   "pitchHz": 849.6,
+   "peakAt": 0.005,
+   "durationSec": 1.5,
+   "loudness": -16,
+   "sharpness": 0.51,
+   "flatness": 0,
+   "world": "abstract",
+   "palettes": [
+    "luxury",
+    "tech",
+    "minimal",
+    "playful"
+   ],
+   "emotions": [
+    "delight",
+    "premium"
+   ],
+   "group": "chime",
+   "license": "CC0-1.0",
+   "description": "magic.chime (glass/digital)"
+  },
+  {
+   "name": "chime-2",
+   "file": "recorded/chime-2.wav",
+   "source": "recorded",
+   "category": "magic.chime",
+   "material": [
+    "glass",
+    "digital"
+   ],
+   "weight": 0.45,
+   "speed": 0.19,
+   "brightness": 0.35,
+   "tonal": true,
+   "pitchHz": 548.6,
+   "peakAt": 0.005,
+   "durationSec": 1.216,
+   "loudness": -16,
+   "sharpness": 1,
+   "flatness": 0,
+   "world": "abstract",
+   "palettes": [
+    "luxury",
+    "tech",
+    "minimal",
+    "playful"
+   ],
+   "emotions": [
+    "delight",
+    "premium"
+   ],
+   "group": "chime",
+   "license": "CC0-1.0",
+   "description": "magic.chime (glass/digital)"
+  },
+  {
+   "name": "chime-3",
+   "file": "recorded/chime-3.wav",
+   "source": "recorded",
+   "category": "magic.chime",
+   "material": [
+    "glass",
+    "digital"
+   ],
+   "weight": 0.43,
+   "speed": 0.16,
+   "brightness": 0.49,
+   "tonal": true,
+   "pitchHz": 1129.4,
+   "peakAt": 0.005,
+   "durationSec": 1.5,
+   "loudness": -16,
+   "sharpness": 0.58,
+   "flatness": 0,
+   "world": "abstract",
+   "palettes": [
+    "luxury",
+    "tech",
+    "minimal",
+    "playful"
+   ],
+   "emotions": [
+    "delight",
+    "premium"
+   ],
+   "group": "chime",
+   "license": "CC0-1.0",
+   "description": "magic.chime (glass/digital)"
+  },
+  {
+   "name": "ding-bell-1",
+   "file": "recorded/ding-bell-1.wav",
+   "source": "recorded",
+   "category": "magic.chime",
+   "material": [
+    "metal"
+   ],
+   "weight": 0.41,
+   "speed": 0.12,
+   "brightness": 0.55,
+   "tonal": true,
+   "peakAt": 0.02,
+   "durationSec": 1.288,
+   "loudness": -16,
+   "sharpness": 0.78,
+   "flatness": 0.007,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "minimal",
+    "luxury"
+   ],
+   "emotions": [
+    "delight",
+    "success"
+   ],
+   "group": "ding-bell",
+   "license": "CC0-1.0",
+   "description": "magic.chime (metal)"
+  },
+  {
+   "name": "ding-bell-2",
+   "file": "recorded/ding-bell-2.wav",
+   "source": "recorded",
+   "category": "magic.chime",
+   "material": [
+    "metal"
+   ],
+   "weight": 0.5,
+   "speed": 0.01,
+   "brightness": 0.41,
+   "tonal": true,
+   "peakAt": 0.02,
+   "durationSec": 1.398,
+   "loudness": -16,
+   "sharpness": 0.59,
+   "flatness": 0,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "minimal",
+    "luxury"
+   ],
+   "emotions": [
+    "delight",
+    "success"
+   ],
+   "group": "ding-bell",
+   "license": "CC0-1.0",
+   "description": "magic.chime (metal)"
+  },
+  {
+   "name": "ding-bell-3",
+   "file": "recorded/ding-bell-3.wav",
+   "source": "recorded",
+   "category": "magic.chime",
+   "material": [
+    "metal"
+   ],
+   "weight": 0.47,
+   "speed": 0.04,
+   "brightness": 0.48,
+   "tonal": true,
+   "peakAt": 0.015,
+   "durationSec": 1.4,
+   "loudness": -16,
+   "sharpness": 0.6,
+   "flatness": 0.002,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "minimal",
+    "luxury"
+   ],
+   "emotions": [
+    "delight",
+    "success"
+   ],
+   "group": "ding-bell",
+   "license": "CC0-1.0",
+   "description": "magic.chime (metal)"
+  },
+  {
+   "name": "toaster-click-1",
+   "file": "recorded/toaster-click-1.wav",
+   "source": "recorded",
+   "category": "mech.click",
+   "material": [
+    "metal-thin"
+   ],
+   "weight": 0.27,
+   "speed": 0.48,
+   "brightness": 0.6,
+   "tonal": false,
+   "peakAt": 0.03,
+   "durationSec": 0.292,
+   "loudness": -19.4,
+   "sharpness": 0.95,
+   "flatness": 0.158,
+   "world": "hyper-real",
+   "palettes": [
+    "tech",
+    "minimal",
+    "playful"
+   ],
+   "emotions": [
+    "tactile",
+    "precise"
+   ],
+   "group": "toaster-click",
+   "license": "CC0-1.0",
+   "description": "mech.click (metal-thin)"
+  },
+  {
+   "name": "toaster-click-2",
+   "file": "recorded/toaster-click-2.wav",
+   "source": "recorded",
+   "category": "mech.click",
+   "material": [
+    "metal-thin"
+   ],
+   "weight": 0.29,
+   "speed": 0.48,
+   "brightness": 0.55,
+   "tonal": false,
+   "peakAt": 0.015,
+   "durationSec": 0.276,
+   "loudness": -18.6,
+   "sharpness": 0.76,
+   "flatness": 0.108,
+   "world": "hyper-real",
+   "palettes": [
+    "tech",
+    "minimal",
+    "playful"
+   ],
+   "emotions": [
+    "tactile",
+    "precise"
+   ],
+   "group": "toaster-click",
+   "license": "CC0-1.0",
+   "description": "mech.click (metal-thin)"
+  },
+  {
+   "name": "toaster-click-3",
+   "file": "recorded/toaster-click-3.wav",
+   "source": "recorded",
+   "category": "mech.click",
+   "material": [
+    "metal-thin"
+   ],
+   "weight": 0.32,
+   "speed": 0.47,
+   "brightness": 0.54,
+   "tonal": false,
+   "peakAt": 0.015,
+   "durationSec": 0.272,
+   "loudness": -18.4,
+   "sharpness": 0.85,
+   "flatness": 0.102,
+   "world": "hyper-real",
+   "palettes": [
+    "tech",
+    "minimal",
+    "playful"
+   ],
+   "emotions": [
+    "tactile",
+    "precise"
+   ],
+   "group": "toaster-click",
+   "license": "CC0-1.0",
+   "description": "mech.click (metal-thin)"
+  },
+  {
+   "name": "key-turn-1",
+   "file": "recorded/key-turn-1.wav",
+   "source": "recorded",
+   "category": "mech.latch",
+   "material": [
+    "metal-thin"
+   ],
+   "weight": 0.09,
+   "speed": 0.46,
+   "brightness": 0.9,
+   "tonal": false,
+   "peakAt": 0.143,
+   "durationSec": 0.348,
+   "loudness": -16,
+   "sharpness": 0.44,
+   "flatness": 0.022,
+   "world": "hyper-real",
+   "palettes": [
+    "tech",
+    "minimal"
+   ],
+   "emotions": [
+    "secure"
+   ],
+   "group": "key-turn",
+   "license": "CC0-1.0",
+   "description": "mech.latch (metal-thin)"
+  },
+  {
+   "name": "key-turn-2",
+   "file": "recorded/key-turn-2.wav",
+   "source": "recorded",
+   "category": "mech.latch",
+   "material": [
+    "metal-thin"
+   ],
+   "weight": 0.12,
+   "speed": 0.58,
+   "brightness": 0.82,
+   "tonal": true,
+   "pitchHz": 1354.4,
+   "peakAt": 0.12,
+   "durationSec": 0.312,
+   "loudness": -16,
+   "sharpness": 1,
+   "flatness": 0.011,
+   "world": "hyper-real",
+   "palettes": [
+    "tech",
+    "minimal"
+   ],
+   "emotions": [
+    "secure"
+   ],
+   "group": "key-turn",
+   "license": "CC0-1.0",
+   "description": "mech.latch (metal-thin)"
+  },
+  {
+   "name": "latch-1",
+   "file": "recorded/latch-1.wav",
+   "source": "recorded",
+   "category": "mech.latch",
+   "material": [
+    "metal-thin"
+   ],
+   "weight": 0.11,
+   "speed": 0.68,
+   "brightness": 0.84,
+   "tonal": false,
+   "peakAt": 0.27,
+   "durationSec": 0.382,
+   "loudness": -22.1,
+   "sharpness": 1,
+   "flatness": 0.223,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "satisfying",
+    "precise"
+   ],
+   "group": "latch",
+   "license": "CC0-1.0",
+   "description": "mech.latch (metal-thin)"
+  },
+  {
+   "name": "latch-2",
+   "file": "recorded/latch-2.wav",
+   "source": "recorded",
+   "category": "mech.latch",
+   "material": [
+    "metal-thin"
+   ],
+   "weight": 0.09,
+   "speed": 0.65,
+   "brightness": 0.94,
+   "tonal": false,
+   "peakAt": 0.035,
+   "durationSec": 0.212,
+   "loudness": -18.8,
+   "sharpness": 1,
+   "flatness": 0.318,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "satisfying",
+    "precise"
+   ],
+   "group": "latch",
+   "license": "CC0-1.0",
+   "description": "mech.latch (metal-thin)"
+  },
+  {
+   "name": "lock-click-1",
+   "file": "recorded/lock-click-1.wav",
+   "source": "recorded",
+   "category": "mech.latch",
+   "material": [
+    "metal"
+   ],
+   "weight": 0.23,
+   "speed": 0.42,
+   "brightness": 0.84,
+   "tonal": false,
+   "peakAt": 0.113,
+   "durationSec": 0.6,
+   "loudness": -17.6,
+   "sharpness": 0.91,
+   "flatness": 0.461,
+   "world": "hyper-real",
+   "palettes": [
+    "tech",
+    "minimal",
+    "cinematic"
+   ],
+   "emotions": [
+    "satisfying",
+    "secure"
+   ],
+   "group": "lock-click",
+   "license": "CC0-1.0",
+   "description": "mech.latch (metal)"
+  },
+  {
+   "name": "lock-click-2",
+   "file": "recorded/lock-click-2.wav",
+   "source": "recorded",
+   "category": "mech.latch",
+   "material": [
+    "metal"
+   ],
+   "weight": 0.14,
+   "speed": 0.39,
+   "brightness": 0.86,
+   "tonal": false,
+   "peakAt": 0.035,
+   "durationSec": 0.52,
+   "loudness": -16,
+   "sharpness": 1,
+   "flatness": 0.333,
+   "world": "hyper-real",
+   "palettes": [
+    "tech",
+    "minimal",
+    "cinematic"
+   ],
+   "emotions": [
+    "satisfying",
+    "secure"
+   ],
+   "group": "lock-click",
+   "license": "CC0-1.0",
+   "description": "mech.latch (metal)"
+  },
+  {
+   "name": "lock-click-3",
+   "file": "recorded/lock-click-3.wav",
+   "source": "recorded",
+   "category": "mech.latch",
+   "material": [
+    "metal"
+   ],
+   "weight": 0.12,
+   "speed": 0.48,
+   "brightness": 0.86,
+   "tonal": false,
+   "peakAt": 0.17,
+   "durationSec": 0.386,
+   "loudness": -16.3,
+   "sharpness": 1,
+   "flatness": 0.505,
+   "world": "hyper-real",
+   "palettes": [
+    "tech",
+    "minimal",
+    "cinematic"
+   ],
+   "emotions": [
+    "satisfying",
+    "secure"
+   ],
+   "group": "lock-click",
+   "license": "CC0-1.0",
+   "description": "mech.latch (metal)"
+  },
+  {
+   "name": "lock-open-1",
+   "file": "recorded/lock-open-1.wav",
+   "source": "recorded",
+   "category": "mech.latch",
+   "material": [
+    "metal"
+   ],
+   "weight": 0.1,
+   "speed": 0.65,
+   "brightness": 0.89,
+   "tonal": false,
+   "peakAt": 0.295,
+   "durationSec": 0.506,
+   "loudness": -22.3,
+   "sharpness": 1,
+   "flatness": 0.307,
+   "world": "hyper-real",
+   "palettes": [
+    "tech",
+    "minimal"
+   ],
+   "emotions": [
+    "secure",
+    "release"
+   ],
+   "group": "lock-open",
+   "license": "CC0-1.0",
+   "description": "mech.latch (metal)"
+  },
+  {
+   "name": "switch-snap-1",
+   "file": "recorded/switch-snap-1.wav",
+   "source": "recorded",
+   "category": "mech.switch",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.54,
+   "speed": 0.7,
+   "brightness": 0.55,
+   "tonal": false,
+   "peakAt": 0.105,
+   "durationSec": 0.182,
+   "loudness": -22.8,
+   "sharpness": 1,
+   "flatness": 0.128,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "tactile"
+   ],
+   "group": "switch-snap",
+   "license": "CC0-1.0",
+   "description": "mech.switch (plastic)"
+  },
+  {
+   "name": "switch-snap-2",
+   "file": "recorded/switch-snap-2.wav",
+   "source": "recorded",
+   "category": "mech.switch",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.71,
+   "speed": 0.9,
+   "brightness": 0.14,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.166,
+   "loudness": -19.9,
+   "sharpness": 1,
+   "flatness": 0.007,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "tactile"
+   ],
+   "group": "switch-snap",
+   "license": "CC0-1.0",
+   "description": "mech.switch (plastic)"
+  },
+  {
+   "name": "switch-snap-3",
+   "file": "recorded/switch-snap-3.wav",
+   "source": "recorded",
+   "category": "mech.switch",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.33,
+   "speed": 0.86,
+   "brightness": 0.4,
+   "tonal": false,
+   "peakAt": 0.105,
+   "durationSec": 0.168,
+   "loudness": -19.9,
+   "sharpness": 1,
+   "flatness": 0.002,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "tactile"
+   ],
+   "group": "switch-snap",
+   "license": "CC0-1.0",
+   "description": "mech.switch (plastic)"
+  },
+  {
+   "name": "ui-switch-1",
+   "file": "recorded/ui-switch-1.wav",
+   "source": "recorded",
+   "category": "mech.switch",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.16,
+   "speed": 0.74,
+   "brightness": 0.66,
+   "tonal": false,
+   "peakAt": 0.02,
+   "durationSec": 0.162,
+   "loudness": -24.2,
+   "sharpness": 1,
+   "flatness": 0.126,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "tactile",
+    "precise"
+   ],
+   "group": "ui-switch",
+   "license": "CC0-1.0",
+   "description": "mech.switch (plastic)"
+  },
+  {
+   "name": "ui-switch-2",
+   "file": "recorded/ui-switch-2.wav",
+   "source": "recorded",
+   "category": "mech.switch",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.13,
+   "speed": 0.82,
+   "brightness": 0.73,
+   "tonal": false,
+   "peakAt": 0.015,
+   "durationSec": 0.156,
+   "loudness": -22.2,
+   "sharpness": 1,
+   "flatness": 0.208,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "tactile",
+    "precise"
+   ],
+   "group": "ui-switch",
+   "license": "CC0-1.0",
+   "description": "mech.switch (plastic)"
+  },
+  {
+   "name": "ui-switch-3",
+   "file": "recorded/ui-switch-3.wav",
+   "source": "recorded",
+   "category": "mech.switch",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.15,
+   "speed": 0.82,
+   "brightness": 0.7,
+   "tonal": false,
+   "peakAt": 0.055,
+   "durationSec": 0.212,
+   "loudness": -21.1,
+   "sharpness": 1,
+   "flatness": 0.152,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "tactile",
+    "precise"
+   ],
+   "group": "ui-switch",
+   "license": "CC0-1.0",
+   "description": "mech.switch (plastic)"
+  },
+  {
+   "name": "wall-switch-1",
+   "file": "recorded/wall-switch-1.wav",
+   "source": "recorded",
+   "category": "mech.switch",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.2,
+   "speed": 0.79,
+   "brightness": 0.58,
+   "tonal": false,
+   "peakAt": 0.01,
+   "durationSec": 0.154,
+   "loudness": -25.7,
+   "sharpness": 1,
+   "flatness": 0.029,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "tactile"
+   ],
+   "group": "wall-switch",
+   "license": "CC0-1.0",
+   "description": "mech.switch (plastic)"
+  },
+  {
+   "name": "wall-switch-2",
+   "file": "recorded/wall-switch-2.wav",
+   "source": "recorded",
+   "category": "mech.switch",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.2,
+   "speed": 0.7,
+   "brightness": 0.59,
+   "tonal": false,
+   "peakAt": 0.025,
+   "durationSec": 0.228,
+   "loudness": -22.8,
+   "sharpness": 1,
+   "flatness": 0.073,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "tactile"
+   ],
+   "group": "wall-switch",
+   "license": "CC0-1.0",
+   "description": "mech.switch (plastic)"
+  },
+  {
+   "name": "sub-boom-1",
+   "file": "recorded/sub-boom-1.wav",
+   "source": "recorded",
+   "category": "sub.boom",
+   "material": [
+    "air"
+   ],
+   "weight": 0.98,
+   "speed": 0.22,
+   "brightness": 0,
+   "tonal": false,
+   "peakAt": 0.275,
+   "durationSec": 2,
+   "loudness": -16,
+   "sharpness": 1,
+   "flatness": 0,
+   "world": "abstract",
+   "palettes": [
+    "cinematic",
+    "hype"
+   ],
+   "emotions": [
+    "weight",
+    "awe"
+   ],
+   "group": "sub-boom",
+   "license": "CC0-1.0",
+   "description": "sub.boom (air)"
+  },
+  {
+   "name": "sub-boom-2",
+   "file": "recorded/sub-boom-2.wav",
+   "source": "recorded",
+   "category": "sub.boom",
+   "material": [
+    "air"
+   ],
+   "weight": 0.85,
+   "speed": 0.49,
+   "brightness": 0,
+   "tonal": false,
+   "peakAt": 0.08,
+   "durationSec": 1,
+   "loudness": -16,
+   "sharpness": 0.71,
+   "flatness": 0,
+   "world": "abstract",
+   "palettes": [
+    "cinematic",
+    "hype"
+   ],
+   "emotions": [
+    "weight",
+    "awe"
+   ],
+   "group": "sub-boom",
+   "license": "CC0-1.0",
+   "description": "sub.boom (air)"
+  },
+  {
+   "name": "click-1",
+   "file": "recorded/click-1.wav",
+   "source": "recorded",
+   "category": "ui.click",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.14,
+   "speed": 0.77,
+   "brightness": 0.75,
+   "tonal": false,
+   "peakAt": 0.035,
+   "durationSec": 0.23,
+   "loudness": -24.5,
+   "sharpness": 1,
+   "flatness": 0.087,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "tactile",
+    "precise"
+   ],
+   "group": "click",
+   "license": "CC0-1.0",
+   "description": "ui.click (plastic)"
+  },
+  {
+   "name": "click-2",
+   "file": "recorded/click-2.wav",
+   "source": "recorded",
+   "category": "ui.click",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.13,
+   "speed": 0.63,
+   "brightness": 0.76,
+   "tonal": false,
+   "peakAt": 0.015,
+   "durationSec": 0.162,
+   "loudness": -22.1,
+   "sharpness": 1,
+   "flatness": 0.187,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "tactile",
+    "precise"
+   ],
+   "group": "click",
+   "license": "CC0-1.0",
+   "description": "ui.click (plastic)"
+  },
+  {
+   "name": "click-3",
+   "file": "recorded/click-3.wav",
+   "source": "recorded",
+   "category": "ui.click",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.17,
+   "speed": 0.65,
+   "brightness": 0.65,
+   "tonal": false,
+   "peakAt": 0.01,
+   "durationSec": 0.122,
+   "loudness": -25.9,
+   "sharpness": 1,
+   "flatness": 0.104,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "tactile",
+    "precise"
+   ],
+   "group": "click",
+   "license": "CC0-1.0",
+   "description": "ui.click (plastic)"
+  },
+  {
+   "name": "click-4",
+   "file": "recorded/click-4.wav",
+   "source": "recorded",
+   "category": "ui.click",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.17,
+   "speed": 0.7,
+   "brightness": 0.7,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.125,
+   "loudness": -24.2,
+   "sharpness": 1,
+   "flatness": 0.25,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "tactile",
+    "precise"
+   ],
+   "group": "click",
+   "license": "CC0-1.0",
+   "description": "ui.click (plastic)"
+  },
+  {
+   "name": "click-5",
+   "file": "recorded/click-5.wav",
+   "source": "recorded",
+   "category": "ui.click",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.15,
+   "speed": 0.7,
+   "brightness": 0.73,
+   "tonal": false,
+   "peakAt": 0.02,
+   "durationSec": 0.162,
+   "loudness": -22,
+   "sharpness": 1,
+   "flatness": 0.229,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "tactile",
+    "precise"
+   ],
+   "group": "click",
+   "license": "CC0-1.0",
+   "description": "ui.click (plastic)"
+  },
+  {
+   "name": "click-6",
+   "file": "recorded/click-6.wav",
+   "source": "recorded",
+   "category": "ui.click",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.17,
+   "speed": 0.77,
+   "brightness": 0.68,
+   "tonal": false,
+   "peakAt": 0.025,
+   "durationSec": 0.19,
+   "loudness": -18.7,
+   "sharpness": 1,
+   "flatness": 0.199,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "tactile",
+    "precise"
+   ],
+   "group": "click",
+   "license": "CC0-1.0",
+   "description": "ui.click (plastic)"
+  },
+  {
+   "name": "ui-click-1",
+   "file": "recorded/ui-click-1.wav",
+   "source": "recorded",
+   "category": "ui.click",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.23,
+   "speed": 1,
+   "brightness": 0.57,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.097,
+   "loudness": -28.6,
+   "sharpness": 1,
+   "flatness": 0.156,
+   "world": "abstract",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "precise"
+   ],
+   "group": "ui-click",
+   "license": "CC0-1.0",
+   "description": "ui.click (plastic)"
+  },
+  {
+   "name": "ui-click-2",
+   "file": "recorded/ui-click-2.wav",
+   "source": "recorded",
+   "category": "ui.click",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.21,
+   "speed": 1,
+   "brightness": 0.59,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.012,
+   "loudness": -26,
+   "sharpness": 1,
+   "flatness": 0.002,
+   "world": "abstract",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "precise"
+   ],
+   "group": "ui-click",
+   "license": "CC0-1.0",
+   "description": "ui.click (plastic)"
+  },
+  {
+   "name": "ui-click-3",
+   "file": "recorded/ui-click-3.wav",
+   "source": "recorded",
+   "category": "ui.click",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.18,
+   "speed": 1,
+   "brightness": 0.66,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.007,
+   "loudness": -25.8,
+   "sharpness": 0.79,
+   "flatness": 0,
+   "world": "abstract",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "precise"
+   ],
+   "group": "ui-click",
+   "license": "CC0-1.0",
+   "description": "ui.click (plastic)"
+  },
+  {
+   "name": "ui-snap-1",
+   "file": "recorded/ui-snap-1.wav",
+   "source": "recorded",
+   "category": "ui.click",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.1,
+   "speed": 0.86,
+   "brightness": 0.86,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.45,
+   "loudness": -26.5,
+   "sharpness": 1,
+   "flatness": 0.232,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "crisp",
+    "precise"
+   ],
+   "group": "ui-snap",
+   "license": "CC0-1.0",
+   "description": "ui.click (plastic)"
+  },
+  {
+   "name": "ui-snap-2",
+   "file": "recorded/ui-snap-2.wav",
+   "source": "recorded",
+   "category": "ui.click",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.12,
+   "speed": 0.86,
+   "brightness": 0.83,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.45,
+   "loudness": -25.8,
+   "sharpness": 1,
+   "flatness": 0.25,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "crisp",
+    "precise"
+   ],
+   "group": "ui-snap",
+   "license": "CC0-1.0",
+   "description": "ui.click (plastic)"
+  },
+  {
+   "name": "ui-snap-3",
+   "file": "recorded/ui-snap-3.wav",
+   "source": "recorded",
+   "category": "ui.click",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.09,
+   "speed": 0.86,
+   "brightness": 0.88,
+   "tonal": false,
+   "peakAt": 0.005,
+   "durationSec": 0.45,
+   "loudness": -26.5,
+   "sharpness": 1,
+   "flatness": 0.202,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "crisp",
+    "precise"
+   ],
+   "group": "ui-snap",
+   "license": "CC0-1.0",
+   "description": "ui.click (plastic)"
+  },
+  {
+   "name": "ui-tap-1",
+   "file": "recorded/ui-tap-1.wav",
+   "source": "recorded",
+   "category": "ui.click",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.17,
+   "speed": 0.82,
+   "brightness": 0.72,
+   "tonal": false,
+   "peakAt": 0.025,
+   "durationSec": 0.081,
+   "loudness": -29.3,
+   "sharpness": 1,
+   "flatness": 0.248,
+   "world": "abstract",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "precise"
+   ],
+   "group": "ui-tap",
+   "license": "CC0-1.0",
+   "description": "ui.click (plastic)"
+  },
+  {
+   "name": "ui-tap-2",
+   "file": "recorded/ui-tap-2.wav",
+   "source": "recorded",
+   "category": "ui.click",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.08,
+   "speed": 0.86,
+   "brightness": 0.82,
+   "tonal": false,
+   "peakAt": 0.005,
+   "durationSec": 0.038,
+   "loudness": -24,
+   "sharpness": 1,
+   "flatness": 0.109,
+   "world": "abstract",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "precise"
+   ],
+   "group": "ui-tap",
+   "license": "CC0-1.0",
+   "description": "ui.click (plastic)"
+  },
+  {
+   "name": "ui-tap-3",
+   "file": "recorded/ui-tap-3.wav",
+   "source": "recorded",
+   "category": "ui.click",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.11,
+   "speed": 0.9,
+   "brightness": 0.75,
+   "tonal": false,
+   "peakAt": 0.005,
+   "durationSec": 0.035,
+   "loudness": -23.7,
+   "sharpness": 0.88,
+   "flatness": 0.04,
+   "world": "abstract",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "precise"
+   ],
+   "group": "ui-tap",
+   "license": "CC0-1.0",
+   "description": "ui.click (plastic)"
+  },
+  {
+   "name": "ui-tap-4",
+   "file": "recorded/ui-tap-4.wav",
+   "source": "recorded",
+   "category": "ui.click",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.01,
+   "speed": 0.82,
+   "brightness": 0.99,
+   "tonal": false,
+   "peakAt": 0.01,
+   "durationSec": 0.056,
+   "loudness": -26.7,
+   "sharpness": 1,
+   "flatness": 0.017,
+   "world": "abstract",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "precise"
+   ],
+   "group": "ui-tap",
+   "license": "CC0-1.0",
+   "description": "ui.click (plastic)"
+  },
+  {
+   "name": "confirm-1",
+   "file": "recorded/confirm-1.wav",
+   "source": "recorded",
+   "category": "ui.confirm",
+   "material": [
+    "digital"
+   ],
+   "weight": 0.31,
+   "speed": 0.21,
+   "brightness": 0.55,
+   "tonal": true,
+   "pitchHz": 1246.8,
+   "peakAt": 0,
+   "durationSec": 0.539,
+   "loudness": -16,
+   "sharpness": 0.64,
+   "flatness": 0,
+   "world": "abstract",
+   "palettes": [
+    "tech",
+    "playful",
+    "minimal"
+   ],
+   "emotions": [
+    "delight",
+    "success"
+   ],
+   "group": "confirm",
+   "license": "CC0-1.0",
+   "description": "ui.confirm (digital)"
+  },
+  {
+   "name": "confirm-2",
+   "file": "recorded/confirm-2.wav",
+   "source": "recorded",
+   "category": "ui.confirm",
+   "material": [
+    "digital"
+   ],
+   "weight": 0.21,
+   "speed": 0.33,
+   "brightness": 0.68,
+   "tonal": true,
+   "pitchHz": 2461.5,
+   "peakAt": 0,
+   "durationSec": 0.322,
+   "loudness": -16,
+   "sharpness": 0.69,
+   "flatness": 0,
+   "world": "abstract",
+   "palettes": [
+    "tech",
+    "playful",
+    "minimal"
+   ],
+   "emotions": [
+    "delight",
+    "success"
+   ],
+   "group": "confirm",
+   "license": "CC0-1.0",
+   "description": "ui.confirm (digital)"
+  },
+  {
+   "name": "confirm-3",
+   "file": "recorded/confirm-3.wav",
+   "source": "recorded",
+   "category": "ui.confirm",
+   "material": [
+    "digital"
+   ],
+   "weight": 0.28,
+   "speed": 0.22,
+   "brightness": 0.55,
+   "tonal": true,
+   "pitchHz": 334.5,
+   "peakAt": 0.163,
+   "durationSec": 0.49,
+   "loudness": -16,
+   "sharpness": 0.28,
+   "flatness": 0,
+   "world": "abstract",
+   "palettes": [
+    "tech",
+    "playful",
+    "minimal"
+   ],
+   "emotions": [
+    "delight",
+    "success"
+   ],
+   "group": "confirm",
+   "license": "CC0-1.0",
+   "description": "ui.confirm (digital)"
+  },
+  {
+   "name": "error-1",
+   "file": "recorded/error-1.wav",
+   "source": "recorded",
+   "category": "ui.error",
+   "material": [
+    "digital"
+   ],
+   "weight": 0.29,
+   "speed": 0.62,
+   "brightness": 0.48,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.105,
+   "loudness": -18.4,
+   "sharpness": 1,
+   "flatness": 0.08,
+   "world": "abstract",
+   "palettes": [
+    "tech",
+    "playful"
+   ],
+   "emotions": [
+    "friction"
+   ],
+   "group": "error",
+   "license": "CC0-1.0",
+   "description": "ui.error (digital)"
+  },
+  {
+   "name": "error-2",
+   "file": "recorded/error-2.wav",
+   "source": "recorded",
+   "category": "ui.error",
+   "material": [
+    "digital"
+   ],
+   "weight": 0.66,
+   "speed": 0.46,
+   "brightness": 0.32,
+   "tonal": true,
+   "pitchHz": 76.7,
+   "peakAt": 0,
+   "durationSec": 0.192,
+   "loudness": -18.9,
+   "sharpness": 0.78,
+   "flatness": 0.017,
+   "world": "abstract",
+   "palettes": [
+    "tech",
+    "playful"
+   ],
+   "emotions": [
+    "friction"
+   ],
+   "group": "error",
+   "license": "CC0-1.0",
+   "description": "ui.error (digital)"
+  },
+  {
+   "name": "error-3",
+   "file": "recorded/error-3.wav",
+   "source": "recorded",
+   "category": "ui.error",
+   "material": [
+    "digital"
+   ],
+   "weight": 0.67,
+   "speed": 0.9,
+   "brightness": 0.23,
+   "tonal": false,
+   "peakAt": 0.015,
+   "durationSec": 0.139,
+   "loudness": -24.2,
+   "sharpness": 1,
+   "flatness": 0.022,
+   "world": "abstract",
+   "palettes": [
+    "tech",
+    "playful"
+   ],
+   "emotions": [
+    "friction"
+   ],
+   "group": "error",
+   "license": "CC0-1.0",
+   "description": "ui.error (digital)"
+  },
+  {
+   "name": "bell-small-1",
+   "file": "recorded/bell-small-1.wav",
+   "source": "recorded",
+   "category": "ui.ping",
+   "material": [
+    "metal"
+   ],
+   "weight": 0.1,
+   "speed": 0.38,
+   "brightness": 0.94,
+   "tonal": true,
+   "pitchHz": 1432.8,
+   "peakAt": 0.015,
+   "durationSec": 0.436,
+   "loudness": -18.1,
+   "sharpness": 0.82,
+   "flatness": 0.033,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "minimal"
+   ],
+   "emotions": [
+    "delight"
+   ],
+   "group": "bell-small",
+   "license": "CC0-1.0",
+   "description": "ui.ping (metal)"
+  },
+  {
+   "name": "glass-ping-1",
+   "file": "recorded/glass-ping-1.wav",
+   "source": "recorded",
+   "category": "ui.ping",
+   "material": [
+    "glass"
+   ],
+   "weight": 0.18,
+   "speed": 0.82,
+   "brightness": 0.63,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.122,
+   "loudness": -18.4,
+   "sharpness": 1,
+   "flatness": 0,
+   "world": "abstract",
+   "palettes": [
+    "cinematic",
+    "minimal",
+    "luxury",
+    "tech"
+   ],
+   "emotions": [
+    "premium",
+    "delight"
+   ],
+   "group": "glass-ping",
+   "license": "CC0-1.0",
+   "description": "ui.ping (glass)"
+  },
+  {
+   "name": "glass-ping-2",
+   "file": "recorded/glass-ping-2.wav",
+   "source": "recorded",
+   "category": "ui.ping",
+   "material": [
+    "glass"
+   ],
+   "weight": 0.2,
+   "speed": 0.7,
+   "brightness": 0.61,
+   "tonal": false,
+   "peakAt": 0.03,
+   "durationSec": 0.121,
+   "loudness": -16,
+   "sharpness": 0.94,
+   "flatness": 0.004,
+   "world": "abstract",
+   "palettes": [
+    "cinematic",
+    "minimal",
+    "luxury",
+    "tech"
+   ],
+   "emotions": [
+    "premium",
+    "delight"
+   ],
+   "group": "glass-ping",
+   "license": "CC0-1.0",
+   "description": "ui.ping (glass)"
+  },
+  {
+   "name": "glass-ping-3",
+   "file": "recorded/glass-ping-3.wav",
+   "source": "recorded",
+   "category": "ui.ping",
+   "material": [
+    "glass"
+   ],
+   "weight": 0.19,
+   "speed": 0.82,
+   "brightness": 0.58,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.098,
+   "loudness": -20,
+   "sharpness": 1,
+   "flatness": 0,
+   "world": "abstract",
+   "palettes": [
+    "cinematic",
+    "minimal",
+    "luxury",
+    "tech"
+   ],
+   "emotions": [
+    "premium",
+    "delight"
+   ],
+   "group": "glass-ping",
+   "license": "CC0-1.0",
+   "description": "ui.ping (glass)"
+  },
+  {
+   "name": "bloop-1",
+   "file": "recorded/bloop-1.wav",
+   "source": "recorded",
+   "category": "ui.pop",
+   "material": [
+    "liquid",
+    "digital"
+   ],
+   "weight": 0.2,
+   "speed": 0.86,
+   "brightness": 0.61,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.132,
+   "loudness": -20.1,
+   "sharpness": 1,
+   "flatness": 0.007,
+   "world": "abstract",
+   "palettes": [
+    "playful",
+    "tech",
+    "minimal"
+   ],
+   "emotions": [
+    "playful",
+    "delight"
+   ],
+   "group": "bloop",
+   "license": "CC0-1.0",
+   "description": "ui.pop (liquid/digital)"
+  },
+  {
+   "name": "bloop-2",
+   "file": "recorded/bloop-2.wav",
+   "source": "recorded",
+   "category": "ui.pop",
+   "material": [
+    "liquid",
+    "digital"
+   ],
+   "weight": 0.3,
+   "speed": 0.72,
+   "brightness": 0.39,
+   "tonal": true,
+   "pitchHz": 849.6,
+   "peakAt": 0,
+   "durationSec": 0.188,
+   "loudness": -20.2,
+   "sharpness": 1,
+   "flatness": 0,
+   "world": "abstract",
+   "palettes": [
+    "playful",
+    "tech",
+    "minimal"
+   ],
+   "emotions": [
+    "playful",
+    "delight"
+   ],
+   "group": "bloop",
+   "license": "CC0-1.0",
+   "description": "ui.pop (liquid/digital)"
+  },
+  {
+   "name": "bloop-3",
+   "file": "recorded/bloop-3.wav",
+   "source": "recorded",
+   "category": "ui.pop",
+   "material": [
+    "liquid",
+    "digital"
+   ],
+   "weight": 0.32,
+   "speed": 0.65,
+   "brightness": 0.37,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.284,
+   "loudness": -19.3,
+   "sharpness": 1,
+   "flatness": 0,
+   "world": "abstract",
+   "palettes": [
+    "playful",
+    "tech",
+    "minimal"
+   ],
+   "emotions": [
+    "playful",
+    "delight"
+   ],
+   "group": "bloop",
+   "license": "CC0-1.0",
+   "description": "ui.pop (liquid/digital)"
+  },
+  {
+   "name": "pluck-1",
+   "file": "recorded/pluck-1.wav",
+   "source": "recorded",
+   "category": "ui.pop",
+   "material": [
+    "digital"
+   ],
+   "weight": 0.11,
+   "speed": 0.72,
+   "brightness": 0.79,
+   "tonal": true,
+   "pitchHz": 442.4,
+   "peakAt": 0,
+   "durationSec": 0.1,
+   "loudness": -22.8,
+   "sharpness": 1,
+   "flatness": 0.083,
+   "world": "abstract",
+   "palettes": [
+    "playful",
+    "hype",
+    "tech"
+   ],
+   "emotions": [
+    "playful"
+   ],
+   "group": "pluck",
+   "license": "CC0-1.0",
+   "description": "ui.pop (digital)"
+  },
+  {
+   "name": "pluck-2",
+   "file": "recorded/pluck-2.wav",
+   "source": "recorded",
+   "category": "ui.pop",
+   "material": [
+    "digital"
+   ],
+   "weight": 0.11,
+   "speed": 0.65,
+   "brightness": 0.79,
+   "tonal": true,
+   "pitchHz": 627.5,
+   "peakAt": 0,
+   "durationSec": 0.142,
+   "loudness": -22.4,
+   "sharpness": 1,
+   "flatness": 0.052,
+   "world": "abstract",
+   "palettes": [
+    "playful",
+    "hype",
+    "tech"
+   ],
+   "emotions": [
+    "playful"
+   ],
+   "group": "pluck",
+   "license": "CC0-1.0",
+   "description": "ui.pop (digital)"
+  },
+  {
+   "name": "finger-snap-1",
+   "file": "recorded/finger-snap-1.wav",
+   "source": "recorded",
+   "category": "ui.snap",
+   "material": [
+    "body"
+   ],
+   "weight": 0.23,
+   "speed": 0.72,
+   "brightness": 0.76,
+   "tonal": false,
+   "peakAt": 0.073,
+   "durationSec": 0.192,
+   "loudness": -26.9,
+   "sharpness": 1,
+   "flatness": 0.298,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "minimal",
+    "hype"
+   ],
+   "emotions": [
+    "human",
+    "casual"
+   ],
+   "group": "finger-snap",
+   "license": "CC0-1.0",
+   "description": "ui.snap (body)"
+  },
+  {
+   "name": "ui-knock-1",
+   "file": "recorded/ui-knock-1.wav",
+   "source": "recorded",
+   "category": "ui.tap",
+   "material": [
+    "wood",
+    "plastic"
+   ],
+   "weight": 0.27,
+   "speed": 0.32,
+   "brightness": 0.56,
+   "tonal": false,
+   "peakAt": 0.01,
+   "durationSec": 0.5,
+   "loudness": -20.3,
+   "sharpness": 1,
+   "flatness": 0.06,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury",
+    "playful"
+   ],
+   "emotions": [
+    "gentle",
+    "tactile"
+   ],
+   "group": "ui-knock",
+   "license": "CC0-1.0",
+   "description": "ui.tap (wood/plastic)"
+  },
+  {
+   "name": "ui-knock-2",
+   "file": "recorded/ui-knock-2.wav",
+   "source": "recorded",
+   "category": "ui.tap",
+   "material": [
+    "wood",
+    "plastic"
+   ],
+   "weight": 0.29,
+   "speed": 0.37,
+   "brightness": 0.49,
+   "tonal": false,
+   "peakAt": 0.015,
+   "durationSec": 0.5,
+   "loudness": -19.9,
+   "sharpness": 1,
+   "flatness": 0.03,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury",
+    "playful"
+   ],
+   "emotions": [
+    "gentle",
+    "tactile"
+   ],
+   "group": "ui-knock",
+   "license": "CC0-1.0",
+   "description": "ui.tap (wood/plastic)"
+  },
+  {
+   "name": "ui-knock-3",
+   "file": "recorded/ui-knock-3.wav",
+   "source": "recorded",
+   "category": "ui.tap",
+   "material": [
+    "wood",
+    "plastic"
+   ],
+   "weight": 0.31,
+   "speed": 0.3,
+   "brightness": 0.48,
+   "tonal": false,
+   "peakAt": 0.01,
+   "durationSec": 0.5,
+   "loudness": -19.3,
+   "sharpness": 0.85,
+   "flatness": 0.034,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury",
+    "playful"
+   ],
+   "emotions": [
+    "gentle",
+    "tactile"
+   ],
+   "group": "ui-knock",
+   "license": "CC0-1.0",
+   "description": "ui.tap (wood/plastic)"
+  },
+  {
+   "name": "chip-click-1",
+   "file": "recorded/chip-click-1.wav",
+   "source": "recorded",
+   "category": "ui.tick",
+   "material": [
+    "plastic",
+    "ceramic"
+   ],
+   "weight": 0.06,
+   "speed": 0.77,
+   "brightness": 0.91,
+   "tonal": false,
+   "peakAt": 0.01,
+   "durationSec": 0.136,
+   "loudness": -24.1,
+   "sharpness": 1,
+   "flatness": 0.247,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "tactile",
+    "reward"
+   ],
+   "group": "chip-click",
+   "license": "CC0-1.0",
+   "description": "ui.tick (plastic/ceramic)"
+  },
+  {
+   "name": "chip-click-2",
+   "file": "recorded/chip-click-2.wav",
+   "source": "recorded",
+   "category": "ui.tick",
+   "material": [
+    "plastic",
+    "ceramic"
+   ],
+   "weight": 0.06,
+   "speed": 0.66,
+   "brightness": 0.91,
+   "tonal": false,
+   "peakAt": 0.005,
+   "durationSec": 0.158,
+   "loudness": -25.9,
+   "sharpness": 1,
+   "flatness": 0.237,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "tactile",
+    "reward"
+   ],
+   "group": "chip-click",
+   "license": "CC0-1.0",
+   "description": "ui.tick (plastic/ceramic)"
+  },
+  {
+   "name": "chip-click-3",
+   "file": "recorded/chip-click-3.wav",
+   "source": "recorded",
+   "category": "ui.tick",
+   "material": [
+    "plastic",
+    "ceramic"
+   ],
+   "weight": 0.05,
+   "speed": 0.74,
+   "brightness": 0.94,
+   "tonal": false,
+   "peakAt": 0.005,
+   "durationSec": 0.144,
+   "loudness": -24.1,
+   "sharpness": 1,
+   "flatness": 0.211,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "tactile",
+    "reward"
+   ],
+   "group": "chip-click",
+   "license": "CC0-1.0",
+   "description": "ui.tick (plastic/ceramic)"
+  },
+  {
+   "name": "chip-click-4",
+   "file": "recorded/chip-click-4.wav",
+   "source": "recorded",
+   "category": "ui.tick",
+   "material": [
+    "plastic",
+    "ceramic"
+   ],
+   "weight": 0.04,
+   "speed": 0.72,
+   "brightness": 0.96,
+   "tonal": false,
+   "peakAt": 0.005,
+   "durationSec": 0.118,
+   "loudness": -27.3,
+   "sharpness": 1,
+   "flatness": 0.265,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "tactile",
+    "reward"
+   ],
+   "group": "chip-click",
+   "license": "CC0-1.0",
+   "description": "ui.tick (plastic/ceramic)"
+  },
+  {
+   "name": "ui-select-1",
+   "file": "recorded/ui-select-1.wav",
+   "source": "recorded",
+   "category": "ui.tick",
+   "material": [
+    "digital"
+   ],
+   "weight": 0.14,
+   "speed": 0.63,
+   "brightness": 0.74,
+   "tonal": false,
+   "peakAt": 0.005,
+   "durationSec": 0.244,
+   "loudness": -16,
+   "sharpness": 0.99,
+   "flatness": 0.017,
+   "world": "abstract",
+   "palettes": [
+    "tech",
+    "minimal",
+    "playful"
+   ],
+   "emotions": [
+    "precise",
+    "subtle"
+   ],
+   "group": "ui-select",
+   "license": "CC0-1.0",
+   "description": "ui.tick (digital)"
+  },
+  {
+   "name": "ui-select-2",
+   "file": "recorded/ui-select-2.wav",
+   "source": "recorded",
+   "category": "ui.tick",
+   "material": [
+    "digital"
+   ],
+   "weight": 0.19,
+   "speed": 0.62,
+   "brightness": 0.63,
+   "tonal": false,
+   "peakAt": 0.005,
+   "durationSec": 0.244,
+   "loudness": -16,
+   "sharpness": 0.92,
+   "flatness": 0.01,
+   "world": "abstract",
+   "palettes": [
+    "tech",
+    "minimal",
+    "playful"
+   ],
+   "emotions": [
+    "precise",
+    "subtle"
+   ],
+   "group": "ui-select",
+   "license": "CC0-1.0",
+   "description": "ui.tick (digital)"
+  },
+  {
+   "name": "ui-select-3",
+   "file": "recorded/ui-select-3.wav",
+   "source": "recorded",
+   "category": "ui.tick",
+   "material": [
+    "digital"
+   ],
+   "weight": 0.25,
+   "speed": 0.52,
+   "brightness": 0.52,
+   "tonal": false,
+   "peakAt": 0.005,
+   "durationSec": 0.246,
+   "loudness": -16,
+   "sharpness": 0.77,
+   "flatness": 0.005,
+   "world": "abstract",
+   "palettes": [
+    "tech",
+    "minimal",
+    "playful"
+   ],
+   "emotions": [
+    "precise",
+    "subtle"
+   ],
+   "group": "ui-select",
+   "license": "CC0-1.0",
+   "description": "ui.tick (digital)"
+  },
+  {
+   "name": "ui-tick-1",
+   "file": "recorded/ui-tick-1.wav",
+   "source": "recorded",
+   "category": "ui.tick",
+   "material": [
+    "digital"
+   ],
+   "weight": 0.01,
+   "speed": 1,
+   "brightness": 1,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.04,
+   "loudness": -28.1,
+   "sharpness": 1,
+   "flatness": 0.354,
+   "world": "abstract",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "precise"
+   ],
+   "group": "ui-tick",
+   "license": "CC0-1.0",
+   "description": "ui.tick (digital)"
+  },
+  {
+   "name": "ui-tick-2",
+   "file": "recorded/ui-tick-2.wav",
+   "source": "recorded",
+   "category": "ui.tick",
+   "material": [
+    "digital"
+   ],
+   "weight": 0.03,
+   "speed": 1,
+   "brightness": 0.95,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.02,
+   "loudness": -26.9,
+   "sharpness": 1,
+   "flatness": 0.181,
+   "world": "abstract",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "precise"
+   ],
+   "group": "ui-tick",
+   "license": "CC0-1.0",
+   "description": "ui.tick (digital)"
+  },
+  {
+   "name": "ui-tick-3",
+   "file": "recorded/ui-tick-3.wav",
+   "source": "recorded",
+   "category": "ui.tick",
+   "material": [
+    "digital"
+   ],
+   "weight": 0.12,
+   "speed": 0.86,
+   "brightness": 0.77,
+   "tonal": false,
+   "peakAt": 0.03,
+   "durationSec": 0.055,
+   "loudness": -19.2,
+   "sharpness": 1,
+   "flatness": 0.027,
+   "world": "abstract",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "precise"
+   ],
+   "group": "ui-tick",
+   "license": "CC0-1.0",
+   "description": "ui.tick (digital)"
+  },
+  {
+   "name": "toggle-1",
+   "file": "recorded/toggle-1.wav",
+   "source": "recorded",
+   "category": "ui.toggle",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.18,
+   "speed": 0.62,
+   "brightness": 0.64,
+   "tonal": true,
+   "pitchHz": 1432.8,
+   "peakAt": 0,
+   "durationSec": 0.13,
+   "loudness": -16,
+   "sharpness": 0.74,
+   "flatness": 0.005,
+   "world": "abstract",
+   "palettes": [
+    "tech",
+    "minimal",
+    "playful"
+   ],
+   "emotions": [
+    "precise"
+   ],
+   "group": "toggle",
+   "license": "CC0-1.0",
+   "description": "ui.toggle (plastic)"
+  },
+  {
+   "name": "toggle-2",
+   "file": "recorded/toggle-2.wav",
+   "source": "recorded",
+   "category": "ui.toggle",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.15,
+   "speed": 0.63,
+   "brightness": 0.69,
+   "tonal": true,
+   "pitchHz": 2133.3,
+   "peakAt": 0,
+   "durationSec": 0.13,
+   "loudness": -16,
+   "sharpness": 0.61,
+   "flatness": 0.005,
+   "world": "abstract",
+   "palettes": [
+    "tech",
+    "minimal",
+    "playful"
+   ],
+   "emotions": [
+    "precise"
+   ],
+   "group": "toggle",
+   "license": "CC0-1.0",
+   "description": "ui.toggle (plastic)"
+  },
+  {
+   "name": "toggle-3",
+   "file": "recorded/toggle-3.wav",
+   "source": "recorded",
+   "category": "ui.toggle",
+   "material": [
+    "plastic"
+   ],
+   "weight": 0.13,
+   "speed": 0.72,
+   "brightness": 0.73,
+   "tonal": true,
+   "pitchHz": 1627.1,
+   "peakAt": 0,
+   "durationSec": 0.063,
+   "loudness": -16,
+   "sharpness": 0.64,
+   "flatness": 0.034,
+   "world": "abstract",
+   "palettes": [
+    "tech",
+    "minimal",
+    "playful"
+   ],
+   "emotions": [
+    "precise"
+   ],
+   "group": "toggle",
+   "license": "CC0-1.0",
+   "description": "ui.toggle (plastic)"
+  },
+  {
+   "name": "air-release-1",
+   "file": "recorded/air-release-1.wav",
+   "source": "recorded",
+   "category": "whoosh.burst",
+   "material": [
+    "air"
+   ],
+   "weight": 0.4,
+   "speed": 0,
+   "brightness": 0.88,
+   "tonal": false,
+   "peakAt": 0.005,
+   "durationSec": 1.1,
+   "loudness": -16,
+   "sharpness": 0.57,
+   "flatness": 0.36,
+   "world": "hyper-real",
+   "palettes": [
+    "tech",
+    "hype",
+    "cinematic"
+   ],
+   "emotions": [
+    "release",
+    "energy"
+   ],
+   "group": "air-release",
+   "license": "CC0-1.0",
+   "description": "whoosh.burst (air)"
+  },
+  {
+   "name": "cloth-flap-1",
+   "file": "recorded/cloth-flap-1.wav",
+   "source": "recorded",
+   "category": "whoosh.cloth",
+   "material": [
+    "cloth"
+   ],
+   "weight": 0.41,
+   "speed": 0.45,
+   "brightness": 0.22,
+   "tonal": false,
+   "peakAt": 0.123,
+   "durationSec": 0.396,
+   "loudness": -21.8,
+   "sharpness": 1,
+   "flatness": 0.005,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury",
+    "cinematic"
+   ],
+   "emotions": [
+    "soft"
+   ],
+   "group": "cloth-flap",
+   "license": "CC0-1.0",
+   "description": "whoosh.cloth (cloth)"
+  },
+  {
+   "name": "cloth-flap-2",
+   "file": "recorded/cloth-flap-2.wav",
+   "source": "recorded",
+   "category": "whoosh.cloth",
+   "material": [
+    "cloth"
+   ],
+   "weight": 0.45,
+   "speed": 0.5,
+   "brightness": 0.28,
+   "tonal": false,
+   "peakAt": 0.068,
+   "durationSec": 0.322,
+   "loudness": -21.5,
+   "sharpness": 1,
+   "flatness": 0.021,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury",
+    "cinematic"
+   ],
+   "emotions": [
+    "soft"
+   ],
+   "group": "cloth-flap",
+   "license": "CC0-1.0",
+   "description": "whoosh.cloth (cloth)"
+  },
+  {
+   "name": "cloth-flap-3",
+   "file": "recorded/cloth-flap-3.wav",
+   "source": "recorded",
+   "category": "whoosh.cloth",
+   "material": [
+    "cloth"
+   ],
+   "weight": 0.38,
+   "speed": 0.58,
+   "brightness": 0.33,
+   "tonal": false,
+   "peakAt": 0.105,
+   "durationSec": 0.656,
+   "loudness": -22.8,
+   "sharpness": 1,
+   "flatness": 0.04,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury",
+    "cinematic"
+   ],
+   "emotions": [
+    "soft"
+   ],
+   "group": "cloth-flap",
+   "license": "CC0-1.0",
+   "description": "whoosh.cloth (cloth)"
+  },
+  {
+   "name": "cloth-swish-1",
+   "file": "recorded/cloth-swish-1.wav",
+   "source": "recorded",
+   "category": "whoosh.cloth",
+   "material": [
+    "cloth"
+   ],
+   "weight": 0.44,
+   "speed": 0.33,
+   "brightness": 0.4,
+   "tonal": false,
+   "peakAt": 0.103,
+   "durationSec": 0.582,
+   "loudness": -18.1,
+   "sharpness": 0.97,
+   "flatness": 0.058,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury",
+    "cinematic",
+    "playful"
+   ],
+   "emotions": [
+    "soft",
+    "organic"
+   ],
+   "group": "cloth-swish",
+   "license": "CC0-1.0",
+   "description": "whoosh.cloth (cloth)"
+  },
+  {
+   "name": "cloth-swish-2",
+   "file": "recorded/cloth-swish-2.wav",
+   "source": "recorded",
+   "category": "whoosh.cloth",
+   "material": [
+    "cloth"
+   ],
+   "weight": 0.36,
+   "speed": 0.38,
+   "brightness": 0.41,
+   "tonal": false,
+   "peakAt": 0.075,
+   "durationSec": 0.378,
+   "loudness": -21.1,
+   "sharpness": 1,
+   "flatness": 0.043,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury",
+    "cinematic",
+    "playful"
+   ],
+   "emotions": [
+    "soft",
+    "organic"
+   ],
+   "group": "cloth-swish",
+   "license": "CC0-1.0",
+   "description": "whoosh.cloth (cloth)"
+  },
+  {
+   "name": "cloth-swish-3",
+   "file": "recorded/cloth-swish-3.wav",
+   "source": "recorded",
+   "category": "whoosh.cloth",
+   "material": [
+    "cloth"
+   ],
+   "weight": 0.34,
+   "speed": 0.31,
+   "brightness": 0.52,
+   "tonal": false,
+   "peakAt": 0.085,
+   "durationSec": 0.384,
+   "loudness": -17.3,
+   "sharpness": 1,
+   "flatness": 0.153,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury",
+    "cinematic",
+    "playful"
+   ],
+   "emotions": [
+    "soft",
+    "organic"
+   ],
+   "group": "cloth-swish",
+   "license": "CC0-1.0",
+   "description": "whoosh.cloth (cloth)"
+  },
+  {
+   "name": "air-suck-1",
+   "file": "recorded/air-suck-1.wav",
+   "source": "recorded",
+   "category": "whoosh.in",
+   "material": [
+    "air"
+   ],
+   "weight": 0.05,
+   "speed": 0.23,
+   "brightness": 1,
+   "tonal": false,
+   "peakAt": 0.483,
+   "durationSec": 0.526,
+   "loudness": -16,
+   "sharpness": 0.41,
+   "flatness": 0.092,
+   "world": "abstract",
+   "palettes": [
+    "tech",
+    "cinematic",
+    "hype"
+   ],
+   "emotions": [
+    "tension",
+    "anticipation"
+   ],
+   "group": "air-suck",
+   "license": "CC0-1.0",
+   "description": "whoosh.in (air)"
+  },
+  {
+   "name": "air-pass-1",
+   "file": "recorded/air-pass-1.wav",
+   "source": "recorded",
+   "category": "whoosh.long",
+   "material": [
+    "air"
+   ],
+   "weight": 0.74,
+   "speed": 0,
+   "brightness": 0.62,
+   "tonal": false,
+   "peakAt": 1.298,
+   "durationSec": 2,
+   "loudness": -16,
+   "sharpness": 0.09,
+   "flatness": 0.312,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "luxury"
+   ],
+   "emotions": [
+    "cinematic",
+    "grand"
+   ],
+   "group": "air-pass",
+   "license": "CC0-1.0",
+   "description": "whoosh.long (air)"
+  },
+  {
+   "name": "air-swell-1",
+   "file": "recorded/air-swell-1.wav",
+   "source": "recorded",
+   "category": "whoosh.medium",
+   "material": [
+    "air"
+   ],
+   "weight": 0.23,
+   "speed": 0.06,
+   "brightness": 0.95,
+   "tonal": false,
+   "peakAt": 0.163,
+   "durationSec": 1.026,
+   "loudness": -16,
+   "sharpness": 0.17,
+   "flatness": 0.236,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury",
+    "cinematic"
+   ],
+   "emotions": [
+    "calm",
+    "airy"
+   ],
+   "group": "air-swell",
+   "license": "CC0-1.0",
+   "description": "whoosh.medium (air)"
+  },
+  {
+   "name": "air-puff-1",
+   "file": "recorded/air-puff-1.wav",
+   "source": "recorded",
+   "category": "whoosh.micro",
+   "material": [
+    "air"
+   ],
+   "weight": 0.09,
+   "speed": 0.4,
+   "brightness": 0.91,
+   "tonal": false,
+   "peakAt": 0.063,
+   "durationSec": 0.274,
+   "loudness": -16,
+   "sharpness": 0.47,
+   "flatness": 0.37,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "airy"
+   ],
+   "group": "air-puff",
+   "license": "CC0-1.0",
+   "description": "whoosh.micro (air)"
+  },
+  {
+   "name": "blade-swipe-1",
+   "file": "recorded/blade-swipe-1.wav",
+   "source": "recorded",
+   "category": "whoosh.micro",
+   "material": [
+    "metal-thin",
+    "air"
+   ],
+   "weight": 0.11,
+   "speed": 0.3,
+   "brightness": 0.87,
+   "tonal": false,
+   "peakAt": 0.173,
+   "durationSec": 0.378,
+   "loudness": -16,
+   "sharpness": 0.1,
+   "flatness": 0.177,
+   "world": "hyper-real",
+   "palettes": [
+    "tech",
+    "hype",
+    "cinematic"
+   ],
+   "emotions": [
+    "sharp",
+    "precise"
+   ],
+   "group": "blade-swipe",
+   "license": "CC0-1.0",
+   "description": "whoosh.micro (metal-thin/air)"
+  },
+  {
+   "name": "blade-swipe-2",
+   "file": "recorded/blade-swipe-2.wav",
+   "source": "recorded",
+   "category": "whoosh.micro",
+   "material": [
+    "metal-thin",
+    "air"
+   ],
+   "weight": 0.1,
+   "speed": 0.41,
+   "brightness": 0.89,
+   "tonal": false,
+   "peakAt": 0.278,
+   "durationSec": 0.456,
+   "loudness": -16,
+   "sharpness": 0.67,
+   "flatness": 0.163,
+   "world": "hyper-real",
+   "palettes": [
+    "tech",
+    "hype",
+    "cinematic"
+   ],
+   "emotions": [
+    "sharp",
+    "precise"
+   ],
+   "group": "blade-swipe",
+   "license": "CC0-1.0",
+   "description": "whoosh.micro (metal-thin/air)"
+  },
+  {
+   "name": "blade-swipe-3",
+   "file": "recorded/blade-swipe-3.wav",
+   "source": "recorded",
+   "category": "whoosh.micro",
+   "material": [
+    "metal-thin",
+    "air"
+   ],
+   "weight": 0.13,
+   "speed": 0.38,
+   "brightness": 0.82,
+   "tonal": false,
+   "peakAt": 0.108,
+   "durationSec": 0.384,
+   "loudness": -16,
+   "sharpness": 0.22,
+   "flatness": 0.55,
+   "world": "hyper-real",
+   "palettes": [
+    "tech",
+    "hype",
+    "cinematic"
+   ],
+   "emotions": [
+    "sharp",
+    "precise"
+   ],
+   "group": "blade-swipe",
+   "license": "CC0-1.0",
+   "description": "whoosh.micro (metal-thin/air)"
+  },
+  {
+   "name": "card-shove-1",
+   "file": "recorded/card-shove-1.wav",
+   "source": "recorded",
+   "category": "whoosh.micro",
+   "material": [
+    "paper"
+   ],
+   "weight": 0.21,
+   "speed": 0.26,
+   "brightness": 0.84,
+   "tonal": false,
+   "peakAt": 0.12,
+   "durationSec": 0.766,
+   "loudness": -21.1,
+   "sharpness": 1,
+   "flatness": 0.642,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "playful",
+    "tech"
+   ],
+   "emotions": [
+    "tactile"
+   ],
+   "group": "card-shove",
+   "license": "CC0-1.0",
+   "description": "whoosh.micro (paper)"
+  },
+  {
+   "name": "card-shove-2",
+   "file": "recorded/card-shove-2.wav",
+   "source": "recorded",
+   "category": "whoosh.micro",
+   "material": [
+    "paper"
+   ],
+   "weight": 0.28,
+   "speed": 0.36,
+   "brightness": 0.83,
+   "tonal": false,
+   "peakAt": 0.21,
+   "durationSec": 0.767,
+   "loudness": -24.1,
+   "sharpness": 1,
+   "flatness": 0.619,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "playful",
+    "tech"
+   ],
+   "emotions": [
+    "tactile"
+   ],
+   "group": "card-shove",
+   "license": "CC0-1.0",
+   "description": "whoosh.micro (paper)"
+  },
+  {
+   "name": "card-shove-3",
+   "file": "recorded/card-shove-3.wav",
+   "source": "recorded",
+   "category": "whoosh.micro",
+   "material": [
+    "paper"
+   ],
+   "weight": 0.38,
+   "speed": 0.35,
+   "brightness": 0.8,
+   "tonal": false,
+   "peakAt": 0.135,
+   "durationSec": 0.693,
+   "loudness": -22.3,
+   "sharpness": 1,
+   "flatness": 0.588,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "playful",
+    "tech"
+   ],
+   "emotions": [
+    "tactile"
+   ],
+   "group": "card-shove",
+   "license": "CC0-1.0",
+   "description": "whoosh.micro (paper)"
+  },
+  {
+   "name": "page-flick-1",
+   "file": "recorded/page-flick-1.wav",
+   "source": "recorded",
+   "category": "whoosh.micro",
+   "material": [
+    "paper"
+   ],
+   "weight": 0.14,
+   "speed": 0.6,
+   "brightness": 0.84,
+   "tonal": false,
+   "peakAt": 0.515,
+   "durationSec": 0.66,
+   "loudness": -22.7,
+   "sharpness": 1,
+   "flatness": 0.281,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury",
+    "playful"
+   ],
+   "emotions": [
+    "tactile",
+    "editorial"
+   ],
+   "group": "page-flick",
+   "license": "CC0-1.0",
+   "description": "whoosh.micro (paper)"
+  },
+  {
+   "name": "page-flick-2",
+   "file": "recorded/page-flick-2.wav",
+   "source": "recorded",
+   "category": "whoosh.micro",
+   "material": [
+    "paper"
+   ],
+   "weight": 0.16,
+   "speed": 0.28,
+   "brightness": 0.86,
+   "tonal": false,
+   "peakAt": 0.035,
+   "durationSec": 0.408,
+   "loudness": -23.7,
+   "sharpness": 1,
+   "flatness": 0.542,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury",
+    "playful"
+   ],
+   "emotions": [
+    "tactile",
+    "editorial"
+   ],
+   "group": "page-flick",
+   "license": "CC0-1.0",
+   "description": "whoosh.micro (paper)"
+  },
+  {
+   "name": "page-flick-3",
+   "file": "recorded/page-flick-3.wav",
+   "source": "recorded",
+   "category": "whoosh.micro",
+   "material": [
+    "paper"
+   ],
+   "weight": 0.09,
+   "speed": 0.44,
+   "brightness": 0.89,
+   "tonal": false,
+   "peakAt": 0.005,
+   "durationSec": 0.205,
+   "loudness": -24.8,
+   "sharpness": 1,
+   "flatness": 0.588,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury",
+    "playful"
+   ],
+   "emotions": [
+    "tactile",
+    "editorial"
+   ],
+   "group": "page-flick",
+   "license": "CC0-1.0",
+   "description": "whoosh.micro (paper)"
+  },
+  {
+   "name": "swish-1",
+   "file": "recorded/swish-1.wav",
+   "source": "recorded",
+   "category": "whoosh.micro",
+   "material": [
+    "air"
+   ],
+   "weight": 0.41,
+   "speed": 0.62,
+   "brightness": 0.13,
+   "tonal": false,
+   "peakAt": 0.043,
+   "durationSec": 0.108,
+   "loudness": -19.2,
+   "sharpness": 1,
+   "flatness": 0.008,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "energy",
+    "nimble"
+   ],
+   "group": "swish",
+   "license": "CC0-1.0",
+   "description": "whoosh.micro (air)"
+  },
+  {
+   "name": "swish-2",
+   "file": "recorded/swish-2.wav",
+   "source": "recorded",
+   "category": "whoosh.micro",
+   "material": [
+    "air"
+   ],
+   "weight": 0.41,
+   "speed": 0.7,
+   "brightness": 0.08,
+   "tonal": true,
+   "pitchHz": 210.1,
+   "peakAt": 0.02,
+   "durationSec": 0.126,
+   "loudness": -16,
+   "sharpness": 0.62,
+   "flatness": 0.001,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "energy",
+    "nimble"
+   ],
+   "group": "swish",
+   "license": "CC0-1.0",
+   "description": "whoosh.micro (air)"
+  },
+  {
+   "name": "swish-3",
+   "file": "recorded/swish-3.wav",
+   "source": "recorded",
+   "category": "whoosh.micro",
+   "material": [
+    "air"
+   ],
+   "weight": 0.43,
+   "speed": 0.65,
+   "brightness": 0.14,
+   "tonal": false,
+   "peakAt": 0.043,
+   "durationSec": 0.128,
+   "loudness": -17.7,
+   "sharpness": 1,
+   "flatness": 0.002,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "energy",
+    "nimble"
+   ],
+   "group": "swish",
+   "license": "CC0-1.0",
+   "description": "whoosh.micro (air)"
+  },
+  {
+   "name": "swish-4",
+   "file": "recorded/swish-4.wav",
+   "source": "recorded",
+   "category": "whoosh.micro",
+   "material": [
+    "air"
+   ],
+   "weight": 0.41,
+   "speed": 0.68,
+   "brightness": 0.12,
+   "tonal": false,
+   "peakAt": 0.025,
+   "durationSec": 0.126,
+   "loudness": -18.1,
+   "sharpness": 0.96,
+   "flatness": 0.002,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "energy",
+    "nimble"
+   ],
+   "group": "swish",
+   "license": "CC0-1.0",
+   "description": "whoosh.micro (air)"
+  },
+  {
+   "name": "swish-5",
+   "file": "recorded/swish-5.wav",
+   "source": "recorded",
+   "category": "whoosh.micro",
+   "material": [
+    "air"
+   ],
+   "weight": 0.43,
+   "speed": 0.66,
+   "brightness": 0.09,
+   "tonal": false,
+   "peakAt": 0.043,
+   "durationSec": 0.158,
+   "loudness": -16,
+   "sharpness": 0.92,
+   "flatness": 0.002,
+   "world": "hyper-real",
+   "palettes": [
+    "cinematic",
+    "tech",
+    "playful",
+    "minimal",
+    "luxury",
+    "hype"
+   ],
+   "emotions": [
+    "energy",
+    "nimble"
+   ],
+   "group": "swish",
+   "license": "CC0-1.0",
+   "description": "whoosh.micro (air)"
+  },
+  {
+   "name": "zip-down-1",
+   "file": "recorded/zip-down-1.wav",
+   "source": "recorded",
+   "category": "whoosh.micro",
+   "material": [
+    "air",
+    "digital"
+   ],
+   "weight": 0.13,
+   "speed": 0.36,
+   "brightness": 0.84,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.258,
+   "loudness": -16,
+   "sharpness": 0.54,
+   "flatness": 0.02,
+   "world": "abstract",
+   "palettes": [
+    "tech",
+    "playful"
+   ],
+   "emotions": [
+    "release"
+   ],
+   "group": "zip-down",
+   "license": "CC0-1.0",
+   "description": "whoosh.micro (air/digital)"
+  },
+  {
+   "name": "zip-down-2",
+   "file": "recorded/zip-down-2.wav",
+   "source": "recorded",
+   "category": "whoosh.micro",
+   "material": [
+    "air",
+    "digital"
+   ],
+   "weight": 0.12,
+   "speed": 0.36,
+   "brightness": 0.87,
+   "tonal": false,
+   "peakAt": 0,
+   "durationSec": 0.258,
+   "loudness": -16,
+   "sharpness": 0.52,
+   "flatness": 0.053,
+   "world": "abstract",
+   "palettes": [
+    "tech",
+    "playful"
+   ],
+   "emotions": [
+    "release"
+   ],
+   "group": "zip-down",
+   "license": "CC0-1.0",
+   "description": "whoosh.micro (air/digital)"
+  },
+  {
+   "name": "zip-down-3",
+   "file": "recorded/zip-down-3.wav",
+   "source": "recorded",
+   "category": "whoosh.micro",
+   "material": [
+    "air",
+    "digital"
+   ],
+   "weight": 0.04,
+   "speed": 0.59,
+   "brightness": 1,
+   "tonal": false,
+   "peakAt": 0.048,
+   "durationSec": 0.418,
+   "loudness": -16,
+   "sharpness": 0.96,
+   "flatness": 0.171,
+   "world": "abstract",
+   "palettes": [
+    "tech",
+    "playful"
+   ],
+   "emotions": [
+    "release"
+   ],
+   "group": "zip-down",
+   "license": "CC0-1.0",
+   "description": "whoosh.micro (air/digital)"
+  },
+  {
+   "name": "zip-up-1",
+   "file": "recorded/zip-up-1.wav",
+   "source": "recorded",
+   "category": "whoosh.micro",
+   "material": [
+    "air",
+    "digital"
+   ],
+   "weight": 0.09,
+   "speed": 0.37,
+   "brightness": 0.86,
+   "tonal": false,
+   "peakAt": 0.218,
+   "durationSec": 0.258,
+   "loudness": -16,
+   "sharpness": 0.42,
+   "flatness": 0,
+   "world": "abstract",
+   "palettes": [
+    "tech",
+    "playful"
+   ],
+   "emotions": [
+    "uplift",
+    "playful"
+   ],
+   "group": "zip-up",
+   "license": "CC0-1.0",
+   "description": "whoosh.micro (air/digital)"
+  },
+  {
+   "name": "zip-up-2",
+   "file": "recorded/zip-up-2.wav",
+   "source": "recorded",
+   "category": "whoosh.micro",
+   "material": [
+    "air",
+    "digital"
+   ],
+   "weight": 0.05,
+   "speed": 0.6,
+   "brightness": 0.93,
+   "tonal": false,
+   "peakAt": 0.163,
+   "durationSec": 0.21,
+   "loudness": -16,
+   "sharpness": 0.49,
+   "flatness": 0.156,
+   "world": "abstract",
+   "palettes": [
+    "tech",
+    "playful"
+   ],
+   "emotions": [
+    "uplift",
+    "playful"
+   ],
+   "group": "zip-up",
+   "license": "CC0-1.0",
+   "description": "whoosh.micro (air/digital)"
+  },
+  {
+   "name": "zip-up-3",
+   "file": "recorded/zip-up-3.wav",
+   "source": "recorded",
+   "category": "whoosh.micro",
+   "material": [
+    "air",
+    "digital"
+   ],
+   "weight": 0.07,
+   "speed": 0.33,
+   "brightness": 0.96,
+   "tonal": false,
+   "peakAt": 0.473,
+   "durationSec": 0.52,
+   "loudness": -16,
+   "sharpness": 1,
+   "flatness": 0.004,
+   "world": "abstract",
+   "palettes": [
+    "tech",
+    "playful"
+   ],
+   "emotions": [
+    "uplift",
+    "playful"
+   ],
+   "group": "zip-up",
+   "license": "CC0-1.0",
+   "description": "whoosh.micro (air/digital)"
+  },
+  {
+   "name": "zipper-1",
+   "file": "recorded/zipper-1.wav",
+   "source": "recorded",
+   "category": "whoosh.micro",
+   "material": [
+    "cloth",
+    "metal-thin"
+   ],
+   "weight": 0.44,
+   "speed": 0.16,
+   "brightness": 0.25,
+   "tonal": false,
+   "peakAt": 0.373,
+   "durationSec": 0.7,
+   "loudness": -16,
+   "sharpness": 0.38,
+   "flatness": 0.005,
+   "world": "hyper-real",
+   "palettes": [
+    "playful",
+    "minimal"
+   ],
+   "emotions": [
+    "tactile"
+   ],
+   "group": "zipper",
+   "license": "CC0-1.0",
+   "description": "whoosh.micro (cloth/metal-thin)"
+  },
+  {
+   "name": "air-hiss-1",
+   "file": "recorded/air-hiss-1.wav",
+   "source": "recorded",
+   "category": "whoosh.out",
+   "material": [
+    "air"
+   ],
+   "weight": 0.13,
+   "speed": 0.18,
+   "brightness": 1,
+   "tonal": true,
+   "pitchHz": 1335.7,
+   "peakAt": 0,
+   "durationSec": 0.532,
+   "loudness": -16,
+   "sharpness": 0.56,
+   "flatness": 0.195,
+   "world": "abstract",
+   "palettes": [
+    "tech",
+    "cinematic"
+   ],
+   "emotions": [
+    "release"
+   ],
+   "group": "air-hiss",
+   "license": "CC0-1.0",
+   "description": "whoosh.out (air)"
+  },
+  {
+   "name": "page-flip-1",
+   "file": "recorded/page-flip-1.wav",
+   "source": "recorded",
+   "category": "whoosh.paper",
+   "material": [
+    "paper"
+   ],
+   "weight": 0.19,
+   "speed": 0.3,
+   "brightness": 0.77,
+   "tonal": false,
+   "peakAt": 0.248,
+   "durationSec": 0.65,
+   "loudness": -16,
+   "sharpness": 0.53,
+   "flatness": 0.341,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury",
+    "playful",
+    "cinematic"
+   ],
+   "emotions": [
+    "editorial",
+    "tactile"
+   ],
+   "group": "page-flip",
+   "license": "CC0-1.0",
+   "description": "whoosh.paper (paper)"
+  },
+  {
+   "name": "page-flip-2",
+   "file": "recorded/page-flip-2.wav",
+   "source": "recorded",
+   "category": "whoosh.paper",
+   "material": [
+    "paper"
+   ],
+   "weight": 0.22,
+   "speed": 0.32,
+   "brightness": 0.71,
+   "tonal": false,
+   "peakAt": 0.288,
+   "durationSec": 0.658,
+   "loudness": -16,
+   "sharpness": 0.54,
+   "flatness": 0.351,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury",
+    "playful",
+    "cinematic"
+   ],
+   "emotions": [
+    "editorial",
+    "tactile"
+   ],
+   "group": "page-flip",
+   "license": "CC0-1.0",
+   "description": "whoosh.paper (paper)"
+  },
+  {
+   "name": "page-flip-3",
+   "file": "recorded/page-flip-3.wav",
+   "source": "recorded",
+   "category": "whoosh.paper",
+   "material": [
+    "paper"
+   ],
+   "weight": 0.2,
+   "speed": 0.28,
+   "brightness": 0.73,
+   "tonal": false,
+   "peakAt": 0.153,
+   "durationSec": 0.546,
+   "loudness": -16.7,
+   "sharpness": 1,
+   "flatness": 0.366,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury",
+    "playful",
+    "cinematic"
+   ],
+   "emotions": [
+    "editorial",
+    "tactile"
+   ],
+   "group": "page-flip",
+   "license": "CC0-1.0",
+   "description": "whoosh.paper (paper)"
+  },
+  {
+   "name": "page-flip-4",
+   "file": "recorded/page-flip-4.wav",
+   "source": "recorded",
+   "category": "whoosh.paper",
+   "material": [
+    "paper"
+   ],
+   "weight": 0.19,
+   "speed": 0.38,
+   "brightness": 0.79,
+   "tonal": false,
+   "peakAt": 0.323,
+   "durationSec": 0.8,
+   "loudness": -17.3,
+   "sharpness": 0.61,
+   "flatness": 0.309,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury",
+    "playful",
+    "cinematic"
+   ],
+   "emotions": [
+    "editorial",
+    "tactile"
+   ],
+   "group": "page-flip",
+   "license": "CC0-1.0",
+   "description": "whoosh.paper (paper)"
+  },
+  {
+   "name": "page-turn-1",
+   "file": "recorded/page-turn-1.wav",
+   "source": "recorded",
+   "category": "whoosh.paper",
+   "material": [
+    "paper"
+   ],
+   "weight": 0.21,
+   "speed": 0.42,
+   "brightness": 0.67,
+   "tonal": false,
+   "peakAt": 0.343,
+   "durationSec": 0.563,
+   "loudness": -17.9,
+   "sharpness": 1,
+   "flatness": 0.11,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury",
+    "cinematic"
+   ],
+   "emotions": [
+    "editorial"
+   ],
+   "group": "page-turn",
+   "license": "CC0-1.0",
+   "description": "whoosh.paper (paper)"
+  },
+  {
+   "name": "page-turn-2",
+   "file": "recorded/page-turn-2.wav",
+   "source": "recorded",
+   "category": "whoosh.paper",
+   "material": [
+    "paper"
+   ],
+   "weight": 0.27,
+   "speed": 0.44,
+   "brightness": 0.61,
+   "tonal": false,
+   "peakAt": 0.635,
+   "durationSec": 0.9,
+   "loudness": -18.1,
+   "sharpness": 1,
+   "flatness": 0.138,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury",
+    "cinematic"
+   ],
+   "emotions": [
+    "editorial"
+   ],
+   "group": "page-turn",
+   "license": "CC0-1.0",
+   "description": "whoosh.paper (paper)"
+  },
+  {
+   "name": "page-turn-3",
+   "file": "recorded/page-turn-3.wav",
+   "source": "recorded",
+   "category": "whoosh.paper",
+   "material": [
+    "paper"
+   ],
+   "weight": 0.25,
+   "speed": 0.48,
+   "brightness": 0.64,
+   "tonal": false,
+   "peakAt": 0.64,
+   "durationSec": 0.852,
+   "loudness": -16,
+   "sharpness": 1,
+   "flatness": 0.034,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury",
+    "cinematic"
+   ],
+   "emotions": [
+    "editorial"
+   ],
+   "group": "page-turn",
+   "license": "CC0-1.0",
+   "description": "whoosh.paper (paper)"
+  },
+  {
+   "name": "page-turn-b-1",
+   "file": "recorded/page-turn-b-1.wav",
+   "source": "recorded",
+   "category": "whoosh.paper",
+   "material": [
+    "paper"
+   ],
+   "weight": 0.2,
+   "speed": 0.3,
+   "brightness": 0.7,
+   "tonal": false,
+   "peakAt": 0.173,
+   "durationSec": 0.516,
+   "loudness": -16.1,
+   "sharpness": 0.66,
+   "flatness": 0.282,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury"
+   ],
+   "emotions": [
+    "editorial"
+   ],
+   "group": "page-turn-b",
+   "license": "CC0-1.0",
+   "description": "whoosh.paper (paper)"
+  },
+  {
+   "name": "paper-slide-1",
+   "file": "recorded/paper-slide-1.wav",
+   "source": "recorded",
+   "category": "whoosh.paper",
+   "material": [
+    "paper"
+   ],
+   "weight": 0.06,
+   "speed": 0.66,
+   "brightness": 1,
+   "tonal": false,
+   "peakAt": 0.518,
+   "durationSec": 0.624,
+   "loudness": -22.4,
+   "sharpness": 1,
+   "flatness": 0.243,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury",
+    "playful",
+    "tech"
+   ],
+   "emotions": [
+    "tactile",
+    "editorial"
+   ],
+   "group": "paper-slide",
+   "license": "CC0-1.0",
+   "description": "whoosh.paper (paper)"
+  },
+  {
+   "name": "paper-slide-2",
+   "file": "recorded/paper-slide-2.wav",
+   "source": "recorded",
+   "category": "whoosh.paper",
+   "material": [
+    "paper"
+   ],
+   "weight": 0.07,
+   "speed": 0.5,
+   "brightness": 0.99,
+   "tonal": false,
+   "peakAt": 0.293,
+   "durationSec": 0.602,
+   "loudness": -22.2,
+   "sharpness": 0.95,
+   "flatness": 0.409,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury",
+    "playful",
+    "tech"
+   ],
+   "emotions": [
+    "tactile",
+    "editorial"
+   ],
+   "group": "paper-slide",
+   "license": "CC0-1.0",
+   "description": "whoosh.paper (paper)"
+  },
+  {
+   "name": "paper-slide-3",
+   "file": "recorded/paper-slide-3.wav",
+   "source": "recorded",
+   "category": "whoosh.paper",
+   "material": [
+    "paper"
+   ],
+   "weight": 0.04,
+   "speed": 0.58,
+   "brightness": 1,
+   "tonal": false,
+   "peakAt": 0.243,
+   "durationSec": 0.372,
+   "loudness": -17.2,
+   "sharpness": 0.28,
+   "flatness": 0.432,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury",
+    "playful",
+    "tech"
+   ],
+   "emotions": [
+    "tactile",
+    "editorial"
+   ],
+   "group": "paper-slide",
+   "license": "CC0-1.0",
+   "description": "whoosh.paper (paper)"
+  },
+  {
+   "name": "paper-slide-4",
+   "file": "recorded/paper-slide-4.wav",
+   "source": "recorded",
+   "category": "whoosh.paper",
+   "material": [
+    "paper"
+   ],
+   "weight": 0.09,
+   "speed": 0.44,
+   "brightness": 0.96,
+   "tonal": false,
+   "peakAt": 0.378,
+   "durationSec": 0.632,
+   "loudness": -17.9,
+   "sharpness": 0.39,
+   "flatness": 0.513,
+   "world": "hyper-real",
+   "palettes": [
+    "minimal",
+    "luxury",
+    "playful",
+    "tech"
+   ],
+   "emotions": [
+    "tactile",
+    "editorial"
+   ],
+   "group": "paper-slide",
+   "license": "CC0-1.0",
+   "description": "whoosh.paper (paper)"
+  }
+ ]
+}

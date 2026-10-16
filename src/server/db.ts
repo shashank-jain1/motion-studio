@@ -111,6 +111,10 @@ const MIGRATIONS: string[] = [
   ALTER TABLE oauth_tokens ADD COLUMN family_id TEXT;
   CREATE INDEX oauth_tokens_family ON oauth_tokens(family_id);
   `,
+  // 3: render jobs per output format (one spec → every platform; NULL = the spec's master format)
+  `
+  ALTER TABLE jobs ADD COLUMN format TEXT;
+  `,
 ];
 
 const open = (): DB => {

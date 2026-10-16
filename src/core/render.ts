@@ -19,7 +19,11 @@ import {
 } from "@remotion/renderer";
 import { BUNDLE_CACHE_DIR, ENGINE_DIR, ENGINE_ENTRY, ROOT } from "./paths";
 import { getProject, loadSpec } from "./projects";
+import { masterFormat, reflowSpec, type Format } from "../engine/spec/reflow";
 import { startAssetServer } from "./assetServer";
+import { masterLoudness } from "./audioMaster";
+import { withMusicInfo } from "./audio";
+import { ensureSfxLibrary } from "../../scripts/gen-sfx";
 
 const execFileP = promisify(execFile);
 
@@ -54,7 +58,7 @@ export const engineHash = (): string => {
     }
   };
   walk(ENGINE_DIR);
-  for (const f of ["package.json", "pnpm-lock.yaml"]) {
+  for (const f of ["package.json", "pnpm-lock.yaml", "library/sfx/manifest.json", "library/sfx/recorded/manifest.json"]) { // the engine imports the SFX manifests
     try {
       const st = fs.statSync(path.join(ROOT, f));
       h.update(`${f}:${st.mtimeMs}:${st.size}\n`);
@@ -115,10 +119,14 @@ export const getBundle = (opts: { onProgress?: (p: number) => void } = {}): Prom
 
 // ---------------------------------------------------------------- helpers
 
-const inputPropsFor = async (projectId: string) => {
-  const spec = loadSpec(projectId);
+/** Input props for a project; with `format`, the spec is reflowed to that format first (one spec → every platform). */
+const inputPropsFor = async (projectId: string, format?: Format) => {
+  const master = loadSpec(projectId);
+  const reflowed = format ? reflowSpec(master, format) : master;
+  const spec = await withMusicInfo(reflowed, getProject(projectId).dir); // music key / onsets for the sound planner
   const server = await startAssetServer();
-  return { spec, assetBase: server.baseUrlFor(projectId), projectId };
+  ensureSfxLibrary(); // "sfx:" cues load from library/sfx (no-op when present)
+  return { spec, assetBase: server.baseUrlFor(projectId), projectId, libraryBase: server.libraryBase };
 };
 
 const fmtTime = (t: number) => t.toFixed(2);
@@ -135,12 +143,12 @@ export type PreviewResult = { frames: PreviewFrame[]; sheet: string | null; colu
 export const renderFrames = async (
   projectId: string,
   times: number[],
-  opts: { scale?: number; sheet?: boolean } = {},
+  opts: { scale?: number; sheet?: boolean; format?: Format } = {},
 ): Promise<PreviewResult> => {
   const project = getProject(projectId);
   const scale = opts.scale ?? 0.5;
   if (times.length === 0) throw new Error("No times given");
-  const inputProps = await inputPropsFor(projectId);
+  const inputProps = await inputPropsFor(projectId, opts.format);
   const serveUrl = await getBundle();
 
   const previewsDir = path.join(project.dir, "previews");
@@ -297,22 +305,26 @@ export type RenderVideoResult = {
   fps: number;
   renderSeconds: number;
   quality: RenderQuality;
+  /** Output format (the master format unless the render was reflowed). */
+  format: Format;
 };
 
 export const renderVideo = async (
   projectId: string,
-  opts: { quality?: RenderQuality; onProgress?: (p: { progress: number; renderedFrames: number; encodedFrames: number; stage: string }) => void; signal?: AbortSignal } = {},
+  opts: { quality?: RenderQuality; format?: Format; onProgress?: (p: { progress: number; renderedFrames: number; encodedFrames: number; stage: string }) => void; signal?: AbortSignal } = {},
 ): Promise<RenderVideoResult> => {
   const project = getProject(projectId);
   const quality = opts.quality ?? "draft";
   const scale = quality === "final" ? 1 : 0.5;
   const crf = quality === "final" ? 18 : 28;
-  const inputProps = await inputPropsFor(projectId);
+  const inputProps = await inputPropsFor(projectId, opts.format);
+  const format = opts.format ?? masterFormat(inputProps.spec);
   const serveUrl = await getBundle();
   const rendersDir = path.join(project.dir, "renders");
   fs.mkdirSync(rendersDir, { recursive: true });
   const stamp = new Date().toISOString().replace(/[:.]/g, "-").replace("T", "_").slice(0, 19);
-  const outputLocation = path.join(rendersDir, `${stamp}-${quality}.mp4`);
+  // filenames carry the format: 2026-…-draft-9x16.mp4
+  const outputLocation = path.join(rendersDir, `${stamp}-${quality}-${format.replace(":", "x")}.mp4`);
 
   const t0 = Date.now();
   const browser = await openBrowser("chrome", { chromiumOptions, logLevel: RENDER_LOG_LEVEL });
@@ -352,6 +364,7 @@ export const renderVideo = async (
       onProgress: (p: RenderMediaProgress) =>
         opts.onProgress?.({ progress: p.progress, renderedFrames: p.renderedFrames, encodedFrames: p.encodedFrames, stage: p.stitchStage }),
     });
+    await masterLoudness(outputLocation); // −14 LUFS, true peak ≤ −1 dBTP
     const sizeBytes = fs.statSync(outputLocation).size;
     return {
       path: outputLocation,
@@ -362,6 +375,7 @@ export const renderVideo = async (
       fps: composition.fps,
       renderSeconds: Math.round((Date.now() - t0) / 100) / 10,
       quality,
+      format,
     };
   } finally {
     await browser.close({ silent: true }).catch(() => undefined);

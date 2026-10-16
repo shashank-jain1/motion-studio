@@ -40,6 +40,9 @@ import { analyzeAudio } from "./audio";
 import { renderFrames, renderVideo, type PreviewResult, type RenderQuality, type RenderVideoResult } from "./render";
 import { listCustomComponents, readCustomComponent, writeCustomComponent } from "./custom";
 import { resolvePublic, safeDownload } from "./safe-download";
+import { FORMAT_LIST, adaptTargets, type Format } from "../engine/spec/reflow";
+import { NICHES } from "../engine/spec/schema";
+import { pickWinner, storyKit, storyReport, type CandidateInput } from "./story";
 
 // ---------------------------------------------------------------- types
 
@@ -62,6 +65,8 @@ export type RenderRecord = {
   height?: number;
   fps?: number;
   renderSeconds?: number;
+  /** Output format ("9:16"…): the master format, or the format the spec was reflowed to (spec/reflow.ts). */
+  format?: Format;
 };
 
 export type PreviewFrameInfo = { time: number; frame: number; path: string; label: string };
@@ -117,7 +122,7 @@ export type ToolPolicy = {
   canAccessProject?: (projectId: string) => boolean;
   listProjectIds?: () => Iterable<string>;
   onProjectCreated?: (projectId: string) => void;
-  renderVideo?: (projectId: string, quality: RenderQuality, ctx: ToolContext) => Promise<RenderRecord | PendingRender>;
+  renderVideo?: (projectId: string, quality: RenderQuality, ctx: ToolContext, opts?: { format?: Format; detach?: boolean }) => Promise<RenderRecord | PendingRender>;
   /** render_status: a job of this project (latest when jobId is omitted), null if none. */
   renderStatus?: (projectId: string, jobId?: string) => RenderJobStatus | null;
   projectLink?: (projectId: string) => string | null | undefined;
@@ -126,11 +131,12 @@ export type ToolPolicy = {
 };
 
 /** render_video returned before the job finished (remote MCP waits ~45s at most); poll with render_status. */
-export type PendingRender = { pending: true; jobId: string; status: string; progress: number; stage?: string; position?: number };
+export type PendingRender = { pending: true; jobId: string; status: string; progress: number; stage?: string; position?: number; format?: Format };
 export type RenderJobStatus = {
   jobId: string;
   status: "queued" | "running" | "done" | "error" | "canceled";
   quality: RenderQuality;
+  format?: Format;
   progress: number;
   stage?: string;
   position?: number;
@@ -472,7 +478,7 @@ const sceneAt = (projectId: string, t: number): string => {
  */
 export const runPreview = async (
   projectId: string,
-  opts: { times?: number[]; scale?: number; individual?: boolean; signal?: AbortSignal; onWait?: () => void } = {},
+  opts: { times?: number[]; scale?: number; individual?: boolean; format?: Format; signal?: AbortSignal; onWait?: () => void } = {},
 ): Promise<PreviewRun> => {
   const project = getProject(projectId);
   let labels = new Map<number, string>();
@@ -483,7 +489,7 @@ export const runPreview = async (
     labels = auto.labels;
   } else loadSpec(projectId); // fail fast with a clear message when there is no / an invalid spec
   const t0 = Date.now();
-  const res: PreviewResult = await withRenderLock(() => renderFrames(projectId, ts!, { scale: opts.scale ?? 0.5, sheet: !opts.individual }), {
+  const res: PreviewResult = await withRenderLock(() => renderFrames(projectId, ts!, { scale: opts.scale ?? 0.5, sheet: !opts.individual, format: opts.format }), {
     signal: opts.signal,
     onWait: opts.onWait,
   });
@@ -493,7 +499,7 @@ export const runPreview = async (
     const label = `t=${f.time.toFixed(2)}s (frame ${f.frame})${where ? ` — ${where}` : ""}${lab && !where.includes(lab) ? ` [${lab}]` : ""}`;
     return { ...f, label };
   });
-  if (frames.length) {
+  if (frames.length && !opts.format) {
     try {
       fs.copyFileSync(frames[Math.floor((frames.length - 1) / 2)].path, path.join(project.dir, "thumb.jpg"));
     } catch {
@@ -514,13 +520,15 @@ export const runPreview = async (
 
 // ---------------------------------------------------------------- renders
 
-const RENDER_RE = /-(draft|final)\.mp4$/;
+const RENDER_RE = /-(draft|final)(?:-(\d+)x(\d+))?\.mp4$/;
 
 /** Render an MP4 under the render lock and record its metadata in renders/<file>.mp4.json. */
 export const runRender = async (
   projectId: string,
   opts: {
     quality?: RenderQuality;
+    /** reflow to this format first (default: the spec's master format) */
+    format?: Format;
     signal?: AbortSignal;
     onWait?: () => void;
     onProgress?: (p: { progress: number; renderedFrames: number; encodedFrames: number; stage: string }) => void;
@@ -528,7 +536,7 @@ export const runRender = async (
 ): Promise<{ result: RenderVideoResult; record: RenderRecord }> => {
   const project = getProject(projectId);
   loadSpec(projectId);
-  const result = await withRenderLock(() => renderVideo(projectId, { quality: opts.quality ?? "draft", signal: opts.signal, onProgress: opts.onProgress }), {
+  const result = await withRenderLock(() => renderVideo(projectId, { quality: opts.quality ?? "draft", format: opts.format, signal: opts.signal, onProgress: opts.onProgress }), {
     signal: opts.signal,
     onWait: opts.onWait,
   });
@@ -542,6 +550,7 @@ export const runRender = async (
     height: result.height,
     fps: result.fps,
     renderSeconds: result.renderSeconds,
+    format: result.format,
   };
   try {
     fs.writeFileSync(`${result.path}.json`, JSON.stringify(record, null, 2) + "\n");
@@ -576,6 +585,7 @@ export const listRenders = (projectId: string): RenderRecord[] => {
       ...meta,
       file: `renders/${f}`,
       quality: (meta.quality ?? (RENDER_RE.exec(f)?.[1] as RenderQuality | undefined) ?? "draft") as RenderQuality,
+      ...(!meta.format && RENDER_RE.exec(f)?.[2] ? { format: `${RENDER_RE.exec(f)![2]}:${RENDER_RE.exec(f)![3]}` as Format } : {}),
       createdAt: meta.createdAt ?? st.mtime.toISOString(),
       sizeBytes: st.size,
     });
@@ -619,10 +629,79 @@ export const TOOLS: ToolDef[] = [
     title: "Director guide",
     scope: "global",
     description:
-      "Read this FIRST. Returns the Director Guide (how to plan and art-direct a video, pacing, the self-critique loop) and the Kit Reference (every layer type, preset, transition and option in the Scene Spec). All spec times are seconds; positions are px from the canvas center.",
+      "Read this FIRST. Returns the Director Guide (how to plan and art-direct a video, pacing, the self-critique loop), the Story Engine manual (how to find a story that hooks, peaks and is remembered: concepts → score_concepts → beats → check_story) and the Kit Reference (every layer type, preset, transition and option in the Scene Spec). All spec times are seconds; positions are px from the canvas center.",
     shape: {},
     startSummary: () => "Reading the director guide",
-    handler: async () => ({ content: [text(readDoc("DIRECTOR_GUIDE.md")), text(readDoc("KIT_REFERENCE.md"))], summary: "Read the director guide" }),
+    handler: async () => ({
+      content: [text(readDoc("DIRECTOR_GUIDE.md")), text(readDoc("STORY_ENGINE.md")), text(readDoc("KIT_REFERENCE.md"))],
+      summary: "Read the director guide",
+    }),
+  }),
+
+  defineTool({
+    name: "story_kit",
+    title: "Story kit",
+    scope: "global",
+    description:
+      "Story Engine reference — call BEFORE writing concepts. Returns the concept rubric (8 weighted dimensions) and its gates, the intensity-curve rules, the 10 technique cards, Goldenberg creativity templates mapped to the motion kit, the 14 story structures with beat timings for 10/15/30s, and the cliché blacklist for `niche` (the things every competitor's ad does — banned unless they are the object of a twist).",
+    shape: {
+      niche: z.enum(NICHES).optional().describe("category whose cliché blacklist to include"),
+      seconds: z.number().positive().optional().describe("planned runtime, to suggest structures"),
+    },
+    startSummary: (i) => `Opening the story kit${i.niche ? ` · ${i.niche}` : ""}`,
+    handler: async ({ niche, seconds }) => ({ content: [text(storyKit(niche, seconds))], summary: `Story kit${niche ? ` · ${niche} blacklist` : ""}` }),
+  }),
+
+  defineTool({
+    name: "score_concepts",
+    title: "Score concepts",
+    scope: "global",
+    description:
+      "Score story concepts with the Story Engine rubric: weighted total 0–100, hard gates (uniqueness, brandLinkage, clarity, feasibility ≥ 3), typicality > 0.3 discarded, ties broken by emotionalPeak + payoff. Returns the ranked list, the winner, alternate-hook and graft candidates, and advice (missing control, repeated techniques, no Goldenberg / sound-led / humorous concept). Send 8 candidates; #0 is the deliberately obvious control. Record the result in spec.concept.story (candidates + chosen).",
+    shape: {
+      candidates: z.array(z.object({
+        title: z.string(),
+        technique: z.string().describe("technique card (control, inherent-drama, metaphor-mining, inversion, exaggeration, perspective-shift, forced-connection, constraint, cultural-tension, consequence, sensory-transposition) + any Goldenberg template / sound-led / humour"),
+        logline: z.string().describe("one line: protagonist + twist + how it becomes the brand"),
+        scores: z.object({
+          hook: z.number().min(0).max(5), surprise: z.number().min(0).max(5), emotionalPeak: z.number().min(0).max(5), payoff: z.number().min(0).max(5),
+          brandLinkage: z.number().min(0).max(5), clarity: z.number().min(0).max(5), uniqueness: z.number().min(0).max(5), feasibility: z.number().min(0).max(5),
+        }),
+        typicality: z.number().min(0).max(1).optional().describe("probability this is a typical first idea from 10 other agencies"),
+      })).min(1),
+    },
+    startSummary: (i) => `Scoring ${plural(Array.isArray(i.candidates) ? i.candidates.length : 0, "concept")}`,
+    handler: async ({ candidates }) => {
+      const r = pickWinner(candidates as CandidateInput[]);
+      const rows = r.ranked.map((c) => {
+        const s = c.scores;
+        const tag = c === r.winner ? " ★ WINNER" : r.alternates.includes(c) ? " (alt hook)" : r.grafts.includes(c) ? " (graft)" : "";
+        const why = c.discarded ? ` — discarded: ${c.discarded}` : c.gatesPassed ? "" : ` — GATE FAIL: ${c.failedGates.join(", ")}`;
+        return `#${c.index} ${String(c.total).padStart(3)}  H${s.hook} S${s.surprise} E${s.emotionalPeak} P${s.payoff} B${s.brandLinkage} C${s.clarity} U${s.uniqueness} F${s.feasibility}  ${c.title} [${c.technique}]${tag}${why}`;
+      });
+      const out = [
+        "Ranked (total = Σ weight×score / 75 × 100):",
+        ...rows,
+        "",
+        r.winner ? `Winner: #${r.winner.index} "${r.winner.title}" (${r.winner.total}). Next: develop it — beats with an intensity curve (one peak at 60–80%, dip before it, end ≥80% of peak), the wow on the peak, a mnemonic ending; record it in concept.story with chosen: ${r.winner.index}.` : "No winner: every concept fails a gate.",
+        ...(r.advice.length ? ["", "Advice:", ...r.advice.map((a) => `  • ${a}`)] : []),
+      ];
+      return { content: [text(out.join("\n"))], summary: r.winner ? `Winner #${r.winner.index} · ${r.winner.total}` : "No concept passes the gates" };
+    },
+  }),
+
+  defineTool({
+    name: "check_story",
+    title: "Check story",
+    scope: "project",
+    description:
+      "Run the Story Engine checks on the saved spec: the intensity curve from concept.story.beats as an ASCII sparkline (60–80% peak window, ^ peak, v dip, W wow), hook / single peak / pre-peak dip / peak-end / floor rules, the chosen concept's gates, wow and mnemonic, brand linkage (first brand asset time), and niche clichés found in text, shapes, icons and concept text. Run after set_spec and before rendering.",
+    shape: { projectId: projectIdField },
+    startSummary: () => "Checking the story",
+    handler: async ({ projectId }) => {
+      const r = storyReport(loadSpec(projectId));
+      return { content: [text(r.text)], summary: r.issues.length ? `Story · ${plural(r.issues.length, "issue")}` : "Story · no issues" };
+    },
   }),
 
   defineTool({
@@ -897,19 +976,20 @@ export const TOOLS: ToolDef[] = [
     title: "Preview frames",
     scope: "project",
     description:
-      "Render still frames of the current spec and return them as an image so you can SEE the video. Use it after every meaningful change and critique honestly: hierarchy, legibility, spacing/safe margins, overlap, contrast, empty or cluttered frames, brand fit. Default: ~6 auto-picked moments (just after each scene settles, and late in each scene) as one labelled contact sheet (tile numbers match the listing). Pass `times` (seconds) to inspect specific moments, e.g. mid-transition or a beat. individual: true returns each frame as its own larger image instead of a sheet.",
+      "Render still frames of the current spec and return them as an image so you can SEE the video. Use it after every meaningful change and critique honestly: hierarchy, legibility, spacing/safe margins, overlap, contrast, empty or cluttered frames, brand fit. Default: ~6 auto-picked moments (just after each scene settles, and late in each scene) as one labelled contact sheet (tile numbers match the listing). Pass `times` (seconds) to inspect specific moments, e.g. mid-transition or a beat. individual: true returns each frame as its own larger image instead of a sheet. `format` previews the film REFLOWED to another format (one spec → every platform: rows restack for vertical, tall stacks spread into columns for landscape, critical content kept in that format's safe zone) — check every format listed in spec.formats and fix problems with per-layer `adapt: {\"9:16\": {...}}` overrides.",
     shape: {
       projectId: projectIdField,
       times: z.array(z.number().min(0)).max(16).optional().describe("seconds on the global timeline"),
       scale: z.number().min(0.1).max(1).optional().describe("render scale, default 0.5 (0.35 for many frames, 1 for fine detail)"),
       individual: z.boolean().optional().describe("return separate images instead of a contact sheet"),
+      format: z.enum(FORMAT_LIST as [Format, ...Format[]]).optional().describe("preview the film adapted to this format (default: the spec's own)"),
     },
-    startSummary: (i) => `Rendering preview${i.times?.length ? ` · ${plural(i.times.length, "frame")}` : ""}`,
-    handler: async ({ projectId, times, scale, individual }, ctx) => {
+    startSummary: (i) => `Rendering preview${i.format ? ` · ${i.format}` : ""}${i.times?.length ? ` · ${plural(i.times.length, "frame")}` : ""}`,
+    handler: async ({ projectId, times, scale, individual, format }, ctx) => {
       if (isHosted(ctx)) await assertSpecSafe(readSpec(projectId));
-      const run = await runPreview(projectId, { times, scale, individual, signal: ctx.signal, onWait: () => ctx.onProgress?.({ progress: 0, message: "Waiting for another render to finish…" }) });
+      const run = await runPreview(projectId, { times, scale, individual, format, signal: ctx.signal, onWait: () => ctx.onProgress?.({ progress: 0, message: "Waiting for another render to finish…" }) });
       const lines = run.frames.map((f, i) => `${i + 1}. ${f.label}`);
-      const header = `Rendered ${run.frames.length} frame(s) of a ${run.durationSeconds.toFixed(2)}s video at ${run.width}x${run.height} in ${run.seconds.toFixed(1)}s.`;
+      const header = `Rendered ${run.frames.length} frame(s) of a ${run.durationSeconds.toFixed(2)}s video at ${run.width}x${run.height}${format ? ` (reflowed to ${format})` : ""} in ${run.seconds.toFixed(1)}s.`;
       const content: ToolContent[] = [];
       if (individual || !run.sheet) {
         content.push(text(`${header}\n${lines.join("\n")}`));
@@ -930,12 +1010,50 @@ export const TOOLS: ToolDef[] = [
     title: "Render MP4",
     scope: "project",
     description:
-      "Render the project to an MP4 (H.264). quality \"draft\" = half resolution, fast (use to check timing/motion); \"final\" = full resolution, high quality. Takes from seconds to minutes depending on length. Returns the file path, duration, size and render time. Only render after preview_frames looks right. On a hosted/remote Motion Studio renders run in a job queue: if the render takes longer than ~45s this returns \"Still rendering\" with a jobId — then poll render_status until it is done.",
-    shape: { projectId: projectIdField, quality: z.enum(["draft", "final"]).optional() },
-    startSummary: (i) => `Rendering ${i.quality ?? "draft"} video`,
-    handler: async ({ projectId, quality }, ctx) => {
+      "Render the project to an MP4 (H.264). quality \"draft\" = half resolution, fast (use to check timing/motion); \"final\" = full resolution, high quality. Takes from seconds to minutes depending on length. Returns the file path, duration, size and render time. Only render after preview_frames looks right. On a hosted/remote Motion Studio renders run in a job queue: if the render takes longer than ~45s this returns \"Still rendering\" with a jobId — then poll render_status until it is done. `format` renders the film reflowed to another format; `all_formats: true` renders the master plus every format in spec.formats (one MP4 each; queued as separate jobs when a queue exists).",
+    shape: {
+      projectId: projectIdField,
+      quality: z.enum(["draft", "final"]).optional(),
+      format: z.enum(FORMAT_LIST as [Format, ...Format[]]).optional().describe("render the film adapted to this format (default: the spec's own)"),
+      all_formats: z.boolean().optional().describe("render every adapt target: the master format + spec.formats"),
+    },
+    startSummary: (i) => `Rendering ${i.quality ?? "draft"} video${i.all_formats ? " · all formats" : i.format ? ` · ${i.format}` : ""}`,
+    handler: async ({ projectId, quality, format, all_formats }, ctx) => {
+      const q = quality ?? "draft";
+      if (all_formats) {
+        const targets = adaptTargets(loadSpec(projectId));
+        if (ctx.policy?.renderVideo) {
+          const queued: PendingRender[] = [];
+          for (const f of targets) {
+            const out = await ctx.policy.renderVideo(projectId, q, ctx, { format: f, detach: true });
+            queued.push("pending" in out ? { ...out, format: f } : { pending: true, jobId: "", status: "done", progress: 1, format: f });
+          }
+          return {
+            content: [
+              text(`Queued ${queued.length} ${q} render(s), one per format: ${queued.map((j) => `${j.format} → job ${j.jobId}`).join(", ")}. Poll render_status {${pidArg(ctx)}jobId} for each (finished MP4s also show up in get_project).`),
+              json(queued),
+            ],
+            summary: `Queued ${plural(queued.length, "render")} · ${targets.join(" · ")}`,
+          };
+        }
+        const done: RenderRecord[] = [];
+        for (const [i, f] of targets.entries()) {
+          const { record } = await runRender(projectId, {
+            quality: q, format: f, signal: ctx.signal,
+            onWait: () => ctx.onProgress?.({ progress: i / targets.length, message: "Waiting for another render to finish…" }),
+            onProgress: (p) => ctx.onProgress?.({ progress: (i + p.progress) / targets.length, message: `${f} · ${p.stage}: ${p.renderedFrames} frames` }),
+          });
+          done.push(record);
+        }
+        const where = (r: RenderRecord) => (isHosted(ctx) ? r.file : path.join(getProject(projectId).dir, r.file));
+        return {
+          content: [text(`Rendered ${done.length} ${q} video(s):\n${done.map((r) => `${r.format}: ${where(r)} (${r.width}x${r.height}, ${(r.sizeBytes / 1e6).toFixed(2)} MB)`).join("\n")}`), json(done)],
+          summary: `Rendered ${plural(done.length, "format")} · ${targets.join(" · ")}`,
+          events: done.map((r) => ({ type: "render" as const, projectId, render: r })),
+        };
+      }
       if (ctx.policy?.renderVideo) {
-        const out = await ctx.policy.renderVideo(projectId, quality ?? "draft", ctx);
+        const out = await ctx.policy.renderVideo(projectId, q, ctx, format ? { format } : undefined);
         if ("pending" in out) {
           const pct = Math.round(out.progress * 100);
           const state = out.status === "queued" ? `queued${out.position ? ` (#${out.position} in line)` : ""}` : `${out.stage ?? "rendering"} · ${pct}%`;
@@ -965,7 +1083,8 @@ export const TOOLS: ToolDef[] = [
       }
       let last = -1;
       const { result: res, record } = await runRender(projectId, {
-        quality: quality ?? "draft",
+        quality: q,
+        format,
         signal: ctx.signal,
         onWait: () => ctx.onProgress?.({ progress: 0, message: "Waiting for another render to finish…" }),
         onProgress: (p) => {
@@ -978,7 +1097,7 @@ export const TOOLS: ToolDef[] = [
       });
       return {
         content: [
-          text(`Rendered ${res.quality} video: ${res.path}\n${res.width}x${res.height} @ ${res.fps}fps, ${res.seconds.toFixed(2)}s, ${(res.sizeBytes / 1e6).toFixed(2)} MB, took ${res.renderSeconds}s.`),
+          text(`Rendered ${res.quality} ${res.format} video: ${res.path}\n${res.width}x${res.height} @ ${res.fps}fps, ${res.seconds.toFixed(2)}s, ${(res.sizeBytes / 1e6).toFixed(2)} MB, took ${res.renderSeconds}s.`),
           json(res),
         ],
         summary: `Rendered ${res.quality} · ${fmtSecs(res.seconds)} · ${(res.sizeBytes / 1e6).toFixed(1)} MB`,
@@ -1017,7 +1136,7 @@ export const TOOLS: ToolDef[] = [
                 ? "Canceled."
                 : `Failed: ${st.error ?? "unknown error"}`;
       return {
-        content: [text(`Job ${st.jobId} (${st.quality}): ${line}`), json(st)],
+        content: [text(`Job ${st.jobId} (${st.quality}${st.format ? ` · ${st.format}` : ""}): ${line}`), json(st)],
         isError: st.status === "error",
         summary: `Render ${st.status}${st.status === "running" ? ` · ${pct}%` : ""}`,
       };

@@ -1,0 +1,21 @@
+{
+  "title": "SaaS: the invoice that waited",
+  "niche": "SaaS explainer",
+  "description": "An invoice spends nine days hopping between grey inbox, sheet and chat windows. One blue line appears, and it zips through every approval in a second — into the dot that is your logo.",
+  "format": "16:9",
+  "durationSeconds": 13,
+  "tags": [
+    "saas",
+    "b2b",
+    "explainer",
+    "workflow",
+    "character",
+    "humour"
+  ],
+  "order": 7,
+  "formats": [
+    "16:9",
+    "9:16",
+    "1:1"
+  ]
+}

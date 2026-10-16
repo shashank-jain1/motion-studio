@@ -1,0 +1,850 @@
+{
+  "title": "Ember — still glowing at your door",
+  "fps": 30,
+  "style": "cinematic",
+  "formats": [
+    "16:9",
+    "1:1",
+    "4:5"
+  ],
+  "sound": {
+    "brief": {
+      "voice": "warm",
+      "realism": "mixed",
+      "materials": [
+        "cardboard",
+        "wood"
+      ],
+      "space": "room",
+      "avoid": [
+        "digital",
+        "gamey"
+      ]
+    },
+    "restraint": 0.55,
+    "signature": "auto"
+  },
+  "theme": {
+    "fonts": {
+      "display": "Fraunces",
+      "body": "DM Sans"
+    },
+    "colors": {
+      "bg": "#081322",
+      "fg": "#eaf2ff",
+      "muted": "#8ea3c2",
+      "accent": "#ff7a2f",
+      "accent2": "#ffc24b",
+      "card": "#10233d",
+      "cream": "#fff1e0",
+      "coal": "#1a0d07",
+      "frost": "#9cc4ff",
+      "block": "#10233d"
+    }
+  },
+  "fx": {
+    "grain": 0.12,
+    "vignette": 0.45,
+    "letterbox": 0,
+    "flashes": [
+      {
+        "at": 7.68,
+        "color": "#ffb35c",
+        "duration": 0.16,
+        "intensity": 0.3
+      }
+    ]
+  },
+  "sfx": [
+    {
+      "src": "sfx:air-suck-1",
+      "at": 0.628,
+      "volume": 0.55
+    },
+    {
+      "src": "sfx:air-suck-1",
+      "at": 2.461,
+      "volume": 0.55
+    },
+    {
+      "src": "sfx:air-suck-1",
+      "at": 4.239,
+      "volume": 0.55
+    },
+    {
+      "src": "sfx:impact-soft",
+      "at": 7.644,
+      "volume": 0.85
+    },
+    {
+      "src": "sfx:shimmer",
+      "at": 7.54,
+      "volume": 0.5
+    }
+  ],
+  "concept": {
+    "niche": "food",
+    "truth": "Ember helps hungry neighbours eat real wood-fired pizza at home, feeling looked after.",
+    "metaphor": "sensory transposition — heat as colour: a frost-blue city, one amber box that never cools; when it opens, its warmth floods everything",
+    "motif": "the warm box (actor), seen from above: closed it carries a small amber stamp; open, the stamp is a glowing pie with three char spots — the Ember mark",
+    "verb": "warm / keep",
+    "hook": "'It's 2°C out.' — snow over a frost-blue city and one glowing box riding through it",
+    "arc": [
+      "hook: 2°C, one warm box",
+      "prior ×3: at every corner a ring of frost closes in and the box pushes it back",
+      "arrival: knock knock",
+      "hold: silence at the door",
+      "wow: the lid lifts and the warmth floods the city",
+      "lockup: the open box is the mark"
+    ],
+    "colorScript": [
+      "frost blue, amber only on the box",
+      "blue + three frost rings, amber only on the box",
+      "blue hold",
+      "amber flood",
+      "coal + amber lockup"
+    ],
+    "story": {
+      "insight": "Delivery pizza usually arrives as a rumour of itself.",
+      "audienceTension": "I want the pizza from the restaurant, not the tired version that turns up half an hour later.",
+      "inherentDrama": "the lid lift: the second the box opens and the heat reaches your face",
+      "orthodoxy": [
+        "flames licking an oven",
+        "a slow-motion cheese pull",
+        "rising steam",
+        "ingredients exploding in slo-mo",
+        "a scooter racing a clock"
+      ],
+      "structure": "transformation",
+      "clicheControl": {
+        "obvious": "Flames and floating embers around a slow-motion cheese pull with rising steam: 'Fire-baked perfection.'",
+        "banned": [
+          "flame",
+          "fire",
+          "steam",
+          "cheese pull",
+          "embers",
+          "slow-mo",
+          "scooter"
+        ]
+      },
+      "candidates": [
+        {
+          "title": "Control: flames, cheese pull, steam",
+          "technique": "control",
+          "logline": "Flames and floating embers swirl around a slow-motion cheese pull with rising steam: 'Fire-baked perfection.'",
+          "typicality": 0.9,
+          "scores": {
+            "hook": 3,
+            "surprise": 0,
+            "emotionalPeak": 2,
+            "payoff": 2,
+            "brandLinkage": 2,
+            "clarity": 5,
+            "uniqueness": 0,
+            "feasibility": 4
+          }
+        },
+        {
+          "title": "Still glowing",
+          "technique": "sensory-transposition (heat as colour)",
+          "logline": "A frost-blue city at 2°C; one amber box rides through it and never cools — every time the cold closes in, it pushes it back; at the door the lid lifts and its warmth floods the whole city — the open box is the Ember mark.",
+          "typicality": 0.1,
+          "scores": {
+            "hook": 4,
+            "surprise": 4,
+            "emotionalPeak": 5,
+            "payoff": 4,
+            "brandLinkage": 4,
+            "clarity": 4,
+            "uniqueness": 4,
+            "feasibility": 4
+          }
+        },
+        {
+          "title": "Leopard spots",
+          "technique": "inherent-drama",
+          "logline": "A pale dough disc blisters with dark char spots in the oven's few seconds; the spots arrange themselves into the mark.",
+          "typicality": 0.2,
+          "scores": {
+            "hook": 4,
+            "surprise": 3,
+            "emotionalPeak": 3,
+            "payoff": 4,
+            "brandLinkage": 4,
+            "clarity": 3,
+            "uniqueness": 4,
+            "feasibility": 4
+          }
+        },
+        {
+          "title": "The bus-stop hand-warmer",
+          "technique": "metaphor-mining (a hand-warmer), comic",
+          "logline": "Strangers at a freezing bus stop huddle round a pizza box like a campfire; it's the warmest thing on the street.",
+          "typicality": 0.15,
+          "scores": {
+            "hook": 3,
+            "surprise": 4,
+            "emotionalPeak": 4,
+            "payoff": 3,
+            "brandLinkage": 3,
+            "clarity": 3,
+            "uniqueness": 4,
+            "feasibility": 3
+          }
+        },
+        {
+          "title": "The melted route",
+          "technique": "exaggeration (extreme situation)",
+          "logline": "The box is so hot it melts a clean path through a snowed-in city; from above, the melted route spells out the delivery.",
+          "typicality": 0.15,
+          "scores": {
+            "hook": 4,
+            "surprise": 4,
+            "emotionalPeak": 3,
+            "payoff": 3,
+            "brandLinkage": 3,
+            "clarity": 4,
+            "uniqueness": 4,
+            "feasibility": 4
+          }
+        },
+        {
+          "title": "The box's night shift",
+          "technique": "perspective-shift",
+          "logline": "The delivery box narrates its job: keep one secret warm across town.",
+          "typicality": 0.18,
+          "scores": {
+            "hook": 3,
+            "surprise": 3,
+            "emotionalPeak": 3,
+            "payoff": 3,
+            "brandLinkage": 3,
+            "clarity": 3,
+            "uniqueness": 3,
+            "feasibility": 4
+          }
+        },
+        {
+          "title": "Crackle vs silence",
+          "technique": "constraint (one slice, two soundtracks) — sound-led competition",
+          "logline": "Split screen, same slice: the cold one makes no sound when bent, Ember's crackles; the crackle wins.",
+          "typicality": 0.2,
+          "scores": {
+            "hook": 3,
+            "surprise": 3,
+            "emotionalPeak": 3,
+            "payoff": 3,
+            "brandLinkage": 3,
+            "clarity": 3,
+            "uniqueness": 4,
+            "feasibility": 4
+          }
+        },
+        {
+          "title": "Fast is not hot",
+          "technique": "cultural-tension",
+          "logline": "Everyone sells 'fast'; you secretly know fast still arrives lukewarm — Ember refuses to race and wins on warmth.",
+          "typicality": 0.25,
+          "scores": {
+            "hook": 3,
+            "surprise": 3,
+            "emotionalPeak": 3,
+            "payoff": 3,
+            "brandLinkage": 3,
+            "clarity": 4,
+            "uniqueness": 3,
+            "feasibility": 4
+          }
+        }
+      ],
+      "chosen": 1,
+      "beats": [
+        {
+          "t": 0,
+          "beat": "hook: 'It's 2°C out.' — snow, frost-blue city, one glowing box riding through",
+          "emotion": "curiosity",
+          "intensity": 6,
+          "sound": "cold wind air + a soft cardboard tap"
+        },
+        {
+          "t": 1.1,
+          "beat": "prior ×3: at each corner a ring of frost closes in and the box's glow pushes it back",
+          "emotion": "tension",
+          "intensity": 5,
+          "to": 7,
+          "sound": "icy closing swell, warm push per corner"
+        },
+        {
+          "t": 6,
+          "beat": "arrival: knock knock",
+          "emotion": "anticipation",
+          "intensity": 7,
+          "to": 7.5,
+          "sound": "two wood knocks"
+        },
+        {
+          "t": 7.1,
+          "beat": "hold: silence at the door",
+          "emotion": "suspense",
+          "intensity": 4,
+          "sound": "silence 0.5s"
+        },
+        {
+          "t": 7.6,
+          "beat": "peak: the lid lifts and the warmth floods the city",
+          "emotion": "comfort / delight",
+          "intensity": 10,
+          "wow": "the lid lifts and amber warmth floods out of the box across the whole frost-blue city; the open box below is a glowing pie with three char spots — the Ember mark",
+          "sound": "hero warm swell"
+        },
+        {
+          "t": 9.6,
+          "beat": "payoff: the open box lifts into the lockup",
+          "emotion": "warmth",
+          "intensity": 9,
+          "sound": "Ember signature"
+        },
+        {
+          "t": 10.4,
+          "beat": "lock + CTA: Still glowing at your door.",
+          "emotion": "satisfaction",
+          "intensity": 8.5
+        }
+      ],
+      "peakAt": 7.6,
+      "mnemonic": {
+        "visual": "the open box from above: a glowing pie with three char spots in a kraft square",
+        "sonic": "Ember's auto signature on the lockup (same notes every film)",
+        "loop": false
+      }
+    }
+  },
+  "actors": [
+    {
+      "id": "box",
+      "from": "ride",
+      "until": "lockup",
+      "layer": {
+        "type": "morph",
+        "width": 150,
+        "height": 150,
+        "shadow": "drop-shadow(0 0 26px #ff7a2f)",
+        "enter": {
+          "type": "pop",
+          "duration": 0.35
+        },
+        "shapes": [
+          {
+            "at": 0,
+            "shape": "svg:assets/ember-box.svg"
+          },
+          {
+            "at": 8.15,
+            "shape": "svg:assets/ember-logo.svg#icon",
+            "morph": 0.55,
+            "ease": "inOutQuint"
+          }
+        ]
+      },
+      "poses": [
+        {
+          "scene": "ride",
+          "t": 0,
+          "x": 0,
+          "y": 70,
+          "scale": 1
+        },
+        {
+          "scene": "ride",
+          "t": 6,
+          "x": 0,
+          "y": 70,
+          "scale": 1
+        },
+        {
+          "scene": "ride",
+          "t": 7.25,
+          "x": 0,
+          "y": 70,
+          "scale": 1.12,
+          "move": 0.3,
+          "ease": "inOut"
+        },
+        {
+          "scene": "warm",
+          "t": 1,
+          "x": 0,
+          "y": -160,
+          "scale": 3.6,
+          "move": 0.6,
+          "ease": "inOutQuint"
+        },
+        {
+          "scene": "lockup",
+          "t": 0.8,
+          "snapTo": "lockup-logo",
+          "move": 0.8,
+          "ease": "expoOut"
+        }
+      ]
+    }
+  ],
+  "scenes": [
+    {
+      "id": "ride",
+      "duration": 8.299999999999999,
+      "background": {
+        "type": "solid",
+        "color": "$bg"
+      },
+      "camera": {
+        "keyframes": [
+          {
+            "t": 0,
+            "x": 1370,
+            "y": 930,
+            "zoom": 1,
+            "ease": "linear"
+          },
+          {
+            "t": 1.111,
+            "x": 1370,
+            "y": 1330,
+            "zoom": 1,
+            "ease": "linear"
+          },
+          {
+            "t": 2.944,
+            "x": 2030,
+            "y": 1330,
+            "zoom": 1,
+            "ease": "linear"
+          },
+          {
+            "t": 4.722,
+            "x": 2030,
+            "y": 1970,
+            "zoom": 1,
+            "ease": "linear"
+          },
+          {
+            "t": 5.639,
+            "x": 1700,
+            "y": 1970,
+            "zoom": 1,
+            "ease": "linear"
+          },
+          {
+            "t": 6,
+            "x": 1700,
+            "y": 2100,
+            "zoom": 1,
+            "ease": "outQuint"
+          },
+          {
+            "t": 8.299999999999999,
+            "x": 1700,
+            "y": 2100,
+            "zoom": 1
+          }
+        ]
+      },
+      "layers": [
+        {
+          "type": "media",
+          "src": "assets/ember-city.svg",
+          "fit": "fill",
+          "width": 3600,
+          "height": 3600,
+          "x": 1700,
+          "y": 1700,
+          "sound": false
+        },
+        {
+          "type": "shape",
+          "shape": "circle",
+          "width": 360,
+          "height": 360,
+          "color": "rgba(255,122,47,0.45)",
+          "blur": 36,
+          "y": 70,
+          "depth": 0,
+          "sound": false,
+          "animate": [
+            {
+              "t": 0,
+              "scale": 0.8,
+              "opacity": 0.7
+            },
+            {
+              "t": 1.061,
+              "scale": 0.75,
+              "opacity": 0.6
+            },
+            {
+              "t": 1.2309999999999999,
+              "scale": 1.25,
+              "opacity": 1,
+              "ease": "expoOut"
+            },
+            {
+              "t": 1.811,
+              "scale": 0.85,
+              "opacity": 0.75,
+              "ease": "inOut"
+            },
+            {
+              "t": 2.894,
+              "scale": 0.75,
+              "opacity": 0.6
+            },
+            {
+              "t": 3.064,
+              "scale": 1.25,
+              "opacity": 1,
+              "ease": "expoOut"
+            },
+            {
+              "t": 3.644,
+              "scale": 0.85,
+              "opacity": 0.75,
+              "ease": "inOut"
+            },
+            {
+              "t": 4.672000000000001,
+              "scale": 0.75,
+              "opacity": 0.6
+            },
+            {
+              "t": 4.8420000000000005,
+              "scale": 1.25,
+              "opacity": 1,
+              "ease": "expoOut"
+            },
+            {
+              "t": 5.422000000000001,
+              "scale": 0.85,
+              "opacity": 0.75,
+              "ease": "inOut"
+            }
+          ]
+        },
+        {
+          "type": "shape",
+          "shape": "ring",
+          "width": 320,
+          "height": 320,
+          "color": "#a9cdff",
+          "stroke": "#a9cdff",
+          "strokeWidth": 10,
+          "y": 70,
+          "depth": 0,
+          "sound": false,
+          "start": 0.511,
+          "duration": 1.3,
+          "animate": [
+            {
+              "t": 0,
+              "scale": 3.2,
+              "opacity": 0
+            },
+            {
+              "t": 0.15,
+              "opacity": 0.9
+            },
+            {
+              "t": 0.6,
+              "scale": 0.62,
+              "opacity": 1,
+              "ease": "in"
+            },
+            {
+              "t": 1.2,
+              "scale": 2.2,
+              "opacity": 0,
+              "ease": "expoOut"
+            }
+          ]
+        },
+        {
+          "type": "shape",
+          "shape": "ring",
+          "width": 320,
+          "height": 320,
+          "color": "#a9cdff",
+          "stroke": "#a9cdff",
+          "strokeWidth": 10,
+          "y": 70,
+          "depth": 0,
+          "sound": false,
+          "start": 2.344,
+          "duration": 1.3,
+          "animate": [
+            {
+              "t": 0,
+              "scale": 3.2,
+              "opacity": 0
+            },
+            {
+              "t": 0.15,
+              "opacity": 0.9
+            },
+            {
+              "t": 0.6,
+              "scale": 0.62,
+              "opacity": 1,
+              "ease": "in"
+            },
+            {
+              "t": 1.2,
+              "scale": 2.2,
+              "opacity": 0,
+              "ease": "expoOut"
+            }
+          ]
+        },
+        {
+          "type": "shape",
+          "shape": "ring",
+          "width": 320,
+          "height": 320,
+          "color": "#a9cdff",
+          "stroke": "#a9cdff",
+          "strokeWidth": 10,
+          "y": 70,
+          "depth": 0,
+          "sound": false,
+          "start": 4.122000000000001,
+          "duration": 1.3,
+          "animate": [
+            {
+              "t": 0,
+              "scale": 3.2,
+              "opacity": 0
+            },
+            {
+              "t": 0.15,
+              "opacity": 0.9
+            },
+            {
+              "t": 0.6,
+              "scale": 0.62,
+              "opacity": 1,
+              "ease": "in"
+            },
+            {
+              "t": 1.2,
+              "scale": 2.2,
+              "opacity": 0,
+              "ease": "expoOut"
+            }
+          ]
+        },
+        {
+          "type": "shape",
+          "id": "box-spot",
+          "shape": "circle",
+          "width": 150,
+          "height": 150,
+          "color": "rgba(255,122,47,0)",
+          "y": 70,
+          "depth": 0,
+          "sound": false
+        },
+        {
+          "type": "particles",
+          "preset": "snow",
+          "count": 90,
+          "colors": [
+            "#ffffff",
+            "#cfe3ff"
+          ],
+          "speed": 0.7,
+          "depth": 0,
+          "sound": false
+        },
+        {
+          "type": "text",
+          "text": "It's 2°C out.",
+          "preset": "blur-rise",
+          "fontSize": 96,
+          "weight": 700,
+          "color": "$fg",
+          "y": -620,
+          "depth": 0,
+          "duration": 2.7,
+          "exitPreset": "blur-out",
+          "exitAt": 2.35
+        },
+        {
+          "type": "text",
+          "text": "Most pizza gives up\non the way.",
+          "preset": "mask-up",
+          "fontSize": 80,
+          "weight": 700,
+          "color": "$fg",
+          "y": -600,
+          "depth": 0,
+          "start": 2.6,
+          "duration": 3.4,
+          "exitPreset": "blur-out",
+          "exitAt": 3.05,
+          "lineHeight": 1.05
+        },
+        {
+          "type": "text",
+          "text": "knock knock",
+          "preset": "pop",
+          "fontSize": 56,
+          "weight": 700,
+          "font": "$body",
+          "color": "$frost",
+          "y": 250,
+          "depth": 0,
+          "start": 6.05,
+          "duration": 1.3,
+          "exitPreset": "fade",
+          "exitAt": 1,
+          "sound": "sfx:wood-knock-1"
+        }
+      ]
+    },
+    {
+      "id": "warm",
+      "duration": 2,
+      "transition": {
+        "type": "expand",
+        "from": "box-spot",
+        "shape": "circle",
+        "color": "#ff8a3d",
+        "duration": 0.7
+      },
+      "background": [
+        {
+          "type": "gradient",
+          "colors": [
+            "#ffb35c",
+            "#ff7a2f",
+            "#c2410c"
+          ],
+          "radial": true
+        }
+      ],
+      "camera": {
+        "keyframes": [
+          {
+            "t": 0,
+            "zoom": 1.06
+          },
+          {
+            "t": 2,
+            "zoom": 1,
+            "ease": "expoOut"
+          }
+        ],
+        "punch": [
+          0.05
+        ]
+      },
+      "layers": [
+        {
+          "type": "particles",
+          "preset": "dust",
+          "count": 40,
+          "colors": [
+            "#fff1e0",
+            "#ffd9a8"
+          ],
+          "speed": 0.4,
+          "sound": false
+        },
+        {
+          "type": "text",
+          "text": "Still glowing.",
+          "preset": "mask-up",
+          "fontSize": 120,
+          "weight": 700,
+          "color": "$coal",
+          "y": 260,
+          "start": 0.35,
+          "sound": false
+        }
+      ]
+    },
+    {
+      "id": "lockup",
+      "duration": 2.8,
+      "transition": {
+        "type": "match"
+      },
+      "background": [
+        {
+          "type": "solid",
+          "color": "$coal"
+        },
+        {
+          "type": "spotlight",
+          "base": "transparent",
+          "color": "#4a1f0a",
+          "y": -160
+        }
+      ],
+      "camera": {
+        "keyframes": [
+          {
+            "t": 0,
+            "zoom": 1.04
+          },
+          {
+            "t": 2.8,
+            "zoom": 1,
+            "ease": "outQuint"
+          }
+        ]
+      },
+      "layers": [
+        {
+          "type": "logo",
+          "id": "lockup-logo",
+          "src": "assets/ember-logo.svg",
+          "parts": "wordmark",
+          "frame": "full",
+          "mode": "cascade",
+          "height": 190,
+          "y": -170,
+          "start": 0.5
+        },
+        {
+          "type": "text",
+          "text": "Wood-fired. Still glowing\nat your door.",
+          "preset": "mask-up",
+          "fontSize": 64,
+          "weight": 600,
+          "font": "$body",
+          "color": "$cream",
+          "y": 30,
+          "start": 0.85,
+          "lineHeight": 1.1
+        },
+        {
+          "type": "card",
+          "variant": "button",
+          "title": "Order tonight",
+          "accent": "$accent",
+          "color": "#ffffff",
+          "fontSize": 46,
+          "y": 220,
+          "start": 1.2,
+          "press": 2.3,
+          "enter": {
+            "type": "grow",
+            "duration": 0.5
+          },
+          "inertia": true
+        }
+      ]
+    }
+  ],
+  "format": "9:16"
+}

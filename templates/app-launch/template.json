@@ -1,0 +1,22 @@
+{
+  "title": "App launch",
+  "niche": "App launch",
+  "description": "A storm of notifications collapses into one calm dot that becomes your app icon. Phone demo, lockup, download CTA.",
+  "format": "9:16",
+  "durationSeconds": 10.4,
+  "tags": [
+    "app",
+    "launch",
+    "device",
+    "notifications",
+    "morph",
+    "logo"
+  ],
+  "order": 1,
+  "formats": [
+    "9:16",
+    "16:9",
+    "1:1",
+    "4:5"
+  ]
+}

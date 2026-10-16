@@ -10,6 +10,7 @@ console.debug = console.error;
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { PROJECTS_DIR } from "../core/paths";
+import { ensureSfxLibrary } from "../../scripts/gen-sfx";
 import { TOOLS, callTool, type ToolContent } from "../core/tools";
 
 type Extra = {
@@ -52,6 +53,7 @@ for (const tool of TOOLS) {
 }
 
 const main = async () => {
+  ensureSfxLibrary(); // library/sfx for "sfx:" cues (fast; no-op when present)
   const transport = new StdioServerTransport();
   await server.connect(transport);
   console.error(`[motion-studio] MCP server ready (projects: ${PROJECTS_DIR})`);

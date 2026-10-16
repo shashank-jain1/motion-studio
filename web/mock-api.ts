@@ -11,6 +11,7 @@ import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Plugin } from "vite";
 import { SpecSchema } from "../src/engine/spec/schema.ts";
 import { preprocessSpecDetailed, sceneTimeline, sceneIndexOf } from "../src/engine/spec/preprocess.ts";
+import { adaptTargets, reflowSpec, type Format } from "../src/engine/spec/reflow.ts";
 
 type Json = any; // eslint-disable-line @typescript-eslint/no-explicit-any
 
@@ -30,6 +31,9 @@ const kindOf = (f: string) => {
 
 export const mockApi = (repoRoot: string): Plugin => {
   const root = path.join(repoRoot, "projects");
+  const tplRoot = path.join(repoRoot, "templates");
+  /** projects created from a template: id → slug (their assets are served from templates/<slug>/) */
+  const fromTemplate = new Map<string, string>();
   const mem = {
     created: new Map<string, Json>(),
     deleted: new Set<string>(),
@@ -95,7 +99,10 @@ export const mockApi = (repoRoot: string): Plugin => {
       next.finishedAt = new Date().toISOString();
       if (r && !/fail/i.test(next.projectId)) {
         next.status = "done"; next.progress = 1; next.stage = "done";
-        next.output = { ...r, quality: next.quality, createdAt: next.finishedAt, seconds: 11.8, width: next.quality === "final" ? 1080 : 540, height: next.quality === "final" ? 1920 : 960 };
+        const dims: Record<string, [number, number]> = { "16:9": [1920, 1080], "9:16": [1080, 1920], "1:1": [1080, 1080], "4:5": [1080, 1350], "21:9": [2520, 1080] };
+        const [w, h] = dims[next.format ?? "9:16"] ?? [1080, 1920];
+        const k = next.quality === "final" ? 1 : 0.5;
+        next.output = { ...r, quality: next.quality, createdAt: next.finishedAt, seconds: 11.8, width: w * k, height: h * k, ...(next.format ? { format: next.format } : {}) };
         jobEmit(next, "done");
       } else {
         next.status = "error"; next.error = "Render failed: Chrome exited with code 1";
@@ -182,11 +189,23 @@ export const mockApi = (repoRoot: string): Plugin => {
     return (event: string, data: unknown) => res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
   };
 
-  const serveFile = (req: IncomingMessage, res: ServerResponse, id: string, rel: string) => {
+  // ---- template gallery (templates/<slug>/{template.json, spec.json, assets/, poster.jpg})
+  const templateMeta = (slug: string) => {
+    const m = readJson(path.join(tplRoot, slug, "template.json"));
+    const spec = readJson(path.join(tplRoot, slug, "spec.json"));
+    if (!m || !spec) return null;
+    const poster = fs.existsSync(path.join(tplRoot, slug, "poster.jpg")) ? `/templates/${slug}/poster.jpg` : undefined;
+    return { slug, title: m.title, niche: m.niche, description: m.description, format: m.format, formats: adaptTargets({ format: m.format, formats: spec.formats }), durationSeconds: m.durationSeconds, tags: m.tags ?? [], order: m.order ?? 999, ...(poster ? { poster } : {}) };
+  };
+  const templates = () => ls(tplRoot).filter((d) => /^[a-z0-9][a-z0-9-]*$/.test(d)).map(templateMeta).filter(Boolean)
+    .sort((a: Json, b: Json) => a.order - b.order).map(({ order: _o, ...m }: Json) => m);
+
+  const serveFile = (req: IncomingMessage, res: ServerResponse, id: string, rel: string, base = path.join(root, id)) => {
     const up = mem.uploads.get(id)?.get(rel.replace(/^assets\//, ""));
     if (up && rel.startsWith("assets/")) { res.setHeader("content-type", up.type); res.end(up.buf); return; }
-    const file = path.resolve(root, id, rel);
-    if (!file.startsWith(path.join(root, id) + path.sep) || !fs.existsSync(file) || !fs.statSync(file).isFile()) return send(res, 404, { error: "not found" });
+    if (fromTemplate.has(id) && base === path.join(root, id)) base = path.join(tplRoot, fromTemplate.get(id)!);
+    const file = path.resolve(base, rel);
+    if (!file.startsWith(base + path.sep) || !fs.existsSync(file) || !fs.statSync(file).isFile()) return send(res, 404, { error: "not found" });
     const size = fs.statSync(file).size;
     res.setHeader("content-type", TYPES[path.extname(file).toLowerCase()] ?? "application/octet-stream");
     res.setHeader("accept-ranges", "bytes");
@@ -256,6 +275,7 @@ export const mockApi = (repoRoot: string): Plugin => {
     let g: RegExpExecArray | null;
     try {
       if ((g = /^\/files\/([^/]+)\/(.+)$/.exec(p))) return serveFile(req, res, decodeURIComponent(g[1]), decodeURIComponent(g[2]));
+      if ((g = /^\/templates\/([a-z0-9-]+)\/(.+)$/.exec(p))) return serveFile(req, res, `tpl:${g[1]}`, decodeURIComponent(g[2]), path.join(tplRoot, g[1]));
       if (p === "/oauth/authorize/decision" && m === "POST") {
         const u = currentUser(req);
         if (!u) return send(res, 401, { error: "login_required" });
@@ -368,12 +388,32 @@ export const mockApi = (repoRoot: string): Plugin => {
         const s = mem.settings;
         return send(res, 200, { model: s.model, effort: s.effort, hasApiKey: !!s.apiKey, keySource: s.apiKey ? "settings" : "none", models: ["claude-opus-4-5", "claude-sonnet-4-5", "claude-haiku-4-5"] });
       }
+      if (p === "/api/templates") return send(res, 200, templates());
+      if ((g = /^\/api\/templates\/([a-z0-9-]+)$/.exec(p))) {
+        const t = templateMeta(g[1]);
+        if (!t) return send(res, 404, { error: `Template "${g[1]}" not found` });
+        const { order: _o, ...meta } = t;
+        return send(res, 200, { ...meta, spec: readJson(path.join(tplRoot, g[1], "spec.json")) });
+      }
       if (p === "/api/projects") {
         if (m === "POST") {
           const b = JSON.parse((await body(req)).toString() || "{}");
           const id = `${String(b.name || "untitled").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}-${Math.random().toString(16).slice(2, 6)}`;
           const now = new Date().toISOString();
-          mem.created.set(id, { id, name: b.name || "Untitled", format: b.format ?? "16:9", createdAt: now, updatedAt: now });
+          const tpl = b.template ? templateMeta(String(b.template)) : null;
+          if (b.template && !tpl) return send(res, 400, { error: `Unknown template "${b.template}"` });
+          const format = b.format ?? tpl?.format ?? "16:9";
+          mem.created.set(id, { id, name: b.name || "Untitled", format, createdAt: now, updatedAt: now });
+          if (tpl) {
+            // copy the template film in (reflowed when another canvas was picked), assets served from templates/<slug>
+            let spec = readJson(path.join(tplRoot, tpl.slug, "spec.json"));
+            if (format !== tpl.format) {
+              const parsed = SpecSchema.parse(preprocessSpecDetailed({ ...spec, format: tpl.format }).spec);
+              spec = { ...reflowSpec(parsed, format as Format), formats: tpl.formats.filter((f: string) => f !== format) };
+            }
+            mem.specs.set(id, spec);
+            fromTemplate.set(id, tpl.slug);
+          }
           return send(res, 200, card(id));
         }
         return send(res, 200, projectIds().map(card).sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt))));
@@ -440,13 +480,27 @@ export const mockApi = (repoRoot: string): Plugin => {
         if (!prev.includes("sheet.jpg")) return send(res, 500, { error: "preview failed: no frames" });
         return send(res, 200, { sheetUrl: `/files/${id}/previews/sheet.jpg?t=${Date.now()}`, frames: prev.filter((f) => f.startsWith("frame-")).map((f) => ({ time: parseFloat(f.slice(6)), url: `/files/${id}/previews/${f}`, label: f.slice(6, -4) })) });
       }
+      const newJob = (quality: unknown, format?: string): Job => {
+        const j: Job = { id: `job_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 5)}`, projectId: id, kind: "render", quality: quality === "final" ? "final" : "draft", ...(format ? { format } : {}), backend: "local", status: "queued", progress: 0, stage: "queued", createdAt: new Date(Date.now() + jobs.size).toISOString() };
+        jobs.set(j.id, j);
+        return j;
+      };
       if (sub === "/render" && m === "POST") {
         const b = JSON.parse((await body(req)).toString() || "{}");
-        const j: Job = { id: `job_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 5)}`, projectId: id, kind: "render", quality: b.quality === "final" ? "final" : "draft", backend: "local", status: "queued", progress: 0, stage: "queued", createdAt: new Date().toISOString() };
-        jobs.set(j.id, j);
+        const j = newJob(b.quality, b.format);
         queuePositions();
         setTimeout(() => void pump(), 400);
         return send(res, 200, { job: j });
+      }
+      if (sub === "/render-all" && m === "POST") {
+        const b = JSON.parse((await body(req)).toString() || "{}");
+        const spec = specOf(id);
+        if (!spec) return send(res, 409, { error: "Project has no spec yet" });
+        const formats = adaptTargets({ ...spec, format: spec.format ?? meta(id).format });
+        const js = formats.map((f) => newJob(b.quality, f));
+        queuePositions();
+        setTimeout(() => void pump(), 400);
+        return send(res, 202, { jobs: js, formats });
       }
       if (sub === "/chat") {
         if (m === "GET") return send(res, 200, { messages: mem.chats.get(id) ?? [], running: mem.running.has(id) });

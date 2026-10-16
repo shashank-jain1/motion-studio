@@ -71,11 +71,11 @@ export const collectTextShapes = (spec: SpecLike & Record<string, unknown>): Tex
     let here = ctx;
     if (typeof o.type === "string") {
       // a layer: font/weight scope (only morph layers use them for shapes; other layers reset to defaults)
-      here = o.type === "morph" ? { font: typeof o.font === "string" ? o.font : undefined, weight: typeof o.weight === "number" ? o.weight : undefined } : {};
+      here = o.type === "morph" || o.type === "three" ? { font: typeof o.font === "string" ? o.font : undefined, weight: typeof o.weight === "number" ? o.weight : undefined } : {};
     }
     for (const [k, val] of Object.entries(o)) {
       const p = at ? `${at}.${k}` : k;
-      if ((k === "shape" || k === "from") && typeof val === "string" && val.startsWith("text:")) {
+      if ((k === "shape" || k === "from" || (k === "source" && o.type === "three")) && typeof val === "string" && val.startsWith("text:")) {
         const text = val.slice(5);
         if (text.length) out.push({ family: resolveFontFamily(here.font, spec), weight: here.weight ?? DEFAULT_GLYPH_WEIGHT, text, at: p });
       } else if (val && typeof val === "object") walk(val, p, here);

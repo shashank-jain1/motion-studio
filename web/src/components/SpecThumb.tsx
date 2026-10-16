@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Thumbnail } from "@remotion/player";
 import { SpecVideo } from "../../../src/engine/render/SpecVideo";
-import { api } from "../api";
+import { api, templateBase } from "../api";
 import { analyzeSpec, type ParsedInfo } from "../lib/specInfo";
 import { fmtTC } from "../lib/format";
 import { useInView } from "./ui";
@@ -17,6 +17,15 @@ const loadInfo = (id: string) => {
   return p;
 };
 export const invalidateThumb = (id: string) => specCache.delete(id);
+const loadTemplateInfo = (slug: string) => {
+  const key = `tpl:${slug}`;
+  let p = specCache.get(key);
+  if (!p) {
+    p = api.template(slug).then((t) => analyzeSpec({ ...t.spec, format: t.format })).catch(() => null);
+    specCache.set(key, p);
+  }
+  return p;
+};
 
 /** A good poster frame: the middle of the scene after the hook (or the only scene), away from transitions. */
 export const posterFrame = (info: ParsedInfo) => {
@@ -30,7 +39,11 @@ export const posterFrame = (info: ParsedInfo) => {
  * Live engine thumbnail of a project's film. Loads lazily when scrolled into view.
  * With `scrub`, hovering scrubs through the film by mouse x (no rendering, the engine draws the frame).
  */
-export const SpecThumb = ({ projectId, scrub, onInfo, empty }: { projectId: string; scrub?: boolean; onInfo?: (i: ParsedInfo | null) => void; empty?: React.ReactNode }) => {
+export const SpecThumb = ({ projectId, template, poster: posterUrl, scrub, onInfo, empty }: {
+  /** a project's film, or (with `template`) a gallery template's film served from /templates/<slug> */
+  projectId?: string; template?: string; poster?: string;
+  scrub?: boolean; onInfo?: (i: ParsedInfo | null) => void; empty?: React.ReactNode;
+}) => {
   const [ref, seen] = useInView<HTMLDivElement>("300px");
   const [info, setInfo] = useState<ParsedInfo | null | undefined>(undefined);
   const [hover, setHover] = useState<number | null>(null);
@@ -38,10 +51,12 @@ export const SpecThumb = ({ projectId, scrub, onInfo, empty }: { projectId: stri
   useEffect(() => {
     if (!seen) return;
     let alive = true;
-    void loadInfo(projectId).then((i) => { if (alive) { setInfo(i); onInfo?.(i); } });
+    void (template ? loadTemplateInfo(template) : loadInfo(projectId ?? "")).then((i) => { if (alive) { setInfo(i); onInfo?.(i); } });
     return () => { alive = false; };
-  }, [seen, projectId]); // eslint-disable-line react-hooks/exhaustive-deps
-  const inputProps = useMemo(() => (info ? { spec: info.raw as never, assetBase: `${location.origin}/files/${projectId}`, projectId } : null), [info, projectId]);
+  }, [seen, projectId, template]); // eslint-disable-line react-hooks/exhaustive-deps
+  const inputProps = useMemo(() => (info
+    ? { spec: info.raw as never, assetBase: template ? templateBase(template) : `${location.origin}/files/${projectId}`, projectId: template ? `tpl-${template}` : projectId }
+    : null), [info, projectId, template]);
   const poster = info ? posterFrame(info) : 0;
   const frame = info && hover != null ? Math.round(hover * (info.durationInFrames - 1)) : poster;
 
@@ -50,7 +65,8 @@ export const SpecThumb = ({ projectId, scrub, onInfo, empty }: { projectId: stri
       onPointerMove={scrub && info ? (e) => { const r = box.current!.getBoundingClientRect(); setHover(Math.max(0, Math.min(1, (e.clientX - r.left) / r.width))); } : undefined}
       onPointerLeave={() => setHover(null)}>
       <div ref={box} className="spec-thumb-box">
-        {info === undefined && <div className="thumb-loading" aria-label="Loading preview" />}
+        {posterUrl && info !== null && <img className="spec-thumb-poster" src={posterUrl} alt="" aria-hidden />}
+        {info === undefined && !posterUrl && <div className="thumb-loading" aria-label="Loading preview" />}
         {info === null && (empty ?? null)}
         {info && inputProps && (
           <Thumbnail component={SpecVideo} inputProps={inputProps} compositionWidth={info.width} compositionHeight={info.height}

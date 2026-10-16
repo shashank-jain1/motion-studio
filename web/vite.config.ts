@@ -29,6 +29,8 @@ const streaming: ProxyOptions = {
 const proxy: Record<string, ProxyOptions> = {
   "/api": streaming,
   "/files": { target, changeOrigin: true },
+  "/library": { target, changeOrigin: true },
+  "/templates": { target, changeOrigin: true },
   "/oauth": { target },
   "/mcp": { target },
   "/.well-known": { target },

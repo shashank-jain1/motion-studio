@@ -1,0 +1,464 @@
+{
+  "title": "Kova — grow on autopilot",
+  "fps": 30,
+  "style": "minimal-dark",
+  "formats": [
+    "16:9",
+    "1:1",
+    "4:5"
+  ],
+  "sound": {
+    "palette": "tech",
+    "intensity": 0.55
+  },
+  "theme": {
+    "fonts": {
+      "display": "Space Grotesk",
+      "body": "Inter"
+    },
+    "colors": {
+      "bg": "#07131f",
+      "fg": "#eafff6",
+      "muted": "#7f97a8",
+      "accent": "#19e6a1",
+      "accent2": "#4cc9ff",
+      "card": "#0e2233",
+      "mint": "#e9fff6",
+      "navy": "#07131f",
+      "gold": "#ffd166"
+    }
+  },
+  "fx": {
+    "grain": 0.06,
+    "vignette": 0.4
+  },
+  "concept": {
+    "truth": "Kova helps young earners grow their savings automatically, feeling in control.",
+    "metaphor": "fusion — one coin compounds: it climbs a rising line, locks into a shield, and its upward arrow becomes the logo",
+    "motif": "a gold coin (actor) that becomes the logo's mint arrow-coin",
+    "verb": "grow",
+    "hook": "a balance counter slams from $0 to $12,480 as the coin drops",
+    "arc": [
+      "hook: $12,480 saved without thinking",
+      "proof: every round-up climbs the curve",
+      "trust: the coin locks into a shield",
+      "lockup: the coin is the logo"
+    ],
+    "colorScript": [
+      "navy + gold",
+      "navy + mint glow",
+      "mint relief",
+      "navy lockup"
+    ]
+  },
+  "actors": [
+    {
+      "id": "coin",
+      "from": "hook",
+      "until": "lockup",
+      "layer": {
+        "type": "morph",
+        "width": 300,
+        "height": 300,
+        "inertia": true,
+        "enter": {
+          "type": "drop-in-3d",
+          "duration": 0.55
+        },
+        "shapes": [
+          {
+            "at": 0,
+            "shape": "coin",
+            "fill": "$gold"
+          },
+          {
+            "at": 4.8,
+            "shape": "shield",
+            "fill": "$accent",
+            "morph": 0.7,
+            "twist": 15
+          },
+          {
+            "at": 7.8,
+            "shape": "svg:assets/kova-logo.svg#icon",
+            "morph": 0.9
+          }
+        ]
+      },
+      "poses": [
+        {
+          "scene": "hook",
+          "t": 0,
+          "x": 0,
+          "y": -470,
+          "scale": 0.9
+        },
+        {
+          "scene": "grow",
+          "t": 2.2,
+          "x": 300,
+          "y": -330,
+          "scale": 0.42,
+          "move": 1.6,
+          "ease": "inOutQuint"
+        },
+        {
+          "scene": "secure",
+          "t": 0.5,
+          "x": 0,
+          "y": -230,
+          "scale": 1.25,
+          "move": 0.6,
+          "ease": "expoOut"
+        },
+        {
+          "scene": "lockup",
+          "t": 0.9,
+          "snapTo": "lockup-logo",
+          "move": 0.9,
+          "ease": "expoOut"
+        }
+      ]
+    }
+  ],
+  "scenes": [
+    {
+      "id": "hook",
+      "duration": 2.2,
+      "background": [
+        {
+          "type": "solid",
+          "color": "$navy"
+        },
+        {
+          "type": "spotlight",
+          "base": "transparent",
+          "color": "#0f3a3a",
+          "y": -300
+        }
+      ],
+      "camera": {
+        "keyframes": [
+          {
+            "t": 0,
+            "zoom": 1
+          },
+          {
+            "t": 2.2,
+            "zoom": 1.06,
+            "ease": "inOut"
+          }
+        ],
+        "punch": [
+          1.15
+        ]
+      },
+      "layers": [
+        {
+          "type": "counter",
+          "from": 0,
+          "to": 12480,
+          "prefix": "$",
+          "countDuration": 1.1,
+          "countDelay": 0.05,
+          "ease": "outExpo",
+          "fontSize": 200,
+          "weight": 700,
+          "gradient": [
+            "#eafff6",
+            "#19e6a1"
+          ],
+          "y": -40,
+          "enter": {
+            "type": "pop",
+            "duration": 0.35
+          }
+        },
+        {
+          "type": "text",
+          "text": "saved without thinking.",
+          "preset": "blur-rise",
+          "fontSize": 68,
+          "weight": 500,
+          "font": "$body",
+          "color": "$muted",
+          "y": 110,
+          "start": 0.45
+        },
+        {
+          "type": "particles",
+          "preset": "sparkles",
+          "start": 1.1,
+          "count": 28,
+          "colors": [
+            "#19e6a1",
+            "#ffd166"
+          ],
+          "originY": -40
+        }
+      ]
+    },
+    {
+      "id": "grow",
+      "duration": 3,
+      "transition": {
+        "type": "zoom-through",
+        "duration": 0.5
+      },
+      "background": [
+        {
+          "type": "gradient",
+          "colors": [
+            "#0b2236",
+            "#07131f"
+          ],
+          "angle": 180
+        },
+        {
+          "type": "grid",
+          "color": "rgba(25,230,161,0.08)",
+          "base": "transparent",
+          "size": 90
+        }
+      ],
+      "camera": {
+        "keyframes": [
+          {
+            "t": 0,
+            "zoom": 1.04
+          },
+          {
+            "t": 3,
+            "zoom": 1,
+            "ease": "inOut"
+          }
+        ]
+      },
+      "layers": [
+        {
+          "type": "path",
+          "d": "M60 900 C220 860 280 760 380 720 S540 640 620 520 S800 300 940 120",
+          "width": 860,
+          "height": 820,
+          "y": -40,
+          "strokeWidth": 14,
+          "gradient": [
+            "#4cc9ff",
+            "#19e6a1"
+          ],
+          "glow": true,
+          "drawDuration": 1.9,
+          "ease": "inOut"
+        },
+        {
+          "type": "card",
+          "variant": "stat",
+          "icon": "📈",
+          "title": "+8.4%",
+          "body": "this year",
+          "meta": "▲ 2.1%",
+          "accent": "$accent",
+          "fontSize": 30,
+          "x": -230,
+          "y": -380,
+          "start": 0.8,
+          "enter": {
+            "type": "pop",
+            "duration": 0.45
+          },
+          "inertia": true
+        },
+        {
+          "type": "card",
+          "variant": "glass",
+          "icon": "🪙",
+          "title": "Round-ups",
+          "body": "$4.20 a day, invested",
+          "width": 560,
+          "fontSize": 30,
+          "x": 140,
+          "y": 330,
+          "start": 1.2,
+          "enter": {
+            "type": "rise",
+            "duration": 0.5
+          }
+        },
+        {
+          "type": "text",
+          "text": "Every round-up,\ncompounding.",
+          "preset": "mask-up",
+          "fontSize": 96,
+          "weight": 700,
+          "color": "$fg",
+          "y": 560,
+          "start": 0.3,
+          "highlight": {
+            "words": [
+              "compounding."
+            ],
+            "color": "$accent",
+            "at": 1.4
+          }
+        }
+      ]
+    },
+    {
+      "id": "secure",
+      "duration": 2.8,
+      "transition": {
+        "type": "expand",
+        "from": "coin",
+        "color": "$mint",
+        "duration": 0.6
+      },
+      "background": {
+        "type": "mesh",
+        "colors": [
+          "#d9fff0",
+          "#f2fffa",
+          "#d7f1ff"
+        ],
+        "base": "#f2fffa"
+      },
+      "camera": {
+        "keyframes": [
+          {
+            "t": 0,
+            "zoom": 1
+          },
+          {
+            "t": 2.8,
+            "zoom": 1.05,
+            "ease": "inOut"
+          }
+        ]
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": "ring",
+          "width": 560,
+          "height": 560,
+          "stroke": "$accent",
+          "strokeWidth": 4,
+          "y": -230,
+          "draw": true,
+          "drawDuration": 1,
+          "start": 0.4,
+          "opacity": 0.7
+        },
+        {
+          "type": "text",
+          "text": "Locked down.\nAlways yours.",
+          "preset": "slide-words",
+          "fontSize": 104,
+          "weight": 700,
+          "color": "$navy",
+          "y": 200,
+          "start": 0.5
+        },
+        {
+          "type": "card",
+          "variant": "toast",
+          "icon": "🔒",
+          "title": "Face ID required to move money",
+          "fontSize": 30,
+          "y": 440,
+          "start": 1.2,
+          "enter": {
+            "type": "rise",
+            "duration": 0.5
+          }
+        }
+      ]
+    },
+    {
+      "id": "lockup",
+      "duration": 3.2,
+      "transition": {
+        "type": "match"
+      },
+      "background": [
+        {
+          "type": "solid",
+          "color": "$navy"
+        },
+        {
+          "type": "spotlight",
+          "base": "transparent",
+          "color": "#0f3a3a",
+          "y": -160
+        }
+      ],
+      "camera": {
+        "keyframes": [
+          {
+            "t": 0,
+            "zoom": 1.05
+          },
+          {
+            "t": 3.2,
+            "zoom": 1,
+            "ease": "outQuint"
+          }
+        ],
+        "punch": [
+          0.9
+        ]
+      },
+      "layers": [
+        {
+          "type": "logo",
+          "id": "lockup-logo",
+          "src": "assets/kova-logo.svg",
+          "parts": "wordmark",
+          "frame": "full",
+          "mode": "cascade",
+          "height": 170,
+          "y": -160,
+          "start": 0.7
+        },
+        {
+          "type": "text",
+          "text": "Grow on autopilot.",
+          "preset": "blur-rise",
+          "fontSize": 72,
+          "weight": 600,
+          "font": "$body",
+          "color": "$fg",
+          "y": 30,
+          "start": 1.2
+        },
+        {
+          "type": "card",
+          "variant": "button",
+          "title": "Open an account",
+          "accent": "$accent",
+          "color": "#07131f",
+          "fontSize": 46,
+          "y": 200,
+          "start": 1.7,
+          "press": 2.6,
+          "enter": {
+            "type": "grow",
+            "duration": 0.5
+          },
+          "inertia": true
+        },
+        {
+          "type": "text",
+          "text": "Takes 2 minutes",
+          "preset": "tracking",
+          "fontSize": 34,
+          "weight": 500,
+          "font": "$body",
+          "color": "$muted",
+          "y": 320,
+          "start": 2
+        }
+      ]
+    }
+  ],
+  "format": "9:16"
+}

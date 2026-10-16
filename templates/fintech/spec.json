@@ -1,0 +1,1082 @@
+{
+  "title": "Kova — saving, without the sharp edges",
+  "fps": 30,
+  "style": "minimal-dark",
+  "formats": [
+    "16:9",
+    "1:1",
+    "4:5"
+  ],
+  "sound": {
+    "brief": {
+      "voice": "precise",
+      "realism": "mixed",
+      "materials": [
+        "paper",
+        "metal-thin"
+      ],
+      "space": "room",
+      "avoid": [
+        "gamey",
+        "cartoon"
+      ]
+    },
+    "restraint": 0.55,
+    "signature": "auto"
+  },
+  "theme": {
+    "fonts": {
+      "display": "Space Grotesk",
+      "body": "Inter"
+    },
+    "colors": {
+      "bg": "#0c1218",
+      "fg": "#eafff6",
+      "muted": "#7d8b96",
+      "accent": "#19e6a1",
+      "accent2": "#4cc9ff",
+      "card": "#151d25",
+      "tag": "#d9e0e5",
+      "ink": "#0c1218",
+      "slate": "#3a4650"
+    }
+  },
+  "fx": {
+    "grain": 0.06,
+    "vignette": 0.4,
+    "flashes": [
+      {
+        "at": 7.57,
+        "color": "#19e6a1",
+        "duration": 0.14,
+        "intensity": 0.28
+      }
+    ]
+  },
+  "sfx": [
+    {
+      "src": "sfx:switch-snap-1",
+      "at": 1.145,
+      "volume": 0.8
+    },
+    {
+      "src": "sfx:switch-snap-2",
+      "at": 2.95,
+      "volume": 0.8
+    },
+    {
+      "src": "sfx:switch-snap-1",
+      "at": 4.395,
+      "volume": 0.8
+    },
+    {
+      "src": "sfx:switch-snap-2",
+      "at": 7.45,
+      "volume": 1
+    },
+    {
+      "src": "sfx:impact-soft",
+      "at": 7.564,
+      "volume": 0.8
+    },
+    {
+      "src": "sfx:chime-bright",
+      "at": 8.196,
+      "volume": 0.7
+    }
+  ],
+  "concept": {
+    "niche": "fintech",
+    "truth": "Kova helps young earners save from every purchase without deciding to, feeling unbothered.",
+    "metaphor": "fusion — rounding up is literal: each purchase rounds a corner off the price tag; the offcuts are the savings and wrap the round tag into the Kova mark",
+    "motif": "a grey price tag (actor) that loses its corners one purchase at a time and ends as the Kova disc; its four mint offcuts become the ring",
+    "verb": "round off / save",
+    "hook": "'Watch the corners.' — a price ticks from $4.60 to $5.00 and a corner snips off in mint",
+    "arc": [
+      "hook: watch the corners",
+      "prior ×3: coffee, bus, lunch — each rounds up, each loses a corner",
+      "hold: the last corner trembles",
+      "wow: the tag goes perfectly round and the offcuts wrap it into the mark",
+      "lockup: saving, without the sharp edges"
+    ],
+    "colorScript": [
+      "slate grey world, mint offcuts only",
+      "grey + 3 mint offcuts",
+      "near-black hold",
+      "mint bloom",
+      "ink + mint lockup"
+    ],
+    "story": {
+      "insight": "Nobody misses forty cents. Everybody misses the moment they decided to save.",
+      "audienceTension": "I want savings, but saving feels like a diet I have to choose every day.",
+      "inherentDrama": "the round-up itself: $4.60 quietly becomes $5.00 and the difference slips away",
+      "orthodoxy": [
+        "a rising green line or arrow",
+        "coins into a jar",
+        "a shield or padlock for 'secure'",
+        "a balance counter slamming up",
+        "'grow your wealth'"
+      ],
+      "structure": "pattern-break",
+      "template": "interactive-experiment",
+      "clicheControl": {
+        "obvious": "A gold coin drops onto a rising green line chart, then locks into a shield: 'Locked down. Always yours.'",
+        "banned": [
+          "coin",
+          "shield",
+          "lock",
+          "arrow",
+          "chart",
+          "jar",
+          "grow",
+          "locked down"
+        ]
+      },
+      "candidates": [
+        {
+          "title": "Control: coin, rising line, shield",
+          "technique": "control",
+          "logline": "A gold coin drops onto a rising green line chart and locks into a shield: 'Locked down. Always yours.'",
+          "typicality": 0.9,
+          "scores": {
+            "hook": 2,
+            "surprise": 0,
+            "emotionalPeak": 1,
+            "payoff": 2,
+            "brandLinkage": 2,
+            "clarity": 5,
+            "uniqueness": 0,
+            "feasibility": 5
+          }
+        },
+        {
+          "title": "Watch the corners",
+          "technique": "inherent-drama + interactive-experiment (Goldenberg)",
+          "logline": "'Watch the corners': each purchase rounds up and its grey price tag loses a corner; at the 4th the tag is perfectly round and the four mint offcuts wrap around it — the Kova mark.",
+          "typicality": 0.08,
+          "scores": {
+            "hook": 4,
+            "surprise": 4,
+            "emotionalPeak": 4,
+            "payoff": 5,
+            "brandLinkage": 5,
+            "clarity": 4,
+            "uniqueness": 4,
+            "feasibility": 4
+          }
+        },
+        {
+          "title": "The tailor",
+          "technique": "metaphor-mining (tailoring)",
+          "logline": "Kova as a tailor: every purchase gets its hem trimmed and the offcut threads are spooled into a savings reel that becomes the logo.",
+          "typicality": 0.12,
+          "scores": {
+            "hook": 3,
+            "surprise": 3,
+            "emotionalPeak": 3,
+            "payoff": 3,
+            "brandLinkage": 3,
+            "clarity": 3,
+            "uniqueness": 4,
+            "feasibility": 3
+          }
+        },
+        {
+          "title": "No peeking",
+          "technique": "inversion (don't watch your money)",
+          "logline": "Every finance ad says watch your money grow; Kova throws a sheet over the balance and asks you to look away; when it lifts, the savings quietly happened.",
+          "typicality": 0.15,
+          "scores": {
+            "hook": 4,
+            "surprise": 3,
+            "emotionalPeak": 3,
+            "payoff": 3,
+            "brandLinkage": 3,
+            "clarity": 3,
+            "uniqueness": 4,
+            "feasibility": 4
+          }
+        },
+        {
+          "title": "Willpower vs Kova",
+          "technique": "exaggeration + competition, benign humour",
+          "logline": "A willpower battery drains by Thursday and faints face-down, comic, while Kova's ring keeps filling without trying.",
+          "typicality": 0.25,
+          "scores": {
+            "hook": 4,
+            "surprise": 4,
+            "emotionalPeak": 3,
+            "payoff": 4,
+            "brandLinkage": 3,
+            "clarity": 4,
+            "uniqueness": 3,
+            "feasibility": 4
+          }
+        },
+        {
+          "title": "Forty cents talks",
+          "technique": "perspective-shift",
+          "logline": "The forgotten 40¢ narrates its escape from a till drawer to the one place it finally counts.",
+          "typicality": 0.18,
+          "scores": {
+            "hook": 3,
+            "surprise": 3,
+            "emotionalPeak": 3,
+            "payoff": 3,
+            "brandLinkage": 3,
+            "clarity": 3,
+            "uniqueness": 3,
+            "feasibility": 3
+          }
+        },
+        {
+          "title": "A month of ticks",
+          "technique": "sensory-transposition (sound-led)",
+          "logline": "Every round-up plays one tick note; a month of coffees composes Kova's three-note sonic signature.",
+          "typicality": 0.2,
+          "scores": {
+            "hook": 3,
+            "surprise": 3,
+            "emotionalPeak": 3,
+            "payoff": 4,
+            "brandLinkage": 4,
+            "clarity": 3,
+            "uniqueness": 3,
+            "feasibility": 4
+          }
+        },
+        {
+          "title": "Saving is a diet",
+          "technique": "cultural-tension",
+          "logline": "Everyone says 'build wealth'; young earners secretly feel saving is a diet — Kova serves the full plate and skims the crumbs.",
+          "typicality": 0.22,
+          "scores": {
+            "hook": 3,
+            "surprise": 3,
+            "emotionalPeak": 2,
+            "payoff": 3,
+            "brandLinkage": 3,
+            "clarity": 4,
+            "uniqueness": 3,
+            "feasibility": 4
+          }
+        }
+      ],
+      "chosen": 1,
+      "beats": [
+        {
+          "t": 0,
+          "beat": "hook: 'Watch the corners.' — $4.60 rolls to $5.00 and a corner snips off in mint",
+          "emotion": "curiosity",
+          "intensity": 6,
+          "sound": "tick-roll + one dry snip"
+        },
+        {
+          "t": 1.85,
+          "beat": "prior ×2: bus fare, lunch — same roll, same snip, offcuts park in the dark",
+          "emotion": "intrigue",
+          "intensity": 5,
+          "to": 7,
+          "sound": "snip per corner, rising pitch"
+        },
+        {
+          "t": 5.1,
+          "beat": "groceries: the last corner trembles",
+          "emotion": "anticipation",
+          "intensity": 7,
+          "to": 8
+        },
+        {
+          "t": 6.95,
+          "beat": "hold: freeze",
+          "emotion": "suspense",
+          "intensity": 4,
+          "sound": "silence 0.5s"
+        },
+        {
+          "t": 7.45,
+          "beat": "peak: last snip — the tag is round and the offcuts wrap it",
+          "emotion": "satisfaction",
+          "intensity": 10,
+          "wow": "the fourth snip makes the tag a perfect circle and all four mint offcuts swing in and bend into a ring around it: the Kova mark, built from your change",
+          "sound": "hero hit on the closure"
+        },
+        {
+          "t": 8.75,
+          "beat": "payoff: the mark lifts and snaps into the lockup",
+          "emotion": "relief",
+          "intensity": 9,
+          "sound": "Kova signature"
+        },
+        {
+          "t": 9.8,
+          "beat": "lock + CTA: Saving, without the sharp edges.",
+          "emotion": "calm confidence",
+          "intensity": 8.5
+        }
+      ],
+      "peakAt": 7.45,
+      "mnemonic": {
+        "visual": "a disc ringed by four arcs: the price, rounded, wrapped in its own change",
+        "sonic": "Kova's auto signature (3 notes, same in every film)",
+        "loop": false
+      }
+    }
+  },
+  "actors": [
+    {
+      "id": "mark",
+      "from": "corners",
+      "until": "lockup",
+      "layer": {
+        "type": "morph",
+        "width": 660,
+        "height": 660,
+        "start": 8.7,
+        "shapes": [
+          {
+            "at": 0,
+            "shape": "svg:assets/kova-logo.svg#icon"
+          }
+        ]
+      },
+      "poses": [
+        {
+          "scene": "corners",
+          "t": 0,
+          "x": 0,
+          "y": -110,
+          "scale": 1
+        },
+        {
+          "scene": "lockup",
+          "t": 0.8,
+          "snapTo": "lockup-logo",
+          "move": 0.8,
+          "ease": "expoOut"
+        }
+      ]
+    }
+  ],
+  "scenes": [
+    {
+      "id": "corners",
+      "duration": 9,
+      "background": [
+        {
+          "type": "solid",
+          "color": "$bg"
+        },
+        {
+          "type": "spotlight",
+          "base": "transparent",
+          "color": "#18232c",
+          "y": -110
+        }
+      ],
+      "camera": {
+        "keyframes": [
+          {
+            "t": 0,
+            "zoom": 1
+          },
+          {
+            "t": 6.9,
+            "zoom": 1.1,
+            "ease": "inOut"
+          },
+          {
+            "t": 7.45,
+            "zoom": 1.1
+          },
+          {
+            "t": 9,
+            "zoom": 0.98,
+            "ease": "expoOut"
+          }
+        ],
+        "punch": [
+          7.55
+        ],
+        "shake": {
+          "amount": 2,
+          "speed": 9,
+          "start": 6.2,
+          "duration": 0.7
+        }
+      },
+      "layers": [
+        {
+          "type": "text",
+          "text": "Watch the corners.",
+          "preset": "mask-up",
+          "fontSize": 96,
+          "weight": 700,
+          "color": "$fg",
+          "y": -620,
+          "duration": 3.4,
+          "exitPreset": "blur-out",
+          "exitAt": 3,
+          "adapt": {
+            "1:1": {
+              "y": -410,
+              "fontSize": 64
+            },
+            "4:5": {
+              "y": -520,
+              "fontSize": 80
+            }
+          }
+        },
+        {
+          "type": "text",
+          "text": "Every purchase, rounded up.",
+          "preset": "slide-words",
+          "fontSize": 66,
+          "weight": 600,
+          "font": "$body",
+          "color": "$muted",
+          "y": -620,
+          "start": 3.3,
+          "duration": 3.5,
+          "exitPreset": "blur-out",
+          "exitAt": 3.1,
+          "adapt": {
+            "1:1": {
+              "y": -410,
+              "fontSize": 48
+            },
+            "4:5": {
+              "y": -520,
+              "fontSize": 54
+            }
+          }
+        },
+        {
+          "type": "morph",
+          "id": "tag",
+          "width": 660,
+          "height": 660,
+          "y": -110,
+          "duration": 8.75,
+          "inertia": true,
+          "sound": false,
+          "enter": {
+            "type": "grow",
+            "duration": 0.35
+          },
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "path:M500 100 H852 A48 48 0 0 1 900 148 V500 V852 A48 48 0 0 1 852 900 H500 H148 A48 48 0 0 1 100 852 V500 V148 A48 48 0 0 1 148 100 H500 Z",
+              "fill": "$tag"
+            },
+            {
+              "at": 1.37,
+              "shape": "path:M500 100 H852 A48 48 0 0 1 900 148 V500 V852 A48 48 0 0 1 852 900 H500 H148 A48 48 0 0 1 100 852 V500 A400 400 0 0 1 500 100 Z",
+              "fill": "$tag",
+              "morph": 0.14,
+              "ease": "expoOut"
+            },
+            {
+              "at": 3.0700000000000003,
+              "shape": "path:M500 100 A400 400 0 0 1 900 500 V852 A48 48 0 0 1 852 900 H500 H148 A48 48 0 0 1 100 852 V500 A400 400 0 0 1 500 100 Z",
+              "fill": "$tag",
+              "morph": 0.14,
+              "ease": "expoOut"
+            },
+            {
+              "at": 4.62,
+              "shape": "path:M500 100 A400 400 0 0 1 900 500 A400 400 0 0 1 500 900 H148 A48 48 0 0 1 100 852 V500 A400 400 0 0 1 500 100 Z",
+              "fill": "$tag",
+              "morph": 0.14,
+              "ease": "expoOut"
+            },
+            {
+              "at": 7.57,
+              "shape": "path:M500 100 A400 400 0 0 1 900 500 A400 400 0 0 1 500 900 A400 400 0 0 1 100 500 A400 400 0 0 1 500 100 Z",
+              "fill": "$accent",
+              "morph": 0.14,
+              "ease": "expoOut"
+            },
+            {
+              "at": 8.2,
+              "shape": "path:M195 500a305 305 0 1 0 610 0a305 305 0 1 0 -610 0Z",
+              "fill": "$accent",
+              "morph": 0.6,
+              "ease": "inOutQuint"
+            }
+          ],
+          "animate": [
+            {
+              "t": 0,
+              "scale": 1
+            },
+            {
+              "t": 6.9,
+              "scale": 1.02,
+              "ease": "inOut"
+            },
+            {
+              "t": 7.45,
+              "scale": 1.02
+            },
+            {
+              "t": 7.7,
+              "scale": 1.06,
+              "ease": "expoOut"
+            },
+            {
+              "t": 8.2,
+              "scale": 1,
+              "ease": "inOutQuint"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "COFFEE",
+          "preset": "tracking",
+          "fontSize": 40,
+          "weight": 600,
+          "font": "$body",
+          "color": "$slate",
+          "y": -230,
+          "start": 0.05,
+          "duration": 1.8,
+          "exitPreset": "fade",
+          "exitAt": 1.55
+        },
+        {
+          "type": "counter",
+          "from": 4.6,
+          "to": 5,
+          "decimals": 2,
+          "prefix": "$",
+          "countDelay": 0.55,
+          "countDuration": 0.5,
+          "ease": "inOutQuint",
+          "fontSize": 150,
+          "weight": 700,
+          "color": "$ink",
+          "y": -90,
+          "start": 0,
+          "duration": 1.85,
+          "enter": {
+            "type": "slide-up",
+            "duration": 0.35
+          },
+          "exit": {
+            "type": "fade",
+            "duration": 0.2
+          },
+          "sound": false
+        },
+        {
+          "type": "text",
+          "text": "BUS FARE",
+          "preset": "tracking",
+          "fontSize": 40,
+          "weight": 600,
+          "font": "$body",
+          "color": "$slate",
+          "y": -230,
+          "start": 1.9000000000000001,
+          "duration": 1.5999999999999999,
+          "exitPreset": "fade",
+          "exitAt": 1.3499999999999999
+        },
+        {
+          "type": "counter",
+          "from": 2.75,
+          "to": 3,
+          "decimals": 2,
+          "prefix": "$",
+          "countDelay": 0.55,
+          "countDuration": 0.5,
+          "ease": "inOutQuint",
+          "fontSize": 150,
+          "weight": 700,
+          "color": "$ink",
+          "y": -90,
+          "start": 1.85,
+          "duration": 1.65,
+          "enter": {
+            "type": "slide-up",
+            "duration": 0.35
+          },
+          "exit": {
+            "type": "fade",
+            "duration": 0.2
+          },
+          "sound": false
+        },
+        {
+          "type": "text",
+          "text": "LUNCH",
+          "preset": "tracking",
+          "fontSize": 40,
+          "weight": 600,
+          "font": "$body",
+          "color": "$slate",
+          "y": -230,
+          "start": 3.55,
+          "duration": 1.5499999999999996,
+          "exitPreset": "fade",
+          "exitAt": 1.2999999999999996
+        },
+        {
+          "type": "counter",
+          "from": 11.2,
+          "to": 12,
+          "decimals": 2,
+          "prefix": "$",
+          "countDelay": 0.55,
+          "countDuration": 0.5,
+          "ease": "inOutQuint",
+          "fontSize": 150,
+          "weight": 700,
+          "color": "$ink",
+          "y": -90,
+          "start": 3.5,
+          "duration": 1.5999999999999996,
+          "enter": {
+            "type": "slide-up",
+            "duration": 0.35
+          },
+          "exit": {
+            "type": "fade",
+            "duration": 0.2
+          },
+          "sound": false
+        },
+        {
+          "type": "text",
+          "text": "GROCERIES",
+          "preset": "tracking",
+          "fontSize": 40,
+          "weight": 600,
+          "font": "$body",
+          "color": "$slate",
+          "y": -230,
+          "start": 5.1499999999999995,
+          "duration": 2.3000000000000007,
+          "exitPreset": "fade",
+          "exitAt": 2.0500000000000007
+        },
+        {
+          "type": "counter",
+          "from": 38.1,
+          "to": 39,
+          "decimals": 2,
+          "prefix": "$",
+          "countDelay": 0.9,
+          "countDuration": 0.8,
+          "ease": "inOutQuint",
+          "fontSize": 150,
+          "weight": 700,
+          "color": "$ink",
+          "y": -90,
+          "start": 5.1,
+          "duration": 2.3500000000000005,
+          "enter": {
+            "type": "slide-up",
+            "duration": 0.35
+          },
+          "exit": {
+            "type": "fade",
+            "duration": 0.2
+          },
+          "sound": false
+        },
+        {
+          "type": "text",
+          "text": "+40¢",
+          "preset": "pop",
+          "fontSize": 50,
+          "weight": 700,
+          "color": "$accent",
+          "x": -330,
+          "y": -520,
+          "start": 1.55,
+          "duration": 5.7,
+          "exitPreset": "fade",
+          "exitAt": 5.4,
+          "sound": false
+        },
+        {
+          "type": "text",
+          "text": "+25¢",
+          "preset": "pop",
+          "fontSize": 50,
+          "weight": 700,
+          "color": "$accent",
+          "x": 330,
+          "y": -520,
+          "start": 3.25,
+          "duration": 4,
+          "exitPreset": "fade",
+          "exitAt": 3.7,
+          "sound": false
+        },
+        {
+          "type": "text",
+          "text": "+80¢",
+          "preset": "pop",
+          "fontSize": 50,
+          "weight": 700,
+          "color": "$accent",
+          "x": 330,
+          "y": 250,
+          "start": 4.8,
+          "duration": 2.45,
+          "exitPreset": "fade",
+          "exitAt": 2.1500000000000004,
+          "sound": false
+        },
+        {
+          "type": "morph",
+          "id": "cut-0",
+          "width": 660,
+          "height": 660,
+          "y": -110,
+          "start": 1.23,
+          "duration": 7.499999999999999,
+          "fill": "#19e6a1",
+          "sound": false,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "path:M100.0 148.0 A48 48 0 0 1 148.0 100.0 L500.0 100.0 A400 400 0 0 0 100.0 500.0 Z"
+            },
+            {
+              "at": 6.949999999999999,
+              "shape": "path:M2.7 447.7 A500 500 0 0 1 447.7 2.7 L459.1 111.1 A391 391 0 0 0 111.1 459.1 Z",
+              "morph": 0.6,
+              "ease": "inOutQuint"
+            }
+          ],
+          "animate": [
+            {
+              "t": 0,
+              "x": 0,
+              "y": 0,
+              "rotate": 0
+            },
+            {
+              "t": 0.45,
+              "x": -110,
+              "y": -70,
+              "rotate": -16,
+              "ease": "expoOut"
+            },
+            {
+              "t": 6.2,
+              "x": -118.80000000000001,
+              "y": -75.60000000000001,
+              "rotate": -19.2,
+              "ease": "inOut"
+            },
+            {
+              "t": 6.949999999999999,
+              "x": 0,
+              "y": 0,
+              "rotate": 0,
+              "ease": "inOutQuint"
+            }
+          ],
+          "inertia": true
+        },
+        {
+          "type": "morph",
+          "id": "cut-1",
+          "width": 660,
+          "height": 660,
+          "y": -110,
+          "start": 2.93,
+          "duration": 5.799999999999999,
+          "fill": "#19e6a1",
+          "sound": false,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "path:M852.0 100.0 A48 48 0 0 1 900.0 148.0 L900.0 500.0 A400 400 0 0 0 500.0 100.0 Z"
+            },
+            {
+              "at": 5.249999999999999,
+              "shape": "path:M552.3 2.7 A500 500 0 0 1 997.3 447.7 L888.9 459.1 A391 391 0 0 0 540.9 111.1 Z",
+              "morph": 0.6,
+              "ease": "inOutQuint"
+            }
+          ],
+          "animate": [
+            {
+              "t": 0,
+              "x": 0,
+              "y": 0,
+              "rotate": 0
+            },
+            {
+              "t": 0.45,
+              "x": 110,
+              "y": -70,
+              "rotate": 16,
+              "ease": "expoOut"
+            },
+            {
+              "t": 4.5,
+              "x": 118.80000000000001,
+              "y": -75.60000000000001,
+              "rotate": 19.2,
+              "ease": "inOut"
+            },
+            {
+              "t": 5.249999999999999,
+              "x": 0,
+              "y": 0,
+              "rotate": 0,
+              "ease": "inOutQuint"
+            }
+          ],
+          "inertia": true
+        },
+        {
+          "type": "morph",
+          "id": "cut-2",
+          "width": 660,
+          "height": 660,
+          "y": -110,
+          "start": 4.48,
+          "duration": 4.249999999999999,
+          "fill": "#19e6a1",
+          "sound": false,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "path:M900.0 852.0 A48 48 0 0 1 852.0 900.0 L500.0 900.0 A400 400 0 0 0 900.0 500.0 Z"
+            },
+            {
+              "at": 3.6999999999999993,
+              "shape": "path:M997.3 552.3 A500 500 0 0 1 552.3 997.3 L540.9 888.9 A391 391 0 0 0 888.9 540.9 Z",
+              "morph": 0.6,
+              "ease": "inOutQuint"
+            }
+          ],
+          "animate": [
+            {
+              "t": 0,
+              "x": 0,
+              "y": 0,
+              "rotate": 0
+            },
+            {
+              "t": 0.45,
+              "x": 110,
+              "y": 70,
+              "rotate": -16,
+              "ease": "expoOut"
+            },
+            {
+              "t": 2.95,
+              "x": 118.80000000000001,
+              "y": 75.60000000000001,
+              "rotate": -19.2,
+              "ease": "inOut"
+            },
+            {
+              "t": 3.6999999999999993,
+              "x": 0,
+              "y": 0,
+              "rotate": 0,
+              "ease": "inOutQuint"
+            }
+          ],
+          "inertia": true
+        },
+        {
+          "type": "morph",
+          "id": "cut-3",
+          "width": 660,
+          "height": 660,
+          "y": -110,
+          "start": 7.430000000000001,
+          "duration": 1.2999999999999992,
+          "fill": "#19e6a1",
+          "sound": false,
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "path:M148.0 900.0 A48 48 0 0 1 100.0 852.0 L100.0 500.0 A400 400 0 0 0 500.0 900.0 Z"
+            },
+            {
+              "at": 0.7499999999999991,
+              "shape": "path:M447.7 997.3 A500 500 0 0 1 2.7 552.3 L111.1 540.9 A391 391 0 0 0 459.1 888.9 Z",
+              "morph": 0.6,
+              "ease": "inOutQuint"
+            }
+          ],
+          "animate": [
+            {
+              "t": 0,
+              "x": 0,
+              "y": 0
+            },
+            {
+              "t": 0.18,
+              "x": -55,
+              "y": 35,
+              "rotate": 16,
+              "ease": "expoOut"
+            },
+            {
+              "t": 0.7499999999999991,
+              "x": 0,
+              "y": 0,
+              "rotate": 0,
+              "ease": "inOutQuint"
+            }
+          ],
+          "inertia": true
+        },
+        {
+          "type": "shape",
+          "shape": "ring",
+          "width": 820,
+          "height": 820,
+          "stroke": "$accent",
+          "strokeWidth": 5,
+          "y": -110,
+          "start": 7.95,
+          "duration": 0.9,
+          "opacity": 0.8,
+          "animate": [
+            {
+              "t": 0,
+              "scale": 0.9,
+              "opacity": 0.9
+            },
+            {
+              "t": 0.9,
+              "scale": 1.45,
+              "opacity": 0,
+              "ease": "expoOut"
+            }
+          ],
+          "sound": false
+        },
+        {
+          "type": "particles",
+          "preset": "sparkles",
+          "start": 7.95,
+          "duration": 1.4,
+          "count": 26,
+          "colors": [
+            "#19e6a1",
+            "#eafff6"
+          ],
+          "originY": -110,
+          "sound": false
+        },
+        {
+          "type": "text",
+          "text": "Saved. Without noticing.",
+          "preset": "blur-rise",
+          "fontSize": 64,
+          "weight": 600,
+          "font": "$body",
+          "color": "$fg",
+          "y": 285,
+          "start": 7.8,
+          "sound": false,
+          "adapt": {
+            "16:9": {
+              "y": 395,
+              "fontSize": 48
+            },
+            "1:1": {
+              "y": 420,
+              "fontSize": 52
+            },
+            "4:5": {
+              "y": 500,
+              "fontSize": 56
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "lockup",
+      "duration": 3,
+      "transition": {
+        "type": "match"
+      },
+      "background": [
+        {
+          "type": "solid",
+          "color": "$bg"
+        },
+        {
+          "type": "spotlight",
+          "base": "transparent",
+          "color": "#0f3a32",
+          "y": -160
+        }
+      ],
+      "camera": {
+        "keyframes": [
+          {
+            "t": 0,
+            "zoom": 1.04
+          },
+          {
+            "t": 3,
+            "zoom": 1,
+            "ease": "outQuint"
+          }
+        ]
+      },
+      "layers": [
+        {
+          "type": "logo",
+          "id": "lockup-logo",
+          "src": "assets/kova-logo.svg",
+          "parts": "wordmark",
+          "frame": "full",
+          "mode": "cascade",
+          "height": 200,
+          "y": -170,
+          "start": 0.6
+        },
+        {
+          "type": "text",
+          "text": "Saving, without\nthe sharp edges.",
+          "preset": "mask-up",
+          "fontSize": 76,
+          "weight": 700,
+          "color": "$fg",
+          "y": 30,
+          "start": 1,
+          "lineHeight": 1.05
+        },
+        {
+          "type": "card",
+          "variant": "button",
+          "title": "Open an account",
+          "accent": "$accent",
+          "color": "#0c1218",
+          "fontSize": 44,
+          "y": 230,
+          "start": 1.4,
+          "press": 2.6,
+          "enter": {
+            "type": "grow",
+            "duration": 0.5
+          },
+          "inertia": true
+        }
+      ]
+    }
+  ],
+  "format": "9:16"
+}

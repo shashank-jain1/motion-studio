@@ -14,6 +14,13 @@ export type Asset = AssetInfo & { url: string };
 export type RenderInfo = {
   file: string; url: string; quality: "draft" | "final"; createdAt: string; sizeBytes: number;
   seconds?: number; width?: number; height?: number;
+  /** output format (absent on renders made before formats existed) */
+  format?: Format;
+};
+/** A starter film from the template gallery (GET /api/templates). */
+export type TemplateMeta = {
+  slug: string; title: string; niche: string; description: string; format: Format; formats: Format[];
+  durationSeconds: number; tags: string[]; poster?: string;
 };
 export type TimelineScene = { index: number; id?: string; start: number; end: number; duration: number; overlapIn: number; transition?: string };
 export type Timeline = { total: number; scenes: TimelineScene[]; actors?: { id: string; from: number; until: number }[] };
@@ -62,7 +69,7 @@ export type ApiToken = { id: string; name: string; prefix: string; createdAt: st
 export type NewToken = { token: string; id: string; name: string; prefix: string };
 export type JobStatus = "queued" | "running" | "done" | "error" | "canceled";
 export type Job = {
-  id: string; projectId: string; kind: "render" | "preview"; quality: "draft" | "final"; backend: "local" | "lambda";
+  id: string; projectId: string; kind: "render" | "preview"; quality: "draft" | "final"; format?: Format; backend: "local" | "lambda";
   status: JobStatus; progress: number; stage?: string; position?: number; output?: RenderInfo; error?: string;
   createdAt: string; startedAt?: string; finishedAt?: string;
 };
@@ -97,7 +104,9 @@ const base = (p: string) => p.split("/").pop() ?? p;
 
 export const api = {
   projects: () => req<ProjectCard[]>("GET", "/api/projects"),
-  createProject: (name: string, format?: Format) => req<ProjectCard>("POST", "/api/projects", { name, format }),
+  createProject: (name: string, format?: Format, template?: string) => req<ProjectCard>("POST", "/api/projects", { name, format, ...(template ? { template } : {}) }),
+  templates: () => req<TemplateMeta[]>("GET", "/api/templates"),
+  template: (slug: string) => req<TemplateMeta & { spec: Record<string, unknown> }>("GET", `/api/templates/${encodeURIComponent(slug)}`),
   project: (id: string, signal?: AbortSignal) => req<ProjectState>("GET", P(id), undefined, signal),
   deleteProject: (id: string) => req<{ ok: true }>("DELETE", P(id)),
   saveSpec: (id: string, spec: unknown) => req<ValidationResult & { timeline?: Timeline }>("PUT", `${P(id)}/spec`, { spec }),
@@ -119,7 +128,9 @@ export const api = {
   jobs: (projectId?: string) => req<Job[]>("GET", `/api/jobs${projectId ? `?projectId=${encodeURIComponent(projectId)}` : ""}`),
   job: (jid: string) => req<Job>("GET", `/api/jobs/${encodeURIComponent(jid)}`),
   cancelJob: (jid: string) => req<Job>("POST", `/api/jobs/${encodeURIComponent(jid)}/cancel`),
-  render: (id: string, quality: "draft" | "final") => req<{ job: Job }>("POST", `${P(id)}/render`, { quality }),
+  render: (id: string, quality: "draft" | "final", format?: Format) => req<{ job: Job }>("POST", `${P(id)}/render`, { quality, ...(format ? { format } : {}) }),
+  /** Batch export: one job per adapt target (master + spec.formats). */
+  renderAll: (id: string, quality: "draft" | "final") => req<{ jobs: Job[]; formats: Format[] }>("POST", `${P(id)}/render-all`, { quality }),
   connect: () => req<ConnectInfo>("GET", "/api/connect"),
   /** Session + Origin authenticated (no Authorization header). 401 → caller sends the user to /login?next=. */
   oauthDecision: async (params: Record<string, string>, approve: boolean): Promise<{ redirect: string }> => {
@@ -226,3 +237,5 @@ export function followJob(jid: string, h: { onProgress?: (p: { progress: number;
 
 export const chatUrl = (id: string) => `${P(id)}/chat`;
 export const renderUrl = (id: string) => `${P(id)}/render`;
+/** Public base URL of a template's files (poster, assets, glyphs) — the Player's assetBase for template thumbnails. */
+export const templateBase = (slug: string) => `${location.origin}/templates/${encodeURIComponent(slug)}`;

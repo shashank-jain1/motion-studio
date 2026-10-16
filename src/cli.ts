@@ -1,17 +1,19 @@
 /**
  * Motion Studio CLI.
- *   pnpm cli render <projectId> [--final]
- *   pnpm cli preview <projectId> [t1,t2,...] [--scale=0.5]
+ *   pnpm cli render <projectId> [--final] [--format=9:16]
+ *   pnpm cli preview <projectId> [t1,t2,...] [--scale=0.5] [--format=9:16]   (--format: reflow to that format, see spec/reflow.ts)
  *   pnpm cli validate <projectId>
  *   pnpm cli list
  */
 import { getProject, listProjects, readSpec, validateSpec } from "./core/projects";
 import { renderFrames, renderVideo } from "./core/render";
 import { computeTimeline } from "./core/projects";
+import { ensureSfxLibrary } from "../scripts/gen-sfx";
+import { FORMAT_LIST, type Format } from "./engine/spec/reflow";
 
 const usage = `Usage:
-  pnpm cli render <projectId> [--final]
-  pnpm cli preview <projectId> [t1,t2,...] [--scale=0.5]
+  pnpm cli render <projectId> [--final] [--format=9:16]
+  pnpm cli preview <projectId> [t1,t2,...] [--scale=0.5] [--format=9:16]
   pnpm cli validate <projectId>
   pnpm cli list`;
 
@@ -20,7 +22,10 @@ const main = async () => {
   const flags = new Set(rest.filter((a) => a.startsWith("--")));
   const args = rest.filter((a) => !a.startsWith("--"));
   const flagValue = (name: string) => [...flags].find((f) => f.startsWith(`--${name}=`))?.split("=")[1];
+  const format = flagValue("format") as Format | undefined;
+  if (format !== undefined && !FORMAT_LIST.includes(format)) throw new Error(`--format must be one of ${FORMAT_LIST.join(", ")}`);
 
+  if (cmd === "render" || cmd === "preview") ensureSfxLibrary();
   switch (cmd) {
     case "list": {
       for (const p of listProjects()) console.log(`${p.id}\t${p.format}\t${p.hasSpec ? "spec" : "no spec"}\t${p.name}`);
@@ -53,7 +58,7 @@ const main = async () => {
         times = tl.scenes.map((s) => Math.round((s.start + s.overlapIn + (s.duration - s.overlapIn) * 0.5) * 100) / 100);
       }
       const scale = Number(flagValue("scale") ?? 0.5);
-      const res = await renderFrames(id, times, { scale });
+      const res = await renderFrames(id, times, { scale, format });
       for (const f of res.frames) console.log(`t=${f.time.toFixed(2)}s\t${f.path}`);
       if (res.sheet) console.log(`sheet\t${res.sheet}`);
       return;
@@ -65,6 +70,7 @@ const main = async () => {
       let last = -1;
       const res = await renderVideo(id, {
         quality: flags.has("--final") ? "final" : "draft",
+        format,
         onProgress: (p) => {
           const pct = Math.floor(p.progress * 100);
           if (pct !== last && pct % 10 === 0) {

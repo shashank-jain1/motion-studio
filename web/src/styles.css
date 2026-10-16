@@ -1002,3 +1002,64 @@ body.is-resizing-v { cursor: row-resize; user-select: none; }
 @container (max-width: 520px) {
   .deck-right .icon-btn:nth-child(2) { display: none; }
 }
+
+/* ---------- template reel (home) ---------- */
+.tpl-section { padding-top: var(--s6); }
+.tpl-head-hint { font-size: 12px; margin-left: var(--s2); }
+.tpl-rail {
+  display: grid; grid-auto-flow: column; grid-auto-columns: minmax(232px, 1fr); gap: var(--s4);
+  overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; padding-bottom: var(--s3);
+  scrollbar-width: thin; scrollbar-color: var(--line-2) transparent;
+}
+.tpl-card { scroll-snap-align: start; }
+.tpl-card .reel-link { width: 100%; text-align: left; }
+.tpl-card .reel-media { aspect-ratio: 3 / 4; }
+.tpl-niche { color: var(--ash); }
+.tpl-title { font: 600 15px/1.3 var(--sans); letter-spacing: -0.02em; color: var(--bone); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tpl-formats { display: inline-flex; gap: 6px; color: var(--smoke); }
+.tpl-formats .is-master { color: var(--bone); }
+.tpl-use { display: inline-flex; align-items: center; gap: 4px; color: var(--ash); transition: color var(--t-fast) var(--snap); }
+.tpl-card:hover .tpl-use { color: var(--tally); }
+.spec-thumb-poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+@media (max-width: 720px) { .tpl-head-hint { display: none; } }
+
+/* ---------- new project: start from template ---------- */
+.tpl-pick { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s2); margin-top: var(--s2); }
+.tpl-pick-tile {
+  display: flex; flex-direction: column; gap: 4px; padding: var(--s2); border: 1px solid var(--line-2); border-radius: var(--r2);
+  background: var(--ink); text-align: left; min-width: 0;
+  transition: border-color var(--t-fast) var(--snap), background var(--t-fast) var(--snap);
+}
+.tpl-pick-tile:hover { border-color: var(--smoke); }
+.tpl-pick-tile.is-active { border-color: var(--bone); background: var(--raised); }
+.tpl-pick-poster { display: grid; place-items: center; height: 84px; max-width: 100%; margin: 0 auto 4px; overflow: hidden; outline: 1px solid var(--line); background: #080807; }
+.tpl-pick-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.tpl-pick-tile.is-active .tpl-pick-poster { outline-color: var(--tally); }
+.tpl-pick-name { font-size: 12px; font-weight: 500; color: var(--bone); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tpl-pick-meta { font-size: 10px; color: var(--ash); }
+.tpl-pick-desc { font-size: 12px; margin-top: var(--s2); max-width: 560px; }
+.tpl-reflow { display: inline-block; margin-left: 4px; font-size: 10.5px; color: var(--bone); border: 1px solid var(--line-2); border-radius: var(--r1); padding: 2px 6px; }
+@media (max-width: 640px) { .tpl-pick { grid-template-columns: repeat(2, 1fr); } }
+
+/* ---------- viewer: format switcher ---------- */
+.fmt-switch > button { position: relative; }
+.fmt-m { font-style: normal; margin-left: 4px; font-size: 8.5px; opacity: 0.7; }
+.fmt-dot { display: inline-block; width: 4px; height: 4px; margin-left: 5px; border-radius: 1px; background: var(--tally); vertical-align: 2px; }
+.viewer-sep { width: 1px; height: 16px; background: var(--line); margin: 0 var(--s1); }
+.reflow-tag {
+  position: absolute; left: 0; bottom: -22px; font-size: 10px; letter-spacing: 0.06em; color: var(--ash); white-space: nowrap;
+}
+
+/* ---------- renders: export every platform ---------- */
+.export-all { display: flex; flex-direction: column; gap: var(--s2); padding: var(--s3); border: 1px solid var(--line); border-radius: var(--r2); background: var(--ink); }
+.export-all-head { display: flex; align-items: center; gap: var(--s2); }
+.export-all-formats { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.fmt-chip {
+  display: inline-flex; align-items: center; gap: 4px; height: 18px; padding: 0 6px; border: 1px solid var(--line-2); border-radius: var(--r1);
+  font-size: 10px; color: var(--ash); letter-spacing: 0.04em;
+}
+.fmt-chip.is-master { color: var(--bone); border-color: var(--ash); }
+.fmt-chip i { font-style: normal; font-size: 8.5px; opacity: 0.7; }
+.export-all-btn { align-self: stretch; justify-content: center; }
+.export-all-btn .mono { margin-left: auto; font-size: 10.5px; }
+.tpl-card .reel-media, .tpl-card .reel-media.is-tall { padding: 30px 22px; }

@@ -1,7 +1,9 @@
 /**
- * Music analysis for beat-synced edits: tempo, beat grid, strong onsets, loudness curve.
+ * Music analysis for beat-synced edits: tempo, beat grid, strong onsets, loudness curve, musical key.
  * Pure JS on top of an ffmpeg decode (mono, 22050 Hz, f32le).
  */
+import fs from "node:fs";
+import path from "node:path";
 import { runBinary } from "./probe";
 
 export type AudioAnalysis = {
@@ -19,6 +21,10 @@ export type AudioAnalysis = {
   energyCurve: number[];
   /** convenience: biggest sustained rise in loudness (likely "drop"), seconds, or null */
   dropAt: number | null;
+  /** estimated key, e.g. "F# minor" (chroma + Krumhansl–Kessler profiles); tune tonal SFX to it */
+  key: string;
+  /** 0..1 — below ~0.5 treat the key as unknown (the sound planner then avoids tonal SFX) */
+  keyConfidence: number;
 };
 
 const SR = 22050;
@@ -283,5 +289,96 @@ export const analyzeAudio = async (filePath: string): Promise<AudioAnalysis> => 
     if (near !== null) dropAt = near;
   }
 
-  return { duration: r3(duration), bpm: bpmOut, beatConfidence: Math.round(beatConfidence * 100) / 100, beats, onsets, energyCurve, dropAt };
+  const k = estimateKey(x, SR);
+  return { duration: r3(duration), bpm: bpmOut, beatConfidence: Math.round(beatConfidence * 100) / 100, beats, onsets, energyCurve, dropAt, key: k.key, keyConfidence: k.confidence };
+};
+
+// ---------------------------------------------------------------- key
+
+/** Krumhansl–Kessler key profiles (major, minor), tonic first. */
+const KK_MAJOR = [6.35, 2.23, 3.48, 2.33, 4.38, 4.09, 2.52, 5.19, 2.39, 3.66, 2.29, 2.88];
+const KK_MINOR = [6.33, 2.68, 3.52, 5.38, 2.6, 3.53, 2.54, 4.75, 3.98, 2.69, 3.34, 3.17];
+const PC_NAMES = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"];
+
+const pearson = (a: number[], b: number[]) => {
+  const n = a.length, ma = a.reduce((s, v) => s + v, 0) / n, mb = b.reduce((s, v) => s + v, 0) / n;
+  let num = 0, da = 0, db = 0;
+  for (let i = 0; i < n; i++) { num += (a[i] - ma) * (b[i] - mb); da += (a[i] - ma) ** 2; db += (b[i] - mb) ** 2; }
+  return da > 0 && db > 0 ? num / Math.sqrt(da * db) : 0;
+};
+
+/**
+ * Lightweight key estimate: a 8192-point STFT (hop 4096) → log-compressed magnitudes folded into a 12-bin chroma
+ * (65 Hz – 2 kHz, each bin weighted by its distance to the nearest equal-tempered pitch), summed over frames weighted
+ * by loudness, then correlated against the 24 rotated Krumhansl–Kessler profiles. Confidence blends the winning
+ * correlation with its margin over the runner-up (relative-major/minor confusions count half).
+ */
+export const estimateKey = (x: Float32Array, sr: number): { key: string; confidence: number; chroma: number[] } => {
+  const N = 8192, HOP = 4096;
+  const chroma = new Array(12).fill(0);
+  const win = new Float64Array(N);
+  for (let i = 0; i < N; i++) win[i] = 0.5 - 0.5 * Math.cos((2 * Math.PI * i) / (N - 1));
+  const kLo = Math.ceil((65 * N) / sr), kHi = Math.floor((2000 * N) / sr);
+  const pcOf: number[] = [], wOf: number[] = [];
+  for (let k = kLo; k <= kHi; k++) {
+    const midi = 69 + 12 * Math.log2((k * sr) / N / 440);
+    const near = Math.round(midi);
+    pcOf[k] = ((near % 12) + 12) % 12;
+    wOf[k] = Math.max(0, 1 - Math.abs(midi - near) * 2);
+  }
+  const re = new Float64Array(N), im = new Float64Array(N);
+  for (let s = 0; s + N <= x.length; s += HOP) {
+    let e = 0;
+    for (let i = 0; i < N; i++) { const v = x[s + i]; e += v * v; re[i] = v * win[i]; im[i] = 0; }
+    if (e / N < 1e-7) continue;
+    fft(re, im);
+    const fr = new Array(12).fill(0);
+    for (let k = kLo; k <= kHi; k++) fr[pcOf[k]] += Math.log1p(1000 * Math.hypot(re[k], im[k]) / N) * wOf[k];
+    const tot = fr.reduce((a, v) => a + v, 0) || 1;
+    const w = Math.sqrt(e / N);
+    for (let p = 0; p < 12; p++) chroma[p] += (fr[p] / tot) * w;
+  }
+  const scores: { root: number; minor: boolean; r: number }[] = [];
+  for (let root = 0; root < 12; root++) {
+    const rot = chroma.map((_, i) => chroma[(i + root) % 12]);
+    scores.push({ root, minor: false, r: pearson(rot, KK_MAJOR) }, { root, minor: true, r: pearson(rot, KK_MINOR) });
+  }
+  scores.sort((a, b) => b.r - a.r);
+  const [best, second] = scores;
+  const relative = second && second.minor !== best.minor && ((best.minor ? best.root + 3 : best.root + 9) % 12) === second.root;
+  const margin = Math.max(0, best.r - (second?.r ?? 0)) * (relative ? 0.5 : 1);
+  const confidence = Math.max(0, Math.min(1, Math.max(0, best.r) * 0.7 + margin * 4));
+  const sum = chroma.reduce((a, v) => a + v, 0) || 1;
+  return { key: `${PC_NAMES[best.root]} ${best.minor ? "minor" : "major"}`, confidence: Math.round(confidence * 100) / 100, chroma: chroma.map((v) => Math.round((v / sum) * 1000) / 1000) };
+};
+
+/**
+ * Fill `spec.sound.music` (key, keyConfidence, bpm, beats, onsets — in FILM time, after audio.trimStart) from the
+ * music file when the spec has music + sound and the director did not set them. Cached per file (size + mtime) in
+ * <projectDir>/.cache/. Never throws: on failure the spec is returned unchanged (the planner then treats the key as
+ * unknown). Renders call this so the engine (which cannot analyze audio) gets the music's key / onsets.
+ */
+export const withMusicInfo = async <T extends { audio?: { src: string; trimStart?: number }; sound?: Record<string, unknown> }>(spec: T, projectDir: string): Promise<T> => {
+  try {
+    if (!spec.audio || !spec.sound || /^(https?:|data:)/.test(spec.audio.src)) return spec;
+    const have = (spec.sound.music ?? {}) as Record<string, unknown>;
+    if (have.key && have.onsets) return spec;
+    const file = path.join(projectDir, spec.audio.src.replace(/^\.?\//, ""));
+    const st = fs.statSync(file);
+    const cacheDir = path.join(projectDir, ".cache");
+    const cacheFile = path.join(cacheDir, `music-${path.basename(file).replace(/[^a-z0-9.-]/gi, "_")}-${st.size}-${Math.round(st.mtimeMs)}.json`);
+    let a: AudioAnalysis;
+    if (fs.existsSync(cacheFile)) a = JSON.parse(fs.readFileSync(cacheFile, "utf8"));
+    else {
+      a = await analyzeAudio(file);
+      fs.mkdirSync(cacheDir, { recursive: true });
+      fs.writeFileSync(cacheFile, JSON.stringify(a));
+    }
+    const off = spec.audio.trimStart ?? 0;
+    const shift = (v: number[]) => v.map((t) => Math.round((t - off) * 1000) / 1000).filter((t) => t >= 0);
+    return { ...spec, sound: { ...spec.sound, music: { key: a.key, keyConfidence: a.keyConfidence, bpm: a.bpm, beats: shift(a.beats), onsets: shift(a.onsets), ...have } } } as T;
+  } catch (e) {
+    console.error(`[motion-studio] music analysis skipped: ${(e as Error).message.split("\n")[0]}`);
+    return spec;
+  }
 };

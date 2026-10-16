@@ -1,0 +1,915 @@
+{
+  "title": "Dewy — skin that actually drinks",
+  "fps": 30,
+  "style": "pastel-pop",
+  "formats": [
+    "9:16",
+    "1:1",
+    "16:9"
+  ],
+  "sound": {
+    "brief": {
+      "voice": "playful",
+      "realism": "mixed",
+      "materials": [
+        "liquid",
+        "plastic"
+      ],
+      "space": "room",
+      "avoid": [
+        "digital",
+        "gamey"
+      ]
+    },
+    "restraint": 0.5,
+    "signature": "auto"
+  },
+  "theme": {
+    "fonts": {
+      "display": "Bricolage Grotesque",
+      "body": "Outfit"
+    },
+    "colors": {
+      "bg": "#fff1f4",
+      "fg": "#3a1d33",
+      "muted": "#9a7a90",
+      "accent": "#ff7a9c",
+      "accent2": "#7c6cff",
+      "card": "#ffffff",
+      "blush": "#ffe1ea",
+      "plum": "#3a1d33",
+      "tired": "#b7a6b1"
+    }
+  },
+  "sfx": [
+    {
+      "src": "sfx:impact-soft",
+      "at": 7.314,
+      "volume": 0.8
+    },
+    {
+      "src": "sfx:bubble-pop-2",
+      "at": 7.29,
+      "volume": 1
+    }
+  ],
+  "fx": {
+    "grain": 0.05,
+    "flashes": [
+      {
+        "at": 7.3,
+        "color": "#ffd0dc",
+        "duration": 0.14,
+        "intensity": 0.3
+      }
+    ]
+  },
+  "concept": {
+    "niche": "beauty",
+    "truth": "Dewy helps tired skin actually drink, feeling plump and awake again.",
+    "metaphor": "extreme situation — the word skın literally sips the serum through a straw and plumps from hairline to heavy; its i-dot is the brand bead",
+    "motif": "the pink bead (actor): the i's dot from frame 0, the cork that pops at the peak, then the logo",
+    "verb": "plump / drink",
+    "hook": "'Skin, 4 p.m.' — a hairline-thin, sagging word, and a striped straw sliding into it",
+    "arc": [
+      "hook: 4 p.m. skin, hairline thin",
+      "prior ×3: sip, sip, sip — a little plumper each time",
+      "slurp: the bottle drains",
+      "hold: empty, sputter, silence",
+      "wow: the word inflates and its dot pops off",
+      "lockup: the dot is the mark"
+    ],
+    "colorScript": [
+      "blush + tired mauve, pink only on the bead and the serum",
+      "mauve → plum as it drinks",
+      "pink bloom at the pop",
+      "blush lockup"
+    ],
+    "story": {
+      "insight": "Tired skin doesn't need ten more steps; it needs one thing it actually drinks.",
+      "audienceTension": "I drink my two litres and still look like 4 p.m.",
+      "inherentDrama": "the second a serum disappears into skin: it's absorbed, gone, and the surface fills out",
+      "orthodoxy": [
+        "water beading on a cheek",
+        "a bottle turning on a pastel plinth",
+        "leaves and botanicals for 'natural'",
+        "a model touching her face",
+        "floating ingredient molecules"
+      ],
+      "structure": "pattern-break",
+      "template": "extreme-situation",
+      "clicheControl": {
+        "obvious": "Water beads on glowing skin, a bottle turns on a pastel pedestal between floating leaves: 'Deep hydration you can feel.'",
+        "banned": [
+          "droplet",
+          "pedestal",
+          "leaf",
+          "botanical",
+          "molecule",
+          "glow",
+          "deep hydration"
+        ]
+      },
+      "candidates": [
+        {
+          "title": "Control: beads on skin, pedestal",
+          "technique": "control",
+          "logline": "Water beads on glowing skin, a bottle turns on a pastel pedestal between floating leaves: 'Deep hydration you can feel.'",
+          "typicality": 0.92,
+          "scores": {
+            "hook": 2,
+            "surprise": 0,
+            "emotionalPeak": 1,
+            "payoff": 2,
+            "brandLinkage": 2,
+            "clarity": 5,
+            "uniqueness": 0,
+            "feasibility": 5
+          }
+        },
+        {
+          "title": "Gone in a second",
+          "technique": "inherent-drama",
+          "logline": "A bead of serum lands on a surface and vanishes into it with a gulp; the surface fills out like a pillow.",
+          "typicality": 0.3,
+          "scores": {
+            "hook": 3,
+            "surprise": 3,
+            "emotionalPeak": 3,
+            "payoff": 3,
+            "brandLinkage": 3,
+            "clarity": 4,
+            "uniqueness": 3,
+            "feasibility": 4
+          }
+        },
+        {
+          "title": "The straw",
+          "technique": "exaggeration (extreme situation) + benign humour, sound-led slurp",
+          "logline": "The word skın, hairline-thin at 4 p.m., drinks the serum through a straw, plumping sip by sip; on the last slurp it inflates and its i-dot pops off like a cork — the dot is the brand's bead mark.",
+          "typicality": 0.06,
+          "scores": {
+            "hook": 4,
+            "surprise": 5,
+            "emotionalPeak": 4,
+            "payoff": 4,
+            "brandLinkage": 4,
+            "clarity": 5,
+            "uniqueness": 5,
+            "feasibility": 4
+          }
+        },
+        {
+          "title": "The sponge",
+          "technique": "metaphor-mining (household, pictorial analogy)",
+          "logline": "A dry compressed sponge tablet gets one press of the dropper and swells ten times its size, oddly satisfying, then squeezes into the bead.",
+          "typicality": 0.2,
+          "scores": {
+            "hook": 4,
+            "surprise": 3,
+            "emotionalPeak": 3,
+            "payoff": 3,
+            "brandLinkage": 3,
+            "clarity": 4,
+            "uniqueness": 3,
+            "feasibility": 4
+          }
+        },
+        {
+          "title": "No shine",
+          "technique": "inversion",
+          "logline": "Beauty ads sell shine; this one is matte, typographic, and never shows a face — only what the skin says.",
+          "typicality": 0.15,
+          "scores": {
+            "hook": 3,
+            "surprise": 3,
+            "emotionalPeak": 2,
+            "payoff": 3,
+            "brandLinkage": 3,
+            "clarity": 3,
+            "uniqueness": 4,
+            "feasibility": 5
+          }
+        },
+        {
+          "title": "Shelf gossip",
+          "technique": "perspective-shift, comic",
+          "logline": "Nine half-used bottles on a bathroom shelf gossip about the new one that actually got finished.",
+          "typicality": 0.18,
+          "scores": {
+            "hook": 4,
+            "surprise": 4,
+            "emotionalPeak": 3,
+            "payoff": 3,
+            "brandLinkage": 3,
+            "clarity": 3,
+            "uniqueness": 4,
+            "feasibility": 3
+          }
+        },
+        {
+          "title": "Ten steps, one",
+          "technique": "cultural-tension",
+          "logline": "Everyone sells a ten-step routine; you secretly know you'll do one — nine bottles topple like dominoes, one stays standing.",
+          "typicality": 0.25,
+          "scores": {
+            "hook": 3,
+            "surprise": 3,
+            "emotionalPeak": 3,
+            "payoff": 3,
+            "brandLinkage": 3,
+            "clarity": 4,
+            "uniqueness": 3,
+            "feasibility": 4
+          }
+        },
+        {
+          "title": "9 a.m. vs 4 p.m.",
+          "technique": "consequence / time-leap",
+          "logline": "The word 'fresh' wilts letter by letter across a working day; one press and it stands back up.",
+          "typicality": 0.22,
+          "scores": {
+            "hook": 3,
+            "surprise": 3,
+            "emotionalPeak": 3,
+            "payoff": 3,
+            "brandLinkage": 3,
+            "clarity": 4,
+            "uniqueness": 3,
+            "feasibility": 4
+          }
+        }
+      ],
+      "chosen": 2,
+      "beats": [
+        {
+          "t": 0,
+          "beat": "hook: 'Skin, 4 p.m.' — a hairline word sags as a striped straw slides into it",
+          "emotion": "curiosity",
+          "intensity": 6,
+          "sound": "soft plastic tap as the straw lands"
+        },
+        {
+          "t": 1.55,
+          "beat": "prior ×3: sip, sip, sip — each a little plumper",
+          "emotion": "amusement",
+          "intensity": 5,
+          "to": 7,
+          "sound": "three bubble sips, rising"
+        },
+        {
+          "t": 5.15,
+          "beat": "the big slurp: the bottle drains, the word swells",
+          "emotion": "anticipation",
+          "intensity": 7,
+          "to": 8.5,
+          "sound": "long slurp"
+        },
+        {
+          "t": 6.7,
+          "beat": "hold: empty bottle, the straw sputters, freeze",
+          "emotion": "suspense",
+          "intensity": 4,
+          "sound": "silence 0.5s"
+        },
+        {
+          "t": 7.2,
+          "beat": "peak: the word inflates and its dot pops off like a cork",
+          "emotion": "delight",
+          "intensity": 10,
+          "wow": "the word skın inflates to full weight with a bounce and its i-dot pops off like a cork — the flying dot is the brand's bead mark",
+          "sound": "pop + hero hit"
+        },
+        {
+          "t": 8.7,
+          "beat": "payoff: the dot lands as the logo",
+          "emotion": "satisfaction",
+          "intensity": 9,
+          "sound": "Dewy signature"
+        },
+        {
+          "t": 9.6,
+          "beat": "lock + CTA: Skin that actually drinks.",
+          "emotion": "warmth",
+          "intensity": 8.5
+        }
+      ],
+      "peakAt": 7.2,
+      "mnemonic": {
+        "visual": "the pink bead: the i-dot that pops off and becomes the mark",
+        "sonic": "Dewy's auto signature on the bead landing (same 3 notes every film)",
+        "loop": false
+      }
+    }
+  },
+  "actors": [
+    {
+      "id": "bead",
+      "from": "sip",
+      "until": "lockup",
+      "layer": {
+        "type": "morph",
+        "width": 92,
+        "height": 92,
+        "inertia": true,
+        "enter": {
+          "type": "pop",
+          "duration": 0.35
+        },
+        "shapes": [
+          {
+            "at": 0,
+            "shape": "svg:assets/dewy-logo.svg#icon"
+          }
+        ]
+      },
+      "poses": [
+        {
+          "scene": "sip",
+          "t": 0,
+          "x": 90,
+          "y": -304,
+          "scale": 0.42
+        },
+        {
+          "scene": "sip",
+          "t": 2.3,
+          "x": 92,
+          "y": -311,
+          "scale": 0.4954085512078142,
+          "move": 0.3,
+          "ease": "expoOut"
+        },
+        {
+          "scene": "sip",
+          "t": 3.5,
+          "x": 94,
+          "y": -318,
+          "scale": 0.6305199742644909,
+          "move": 0.3,
+          "ease": "expoOut"
+        },
+        {
+          "scene": "sip",
+          "t": 4.7,
+          "x": 96,
+          "y": -325,
+          "scale": 0.7521202550155004,
+          "move": 0.3,
+          "ease": "expoOut"
+        },
+        {
+          "scene": "sip",
+          "t": 6.6,
+          "x": 98,
+          "y": -333,
+          "scale": 0.9007428203778441,
+          "move": 1.2,
+          "ease": "inOut"
+        },
+        {
+          "scene": "sip",
+          "t": 7.32,
+          "x": 99,
+          "y": -340,
+          "scale": 1.0358542434345206,
+          "move": 0.12,
+          "ease": "expoOut"
+        },
+        {
+          "scene": "sip",
+          "t": 7.7,
+          "x": 209,
+          "y": -530,
+          "scale": 2,
+          "move": 0.38,
+          "ease": "expoOut"
+        },
+        {
+          "scene": "sip",
+          "t": 8.3,
+          "x": 139,
+          "y": -490,
+          "scale": 2.2,
+          "move": 0.6,
+          "ease": "inOut"
+        },
+        {
+          "scene": "lockup",
+          "t": 0.75,
+          "snapTo": "lockup-logo",
+          "move": 0.75,
+          "ease": "expoOut"
+        }
+      ]
+    }
+  ],
+  "scenes": [
+    {
+      "id": "sip",
+      "duration": 8.7,
+      "background": [
+        {
+          "type": "solid",
+          "color": "$bg"
+        },
+        {
+          "type": "spotlight",
+          "base": "transparent",
+          "color": "#ffffff",
+          "y": -150
+        }
+      ],
+      "camera": {
+        "keyframes": [
+          {
+            "t": 0,
+            "zoom": 1
+          },
+          {
+            "t": 6.7,
+            "zoom": 1.07,
+            "ease": "inOut"
+          },
+          {
+            "t": 7.2,
+            "zoom": 1.07
+          },
+          {
+            "t": 8.7,
+            "zoom": 1,
+            "ease": "expoOut"
+          }
+        ],
+        "punch": [
+          7.3
+        ]
+      },
+      "layers": [
+        {
+          "type": "text",
+          "text": "Skin, 4 p.m.",
+          "preset": "blur-rise",
+          "fontSize": 72,
+          "weight": 600,
+          "font": "$body",
+          "color": "$muted",
+          "y": -470,
+          "duration": 5,
+          "exitPreset": "blur-out",
+          "exitAt": 4.6
+        },
+        {
+          "type": "shape",
+          "shape": "circle",
+          "width": 1100,
+          "height": 1100,
+          "color": "#ffd0dc",
+          "y": -150,
+          "start": 7.2,
+          "duration": 1.2,
+          "opacity": 0.9,
+          "animate": [
+            {
+              "t": 0,
+              "scale": 0.1,
+              "opacity": 0.9
+            },
+            {
+              "t": 1.2,
+              "scale": 1.4,
+              "opacity": 0,
+              "ease": "expoOut"
+            }
+          ],
+          "sound": false
+        },
+        {
+          "type": "group",
+          "id": "bottle",
+          "x": 360,
+          "y": 216,
+          "width": 300,
+          "height": 540,
+          "layers": [
+            {
+              "type": "shape",
+              "shape": "rect",
+              "width": 210,
+              "height": 300,
+              "radius": 54,
+              "color": "#ffffff",
+              "x": 0,
+              "y": 114,
+              "shadow": "premium",
+              "enter": {
+                "type": "rise",
+                "duration": 0.5
+              },
+              "inertia": true
+            },
+            {
+              "type": "shape",
+              "shape": "rect",
+              "width": 170,
+              "height": 230,
+              "radius": 38,
+              "color": "$accent",
+              "x": 0,
+              "y": 129,
+              "origin": "50% 100%",
+              "enter": {
+                "type": "rise",
+                "duration": 0.5
+              },
+              "sound": false,
+              "animate": [
+                {
+                  "t": 0,
+                  "scaleY": 1
+                },
+                {
+                  "t": 2.1,
+                  "scaleY": 0.87,
+                  "ease": "expoOut"
+                },
+                {
+                  "t": 3.3,
+                  "scaleY": 0.74,
+                  "ease": "expoOut"
+                },
+                {
+                  "t": 4.5,
+                  "scaleY": 0.61,
+                  "ease": "expoOut"
+                },
+                {
+                  "t": 6.45,
+                  "scaleY": 0.04,
+                  "ease": "inOut"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "text": "SERUM",
+              "preset": "none",
+              "fontSize": 26,
+              "weight": 700,
+              "font": "$body",
+              "color": "#ffffff",
+              "letterSpacing": 0.2,
+              "x": 0,
+              "y": 154,
+              "sound": false
+            },
+            {
+              "type": "shape",
+              "shape": "rect",
+              "width": 110,
+              "height": 70,
+              "radius": 18,
+              "color": "$plum",
+              "x": 0,
+              "y": -61,
+              "enter": {
+                "type": "rise",
+                "duration": 0.5
+              },
+              "sound": false
+            },
+            {
+              "type": "path",
+              "d": "M500.0 712.5 L500.0 500.0 C500.0 400.0 537.5 370.0 537.5 280.0",
+              "width": 400,
+              "height": 400,
+              "x": 0,
+              "y": -176,
+              "strokeWidth": 36,
+              "color": "#f2c3cf",
+              "drawDuration": 0.7,
+              "ease": "expoOut",
+              "start": 0.15,
+              "sound": false
+            },
+            {
+              "type": "path",
+              "d": "M500.0 712.5 L500.0 500.0 C500.0 400.0 537.5 370.0 537.5 280.0",
+              "width": 400,
+              "height": 400,
+              "x": 0,
+              "y": -176,
+              "strokeWidth": 30,
+              "color": "#ffffff",
+              "drawDuration": 0.7,
+              "ease": "expoOut",
+              "start": 0.15,
+              "sound": "sfx:tap-generic-1"
+            },
+            {
+              "type": "path",
+              "d": "M500.0 712.5 L500.0 500.0 C500.0 400.0 537.5 370.0 537.5 280.0",
+              "width": 400,
+              "height": 400,
+              "x": 0,
+              "y": -176,
+              "strokeWidth": 30,
+              "color": "#ffc2d1",
+              "dashed": true,
+              "drawDuration": 0.7,
+              "ease": "expoOut",
+              "start": 0.15,
+              "sound": false
+            },
+            {
+              "type": "path",
+              "d": "M500.0 712.5 L500.0 500.0 C500.0 400.0 537.5 370.0 537.5 280.0",
+              "width": 400,
+              "height": 400,
+              "x": 0,
+              "y": -176,
+              "strokeWidth": 15,
+              "color": "$accent",
+              "trail": 0.35,
+              "start": 1.55,
+              "duration": 0.6,
+              "drawDuration": 0.5,
+              "ease": "in",
+              "sound": "sfx:bubble-1"
+            },
+            {
+              "type": "path",
+              "d": "M500.0 712.5 L500.0 500.0 C500.0 400.0 537.5 370.0 537.5 280.0",
+              "width": 400,
+              "height": 400,
+              "x": 0,
+              "y": -176,
+              "strokeWidth": 15,
+              "color": "$accent",
+              "trail": 0.35,
+              "start": 2.75,
+              "duration": 0.6,
+              "drawDuration": 0.5,
+              "ease": "in",
+              "sound": "sfx:bubble-2"
+            },
+            {
+              "type": "path",
+              "d": "M500.0 712.5 L500.0 500.0 C500.0 400.0 537.5 370.0 537.5 280.0",
+              "width": 400,
+              "height": 400,
+              "x": 0,
+              "y": -176,
+              "strokeWidth": 15,
+              "color": "$accent",
+              "trail": 0.35,
+              "start": 3.95,
+              "duration": 0.6,
+              "drawDuration": 0.5,
+              "ease": "in",
+              "sound": "sfx:bubble-3"
+            },
+            {
+              "type": "path",
+              "d": "M500.0 712.5 L500.0 500.0 C500.0 400.0 537.5 370.0 537.5 280.0",
+              "width": 400,
+              "height": 400,
+              "x": 0,
+              "y": -176,
+              "strokeWidth": 15,
+              "color": "$accent",
+              "start": 5.15,
+              "duration": 1.5999999999999996,
+              "drawDuration": 0.45,
+              "ease": "out",
+              "sound": "sfx:goo-1"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "sip.",
+          "preset": "pop",
+          "fontSize": 46,
+          "weight": 700,
+          "color": "$accent",
+          "x": 160,
+          "y": 80,
+          "start": 1.6500000000000001,
+          "duration": 3.9000000000000004,
+          "exitPreset": "fade",
+          "exitAt": 3.6000000000000005,
+          "sound": false
+        },
+        {
+          "type": "text",
+          "text": "sip.",
+          "preset": "pop",
+          "fontSize": 46,
+          "weight": 700,
+          "color": "$accent",
+          "x": 146,
+          "y": 140,
+          "start": 2.85,
+          "duration": 2.7,
+          "exitPreset": "fade",
+          "exitAt": 2.4000000000000004,
+          "sound": false
+        },
+        {
+          "type": "text",
+          "text": "sip.",
+          "preset": "pop",
+          "fontSize": 46,
+          "weight": 700,
+          "color": "$accent",
+          "x": 132,
+          "y": 200,
+          "start": 4.05,
+          "duration": 1.5000000000000002,
+          "exitPreset": "fade",
+          "exitAt": 1.2000000000000002,
+          "sound": false
+        },
+        {
+          "type": "text",
+          "text": "slurrrp.",
+          "preset": "stretch",
+          "fontSize": 76,
+          "weight": 800,
+          "color": "$plum",
+          "x": -170,
+          "y": 150,
+          "start": 5.300000000000001,
+          "duration": 1.4,
+          "exitPreset": "fade",
+          "exitAt": 1.2,
+          "sound": false
+        },
+        {
+          "type": "morph",
+          "id": "word",
+          "width": 880,
+          "height": 880,
+          "y": -150,
+          "enter": {
+            "type": "reveal-up",
+            "duration": 0.45
+          },
+          "shapes": [
+            {
+              "at": 0,
+              "shape": "path:M212.1 615.3Q188.3 615.3 170.2 609.8Q152.1 604.3 140.4 594.1Q128.7 584.0 123.2 569.8Q117.7 555.7 119.0 539.0L143.3 536.8Q141.0 555.3 149.2 567.4Q157.4 579.6 173.9 585.7Q190.5 591.9 213.0 591.9Q243.9 591.9 260.4 581.3Q276.9 570.7 276.9 552.2Q276.9 537.6 267.7 529.5Q258.4 521.3 242.8 516.7Q227.1 512.0 207.2 508.1Q191.8 504.5 176.6 500.1Q161.3 495.7 149.2 488.9Q137.1 482.0 129.8 471.0Q122.5 460.0 122.5 443.6Q122.5 423.4 133.1 409.0Q143.7 394.7 162.9 386.7Q182.1 378.8 208.1 378.8Q235.9 378.8 254.7 387.8Q273.4 396.9 283.1 413.2Q292.8 429.5 292.4 450.7L268.6 454.2Q269.0 436.6 261.3 425.1Q253.6 413.6 239.2 407.9Q224.9 402.2 205.5 402.2Q178.6 402.2 162.9 412.8Q147.2 423.4 147.2 441.9Q147.2 456.0 156.3 464.2Q165.3 472.3 180.5 476.7Q195.8 481.2 213.9 485.1Q231.1 488.7 246.7 493.1Q262.4 497.5 274.5 504.3Q286.7 511.2 293.9 522.4Q301.2 533.7 301.2 550.9Q301.2 572.9 289.7 587.3Q278.3 601.6 258.2 608.5Q238.1 615.3 212.1 615.3M387.3 610.0L362.1 610.0L362.1 305.1L387.3 305.1L387.3 482.0Q406.7 472.8 425.2 460.0Q443.7 447.2 459.4 433.1Q475.1 418.9 486.3 405.9Q497.6 392.9 502.4 384.1L532.4 384.1Q522.7 400.4 508.4 416.7Q494.0 433.1 477.5 447.2Q460.9 461.3 444.6 471.7Q428.3 482.0 414.2 486.5L414.2 490.4Q431.4 490.9 446.2 498.6Q460.9 506.3 474.4 519.3Q487.9 532.3 500.9 549.3Q513.9 566.3 527.1 586.2L543.0 610.0L513.9 610.0L501.1 590.6Q485.7 567.2 469.8 547.8Q453.9 528.4 435.6 516.7Q417.3 505.0 394.8 505.0L387.3 505.0M614.9 610.0L590.2 610.0L590.2 384.1L614.9 384.1M716.4 610.0L691.7 610.0L691.7 467.9L691.7 384.1L717.8 384.1L711.6 458.2L717.8 458.2Q724.4 430.9 734.7 413.4Q745.1 396.0 760.8 387.4Q776.4 378.8 797.2 378.8Q833.4 378.8 852.1 405.0Q870.9 431.3 870.9 480.7L870.9 610.0L845.7 610.0L845.7 482.0Q845.7 441.9 832.7 422.5Q819.7 403.1 794.5 403.1Q771.6 403.1 754.6 417.8Q737.6 432.6 727.9 456.4Q718.2 480.3 716.4 508.1",
+              "fill": "$tired"
+            },
+            {
+              "at": 2.25,
+              "shape": "path:M202.2 615.5Q178.5 615.5 160.2 610.2Q141.9 605.0 129.7 595.3Q117.6 585.6 111.3 572.0Q105.1 558.5 105.5 542.3L135.5 535.9Q134.3 552.2 142.4 563.4Q150.5 574.7 166.3 580.6Q182.2 586.5 203.9 586.5Q232.1 586.5 247.3 577.0Q262.6 567.6 262.6 550.8Q262.6 537.7 254.0 530.4Q245.5 523.0 230.8 518.6Q216.1 514.2 196.9 510.5Q181.2 506.9 165.6 502.5Q150.0 498.0 137.3 490.9Q124.5 483.8 116.9 472.3Q109.3 460.8 109.3 443.6Q109.3 423.0 120.0 408.3Q130.8 393.6 150.7 385.4Q170.6 377.2 198.0 377.2Q226.0 377.2 245.4 385.9Q264.9 394.7 275.6 410.5Q286.3 426.4 287.1 447.2L256.7 454.1Q256.6 438.0 249.0 427.4Q241.5 416.8 227.9 411.5Q214.4 406.1 196.0 406.1Q171.1 406.1 156.6 415.7Q142.2 425.2 142.2 441.8Q142.2 454.5 150.7 462.0Q159.2 469.4 173.8 473.6Q188.3 477.7 206.1 481.6Q223.3 485.1 239.2 489.6Q255.2 494.0 267.6 501.1Q280.1 508.1 287.6 519.6Q295.0 531.1 295.0 548.8Q295.0 571.2 283.4 586.0Q271.7 600.9 250.9 608.2Q230.0 615.5 202.2 615.5M385.8 610.0L351.8 610.0L351.8 302.5L385.8 302.5L385.8 479.1Q403.9 469.9 421.0 457.5Q438.1 445.2 452.5 431.6Q467.0 418.0 477.5 405.1Q488.0 392.3 493.1 382.7L533.3 382.7Q524.4 399.2 510.9 415.6Q497.4 432.1 481.2 446.3Q465.1 460.4 448.0 470.7Q430.9 481.1 414.6 485.3L414.6 490.1Q434.7 489.2 450.7 496.6Q466.6 503.9 479.8 517.0Q493.1 530.0 504.8 547.2Q516.5 564.3 528.0 583.6L542.6 610.0L503.8 610.0L492.7 590.1Q479.5 567.0 465.6 548.4Q451.7 529.8 434.8 518.7Q418.0 507.6 395.8 507.6L385.8 507.6M621.7 610.0L587.7 610.0L587.7 382.7L621.7 382.7M728.1 610.0L694.1 610.0L694.1 468.3L694.1 382.7L726.4 382.7L721.6 455.7L728.3 455.7Q734.8 428.8 745.2 411.5Q755.6 394.2 771.4 385.7Q787.2 377.2 808.2 377.2Q845.4 377.2 864.6 403.9Q883.9 430.7 883.9 482.7L883.9 610.0L849.5 610.0L849.5 485.4Q849.5 446.0 837.0 427.2Q824.5 408.4 800.4 408.4Q778.6 408.4 762.9 422.2Q747.1 436.1 738.3 458.5Q729.5 480.9 728.1 507.3",
+              "fill": "#ad8fa3",
+              "morph": 0.25,
+              "ease": "expoOut"
+            },
+            {
+              "at": 3.45,
+              "shape": "path:M192.3 615.6Q168.7 615.6 150.2 610.7Q131.8 605.7 119.1 596.4Q106.5 587.1 99.5 574.2Q92.6 561.2 92.0 545.7L127.7 535.0Q127.6 549.1 135.6 559.5Q143.6 569.8 158.7 575.5Q173.9 581.1 194.8 581.1Q220.4 581.1 234.3 572.8Q248.2 564.4 248.2 549.4Q248.2 537.8 240.4 531.2Q232.6 524.7 218.8 520.6Q205.0 516.5 186.6 512.8Q170.6 509.3 154.6 504.8Q138.6 500.3 125.3 492.9Q112.0 485.6 104.0 473.6Q96.0 461.6 96.0 443.5Q96.0 422.6 107.0 407.6Q117.9 392.6 138.5 384.1Q159.1 375.6 187.8 375.6Q216.1 375.6 236.2 384.0Q256.3 392.5 268.0 407.8Q279.8 423.2 281.8 443.6L244.7 453.9Q244.1 439.4 236.8 429.7Q229.4 420.0 216.6 415.1Q203.9 410.1 186.6 410.1Q163.5 410.1 150.4 418.6Q137.2 427.1 137.2 441.7Q137.2 453.0 145.1 459.8Q153.1 466.5 167.0 470.4Q180.9 474.3 198.3 478.1Q215.5 481.6 231.7 486.1Q247.9 490.6 260.8 497.8Q273.6 505.0 281.2 516.8Q288.9 528.5 288.9 546.8Q288.9 569.4 277.0 584.8Q265.2 600.2 243.5 607.9Q221.9 615.6 192.3 615.6M384.4 610.0L341.5 610.0L341.5 299.8L384.4 299.8L384.4 476.2Q401.2 466.9 416.8 455.0Q432.4 443.1 445.6 430.1Q458.8 417.0 468.7 404.3Q478.5 391.7 483.7 381.3L534.2 381.3Q526.1 397.9 513.4 414.5Q500.8 431.1 485.0 445.3Q469.2 459.5 451.4 469.8Q433.6 480.1 415.1 484.2L415.1 489.7Q438.1 487.5 455.2 494.5Q472.2 501.5 485.3 514.6Q498.3 527.8 508.7 545.0Q519.2 562.3 528.9 581.1L542.1 610.0L493.8 610.0L484.3 589.5Q473.3 566.8 461.4 549.0Q449.5 531.2 434.1 520.7Q418.7 510.3 396.9 510.3L384.4 510.3M628.4 610.0L585.1 610.0L585.1 381.3L628.4 381.3M739.7 610.0L696.5 610.0L696.5 468.6L696.5 381.3L735.1 381.3L731.7 453.1L738.9 453.1Q745.2 426.8 755.7 409.6Q766.1 392.5 782.0 384.0Q798.0 375.6 819.2 375.6Q857.4 375.6 877.2 402.8Q897.0 430.1 897.0 484.8L897.0 610.0L853.3 610.0L853.3 488.7Q853.3 450.2 841.3 431.9Q829.4 413.6 806.2 413.6Q785.7 413.6 771.2 426.6Q756.7 439.5 748.7 460.5Q740.8 481.5 739.7 506.5",
+              "fill": "#9a6f8c",
+              "morph": 0.25,
+              "ease": "expoOut"
+            },
+            {
+              "at": 4.65,
+              "shape": "path:M183.4 615.8Q159.9 615.8 141.2 611.1Q122.6 606.3 109.5 597.4Q96.4 588.6 88.9 576.1Q81.3 563.7 79.8 548.7L120.7 534.2Q121.6 546.3 129.5 555.9Q137.4 565.5 151.9 570.9Q166.4 576.3 186.6 576.3Q209.8 576.3 222.5 568.9Q235.2 561.5 235.2 548.1Q235.2 537.9 228.1 532.0Q221.1 526.2 208.1 522.3Q195.1 518.4 177.3 515.0Q161.1 511.5 144.7 506.9Q128.3 502.4 114.5 494.8Q100.7 487.2 92.4 474.7Q84.1 462.3 84.1 443.4Q84.1 422.3 95.2 407.0Q106.3 391.6 127.6 382.9Q148.8 374.2 178.7 374.2Q207.3 374.2 227.9 382.3Q248.6 390.5 261.2 405.4Q273.9 420.3 277.0 440.5L234.0 453.7Q232.9 440.7 225.7 431.8Q218.5 422.9 206.5 418.3Q194.4 413.7 178.1 413.7Q156.8 413.7 144.7 421.2Q132.6 428.7 132.6 441.6Q132.6 451.7 140.1 457.8Q147.7 463.9 161.0 467.5Q174.3 471.2 191.3 474.9Q208.5 478.4 225.0 483.0Q241.4 487.5 254.6 494.9Q267.7 502.2 275.5 514.2Q283.3 526.2 283.3 545.0Q283.3 567.8 271.3 583.7Q259.3 599.6 237.0 607.7Q214.6 615.8 183.4 615.8M383.2 610.0L332.2 610.0L332.2 297.4L383.2 297.4L383.2 473.6Q398.7 464.3 413.1 452.8Q427.4 441.3 439.4 428.7Q451.5 416.1 460.7 403.6Q469.9 391.1 475.3 380.0L535.0 380.0Q527.6 396.8 515.7 413.5Q503.8 430.2 488.4 444.5Q473.0 458.7 454.5 469.0Q436.0 479.2 415.5 483.1L415.5 489.4Q441.1 486.0 459.2 492.7Q477.3 499.4 490.1 512.5Q503.0 525.7 512.3 543.1Q521.6 560.4 529.7 578.8L541.7 610.0L484.7 610.0L476.8 589.0Q467.7 566.7 457.6 549.6Q447.5 532.5 433.4 522.6Q419.3 512.7 397.8 512.7L383.2 512.7M634.4 610.0L582.8 610.0L582.8 380.0L634.4 380.0M750.2 610.0L698.6 610.0L698.6 468.9L698.6 380.0L742.8 380.0L740.8 450.8L748.5 450.8Q754.6 425.0 765.1 407.9Q775.6 390.9 791.6 382.5Q807.7 374.2 829.2 374.2Q868.2 374.2 888.5 401.8Q908.7 429.5 908.7 486.6L908.7 610.0L856.7 610.0L856.7 491.8Q856.7 453.9 845.2 436.2Q833.8 418.4 811.4 418.4Q792.1 418.4 778.7 430.5Q765.3 442.6 758.1 462.3Q751.0 482.1 750.2 505.8",
+              "fill": "#7d4a6e",
+              "morph": 0.25,
+              "ease": "expoOut"
+            },
+            {
+              "at": 6.6,
+              "shape": "path:M172.6 616.0Q149.1 616.0 130.3 611.5Q111.5 607.1 97.8 598.7Q84.2 590.3 75.9 578.5Q67.5 566.7 65.0 552.4L112.2 533.2Q114.2 542.9 122.0 551.5Q129.8 560.1 143.6 565.3Q157.3 570.4 176.6 570.4Q196.9 570.4 208.2 564.2Q219.4 558.0 219.4 546.5Q219.4 538.0 213.1 533.0Q206.9 528.0 194.9 524.4Q183.0 520.9 165.9 517.6Q149.4 514.1 132.6 509.5Q115.8 504.9 101.4 497.0Q86.9 489.1 78.3 476.1Q69.6 463.2 69.6 443.3Q69.6 421.9 80.9 406.2Q92.2 390.4 114.2 381.4Q136.2 372.4 167.5 372.4Q196.4 372.4 217.8 380.2Q239.2 388.1 252.9 402.4Q266.7 416.8 271.2 436.6L220.9 453.5Q219.2 442.2 212.2 434.3Q205.2 426.4 194.0 422.2Q182.9 418.1 167.7 418.1Q148.5 418.1 137.8 424.4Q127.1 430.8 127.1 441.5Q127.1 450.0 134.0 455.3Q141.0 460.7 153.5 464.0Q166.1 467.4 182.8 471.0Q200.0 474.5 216.7 479.1Q233.4 483.7 247.0 491.3Q260.5 498.8 268.5 511.1Q276.5 523.4 276.5 542.8Q276.5 565.9 264.3 582.3Q252.2 598.8 228.9 607.4Q205.6 616.0 172.6 616.0M381.6 610.0L320.8 610.0L320.8 294.5L381.6 294.5L381.6 470.4Q395.7 461.1 408.4 450.1Q421.1 439.1 431.9 427.1Q442.6 415.1 451.0 402.7Q459.4 390.4 465.0 378.4L536.0 378.4Q529.4 395.5 518.4 412.3Q507.5 429.2 492.5 443.5Q477.5 457.8 458.2 468.0Q438.9 478.2 415.9 481.9L415.9 489.0Q444.8 484.2 464.2 490.5Q483.5 496.8 496.1 510.0Q508.7 523.2 516.6 540.7Q524.5 558.2 530.7 575.9L541.3 610.0L473.7 610.0L467.6 588.5Q460.9 566.5 453.0 550.3Q445.1 534.0 432.6 524.8Q420.1 515.6 399.0 515.6L381.6 515.6M641.8 610.0L580.0 610.0L580.0 378.4L641.8 378.4M763.0 610.0L701.3 610.0L701.3 469.3L701.3 378.4L752.3 378.4L751.8 448.0L760.1 448.0Q766.0 422.7 776.6 405.8Q787.1 388.9 803.3 380.7Q819.5 372.4 841.3 372.4Q881.4 372.4 902.2 400.6Q923.1 428.8 923.1 488.8L923.1 610.0L860.9 610.0L860.9 495.5Q860.9 458.5 850.0 441.4Q839.1 424.2 817.8 424.2Q799.8 424.2 787.8 435.3Q775.7 446.4 769.6 464.6Q763.4 482.7 763.0 504.9",
+              "fill": "#5e2f52",
+              "morph": 1.2,
+              "ease": "inOut"
+            },
+            {
+              "at": 7.32,
+              "shape": "path:M162.7 616.2Q139.3 616.2 120.3 612.0Q101.3 607.8 87.2 599.9Q73.1 591.9 64.0 580.7Q55.0 569.4 51.5 555.7L104.4 532.3Q107.5 539.8 115.2 547.6Q123.0 555.3 136.0 560.1Q149.0 565.0 167.5 565.0Q185.2 565.0 195.1 559.9Q205.0 554.8 205.0 545.1Q205.0 538.1 199.5 533.9Q194.0 529.7 183.0 526.4Q171.9 523.1 155.6 520.0Q138.8 516.5 121.6 511.8Q104.4 507.2 89.4 499.0Q74.4 490.9 65.4 477.4Q56.3 463.9 56.3 443.2Q56.3 421.6 67.8 405.5Q79.3 389.4 102.0 380.1Q124.7 370.8 157.4 370.8Q186.5 370.8 208.6 378.3Q230.6 385.8 245.4 399.7Q260.2 413.6 265.9 433.1L209.0 453.4Q206.8 443.6 200.0 436.6Q193.1 429.5 182.7 425.8Q172.4 422.0 158.3 422.0Q141.0 422.0 131.6 427.3Q122.1 432.6 122.1 441.4Q122.1 448.5 128.5 453.1Q134.9 457.8 146.8 460.9Q158.7 463.9 175.0 467.5Q192.2 471.0 209.2 475.6Q226.2 480.3 240.1 488.0Q254.0 495.7 262.2 508.3Q270.3 520.9 270.3 540.7Q270.3 564.1 258.0 581.1Q245.6 598.1 221.6 607.1Q197.5 616.2 162.7 616.2M380.2 610.0L310.5 610.0L310.5 291.9L380.2 291.9L380.2 467.5Q393.0 458.2 404.2 447.6Q415.5 437.0 425.0 425.6Q434.5 414.1 442.2 402.0Q449.9 389.8 455.7 377.0L536.8 377.0Q531.1 394.2 521.0 411.2Q510.8 428.2 496.2 442.5Q481.7 456.9 461.6 467.0Q441.5 477.2 416.4 480.7L416.4 488.7Q448.2 482.5 468.7 488.4Q489.2 494.4 501.5 507.6Q513.9 520.9 520.5 538.5Q527.1 556.2 531.5 573.4L540.8 610.0L463.6 610.0L459.2 587.9Q454.8 566.3 448.8 550.9Q442.9 535.4 431.8 526.8Q420.8 518.2 400.1 518.2L380.2 518.2M648.5 610.0L577.4 610.0L577.4 377.0L648.5 377.0M774.7 610.0L703.6 610.0L703.6 469.7L703.6 377.0L761.0 377.0L761.9 445.4L770.7 445.4Q776.4 420.7 787.0 403.9Q797.6 387.2 813.9 379.0Q830.3 370.8 852.3 370.8Q893.4 370.8 914.8 399.5Q936.2 428.2 936.2 490.9L936.2 610.0L864.7 610.0L864.7 498.8Q864.7 462.6 854.3 446.1Q844.0 429.5 823.7 429.5Q806.9 429.5 796.1 439.7Q785.3 449.8 780.0 466.6Q774.7 483.4 774.7 504.1",
+              "fill": "$plum",
+              "morph": 0.12,
+              "ease": "expoOut",
+              "scale": 1.14
+            },
+            {
+              "at": 7.8,
+              "shape": "path:M162.7 616.2Q139.3 616.2 120.3 612.0Q101.3 607.8 87.2 599.9Q73.1 591.9 64.0 580.7Q55.0 569.4 51.5 555.7L104.4 532.3Q107.5 539.8 115.2 547.6Q123.0 555.3 136.0 560.1Q149.0 565.0 167.5 565.0Q185.2 565.0 195.1 559.9Q205.0 554.8 205.0 545.1Q205.0 538.1 199.5 533.9Q194.0 529.7 183.0 526.4Q171.9 523.1 155.6 520.0Q138.8 516.5 121.6 511.8Q104.4 507.2 89.4 499.0Q74.4 490.9 65.4 477.4Q56.3 463.9 56.3 443.2Q56.3 421.6 67.8 405.5Q79.3 389.4 102.0 380.1Q124.7 370.8 157.4 370.8Q186.5 370.8 208.6 378.3Q230.6 385.8 245.4 399.7Q260.2 413.6 265.9 433.1L209.0 453.4Q206.8 443.6 200.0 436.6Q193.1 429.5 182.7 425.8Q172.4 422.0 158.3 422.0Q141.0 422.0 131.6 427.3Q122.1 432.6 122.1 441.4Q122.1 448.5 128.5 453.1Q134.9 457.8 146.8 460.9Q158.7 463.9 175.0 467.5Q192.2 471.0 209.2 475.6Q226.2 480.3 240.1 488.0Q254.0 495.7 262.2 508.3Q270.3 520.9 270.3 540.7Q270.3 564.1 258.0 581.1Q245.6 598.1 221.6 607.1Q197.5 616.2 162.7 616.2M380.2 610.0L310.5 610.0L310.5 291.9L380.2 291.9L380.2 467.5Q393.0 458.2 404.2 447.6Q415.5 437.0 425.0 425.6Q434.5 414.1 442.2 402.0Q449.9 389.8 455.7 377.0L536.8 377.0Q531.1 394.2 521.0 411.2Q510.8 428.2 496.2 442.5Q481.7 456.9 461.6 467.0Q441.5 477.2 416.4 480.7L416.4 488.7Q448.2 482.5 468.7 488.4Q489.2 494.4 501.5 507.6Q513.9 520.9 520.5 538.5Q527.1 556.2 531.5 573.4L540.8 610.0L463.6 610.0L459.2 587.9Q454.8 566.3 448.8 550.9Q442.9 535.4 431.8 526.8Q420.8 518.2 400.1 518.2L380.2 518.2M648.5 610.0L577.4 610.0L577.4 377.0L648.5 377.0M774.7 610.0L703.6 610.0L703.6 469.7L703.6 377.0L761.0 377.0L761.9 445.4L770.7 445.4Q776.4 420.7 787.0 403.9Q797.6 387.2 813.9 379.0Q830.3 370.8 852.3 370.8Q893.4 370.8 914.8 399.5Q936.2 428.2 936.2 490.9L936.2 610.0L864.7 610.0L864.7 498.8Q864.7 462.6 854.3 446.1Q844.0 429.5 823.7 429.5Q806.9 429.5 796.1 439.7Q785.3 449.8 780.0 466.6Q774.7 483.4 774.7 504.1",
+              "fill": "$plum",
+              "morph": 0.45,
+              "ease": "outBack",
+              "scale": 1
+            }
+          ],
+          "animate": [
+            {
+              "t": 0,
+              "y": 0,
+              "scaleY": 0.96
+            },
+            {
+              "t": 1.2,
+              "y": 10,
+              "scaleY": 0.93,
+              "ease": "inOut"
+            },
+            {
+              "t": 4.75,
+              "y": 0,
+              "scaleY": 1,
+              "ease": "inOut"
+            }
+          ],
+          "sound": false
+        },
+        {
+          "type": "text",
+          "text": "Plumped.",
+          "preset": "mask-up",
+          "fontSize": 84,
+          "weight": 800,
+          "color": "$plum",
+          "x": -170,
+          "y": 170,
+          "start": 7.45,
+          "sound": false
+        }
+      ]
+    },
+    {
+      "id": "lockup",
+      "duration": 3,
+      "transition": {
+        "type": "match"
+      },
+      "background": {
+        "type": "mesh",
+        "colors": [
+          "#ffd6e0",
+          "#fff1f4",
+          "#ffe9d6"
+        ],
+        "base": "#fff1f4"
+      },
+      "camera": {
+        "keyframes": [
+          {
+            "t": 0,
+            "zoom": 1.04
+          },
+          {
+            "t": 3,
+            "zoom": 1,
+            "ease": "outQuint"
+          }
+        ]
+      },
+      "layers": [
+        {
+          "type": "logo",
+          "id": "lockup-logo",
+          "src": "assets/dewy-logo.svg",
+          "parts": "wordmark",
+          "frame": "full",
+          "mode": "cascade",
+          "height": 190,
+          "y": -170,
+          "start": 0.4
+        },
+        {
+          "type": "text",
+          "text": "Skin that actually drinks.",
+          "preset": "mask-up",
+          "fontSize": 72,
+          "weight": 700,
+          "color": "$plum",
+          "y": 20,
+          "start": 0.95
+        },
+        {
+          "type": "card",
+          "variant": "button",
+          "title": "Shop the launch →",
+          "accent": "$accent",
+          "color": "#ffffff",
+          "fontSize": 44,
+          "y": 190,
+          "start": 1.35,
+          "press": 2.5,
+          "enter": {
+            "type": "grow",
+            "duration": 0.5
+          },
+          "inertia": true
+        }
+      ]
+    }
+  ],
+  "format": "4:5"
+}

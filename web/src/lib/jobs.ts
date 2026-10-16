@@ -74,6 +74,14 @@ export const useJobs = (projectId?: string, opts: { onDone?: (job: Job, out: Ren
     return job;
   }, [upsert, follow]);
 
+  /** Export all formats: one job per adapt target, each followed live. */
+  const startAll = useCallback(async (id: string, quality: "draft" | "final") => {
+    const { jobs: js } = await api.renderAll(id, quality);
+    for (const j of [...js].reverse()) upsert(j);
+    js.forEach(follow);
+    return js;
+  }, [upsert, follow]);
+
   const cancel = useCallback(async (jid: string) => {
     const j = await api.cancelJob(jid);
     upsert(j);
@@ -82,7 +90,7 @@ export const useJobs = (projectId?: string, opts: { onDone?: (job: Job, out: Ren
     return j;
   }, [upsert]);
 
-  return { jobs, error, start, cancel, reload: load };
+  return { jobs, error, start, startAll, cancel, reload: load };
 };
 
 export const isActive = active;

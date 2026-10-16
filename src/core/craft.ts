@@ -4,6 +4,8 @@
  */
 import { FORMATS, type Layer, type Spec } from "../engine/spec/schema";
 import { sceneTimeline } from "../engine/spec/preprocess";
+import { SAFE_ZONES } from "../engine/spec/reflow";
+import { storyIssues } from "./story";
 
 const HERO_TYPES = new Set(["logo", "device"]);
 const READ_WPS = 1 / 0.3; // ~3.3 words/s → hold ≥ words × 0.3s
@@ -51,6 +53,17 @@ export const craftWarnings = (spec: Spec): string[] => {
     if (p.x !== undefined || p.y !== undefined || p.scale !== undefined) out.push(`${at}: x/y/scale on a snapTo pose are ignored (the snap computes them).`);
   });
 
+  // 2c. Build with sound
+  if (spec.scenes.length >= 2 && !spec.sound && !spec.audio && !spec.sfx?.length) {
+    out.push("craft/sound: the film is silent. Add `\"sound\": {\"palette\": …}` (auto sound design: whooshes on cuts, hits on slams, ticks on counters) and optionally a music `audio` track — sound sync is a top retention lever.");
+  }
+  // 2d. 3D budget (one WebGL context per 3D layer; Chrome caps ~16)
+  spec.scenes.forEach((sc, si) => {
+    const n = sc.layers.filter((l) => l.type === "three").length;
+    if (n > 2) out.push(`craft/3d scenes[${si}]: ${n} 3D layers. 3D is a centrepiece — keep 1 (max 2) per scene.`);
+    for (const l of sc.layers) if (l.type === "three" && (l.repeat || l.motionBlur)) out.push(`craft/3d scenes[${si}]: avoid repeat/motionBlur on 3D layers (each copy is another WebGL canvas).`);
+  });
+
   // 3. Hook: frame 0 must already move and be readable
   const first = spec.scenes[0];
   if (first) {
@@ -68,7 +81,10 @@ export const craftWarnings = (spec: Spec): string[] => {
 
     // 4. Static frames: > 5s with no camera move, no loop, no animated background
     const camMoves = !!(scene.camera?.keyframes?.length || scene.camera?.punch?.length || scene.camera?.shake);
-    const anyLoop = scene.layers.some((l) => l.loop || l.animate?.length || l.path);
+    // living elements: loops, keyframes, paths, 3D objects with motion/orbit, animated shaders, particles
+    const anyLoop = scene.layers.some((l) => l.loop || l.animate?.length || l.path
+      || (l.type === "three" && ((l.animation ?? "spin-in") !== "none" || !!l.orbit?.length))
+      || l.type === "shader" || l.type === "particles");
     if (scene.duration > 5 && !camMoves && !anyLoop) {
       out.push(`craft/pacing ${where}: ${scene.duration}s with no camera move or living element. Add a breathing push (zoom 1→1.04) or a float loop — never hold a dead frame >5s.`);
     }
@@ -111,17 +127,26 @@ export const craftWarnings = (spec: Spec): string[] => {
         }
       }
 
-      // 9. Vertical safe zone for critical content (x 90–930, y 270–1250 on 1080×1920 → center-relative)
+      // 9. Safe zone for critical content, per format (same SAFE_ZONES the reflow engine uses)
       if (vertical && (txt || l.type === "logo" || l.type === "counter")) {
-        const sx = W / 1080, sy = H / 1920;
+        const z = SAFE_ZONES[(spec.format ?? "9:16") as keyof typeof SAFE_ZONES] ?? SAFE_ZONES["9:16"];
+        const ref = FORMATS[(spec.format ?? "9:16") as keyof typeof FORMATS] ?? [1080, 1920];
+        const sx = W / ref[0], sy = H / ref[1];
         const x = l.x ?? 0, y = l.y ?? 0;
-        if (y > 290 * sy || y < -690 * sy || Math.abs(x) > 420 * sx) {
-          out.push(`craft/safe-zone ${at}: critical content at (${x}, ${y}) is outside the universal 9:16 safe zone (x −420…420, y −690…290 from center). Platform UI will cover it.`);
+        if (y > z.b * sy || y < z.t * sy || x > z.r * sx || x < z.l * sx) {
+          out.push(`craft/safe-zone ${at}: critical content at (${x}, ${y}) is outside the ${spec.format ?? "9:16"} safe zone (x ${z.l}…${z.r}, y ${z.t}…${z.b} from center). Platform UI will cover it.`);
         }
       }
     });
     void slot;
   });
+
+  // 10. Story Engine (docs/STORY_ENGINE.md, research 06): story block, gates, intensity curve, peak-end, wow, brand linkage, clichés
+  try {
+    for (const i of storyIssues(spec)) if (i.severity !== "info") out.push(`story/${i.code}: ${i.message}`);
+  } catch (e) {
+    out.push(`story: checks skipped (${(e as Error).message})`);
+  }
 
   return out;
 };

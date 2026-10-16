@@ -8,6 +8,7 @@ import { HTTPException } from "hono/http-exception";
 import { loadSpec, readSpec } from "../core/projects";
 import { assertSpecSafe } from "../core/tools";
 import type { Spec } from "../engine/spec/schema";
+import type { Format } from "../engine/spec/reflow";
 import { IS_HOSTED, type BackendName } from "./config";
 import { db, newId, nowIso } from "./db";
 import type { User } from "./auth";
@@ -19,6 +20,8 @@ export type Job = {
   projectId: string;
   kind: "render" | "preview";
   quality: "draft" | "final";
+  /** output format when reflowed (absent = the spec's master format) */
+  format?: Format;
   backend: BackendName;
   status: JobStatus;
   progress: number;
@@ -40,6 +43,7 @@ type Row = {
   project_id: string;
   kind: string;
   quality: string;
+  format: string | null;
   backend: string;
   status: string;
   progress: number;
@@ -70,6 +74,7 @@ const toJob = (r: Row & { _rowid?: number }): Job => {
     progress: r.progress,
     createdAt: r.created_at,
   };
+  if (r.format) j.format = r.format as Format;
   if (r.stage) j.stage = r.stage;
   if (r.status === "queued" && r._rowid !== undefined) j.position = queuePosition(r as Row & { _rowid: number });
   if (r.output) {
@@ -162,14 +167,14 @@ export const initJobs = (): void => {
   setImmediate(kick);
 };
 
-export const enqueueRenderJob = (input: { user: User; projectId: string; quality: "draft" | "final"; backend?: BackendName }): Job => {
+export const enqueueRenderJob = (input: { user: User; projectId: string; quality: "draft" | "final"; format?: Format; backend?: BackendName }): Job => {
   const backend = input.backend ?? defaultBackend();
   const err = backendError(backend);
   if (err) throw new HTTPException(503, { message: err });
   const id = newId(9);
   db.prepare(
-    "INSERT INTO jobs (id, user_id, project_id, kind, quality, backend, status, progress, stage, created_at) VALUES (?, ?, ?, 'render', ?, ?, 'queued', 0, 'queued', ?)",
-  ).run(id, input.user.id, input.projectId, input.quality, backend, nowIso());
+    "INSERT INTO jobs (id, user_id, project_id, kind, quality, format, backend, status, progress, stage, created_at) VALUES (?, ?, ?, 'render', ?, ?, ?, 'queued', 0, 'queued', ?)",
+  ).run(id, input.user.id, input.projectId, input.quality, input.format ?? null, backend, nowIso());
   setImmediate(kick);
   return getJob(id)!;
 };
@@ -249,7 +254,7 @@ function start(r: Row): void {
       throw new Error((e as Error).message);
     }
     if (IS_HOSTED) await assertSpecSafe(readSpec(r.project_id));
-    return backend.render({ id: r.id, projectId: r.project_id, quality: r.quality as "draft" | "final" }, spec, onProgress, ac.signal);
+    return backend.render({ id: r.id, projectId: r.project_id, quality: r.quality as "draft" | "final", ...(r.format ? { format: r.format as Format } : {}) }, spec, onProgress, ac.signal);
   })()
     .then((output) => finish(r.id, { status: "done", output }))
     .catch((e: unknown) => {

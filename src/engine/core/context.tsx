@@ -9,6 +9,8 @@ export type RuntimeContext = {
   assetBase?: string;
   /** Project folder name, used with Remotion Studio's --public-dir=projects. */
   projectId?: string;
+  /** Base URL of the built-in library (library/: generated SFX…), see SpecVideoProps.libraryBase. */
+  libraryBase?: string;
   width: number;
   height: number;
   fps: number;

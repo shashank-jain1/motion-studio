@@ -105,6 +105,12 @@ const commonLayer = {
     opacity: z.number().optional().describe("opacity multiplier per copy, e.g. 0.7 → falloff"),
   }).optional().describe("repeater: N copies with per-copy transform/time offset (echoes, tunnels, bursts)"),
   stepRate: z.number().optional().describe("animate on twos: quantize this layer's time to N fps (e.g. 12)"),
+
+  // --- sound & formats (v4) ---
+  sound: z.union([z.string(), z.literal(false)]).optional()
+    .describe("sound on this layer's entrance: \"sfx:<name>\" (built-in library) or an assets/ path; false = never auto-sound this layer"),
+  adapt: z.record(z.string(), z.record(z.string(), z.any())).optional()
+    .describe("per-format overrides, e.g. {\"9:16\": {\"y\": 300, \"fontSize\": 140}, \"1:1\": {\"x\": 0}} — applied when rendering that format"),
 };
 
 export const TEXT_PRESETS = [
@@ -303,6 +309,113 @@ export const LottieLayer = z.object({
   loopAnim: z.boolean().optional(),
 });
 
+export const MATERIALS_3D = ["chrome", "glass", "clay", "matte", "gold", "plastic", "neon", "brushed", "pearl"] as const;
+
+export const ThreeLayer = z.object({
+  ...commonLayer,
+  type: z.literal("three"),
+  source: z.string().describe("what to extrude: a shape source — \"svg:assets/logo.svg[#icon]\", \"text:Word\", or a library shape name; or \"primitive:sphere|box|torus|capsule|cylinder|knot\""),
+  depth: z.number().optional().describe("extrusion depth as a fraction of the shape height, default 0.18"),
+  bevel: z.number().optional().describe("bevel size as a fraction of the shape height, default 0.02"),
+  material: z.enum(MATERIALS_3D).optional(),
+  color: z.string().optional().describe("base color (default: the logo's own colors for svg sources, else $accent)"),
+  lighting: z.enum(["studio", "softbox", "sunset", "neon", "rim", "dramatic"]).optional(),
+  animation: z.enum([
+    "none", "turntable", "spin-in", "flip-in", "float", "assemble", "explode", "rise",
+    "rail", "extrude-grow", "cascade-flip", "stack-echo", "orbit-ring", "drop", "wave",
+  ]).optional()
+    .describe("built-in object motion (mode object); rail…wave are per-glyph 3D kinetic type; layer animate/rotateX/rotateY still apply on top"),
+  stagger: z.number().optional().describe("kinetic type: seconds between glyphs"),
+  order: z.enum(["left", "right", "center-out", "edges-in", "random"]).optional().describe("kinetic type: stagger order"),
+  echo: z.object({ count: z.number().optional(), gap: z.number().optional(), color: z.string().optional() }).optional()
+    .describe("stack-echo: copies behind the word (default 6), spacing multiplier, color the deepest copy fades to"),
+  orbit: z.array(z.object({ t: z.number(), yaw: z.number().optional(), pitch: z.number().optional(), distance: z.number().optional(), ease: Ease.optional() })).optional()
+    .describe("camera orbit keyframes around the object (degrees; distance multiplier, default 1)"),
+  font: z.string().optional(), weight: z.number().optional(),
+  shadow3d: z.boolean().optional().describe("soft contact shadow under the object, default true (cloner: true for logo-shaped layouts)"),
+  background: z.string().optional().describe("canvas background; default transparent (composites over the scene). With `post`, a solid color is painted inside the canvas so bloom/DOF see it"),
+  // --- 3D v2 ---------------------------------------------------------------------------------
+  mode: z.enum(["object", "cloner", "particles"]).optional().describe("object (default): the extruded shape · cloner: MoGraph clones + fields · particles: particle-to-logo"),
+  cloner: z.object({
+    preset: z.enum(["sweep", "ripple", "tile-flip", "split-flap", "cube-shuffle", "burst-collapse", "wave-field", "logo-of-logos"]).optional(),
+    layout: z.enum(["grid", "grid3d", "honeycomb", "radial", "linear", "surface", "outline", "volume"]).optional(),
+    mask: z.enum(["logo", "none"]).optional().describe("grid/honeycomb: only cells inside the logo (default) or the full rectangle around it"),
+    density: z.number().optional().describe("cells across the shape height (grids), default 28"),
+    count: z.number().optional().describe("clones for surface/outline/volume/radial/linear"),
+    cols: z.number().optional(), rows: z.number().optional(), layers: z.number().optional(),
+    radius: z.number().optional(), rings: z.number().optional(),
+    pad: z.number().optional().describe("mask none: cells of margin around the logo"),
+    shape: z.enum(["box", "rounded-box", "sphere", "cylinder", "tile", "logo"]).optional(),
+    size: z.number().optional().describe("clone size as a fraction of the cell, default 0.9"),
+    depth: z.number().optional().describe("clone depth as a fraction of the cell"),
+    seed: z.number().optional(),
+    plane: z.enum(["wall", "floor"]).optional().describe("wall (default): clones face the camera · floor: the layout lies on the ground, z effects = height"),
+    colors: z.object({ inside: z.string().optional(), outside: z.string().optional(), base: z.string().optional(), palette: z.array(z.string()).optional() }).optional()
+      .describe("inside: logo cells (default the logo's colors) · outside: cells outside the logo · base: color before a reveal · palette: split-flap cycling"),
+  }).optional(),
+  fields: z.array(z.object({
+    kind: z.enum(["linear", "spherical", "radial", "time", "step", "random", "noise", "wave", "beat", "mask"]),
+    axis: z.union([z.enum(["x", "-x", "y", "-y", "z", "-z"]), z.number()]).optional(),
+    start: z.number().optional(), end: z.number().optional(), ease: Ease.optional(),
+    width: z.number().optional(), center: z.tuple([z.number(), z.number(), z.number()]).optional(),
+    radius: z.tuple([z.number(), z.number()]).optional(),
+    speed: z.number().optional(), scale: z.number().optional(), freq: z.number().optional(), seed: z.number().optional(),
+    beats: z.array(z.number()).optional(), decay: z.number().optional(), spread: z.number().optional(), stagger: z.number().optional(),
+    strength: z.number().optional(), invert: z.boolean().optional(), pulse: z.boolean().optional(),
+    spring: z.number().optional().describe("seconds of per-clone spring follow-through (C4D Delay effector)"),
+    effect: z.object({
+      x: z.union([z.number(), z.tuple([z.number(), z.number()])]).optional(),
+      y: z.union([z.number(), z.tuple([z.number(), z.number()])]).optional(),
+      z: z.union([z.number(), z.tuple([z.number(), z.number()])]).optional(),
+      rotateX: z.union([z.number(), z.tuple([z.number(), z.number()])]).optional(),
+      rotateY: z.union([z.number(), z.tuple([z.number(), z.number()])]).optional(),
+      rotateZ: z.union([z.number(), z.tuple([z.number(), z.number()])]).optional(),
+      scale: z.union([z.number(), z.tuple([z.number(), z.number()])]).optional(),
+      scaleX: z.union([z.number(), z.tuple([z.number(), z.number()])]).optional(),
+      scaleY: z.union([z.number(), z.tuple([z.number(), z.number()])]).optional(),
+      scaleZ: z.union([z.number(), z.tuple([z.number(), z.number()])]).optional(),
+      color: z.string().optional().describe("\"reveal\" (switch base→final at 0.5) · \"blend\" · or a CSS color to tint toward"),
+    }),
+  })).optional().describe("cloner fields/effectors (weights 0..1 × effect); replaces the preset's fields"),
+  particles: z.object({
+    count: z.number().optional(),
+    from: z.enum(["chaos", "explosion", "vortex", "galaxy", "rain", "stream"]).optional(),
+    start: z.number().optional(), duration: z.number().optional(), spread: z.number().optional(),
+    size: z.number().optional(), turbulence: z.number().optional(), trail: z.number().optional(),
+    blending: z.enum(["additive", "normal"]).optional(),
+    disperseAt: z.number().optional(), disperseDuration: z.number().optional(),
+    solidAt: z.number().optional().describe("crossfade to the solid extruded logo at this time"),
+    seed: z.number().optional(), colors: z.array(z.string()).optional(), intensity: z.number().optional(),
+  }).optional(),
+  post: z.object({
+    bloom: z.union([z.number(), z.object({ strength: z.number().optional(), threshold: z.number().optional(), radius: z.number().optional() })]).optional(),
+    dof: z.object({
+      aperture: z.number().optional(), maxBlur: z.number().optional(),
+      focus: z.union([z.number(), z.array(z.object({ t: z.number(), z: z.number(), ease: Ease.optional() }))]).optional()
+        .describe("focus plane as world z relative to the subject (0 = subject, + toward camera); keyframes = rack focus"),
+    }).optional(),
+    ca: z.number().optional(), vignette: z.number().optional(), grain: z.number().optional(),
+    motionBlur: z.union([z.boolean(), z.object({ samples: z.number().optional(), shutter: z.number().optional(), threshold: z.number().optional() })]).optional(),
+    quality: z.enum(["auto", "draft", "final"]).optional(),
+  }).optional().describe("post stack (frame-local): bloom · dof (rack focus) · ca · vignette · grain · sub-frame motionBlur"),
+  camera: z.object({
+    move: z.enum(["none", "dolly-zoom", "god-shot", "macro-push", "macro-pull", "whip-pan", "whip-out", "push-in", "pull-out", "crane-up", "orbit"]).optional(),
+    at: z.number().optional(), duration: z.number().optional(), amount: z.number().optional(),
+    path: z.array(z.object({
+      t: z.number(), pos: z.tuple([z.number(), z.number(), z.number()]),
+      target: z.tuple([z.number(), z.number(), z.number()]).optional(), fov: z.number().optional(), ease: Ease.optional(),
+    })).optional().describe("spline camera path; pos in fit units (1 = auto-framing distance), target in model units"),
+    fov: z.number().optional(), shake: z.number().optional(), roll: z.number().optional(),
+    target: z.tuple([z.number(), z.number(), z.number()]).optional(),
+  }).optional(),
+  deform: z.array(z.object({
+    type: z.enum(["twist", "bend", "taper", "wave", "squash", "jiggle"]),
+    amount: z.number().optional(),
+    keys: z.array(z.object({ t: z.number(), amount: z.number(), ease: Ease.optional() })).optional(),
+    at: z.number().optional(), freq: z.number().optional(), speed: z.number().optional(), decay: z.number().optional(),
+  })).max(4).optional().describe("vertex deformers (object mode; tessellates the geometry)"),
+});
+
 export const CustomLayer = z.object({
   ...commonLayer,
   type: z.literal("custom"),
@@ -370,7 +483,7 @@ export type Layer =
   | z.infer<typeof TextLayer> | z.infer<typeof MediaLayer> | z.infer<typeof ShapeLayer> | z.infer<typeof PathLayer>
   | z.infer<typeof ParticlesLayer> | z.infer<typeof CardLayer> | z.infer<typeof CounterLayer> | z.infer<typeof CaptionsLayer>
   | z.infer<typeof CloudLayer> | z.infer<typeof ShaderLayer> | z.infer<typeof LottieLayer> | z.infer<typeof CustomLayer>
-  | z.infer<typeof MorphLayer> | z.infer<typeof LogoLayer>
+  | z.infer<typeof MorphLayer> | z.infer<typeof LogoLayer> | z.infer<typeof ThreeLayer>
   | DeviceLayerT | GroupLayerT;
 
 const commonLayerSchema = z.object(commonLayer);
@@ -406,7 +519,7 @@ export type GroupLayerT = Common & {
 export const LayerSchema: z.ZodType<Layer> = z.lazy(() =>
   z.discriminatedUnion("type", [
     TextLayer, MediaLayer, ShapeLayer, PathLayer, ParticlesLayer, CardLayer, CounterLayer,
-    CaptionsLayer, CloudLayer, ShaderLayer, LottieLayer, CustomLayer, MorphLayer, LogoLayer, DeviceLayer, GroupLayer,
+    CaptionsLayer, CloudLayer, ShaderLayer, LottieLayer, CustomLayer, MorphLayer, LogoLayer, ThreeLayer, DeviceLayer, GroupLayer,
   ]),
 ) as z.ZodType<Layer>;
 
@@ -481,6 +594,7 @@ export const TRANSITIONS = [
 
 export const TransitionSchema = z.object({
   type: z.enum(TRANSITIONS),
+  sound: z.union([z.string(), z.literal(false)]).optional().describe("\"sfx:<name>\" or assets path for this transition; false = silent"),
   duration: z.number().positive().optional().describe("seconds, default 0.5"),
   direction: z.enum(["left", "right", "up", "down"]).optional(),
   color: z.string().optional().describe("flash color / expand fill color"),
@@ -540,6 +654,68 @@ export const ActorSchema = z.object({
   until: z.union([z.string(), z.number()]).optional().describe("scene id/index after which it disappears (default end)"),
 });
 
+// ---- Story Engine (docs/STORY_ENGINE.md, research 06). Pure metadata: ignored by the renderer, checked by the craft linter.
+/** The 14 short-form story structures (research 06 §2). */
+export const STORY_STRUCTURES = [
+  "story-spine", "abt", "pas", "before-after-bridge", "heros-journey", "volta", "metaphor",
+  "transformation", "reveal", "loop", "mystery-box", "contrast", "world-without", "pattern-break",
+] as const;
+/** Goldenberg creativity templates (research 06 §3.3). */
+export const STORY_TEMPLATES = [
+  "pictorial-analogy", "extreme-situation", "consequences", "competition", "interactive-experiment", "dimensionality-alteration",
+] as const;
+/** Niches with a cliché blacklist (research 06 §4f). */
+export const NICHES = [
+  "fintech", "crypto", "saas", "ai", "food", "beauty", "wellness", "real-estate", "app", "education", "events", "fitness",
+  "travel", "sustainability", "creator",
+] as const;
+
+const Score05 = z.number().min(0).max(5);
+export const StoryCandidateSchema = z.object({
+  title: z.string(),
+  technique: z.string().describe("technique card used: control | inherent-drama | metaphor-mining | inversion | exaggeration | perspective-shift | forced-connection | constraint | cultural-tension | consequence | sensory-transposition (+ a Goldenberg template, sound-led, humour…)"),
+  logline: z.string().describe("one line: protagonist + twist + how it becomes the brand"),
+  scores: z.object({
+    hook: Score05, surprise: Score05, emotionalPeak: Score05, payoff: Score05,
+    brandLinkage: Score05, clarity: Score05, uniqueness: Score05, feasibility: Score05,
+  }).describe("rubric 0–5 per dimension (score_concepts computes total + gates)"),
+  total: z.number().optional().describe("0–100, weighted (filled by score_concepts)"),
+  gatesPassed: z.boolean().optional(),
+  typicality: z.number().min(0).max(1).optional().describe("estimated probability this is a typical first idea from 10 other agencies (discard > 0.3)"),
+});
+
+export const StorySchema = z.object({
+  insight: z.string().optional().describe("the one true thing: short, specific, slightly uncomfortable (never invented facts)"),
+  audienceTension: z.string().optional().describe("what the audience feels and doesn't say (usually a contradiction)"),
+  inherentDrama: z.string().optional().describe("the most dramatic second in how the product works"),
+  orthodoxy: z.array(z.string()).optional().describe("3–5 things every competitor's ad does"),
+  structure: z.enum(STORY_STRUCTURES).optional(),
+  template: z.enum(STORY_TEMPLATES).optional().describe("Goldenberg template used, if any"),
+  candidates: z.array(StoryCandidateSchema).optional().describe("the 8 concepts (#0 = the deliberate control/obvious idea)"),
+  chosen: z.number().int().min(0).optional().describe("index of the winning candidate"),
+  clicheControl: z.object({
+    obvious: z.string().describe("the deliberately-obvious idea anyone would make first"),
+    banned: z.array(z.string()).describe("elements banned from this film (taken from the obvious idea + niche blacklist)"),
+    twists: z.array(z.object({ item: z.string(), twist: z.string() })).optional()
+      .describe("blacklisted items used ONLY as the object of a twist (e.g. {item:'sheep', twist:'the sheep go on strike'})"),
+  }).optional(),
+  beats: z.array(z.object({
+    t: z.number().min(0).describe("seconds: the beat starts here and lasts until the next beat"),
+    beat: z.string().describe("hook | tension | hold | transformation | peak | payoff | lock …"),
+    emotion: z.string().optional(),
+    intensity: z.number().min(0).max(10).describe("0–10 at the beat start"),
+    to: z.number().min(0).max(10).optional().describe("intensity at the beat end (linear ramp); default = intensity"),
+    wow: z.string().optional().describe("the wow moment's mechanism (on the peak beat)"),
+    sound: z.string().optional(),
+  })).optional().describe("beat sheet = the intensity curve"),
+  peakAt: z.number().optional().describe("seconds of the single dominant peak (60–80% of runtime)"),
+  mnemonic: z.object({
+    visual: z.string().describe("e.g. the motif snaps into the logo"),
+    sonic: z.string().optional().describe("the brand's fixed 2–4-note signature"),
+    loop: z.boolean().optional().describe("last frame returns to the frame-0 pose"),
+  }).optional(),
+}).describe("Story Engine record (docs/STORY_ENGINE.md): checked by the craft linter and check_story");
+
 export const ConceptSchema = z.object({
   truth: z.string().optional().describe("one-line brand truth: <Brand> helps <who> <verb> <object>, feeling <adj>"),
   metaphor: z.string().optional().describe("the visual metaphor and its structure (juxtaposition | fusion | replacement)"),
@@ -548,6 +724,8 @@ export const ConceptSchema = z.object({
   hook: z.string().optional(),
   arc: z.array(z.string()).optional().describe("beats: hook → tension → transformation → payoff → lockup"),
   colorScript: z.array(z.string()).optional(),
+  niche: z.enum(NICHES).optional().describe("category, for the cliché blacklist (inferred when omitted)"),
+  story: StorySchema.optional(),
 }).describe("director's concept (ignored by the renderer, required by the director workflow)");
 
 export const SpecSchema = z.object({
@@ -566,7 +744,31 @@ export const SpecSchema = z.object({
     fadeIn: z.number().optional(),
     fadeOut: z.number().optional(),
   }).optional(),
-  sfx: z.array(z.object({ src: z.string(), at: z.number(), volume: z.number().optional() })).optional(),
+  sfx: z.array(z.object({ src: z.string().describe("\"sfx:<name>\" (built-in) or an assets/ path"), at: z.number(), volume: z.number().optional(), rate: z.number().optional() })).optional(),
+  sound: z.object({
+    auto: z.boolean().optional().describe("auto sound design: place library SFX on transitions, slams, punches, morphs, counters, pops (default true when sound is set)"),
+    palette: z.enum(["cinematic", "tech", "playful", "minimal", "luxury", "hype"]).optional().describe("legacy preset: fills brief.voice when the brief has none (cinematic→epic, tech→precise, playful, minimal→calm, luxury, hype→raw)"),
+    intensity: z.number().optional().describe("0..1 scales the density budget (default 0.6)"),
+    volume: z.number().optional().describe("SFX master volume, default 0.8"),
+    duck: z.boolean().optional().describe("duck the music under SFX hits, default true"),
+    brief: z.object({
+      voice: z.enum(["precise", "warm", "playful", "epic", "luxury", "raw", "calm"]).optional().describe("brand voice: envelope, brightness, timbre of tonal sounds"),
+      realism: z.enum(["hyper-real", "abstract", "mixed"]).optional().describe("hyper-real = recorded material foley (devices, cards, product); abstract = synthetic / tonal (shapes, data, light)"),
+      materials: z.array(z.string()).optional().describe("1–2 primary + 1 accent: glass, metal-thin, metal, paper, cardboard, wood, ceramic, plastic, cloth, leather, liquid, digital, air, stone, body, coins"),
+      space: z.enum(["dry", "room", "plate", "hall"]).optional().describe("ONE shared reverb for every sound in the film"),
+      avoid: z.array(z.string()).optional().describe("never use: categories (\"digital\", \"whoosh.long\"), materials, sound names or tags (\"gamey\", \"cartoon\")"),
+      key: z.string().optional().describe("tonal centre, e.g. \"F# minor\" (default: sound.music.key, else a stable per-brand key)"),
+    }).optional().describe("the film's sound brief (inferred from style / concept / layers when missing)"),
+    variation: z.number().min(0).max(1).optional().describe("0..1 micro-variation: pitch / gain jitter and round-robin spread (default 0.5)"),
+    restraint: z.number().min(0).max(1).optional().describe("0..1 how much is left silent: density budget, pre-hero silence + stopdown length (default 0.5)"),
+    signature: z.union([z.literal("auto"), z.literal(false), z.string()]).optional().describe("sonic logo on the final logo resolve: \"auto\" (mnemonic in key from the brand, default), \"sfx:<name>\" or an assets/ path, false = a plain hit"),
+    stereo: z.boolean().optional().describe("pan cues by on-screen x / lateral motion (default true; subtler on 9:16)"),
+    music: z.object({
+      key: z.string().optional(), keyConfidence: z.number().optional(), bpm: z.number().optional(),
+      beats: z.array(z.number()).optional(), onsets: z.array(z.number()).optional(),
+    }).optional().describe("music analysis (analyze_audio: key, keyConfidence, onsets); filled automatically at render when spec.audio is set"),
+  }).optional(),
+  formats: z.array(z.enum(["16:9", "9:16", "1:1", "4:5", "21:9"])).optional().describe("extra formats this film should adapt to and export (the spec's own format is the master)"),
   fx: FxSchema.optional(),
   concept: ConceptSchema.optional(),
   bpm: z.number().optional().describe("enables \"beat:N\" time strings (N may be fractional); with beatOffset (s) for the first downbeat"),

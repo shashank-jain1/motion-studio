@@ -20,6 +20,7 @@ const statusOf = (job: Job): RenderJobStatus => ({
   jobId: job.id,
   status: job.status,
   quality: job.quality,
+  ...(job.format ? { format: job.format } : {}),
   progress: job.progress,
   ...(job.stage ? { stage: job.stage } : {}),
   ...(job.position ? { position: job.position } : {}),
@@ -63,8 +64,10 @@ export const toolPolicyFor = (user: User, opts: ScopeOptions = {}): ToolPolicy =
     const latest = listJobs(user, projectId, 1)[0];
     return latest ? statusOf(latest) : null;
   },
-  renderVideo: async (projectId, quality, ctx): Promise<RenderRecord | PendingRender> => {
-    const job = enqueueRenderJob({ user, projectId, quality });
+  renderVideo: async (projectId, quality, ctx, ro): Promise<RenderRecord | PendingRender> => {
+    const job = enqueueRenderJob({ user, projectId, quality, ...(ro?.format ? { format: ro.format } : {}) });
+    // batch exports (all_formats) don't wait: the caller polls render_status per job
+    if (ro?.detach) return { pending: true, jobId: job.id, status: job.status, progress: job.progress, ...(job.position ? { position: job.position } : {}), ...(job.format ? { format: job.format } : {}) };
     const capped = opts.maxRenderWaitMs !== undefined;
     // Capped callers (remote MCP) detach on abort / timeout instead of canceling the render.
     const waitAc = new AbortController();

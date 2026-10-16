@@ -1,0 +1,2524 @@
+{
+  "title": "3D showcase",
+  "format": "16:9",
+  "fps": 30,
+  "style": "minimal-dark",
+  "theme": {
+    "fonts": {
+      "display": "Inter",
+      "body": "Inter"
+    },
+    "colors": {
+      "bg": "#0b0c10",
+      "fg": "#f4f4f6",
+      "muted": "#9aa0aa",
+      "accent": "#ff5a5f",
+      "accent2": "#2ec4b6"
+    }
+  },
+  "scenes": [
+    {
+      "id": "mat-loopa-studio",
+      "duration": 1,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#1b1d24",
+          "#07080b"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "width": 600,
+          "height": 330,
+          "x": -620,
+          "y": -345,
+          "type": "three",
+          "source": "svg:assets/loopa-logo.svg",
+          "material": "chrome",
+          "lighting": "studio",
+          "animation": "none"
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 0,
+          "y": -345,
+          "type": "three",
+          "source": "svg:assets/loopa-logo.svg",
+          "material": "glass",
+          "lighting": "studio",
+          "animation": "none"
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 620,
+          "y": -345,
+          "type": "three",
+          "source": "svg:assets/loopa-logo.svg",
+          "material": "clay",
+          "lighting": "studio",
+          "animation": "none"
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": -620,
+          "y": 0,
+          "type": "three",
+          "source": "svg:assets/loopa-logo.svg",
+          "material": "matte",
+          "lighting": "studio",
+          "animation": "none"
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 0,
+          "y": 0,
+          "type": "three",
+          "source": "svg:assets/loopa-logo.svg",
+          "material": "gold",
+          "lighting": "studio",
+          "animation": "none"
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 620,
+          "y": 0,
+          "type": "three",
+          "source": "svg:assets/loopa-logo.svg",
+          "material": "plastic",
+          "lighting": "studio",
+          "animation": "none"
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": -620,
+          "y": 345,
+          "type": "three",
+          "source": "svg:assets/loopa-logo.svg",
+          "material": "neon",
+          "lighting": "studio",
+          "animation": "none"
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 0,
+          "y": 345,
+          "type": "three",
+          "source": "svg:assets/loopa-logo.svg",
+          "material": "brushed",
+          "lighting": "studio",
+          "animation": "none"
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 620,
+          "y": 345,
+          "type": "three",
+          "source": "svg:assets/loopa-logo.svg",
+          "material": "pearl",
+          "lighting": "studio",
+          "animation": "none"
+        },
+        {
+          "type": "text",
+          "text": "chrome",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": -620,
+          "y": -195,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "glass",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": 0,
+          "y": -195,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "clay",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": 620,
+          "y": -195,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "matte",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": -620,
+          "y": 150,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "gold",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": 0,
+          "y": 150,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "plastic",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": 620,
+          "y": 150,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "neon",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": -620,
+          "y": 495,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "brushed",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": 0,
+          "y": 495,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "pearl",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": 620,
+          "y": 495,
+          "font": "$body"
+        }
+      ]
+    },
+    {
+      "id": "mat-text-softbox",
+      "duration": 1,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#f4f1ec",
+          "#d9d4cc"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "width": 600,
+          "height": 330,
+          "x": -620,
+          "y": -345,
+          "type": "three",
+          "source": "text:Brew",
+          "material": "chrome",
+          "lighting": "softbox",
+          "animation": "none"
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 0,
+          "y": -345,
+          "type": "three",
+          "source": "text:Brew",
+          "material": "glass",
+          "lighting": "softbox",
+          "animation": "none"
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 620,
+          "y": -345,
+          "type": "three",
+          "source": "text:Brew",
+          "material": "clay",
+          "lighting": "softbox",
+          "animation": "none"
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": -620,
+          "y": 0,
+          "type": "three",
+          "source": "text:Brew",
+          "material": "matte",
+          "lighting": "softbox",
+          "animation": "none"
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 0,
+          "y": 0,
+          "type": "three",
+          "source": "text:Brew",
+          "material": "gold",
+          "lighting": "softbox",
+          "animation": "none"
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 620,
+          "y": 0,
+          "type": "three",
+          "source": "text:Brew",
+          "material": "plastic",
+          "lighting": "softbox",
+          "animation": "none"
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": -620,
+          "y": 345,
+          "type": "three",
+          "source": "text:Brew",
+          "material": "neon",
+          "lighting": "softbox",
+          "animation": "none"
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 0,
+          "y": 345,
+          "type": "three",
+          "source": "text:Brew",
+          "material": "brushed",
+          "lighting": "softbox",
+          "animation": "none"
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 620,
+          "y": 345,
+          "type": "three",
+          "source": "text:Brew",
+          "material": "pearl",
+          "lighting": "softbox",
+          "animation": "none"
+        },
+        {
+          "type": "text",
+          "text": "chrome",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#6b6660",
+          "x": -620,
+          "y": -195,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "glass",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#6b6660",
+          "x": 0,
+          "y": -195,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "clay",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#6b6660",
+          "x": 620,
+          "y": -195,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "matte",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#6b6660",
+          "x": -620,
+          "y": 150,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "gold",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#6b6660",
+          "x": 0,
+          "y": 150,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "plastic",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#6b6660",
+          "x": 620,
+          "y": 150,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "neon",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#6b6660",
+          "x": -620,
+          "y": 495,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "brushed",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#6b6660",
+          "x": 0,
+          "y": 495,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "pearl",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#6b6660",
+          "x": 620,
+          "y": 495,
+          "font": "$body"
+        }
+      ]
+    },
+    {
+      "id": "mat-brew-dramatic",
+      "duration": 1,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#1b1d24",
+          "#07080b"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "width": 600,
+          "height": 330,
+          "x": -620,
+          "y": -345,
+          "type": "three",
+          "source": "svg:assets/brew-logo.svg",
+          "material": "chrome",
+          "lighting": "dramatic",
+          "animation": "none"
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 0,
+          "y": -345,
+          "type": "three",
+          "source": "svg:assets/brew-logo.svg",
+          "material": "glass",
+          "lighting": "dramatic",
+          "animation": "none"
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 620,
+          "y": -345,
+          "type": "three",
+          "source": "svg:assets/brew-logo.svg",
+          "material": "clay",
+          "lighting": "dramatic",
+          "animation": "none"
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": -620,
+          "y": 0,
+          "type": "three",
+          "source": "svg:assets/brew-logo.svg",
+          "material": "matte",
+          "lighting": "dramatic",
+          "animation": "none"
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 0,
+          "y": 0,
+          "type": "three",
+          "source": "svg:assets/brew-logo.svg",
+          "material": "gold",
+          "lighting": "dramatic",
+          "animation": "none"
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 620,
+          "y": 0,
+          "type": "three",
+          "source": "svg:assets/brew-logo.svg",
+          "material": "plastic",
+          "lighting": "dramatic",
+          "animation": "none"
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": -620,
+          "y": 345,
+          "type": "three",
+          "source": "svg:assets/brew-logo.svg",
+          "material": "neon",
+          "lighting": "dramatic",
+          "animation": "none"
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 0,
+          "y": 345,
+          "type": "three",
+          "source": "svg:assets/brew-logo.svg",
+          "material": "brushed",
+          "lighting": "dramatic",
+          "animation": "none"
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 620,
+          "y": 345,
+          "type": "three",
+          "source": "svg:assets/brew-logo.svg",
+          "material": "pearl",
+          "lighting": "dramatic",
+          "animation": "none"
+        },
+        {
+          "type": "text",
+          "text": "chrome",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": -620,
+          "y": -195,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "glass",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": 0,
+          "y": -195,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "clay",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": 620,
+          "y": -195,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "matte",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": -620,
+          "y": 150,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "gold",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": 0,
+          "y": 150,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "plastic",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": 620,
+          "y": 150,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "neon",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": -620,
+          "y": 495,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "brushed",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": 0,
+          "y": 495,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "pearl",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": 620,
+          "y": 495,
+          "font": "$body"
+        }
+      ]
+    },
+    {
+      "id": "mat-loopa-sunset",
+      "duration": 1,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#1b1d24",
+          "#07080b"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "width": 600,
+          "height": 330,
+          "x": -620,
+          "y": -345,
+          "type": "three",
+          "source": "svg:assets/loopa-logo.svg",
+          "material": "chrome",
+          "lighting": "sunset",
+          "animation": "none"
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 0,
+          "y": -345,
+          "type": "three",
+          "source": "svg:assets/loopa-logo.svg",
+          "material": "glass",
+          "lighting": "sunset",
+          "animation": "none"
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 620,
+          "y": -345,
+          "type": "three",
+          "source": "svg:assets/loopa-logo.svg",
+          "material": "clay",
+          "lighting": "sunset",
+          "animation": "none"
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": -620,
+          "y": 0,
+          "type": "three",
+          "source": "svg:assets/loopa-logo.svg",
+          "material": "matte",
+          "lighting": "sunset",
+          "animation": "none"
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 0,
+          "y": 0,
+          "type": "three",
+          "source": "svg:assets/loopa-logo.svg",
+          "material": "gold",
+          "lighting": "sunset",
+          "animation": "none"
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 620,
+          "y": 0,
+          "type": "three",
+          "source": "svg:assets/loopa-logo.svg",
+          "material": "plastic",
+          "lighting": "sunset",
+          "animation": "none"
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": -620,
+          "y": 345,
+          "type": "three",
+          "source": "svg:assets/loopa-logo.svg",
+          "material": "neon",
+          "lighting": "sunset",
+          "animation": "none"
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 0,
+          "y": 345,
+          "type": "three",
+          "source": "svg:assets/loopa-logo.svg",
+          "material": "brushed",
+          "lighting": "sunset",
+          "animation": "none"
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 620,
+          "y": 345,
+          "type": "three",
+          "source": "svg:assets/loopa-logo.svg",
+          "material": "pearl",
+          "lighting": "sunset",
+          "animation": "none"
+        },
+        {
+          "type": "text",
+          "text": "chrome",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": -620,
+          "y": -195,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "glass",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": 0,
+          "y": -195,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "clay",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": 620,
+          "y": -195,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "matte",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": -620,
+          "y": 150,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "gold",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": 0,
+          "y": 150,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "plastic",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": 620,
+          "y": 150,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "neon",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": -620,
+          "y": 495,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "brushed",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": 0,
+          "y": 495,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "pearl",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": 620,
+          "y": 495,
+          "font": "$body"
+        }
+      ]
+    },
+    {
+      "id": "mat-text-rim",
+      "duration": 1,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#1b1d24",
+          "#07080b"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "width": 600,
+          "height": 330,
+          "x": -620,
+          "y": -345,
+          "type": "three",
+          "source": "text:LOOPA",
+          "material": "chrome",
+          "lighting": "rim",
+          "animation": "none",
+          "weight": 800
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 0,
+          "y": -345,
+          "type": "three",
+          "source": "text:LOOPA",
+          "material": "glass",
+          "lighting": "rim",
+          "animation": "none",
+          "weight": 800
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 620,
+          "y": -345,
+          "type": "three",
+          "source": "text:LOOPA",
+          "material": "clay",
+          "lighting": "rim",
+          "animation": "none",
+          "weight": 800
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": -620,
+          "y": 0,
+          "type": "three",
+          "source": "text:LOOPA",
+          "material": "matte",
+          "lighting": "rim",
+          "animation": "none",
+          "weight": 800
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 0,
+          "y": 0,
+          "type": "three",
+          "source": "text:LOOPA",
+          "material": "gold",
+          "lighting": "rim",
+          "animation": "none",
+          "weight": 800
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 620,
+          "y": 0,
+          "type": "three",
+          "source": "text:LOOPA",
+          "material": "plastic",
+          "lighting": "rim",
+          "animation": "none",
+          "weight": 800
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": -620,
+          "y": 345,
+          "type": "three",
+          "source": "text:LOOPA",
+          "material": "neon",
+          "lighting": "rim",
+          "animation": "none",
+          "weight": 800
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 0,
+          "y": 345,
+          "type": "three",
+          "source": "text:LOOPA",
+          "material": "brushed",
+          "lighting": "rim",
+          "animation": "none",
+          "weight": 800
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 620,
+          "y": 345,
+          "type": "three",
+          "source": "text:LOOPA",
+          "material": "pearl",
+          "lighting": "rim",
+          "animation": "none",
+          "weight": 800
+        },
+        {
+          "type": "text",
+          "text": "chrome",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": -620,
+          "y": -195,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "glass",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": 0,
+          "y": -195,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "clay",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": 620,
+          "y": -195,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "matte",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": -620,
+          "y": 150,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "gold",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": 0,
+          "y": 150,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "plastic",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": 620,
+          "y": 150,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "neon",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": -620,
+          "y": 495,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "brushed",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": 0,
+          "y": 495,
+          "font": "$body"
+        },
+        {
+          "type": "text",
+          "text": "pearl",
+          "fontSize": 22,
+          "weight": 600,
+          "color": "#9aa0aa",
+          "x": 620,
+          "y": 495,
+          "font": "$body"
+        }
+      ]
+    },
+    {
+      "id": "primitives",
+      "duration": 1,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#1b1d24",
+          "#07080b"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "width": 600,
+          "height": 330,
+          "x": -620,
+          "y": -345,
+          "type": "three",
+          "source": "primitive:sphere",
+          "material": "chrome",
+          "lighting": "studio",
+          "animation": "none",
+          "orbit": [
+            {
+              "t": 0,
+              "yaw": -20,
+              "pitch": 14
+            }
+          ]
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 0,
+          "y": -345,
+          "type": "three",
+          "source": "primitive:box",
+          "material": "glass",
+          "lighting": "softbox",
+          "animation": "none",
+          "orbit": [
+            {
+              "t": 0,
+              "yaw": -20,
+              "pitch": 14
+            }
+          ]
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 620,
+          "y": -345,
+          "type": "three",
+          "source": "primitive:torus",
+          "material": "clay",
+          "lighting": "studio",
+          "animation": "none",
+          "orbit": [
+            {
+              "t": 0,
+              "yaw": -20,
+              "pitch": 14
+            }
+          ],
+          "color": "#ff7a59"
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": -620,
+          "y": 0,
+          "type": "three",
+          "source": "primitive:capsule",
+          "material": "gold",
+          "lighting": "sunset",
+          "animation": "none",
+          "orbit": [
+            {
+              "t": 0,
+              "yaw": -20,
+              "pitch": 14
+            }
+          ]
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 0,
+          "y": 0,
+          "type": "three",
+          "source": "primitive:cylinder",
+          "material": "pearl",
+          "lighting": "rim",
+          "animation": "none",
+          "orbit": [
+            {
+              "t": 0,
+              "yaw": -20,
+              "pitch": 14
+            }
+          ]
+        },
+        {
+          "width": 600,
+          "height": 330,
+          "x": 620,
+          "y": 0,
+          "type": "three",
+          "source": "primitive:knot",
+          "material": "brushed",
+          "lighting": "neon",
+          "animation": "none",
+          "orbit": [
+            {
+              "t": 0,
+              "yaw": -20,
+              "pitch": 14
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a-spin-in",
+      "duration": 3,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#1b1d24",
+          "#07080b"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "type": "three",
+          "source": "svg:assets/loopa-logo.svg",
+          "material": "chrome",
+          "lighting": "studio",
+          "animation": "spin-in",
+          "width": 1600,
+          "height": 900
+        }
+      ]
+    },
+    {
+      "id": "a-flip-in",
+      "duration": 3,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#1b1d24",
+          "#07080b"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "type": "three",
+          "source": "svg:assets/brew-logo.svg",
+          "material": "gold",
+          "lighting": "sunset",
+          "animation": "flip-in",
+          "width": 1600,
+          "height": 900
+        }
+      ]
+    },
+    {
+      "id": "a-float",
+      "duration": 3,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#f4f1ec",
+          "#d9d4cc"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "type": "three",
+          "source": "text:Brew",
+          "material": "glass",
+          "color": "#7fd1ff",
+          "lighting": "softbox",
+          "animation": "float",
+          "width": 1600,
+          "height": 900
+        }
+      ]
+    },
+    {
+      "id": "a-assemble",
+      "duration": 3,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#f4f1ec",
+          "#d9d4cc"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "type": "three",
+          "source": "svg:assets/loopa-logo.svg",
+          "material": "plastic",
+          "lighting": "softbox",
+          "animation": "assemble",
+          "width": 1600,
+          "height": 900
+        }
+      ]
+    },
+    {
+      "id": "a-explode",
+      "duration": 3,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#1b1d24",
+          "#07080b"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "type": "three",
+          "source": "svg:assets/brew-logo.svg",
+          "material": "clay",
+          "lighting": "studio",
+          "animation": "explode",
+          "width": 1600,
+          "height": 900
+        }
+      ]
+    },
+    {
+      "id": "a-rise",
+      "duration": 3,
+      "background": {
+        "type": "solid",
+        "color": "#05040a"
+      },
+      "layers": [
+        {
+          "type": "three",
+          "source": "text:LOOPA",
+          "weight": 800,
+          "material": "neon",
+          "color": "#ff3fb4",
+          "animation": "rise",
+          "width": 1600,
+          "height": 900
+        }
+      ]
+    },
+    {
+      "id": "a-turntable",
+      "duration": 3,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#1b1d24",
+          "#07080b"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "type": "three",
+          "source": "primitive:knot",
+          "material": "pearl",
+          "lighting": "rim",
+          "animation": "turntable",
+          "width": 1600,
+          "height": 900
+        }
+      ]
+    },
+    {
+      "id": "a-orbit",
+      "duration": 3,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#1b1d24",
+          "#07080b"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "type": "three",
+          "source": "text:Brew",
+          "material": "brushed",
+          "lighting": "dramatic",
+          "animation": "none",
+          "width": 1600,
+          "height": 900,
+          "orbit": [
+            {
+              "t": 0,
+              "yaw": -40,
+              "pitch": 20,
+              "distance": 1.25
+            },
+            {
+              "t": 3,
+              "yaw": 25,
+              "pitch": 4,
+              "distance": 0.95,
+              "ease": "inOutQuint"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hero",
+      "duration": 7,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#20232c",
+          "#050608"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "type": "three",
+          "source": "svg:assets/loopa-logo.svg",
+          "material": "chrome",
+          "lighting": "studio",
+          "animation": "spin-in",
+          "width": 1920,
+          "height": 1080,
+          "orbit": [
+            {
+              "t": 0,
+              "yaw": -34,
+              "pitch": 18,
+              "distance": 1.22
+            },
+            {
+              "t": 2.4,
+              "yaw": -12,
+              "pitch": 7,
+              "distance": 1,
+              "ease": "quintOut"
+            },
+            {
+              "t": 7,
+              "yaw": 14,
+              "pitch": 3,
+              "distance": 0.92,
+              "ease": "inOut"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "Loop it. Love it.",
+          "preset": "blur-rise",
+          "fontSize": 44,
+          "weight": 600,
+          "color": "#c9ced8",
+          "y": 330,
+          "start": 2.4,
+          "font": "$body"
+        }
+      ]
+    },
+    {
+      "id": "c-sweep",
+      "duration": 3.5,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#f4f1ec",
+          "#d9d4cc"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "type": "three",
+          "mode": "cloner",
+          "source": "svg:assets/loopa-logo.svg",
+          "material": "plastic",
+          "lighting": "softbox",
+          "cloner": {
+            "preset": "sweep"
+          },
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "c-tile-flip",
+      "duration": 3.5,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#1b1d24",
+          "#07080b"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "type": "three",
+          "mode": "cloner",
+          "source": "text:LOOPA",
+          "weight": 800,
+          "material": "plastic",
+          "lighting": "studio",
+          "cloner": {
+            "preset": "tile-flip",
+            "colors": {
+              "inside": "#ff5a5f",
+              "outside": "#16181d",
+              "base": "#d9dce3"
+            }
+          },
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "c-ripple",
+      "duration": 3.5,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#f4f1ec",
+          "#d9d4cc"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "type": "three",
+          "mode": "cloner",
+          "source": "svg:assets/loopa-logo.svg",
+          "material": "plastic",
+          "lighting": "softbox",
+          "cloner": {
+            "preset": "ripple",
+            "colors": {
+              "outside": "#f4f1ec",
+              "base": "#f4f1ec"
+            }
+          },
+          "orbit": [
+            {
+              "t": 0,
+              "yaw": -18,
+              "pitch": 30,
+              "distance": 1.05
+            }
+          ],
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "c-split-flap",
+      "duration": 3.5,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#1b1d24",
+          "#07080b"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "type": "three",
+          "mode": "cloner",
+          "source": "text:Brew",
+          "material": "plastic",
+          "lighting": "studio",
+          "cloner": {
+            "preset": "split-flap",
+            "colors": {
+              "inside": "#f2b25c",
+              "outside": "#121317",
+              "palette": [
+                "#e8743b",
+                "#2a2c33",
+                "#f4f1ec",
+                "#5b3a29",
+                "#1b1d22"
+              ]
+            }
+          },
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "c-cube-shuffle",
+      "duration": 3.5,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#f4f1ec",
+          "#d9d4cc"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "type": "three",
+          "mode": "cloner",
+          "source": "svg:assets/loopa-logo.svg",
+          "material": "plastic",
+          "lighting": "softbox",
+          "cloner": {
+            "preset": "cube-shuffle"
+          },
+          "orbit": [
+            {
+              "t": 0,
+              "yaw": -28,
+              "pitch": 20
+            },
+            {
+              "t": 3.5,
+              "yaw": -10,
+              "pitch": 8,
+              "ease": "inOutQuint"
+            }
+          ],
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "c-burst-collapse",
+      "duration": 3.5,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#1b1d24",
+          "#07080b"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "type": "three",
+          "mode": "cloner",
+          "source": "text:LOOPA",
+          "weight": 800,
+          "material": "chrome",
+          "lighting": "studio",
+          "color": "#ffffff",
+          "cloner": {
+            "preset": "burst-collapse",
+            "colors": {
+              "inside": "#ff8a8d"
+            }
+          },
+          "post": {
+            "bloom": 0.5
+          },
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "c-wave-field",
+      "duration": 3.5,
+      "background": {
+        "type": "solid",
+        "color": "#0b0c10"
+      },
+      "layers": [
+        {
+          "type": "three",
+          "mode": "cloner",
+          "source": "svg:assets/brew-logo.svg",
+          "material": "plastic",
+          "lighting": "studio",
+          "cloner": {
+            "preset": "wave-field",
+            "colors": {
+              "inside": "#f2b25c",
+              "outside": "#2a2e37",
+              "base": "#2a2e37"
+            }
+          },
+          "orbit": [
+            {
+              "t": 0,
+              "yaw": -24,
+              "pitch": 52,
+              "distance": 1
+            },
+            {
+              "t": 3.5,
+              "yaw": -8,
+              "pitch": 40,
+              "distance": 0.92
+            }
+          ],
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "c-logo-of-logos",
+      "duration": 4,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#1b1d24",
+          "#07080b"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "type": "three",
+          "mode": "cloner",
+          "source": "svg:assets/loopa-logo.svg#icon",
+          "material": "plastic",
+          "lighting": "studio",
+          "cloner": {
+            "preset": "logo-of-logos"
+          },
+          "camera": {
+            "move": "macro-pull",
+            "duration": 3.2,
+            "amount": 1.25
+          },
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "p-chaos",
+      "duration": 3.5,
+      "background": {
+        "type": "solid",
+        "color": "#05060a"
+      },
+      "layers": [
+        {
+          "type": "three",
+          "mode": "particles",
+          "source": "svg:assets/loopa-logo.svg",
+          "particles": {
+            "from": "chaos",
+            "count": 30000,
+            "trail": 2
+          },
+          "post": {
+            "bloom": {
+              "strength": 0.5,
+              "threshold": 0.7
+            }
+          },
+          "background": "#05060a",
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "p-vortex",
+      "duration": 3.5,
+      "background": {
+        "type": "solid",
+        "color": "#05060a"
+      },
+      "layers": [
+        {
+          "type": "three",
+          "mode": "particles",
+          "source": "text:LOOPA",
+          "weight": 800,
+          "particles": {
+            "from": "vortex",
+            "count": 40000,
+            "colors": [
+              "#ff5a5f",
+              "#ffb35c",
+              "#ffffff"
+            ]
+          },
+          "post": {
+            "bloom": 0.7
+          },
+          "background": "#05060a",
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "p-explosion",
+      "duration": 4.5,
+      "background": {
+        "type": "solid",
+        "color": "#05060a"
+      },
+      "layers": [
+        {
+          "type": "three",
+          "mode": "particles",
+          "source": "svg:assets/brew-logo.svg",
+          "particles": {
+            "from": "explosion",
+            "count": 30000,
+            "disperseAt": 3
+          },
+          "post": {
+            "bloom": 0.6
+          },
+          "background": "#05060a",
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "p-galaxy-solid",
+      "duration": 4,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#1b1d24",
+          "#07080b"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "type": "three",
+          "mode": "particles",
+          "source": "svg:assets/loopa-logo.svg",
+          "material": "chrome",
+          "particles": {
+            "from": "galaxy",
+            "count": 30000,
+            "solidAt": 2.7
+          },
+          "orbit": [
+            {
+              "t": 0,
+              "yaw": -30,
+              "pitch": 25,
+              "distance": 1.25
+            },
+            {
+              "t": 3.5,
+              "yaw": -12,
+              "pitch": 7,
+              "distance": 1,
+              "ease": "inOutQuint"
+            }
+          ],
+          "post": {
+            "bloom": 0.5
+          },
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "post-bloom-neon",
+      "duration": 3,
+      "background": {
+        "type": "solid",
+        "color": "#05040a"
+      },
+      "layers": [
+        {
+          "type": "three",
+          "source": "text:LOOPA",
+          "weight": 800,
+          "material": "neon",
+          "color": "#ff3fb4",
+          "animation": "rise",
+          "post": {
+            "bloom": {
+              "strength": 1,
+              "threshold": 0.7
+            },
+            "vignette": 0.35,
+            "grain": 0.03
+          },
+          "background": "#05040a",
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "post-rack-focus",
+      "duration": 3.5,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#1b1d24",
+          "#07080b"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "type": "three",
+          "source": "text:Brew",
+          "material": "gold",
+          "lighting": "sunset",
+          "animation": "cascade-flip",
+          "orbit": [
+            {
+              "t": 0,
+              "yaw": -48,
+              "pitch": 6,
+              "distance": 0.8
+            }
+          ],
+          "post": {
+            "dof": {
+              "aperture": 2,
+              "focus": [
+                {
+                  "t": 0.6,
+                  "z": 0.9
+                },
+                {
+                  "t": 2.4,
+                  "z": -0.9
+                }
+              ]
+            },
+            "bloom": 0.35,
+            "vignette": 0.3
+          },
+          "background": "#0e0f13",
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "post-ca-grain",
+      "duration": 3,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#1b1d24",
+          "#07080b"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "type": "three",
+          "source": "svg:assets/loopa-logo.svg",
+          "material": "chrome",
+          "lighting": "studio",
+          "animation": "spin-in",
+          "post": {
+            "bloom": 0.4,
+            "ca": 0.006,
+            "vignette": 0.45,
+            "grain": 0.05
+          },
+          "background": "#101218",
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "cam-dolly-zoom",
+      "duration": 3.5,
+      "background": {
+        "type": "solid",
+        "color": "#0b0c10"
+      },
+      "layers": [
+        {
+          "type": "three",
+          "mode": "cloner",
+          "source": "svg:assets/brew-logo.svg",
+          "material": "plastic",
+          "lighting": "studio",
+          "cloner": {
+            "preset": "wave-field",
+            "colors": {
+              "inside": "#f2b25c",
+              "outside": "#2a2e37",
+              "base": "#2a2e37"
+            }
+          },
+          "orbit": [
+            {
+              "t": 0,
+              "yaw": -10,
+              "pitch": 34
+            }
+          ],
+          "camera": {
+            "move": "dolly-zoom",
+            "amount": 1.6,
+            "duration": 3.2,
+            "at": 0.2
+          },
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "cam-god-shot",
+      "duration": 3.5,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#f4f1ec",
+          "#d9d4cc"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "type": "three",
+          "mode": "cloner",
+          "source": "svg:assets/loopa-logo.svg",
+          "material": "plastic",
+          "lighting": "softbox",
+          "cloner": {
+            "preset": "cube-shuffle",
+            "plane": "floor"
+          },
+          "orbit": [
+            {
+              "t": 0,
+              "yaw": -16,
+              "pitch": 38
+            }
+          ],
+          "camera": {
+            "move": "god-shot",
+            "duration": 3.2
+          },
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "cam-macro-push",
+      "duration": 3.5,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#1b1d24",
+          "#07080b"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "type": "three",
+          "source": "svg:assets/loopa-logo.svg",
+          "material": "chrome",
+          "lighting": "studio",
+          "animation": "float",
+          "camera": {
+            "move": "macro-push",
+            "duration": 3.2
+          },
+          "post": {
+            "dof": {
+              "aperture": 0.9
+            },
+            "bloom": 0.3
+          },
+          "background": "#101218",
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "cam-whip-pan",
+      "duration": 2.5,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#1b1d24",
+          "#07080b"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "type": "three",
+          "source": "svg:assets/brew-logo.svg",
+          "material": "gold",
+          "lighting": "sunset",
+          "animation": "none",
+          "camera": {
+            "move": "whip-pan",
+            "at": 0.6
+          },
+          "post": {
+            "bloom": 0.3
+          },
+          "background": "#101218",
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "cam-path",
+      "duration": 4,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#1b1d24",
+          "#07080b"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "type": "three",
+          "source": "primitive:knot",
+          "material": "pearl",
+          "lighting": "rim",
+          "animation": "turntable",
+          "camera": {
+            "path": [
+              {
+                "t": 0,
+                "pos": [
+                  -1.2,
+                  0.9,
+                  0.6
+                ]
+              },
+              {
+                "t": 2,
+                "pos": [
+                  0.4,
+                  0.2,
+                  0.9
+                ]
+              },
+              {
+                "t": 4,
+                "pos": [
+                  0.9,
+                  -0.1,
+                  0.8
+                ]
+              }
+            ],
+            "shake": 0.4
+          },
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "k-rail",
+      "duration": 3.5,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#1b1d24",
+          "#07080b"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "type": "three",
+          "source": "text:LOOPA",
+          "weight": 800,
+          "material": "chrome",
+          "lighting": "studio",
+          "animation": "rail",
+          "orbit": [
+            {
+              "t": 0,
+              "yaw": -22,
+              "pitch": 12
+            }
+          ],
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "k-extrude-grow",
+      "duration": 3,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#f4f1ec",
+          "#d9d4cc"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "type": "three",
+          "source": "svg:assets/loopa-logo.svg",
+          "material": "plastic",
+          "lighting": "softbox",
+          "animation": "extrude-grow",
+          "depth": 0.35,
+          "orbit": [
+            {
+              "t": 0,
+              "yaw": 0,
+              "pitch": 0
+            },
+            {
+              "t": 2.6,
+              "yaw": -26,
+              "pitch": 12,
+              "ease": "inOutQuint"
+            }
+          ],
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "k-cascade-flip",
+      "duration": 3,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#1b1d24",
+          "#07080b"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "type": "three",
+          "source": "text:Brew",
+          "material": "gold",
+          "lighting": "sunset",
+          "animation": "cascade-flip",
+          "order": "center-out",
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "k-stack-echo",
+      "duration": 3.5,
+      "background": {
+        "type": "solid",
+        "color": "#ffd84d"
+      },
+      "layers": [
+        {
+          "type": "three",
+          "source": "text:LOOPA",
+          "weight": 800,
+          "material": "plastic",
+          "color": "#ff5a5f",
+          "lighting": "softbox",
+          "animation": "stack-echo",
+          "echo": {
+            "count": 7,
+            "color": "#7a1f3d"
+          },
+          "orbit": [
+            {
+              "t": 0,
+              "yaw": -24,
+              "pitch": 14
+            }
+          ],
+          "shadow3d": false,
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "k-orbit-ring",
+      "duration": 4,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#1b1d24",
+          "#07080b"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "type": "three",
+          "source": "text:LOOPA",
+          "weight": 800,
+          "material": "chrome",
+          "lighting": "studio",
+          "animation": "orbit-ring",
+          "orbit": [
+            {
+              "t": 0,
+              "yaw": 0,
+              "pitch": 16,
+              "distance": 1.25
+            },
+            {
+              "t": 3.5,
+              "yaw": -10,
+              "pitch": 6,
+              "distance": 1
+            }
+          ],
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "k-drop",
+      "duration": 3,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#f4f1ec",
+          "#d9d4cc"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "type": "three",
+          "source": "text:Brew",
+          "material": "clay",
+          "color": "#e8743b",
+          "lighting": "softbox",
+          "animation": "drop",
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "d-twist",
+      "duration": 3,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#1b1d24",
+          "#07080b"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "type": "three",
+          "source": "text:LOOPA",
+          "weight": 800,
+          "material": "chrome",
+          "lighting": "studio",
+          "animation": "none",
+          "deform": [
+            {
+              "type": "twist",
+              "keys": [
+                {
+                  "t": 0,
+                  "amount": 0
+                },
+                {
+                  "t": 1.2,
+                  "amount": 160
+                },
+                {
+                  "t": 2.6,
+                  "amount": 0,
+                  "ease": "outElastic"
+                }
+              ]
+            }
+          ],
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "d-bend",
+      "duration": 3,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#f4f1ec",
+          "#d9d4cc"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "type": "three",
+          "source": "svg:assets/loopa-logo.svg",
+          "material": "plastic",
+          "lighting": "softbox",
+          "animation": "none",
+          "deform": [
+            {
+              "type": "bend",
+              "keys": [
+                {
+                  "t": 0,
+                  "amount": 200
+                },
+                {
+                  "t": 2.2,
+                  "amount": 0,
+                  "ease": "inOutQuint"
+                }
+              ]
+            }
+          ],
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "d-jiggle",
+      "duration": 3,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#f4f1ec",
+          "#d9d4cc"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "type": "three",
+          "source": "text:Brew",
+          "material": "clay",
+          "color": "#ff7a59",
+          "lighting": "softbox",
+          "animation": "drop",
+          "deform": [
+            {
+              "type": "jiggle",
+              "at": 0.55,
+              "amount": 0.3
+            },
+            {
+              "type": "wave",
+              "amount": 0
+            }
+          ],
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "d-wave",
+      "duration": 3,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#1b1d24",
+          "#07080b"
+        ],
+        "angle": 180,
+        "radial": true
+      },
+      "layers": [
+        {
+          "type": "three",
+          "source": "text:LOOPA",
+          "weight": 800,
+          "material": "pearl",
+          "lighting": "rim",
+          "animation": "none",
+          "deform": [
+            {
+              "type": "wave",
+              "amount": 0.12,
+              "freq": 1.2,
+              "speed": 0.6
+            },
+            {
+              "type": "taper",
+              "keys": [
+                {
+                  "t": 0,
+                  "amount": 0
+                },
+                {
+                  "t": 1.5,
+                  "amount": 0.35
+                },
+                {
+                  "t": 3,
+                  "amount": 0
+                }
+              ]
+            }
+          ],
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    }
+  ]
+}

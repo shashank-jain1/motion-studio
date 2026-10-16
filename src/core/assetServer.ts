@@ -1,12 +1,14 @@
 /**
  * Tiny static file server for PROJECTS_DIR so headless Chrome can load project assets during renders.
+ * `/_library/…` serves LIBRARY_DIR (SFX library + baked sound cues, see scripts/gen-sfx.ts / sfx-bake.ts); project ids can't start with "_".
  * 127.0.0.1 only, random port, CORS *, HTTP Range (video seeking), path traversal protection.
  */
 import http from "node:http";
 import fs from "node:fs";
 import path from "node:path";
 import type { AddressInfo } from "node:net";
-import { PROJECTS_DIR } from "./paths";
+import { LIBRARY_DIR, PROJECTS_DIR } from "./paths";
+import { ensureBaked } from "../../scripts/sfx-bake";
 
 const MIME: Record<string, string> = {
   ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".webp": "image/webp", ".gif": "image/gif",
@@ -19,7 +21,7 @@ const MIME: Record<string, string> = {
   ".ttf": "font/ttf", ".otf": "font/otf", ".woff": "font/woff", ".woff2": "font/woff2",
 };
 
-export type AssetServer = { port: number; origin: string; baseUrlFor: (projectId: string) => string; close: () => Promise<void> };
+export type AssetServer = { port: number; origin: string; baseUrlFor: (projectId: string) => string; /** `${origin}/_library` */ libraryBase: string; close: () => Promise<void> };
 
 let serverPromise: Promise<AssetServer> | null = null;
 
@@ -48,8 +50,19 @@ const handler = (req: http.IncomingMessage, res: http.ServerResponse) => {
     res.writeHead(400).end("Bad request");
     return;
   }
-  const abs = path.resolve(PROJECTS_DIR, "." + path.posix.normalize("/" + rel));
-  if (!abs.startsWith(PROJECTS_DIR + path.sep)) {
+  const lib = rel.startsWith("/_library/");
+  // planned sound cues: `/_library/bake/<hash>.wav?r=<recipe>` is rendered on first request (scripts/sfx-bake.ts)
+  if (lib && rel.startsWith("/_library/bake/")) {
+    try {
+      ensureBaked(rel.slice("/_library".length), new URL(req.url ?? "/", "http://x").searchParams);
+    } catch (e) {
+      res.writeHead(400, { "Content-Type": "text/plain" }).end(`Bad sound recipe: ${(e as Error).message}`);
+      return;
+    }
+  }
+  const root = lib ? LIBRARY_DIR : PROJECTS_DIR;
+  const abs = path.resolve(root, "." + path.posix.normalize("/" + (lib ? rel.slice("/_library".length) : rel)));
+  if (!abs.startsWith(root + path.sep)) {
     res.writeHead(403).end("Forbidden");
     return;
   }
@@ -125,6 +138,7 @@ export const startAssetServer = (): Promise<AssetServer> => {
         port,
         origin,
         baseUrlFor: (projectId: string) => `${origin}/${encodeURIComponent(projectId)}`,
+        libraryBase: `${origin}/_library`,
         close: () =>
           new Promise<void>((r) => {
             serverPromise = null;

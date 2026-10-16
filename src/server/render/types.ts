@@ -1,8 +1,9 @@
 /** Render backends (docs/PLATFORM.md → "Render backends"). */
 import type { Spec } from "../../engine/spec/schema";
 import type { RenderRecord } from "../../core/tools";
+import type { Format } from "../../engine/spec/reflow";
 
-export type RenderInfo = { file: string; url: string; quality: "draft" | "final"; createdAt: string; sizeBytes: number; seconds?: number; width?: number; height?: number };
+export type RenderInfo = { file: string; url: string; quality: "draft" | "final"; createdAt: string; sizeBytes: number; seconds?: number; width?: number; height?: number; format?: Format };
 
 /** What a backend returns: the RenderInfo plus the extra record fields (fps, render time) the tools report. */
 export type RenderOutput = RenderInfo & { fps?: number; renderSeconds?: number };
@@ -10,7 +11,7 @@ export type RenderOutput = RenderInfo & { fps?: number; renderSeconds?: number }
 export type RenderProgressUpdate = { progress: number; stage: string };
 
 /** The slice of a Job a backend needs. */
-export type RenderJob = { id: string; projectId: string; quality: "draft" | "final" };
+export type RenderJob = { id: string; projectId: string; quality: "draft" | "final"; /** reflow to this format (absent = master) */ format?: Format };
 
 export type RenderBackend = {
   name: "local" | "lambda";
@@ -32,4 +33,5 @@ export const toRenderOutput = (projectId: string, r: RenderRecord): RenderOutput
   ...(r.height !== undefined ? { height: r.height } : {}),
   ...(r.fps !== undefined ? { fps: r.fps } : {}),
   ...(r.renderSeconds !== undefined ? { renderSeconds: r.renderSeconds } : {}),
+  ...(r.format ? { format: r.format } : {}),
 });
