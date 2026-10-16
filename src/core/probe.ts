@@ -110,7 +110,15 @@ export const probeAsset = async (absPath: string, specPath?: string): Promise<As
     info.kind = still || /image2|_pipe$/.test(probe?.format?.format_name ?? "") ? "image" : "video";
   } else if (a) info.kind = "audio";
 
-  if (v && (info.kind === "image" || info.kind === "video")) {
+  if (ext === ".svg") {
+    // ffprobe rasterizes SVGs at a default size; the real intrinsic size is the viewBox (or width/height attrs)
+    const head = fs.readFileSync(absPath, "utf8").slice(0, 4000);
+    const vb = head.match(/viewBox\s*=\s*["']\s*[-\d.]+[\s,]+[-\d.]+[\s,]+([\d.]+)[\s,]+([\d.]+)/i);
+    const w = head.match(/<svg[^>]*\swidth\s*=\s*["']([\d.]+)(px)?["']/i), h = head.match(/<svg[^>]*\sheight\s*=\s*["']([\d.]+)(px)?["']/i);
+    const W = vb ? Number(vb[1]) : w ? Number(w[1]) : NaN, H = vb ? Number(vb[2]) : h ? Number(h[1]) : NaN;
+    if (W > 0 && H > 0) { info.kind = "image"; info.width = Math.round(W * 100) / 100; info.height = Math.round(H * 100) / 100; info.hasAlpha = true; }
+  }
+  if (v && (info.kind === "image" || info.kind === "video") && info.width === undefined) {
     info.width = v.width;
     info.height = v.height;
     info.hasAlpha = /rgba|argb|bgra|abgr|yuva|gbrap|ya8|ya16|pal8/.test(v.pix_fmt ?? "");
