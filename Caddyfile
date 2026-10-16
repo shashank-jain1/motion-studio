@@ -1,0 +1,27 @@
+# Automatic HTTPS for ${DOMAIN} (Let's Encrypt), reverse proxy to the app container.
+{$DOMAIN} {
+	# Uploads (videos) up to ~600 MB.
+	request_body {
+		max_size 600MB
+	}
+
+	# Compress text, but never the SSE streams (text/event-stream must flush event by event).
+	encode {
+		zstd
+		gzip
+		match {
+			header Content-Type text/html*
+			header Content-Type text/css*
+			header Content-Type text/javascript*
+			header Content-Type text/plain*
+			header Content-Type application/json*
+			header Content-Type application/javascript*
+			header Content-Type image/svg+xml*
+		}
+	}
+
+	reverse_proxy app:4310 {
+		# Stream SSE (render jobs, chat, MCP) immediately.
+		flush_interval -1
+	}
+}

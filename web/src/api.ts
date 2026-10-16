@@ -56,6 +56,18 @@ export type Settings = {
   keySource: "env" | "profile" | "settings" | "none"; models: string[];
 };
 
+export type User = { id: string; email: string; name: string };
+export type Me = { user: User | null; mode: "local" | "hosted"; publicUrl?: string; signup?: boolean };
+export type ApiToken = { id: string; name: string; prefix: string; createdAt: string; lastUsedAt?: string | null };
+export type NewToken = { token: string; id: string; name: string; prefix: string };
+export type JobStatus = "queued" | "running" | "done" | "error" | "canceled";
+export type Job = {
+  id: string; projectId: string; kind: "render" | "preview"; quality: "draft" | "final"; backend: "local" | "lambda";
+  status: JobStatus; progress: number; stage?: string; position?: number; output?: RenderInfo; error?: string;
+  createdAt: string; startedAt?: string; finishedAt?: string;
+};
+export type ConnectInfo = { mcpUrl: string; publicUrl: string; claudeCodeConfig: string; steps: string[] };
+
 export class ApiError extends Error {
   constructor(message: string, public status: number) { super(message); }
 }
@@ -73,6 +85,7 @@ async function req<T>(method: string, url: string, body?: unknown, signal?: Abor
   let data: unknown = null;
   try { data = text ? JSON.parse(text) : null; } catch { /* non-JSON */ }
   if (!res.ok) {
+    if (res.status === 401 && !url.startsWith("/api/auth/")) window.dispatchEvent(new Event("ms:unauthorized"));
     const msg = (data as { error?: string } | null)?.error ?? (res.status === 502 || res.status === 504 ? "Server unavailable (proxy error)" : `HTTP ${res.status}`);
     throw new ApiError(msg, res.status);
   }
@@ -96,6 +109,28 @@ export const api = {
   stopChat: (id: string) => req<{ ok: true }>("POST", `${P(id)}/chat/stop`),
   clearChat: (id: string) => req<{ ok: true }>("DELETE", `${P(id)}/chat`),
   settings: () => req<Settings>("GET", "/api/settings"),
+  me: () => req<Me>("GET", "/api/auth/me"),
+  login: (email: string, password: string) => req<{ user: User }>("POST", "/api/auth/login", { email, password }),
+  signup: (email: string, password: string, name: string) => req<{ user: User }>("POST", "/api/auth/signup", { email, password, name }),
+  logout: () => req<{ ok: true }>("POST", "/api/auth/logout"),
+  tokens: () => req<ApiToken[]>("GET", "/api/tokens"),
+  createToken: (name: string) => req<NewToken>("POST", "/api/tokens", { name }),
+  deleteToken: (tid: string) => req<{ ok: true }>("DELETE", `/api/tokens/${encodeURIComponent(tid)}`),
+  jobs: (projectId?: string) => req<Job[]>("GET", `/api/jobs${projectId ? `?projectId=${encodeURIComponent(projectId)}` : ""}`),
+  job: (jid: string) => req<Job>("GET", `/api/jobs/${encodeURIComponent(jid)}`),
+  cancelJob: (jid: string) => req<Job>("POST", `/api/jobs/${encodeURIComponent(jid)}/cancel`),
+  render: (id: string, quality: "draft" | "final") => req<{ job: Job }>("POST", `${P(id)}/render`, { quality }),
+  connect: () => req<ConnectInfo>("GET", "/api/connect"),
+  /** Session + Origin authenticated (no Authorization header). 401 → caller sends the user to /login?next=. */
+  oauthDecision: async (params: Record<string, string>, approve: boolean): Promise<{ redirect: string }> => {
+    let res: Response;
+    try {
+      res = await fetch("/oauth/authorize/decision", { method: "POST", credentials: "include", headers: { "content-type": "application/json" }, body: JSON.stringify({ ...params, approve }) });
+    } catch { throw new ApiError("Can't reach the Motion Studio server", 0); }
+    const data = await res.json().catch(() => null) as { redirect?: string; error?: string; error_description?: string } | null;
+    if (!res.ok || !data?.redirect) throw new ApiError(data?.error_description ?? data?.error ?? `HTTP ${res.status}`, res.status);
+    return { redirect: data.redirect };
+  },
   saveSettings: (s: { model?: string; effort?: string; apiKey?: string }) => req<Settings>("PUT", "/api/settings", s),
 };
 
@@ -166,6 +201,27 @@ export async function postSSE(url: string, body: unknown, onEvent: (event: strin
   }
   buf += dec.decode();
   if (buf.trim()) flush(buf);
+}
+
+/**
+ * Follow a job's SSE stream (GET /api/jobs/:id/events). The server sends the current state first, then
+ * `progress {progress, stage}` until `done {job}` / `error {job}`. Returns a close() function.
+ */
+export function followJob(jid: string, h: { onProgress?: (p: { progress: number; stage?: string; position?: number; status?: JobStatus }) => void; onDone?: (job: Job) => void; onError?: (job: Job | null, message: string) => void }) {
+  const es = new EventSource(`/api/jobs/${encodeURIComponent(jid)}/events`);
+  let closed = false;
+  const close = () => { closed = true; es.close(); };
+  const parse = (e: MessageEvent) => { try { return JSON.parse(e.data); } catch { return null; } };
+  es.addEventListener("progress", (e) => { const d = parse(e as MessageEvent); if (d) h.onProgress?.(d); });
+  es.addEventListener("state", (e) => { const d = parse(e as MessageEvent); if (d) h.onProgress?.(d.job ?? d); });
+  es.addEventListener("done", (e) => { const d = parse(e as MessageEvent); close(); h.onDone?.(d?.job ?? d); });
+  es.addEventListener("error", (e) => {
+    const d = "data" in e ? parse(e as MessageEvent) : null;
+    if (d) { close(); h.onError?.(d.job ?? d, d.job?.error ?? d.error ?? "Render failed"); return; }
+    // transport error: EventSource retries by itself; give up only when the server closed for good
+    if (!closed && es.readyState === EventSource.CLOSED) { close(); h.onError?.(null, "Lost connection to the render queue"); }
+  });
+  return close;
 }
 
 export const chatUrl = (id: string) => `${P(id)}/chat`;

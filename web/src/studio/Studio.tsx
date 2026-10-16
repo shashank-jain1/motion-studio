@@ -5,8 +5,9 @@ import { StudioContext, useStudio, type RightTab, type StudioApi } from "./conte
 import { PlayerBus } from "./bus";
 import { analyzeSpec, type ParsedInfo } from "../lib/specInfo";
 import { useToast } from "../components/Toast";
-import { ErrorBoundary, FormatBadge, Skeleton } from "../components/ui";
-import { IconArrowLeft, IconCode, IconFilm, IconGear, IconImage, IconPanelLeft, IconPanelRight, Logo } from "../components/Icons";
+import { ErrorBoundary, Skeleton, SlateStripe } from "../components/ui";
+import { IconGear, IconPanelBottom, IconPanelLeft, IconPanelRight } from "../components/Icons";
+import { AppBar } from "../components/AppBar";
 import { ChatPanel } from "./Chat";
 import { PlayerPane } from "./PlayerPane";
 import { TimelinePanel } from "./Timeline";
@@ -14,7 +15,7 @@ import { AssetsPanel } from "./AssetsPanel";
 import { SpecPanel } from "./SpecPanel";
 import { RendersPanel } from "./RendersPanel";
 import { SettingsDialog } from "../pages/Settings";
-import { fmtDuration } from "../lib/format";
+import { fmtTC } from "../lib/format";
 
 const pretty = (spec: unknown) => (spec ? JSON.stringify(spec, null, 2) : "");
 
@@ -158,7 +159,7 @@ export const Studio = () => {
     chatRunning, setChatRunning,
   };
 
-  // ---- keyboard
+  // ---- keyboard: Space · J/K/L shuttle · ←/→ frame (⇧ = 1s) · Home/End · S safe zones · F fullscreen · ⌘S save
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const t = e.target instanceof HTMLElement ? e.target : null;
@@ -168,12 +169,19 @@ export const Studio = () => {
         if (!t?.closest(".cm-editor")) void saveEditor();
         return;
       }
-      if (typing || e.metaKey || e.ctrlKey || e.altKey || document.querySelector(".dialog-backdrop, .lightbox")) return;
+      if (typing || e.metaKey || e.ctrlKey || e.altKey || document.querySelector(".dialog-backdrop, .lightbox, .menu, .select-list")) return;
+      const k = e.key.toLowerCase();
       if (e.key === " " && !(t instanceof HTMLButtonElement)) { e.preventDefault(); bus.toggle(); }
+      else if (k === "k") { e.preventDefault(); bus.halt(); }
+      else if (k === "l") { e.preventDefault(); bus.shuttle(1); }
+      else if (k === "j") { e.preventDefault(); bus.shuttle(-1); }
       else if (e.key === "ArrowLeft") { e.preventDefault(); bus.step(e.shiftKey ? -bus.fps : -1); }
       else if (e.key === "ArrowRight") { e.preventDefault(); bus.step(e.shiftKey ? bus.fps : 1); }
       else if (e.key === "Home") { e.preventDefault(); bus.seek(0); }
       else if (e.key === "End") { e.preventDefault(); bus.seek(bus.durationInFrames - 1); }
+      else if (k === "s" && !e.shiftKey) { e.preventDefault(); bus.safe = bus.safe === "off" ? "title" : "off"; bus.emit(); }
+      else if (k === "f") { e.preventDefault(); bus.player?.requestFullscreen(); }
+      else if (k === "1" || k === "2" || k === "3") { e.preventDefault(); setRightTab((["assets", "spec", "renders"] as const)[Number(k) - 1]); setRightOpen(true); }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -188,61 +196,68 @@ export const Studio = () => {
   }, [dirty]);
 
   // ---- layout
-  const [leftW, setLeftW] = usePersisted("ms.leftW", 380);
-  const [rightW, setRightW] = usePersisted("ms.rightW", 380);
-  const [tlH, setTlH] = usePersisted("ms.timelineH", 196);
+  const roomy = typeof window === "undefined" || window.innerWidth >= 1400;
+  const [leftW, setLeftW] = usePersisted("ms.leftW", roomy ? 384 : 340);
+  const [rightW, setRightW] = usePersisted("ms.rightW", roomy ? 360 : 312);
+  const [tlH, setTlH] = usePersisted("ms.timelineH", 228);
   const [leftOpen, setLeftOpen] = useState(true);
   const [rightOpen, setRightOpen] = useState(true);
+  const [tlOpen, setTlOpen] = useState(true);
 
   if (loadError) {
     return (
-      <div className="center-screen">
-        <Logo size={40} />
-        <h1 className="display-sm">{loadError.status === 404 ? "Project not found" : "Couldn't open project"}</h1>
-        <p className="muted">{loadError.message}</p>
-        <div className="row gap">
-          <Link to="/" className="btn">Back to projects</Link>
-          {loadError.status !== 404 && <button className="btn primary" onClick={() => location.reload()}>Retry</button>}
-        </div>
+      <div className="page">
+        <AppBar crumbs={<span className="crumb mono">{id}</span>} />
+        <BootSlateInline title={loadError.status === 404 ? "Project not found" : "Couldn't open project"} detail={loadError.message}
+          actions={<><Link to="/" className="btn">Back to projects</Link>{loadError.status !== 404 && <button className="btn primary" onClick={() => location.reload()}>Retry</button>}</>} />
       </div>
     );
   }
 
-  const cols = `${leftOpen ? leftW : 0}px ${leftOpen ? "1px" : "0px"} minmax(420px, 1fr) ${rightOpen ? "1px" : "0px"} ${rightOpen ? rightW : 0}px`;
+  const cols = `${leftOpen ? leftW : 0}px ${leftOpen ? "1px" : "0px"} minmax(440px, 1fr) ${rightOpen ? "1px" : "0px"} ${rightOpen ? rightW : 0}px`;
+  const fmt = info?.spec.format ?? state?.project.format ?? "16:9";
 
   return (
     <div className="studio">
-      <header className="topbar studio-top">
-        <div className="topbar-left">
-          <Link to="/" className="icon-btn ghost" aria-label="All projects" title="All projects"><IconArrowLeft size={15} /></Link>
-          <Link to="/" className="brand compact"><Logo size={20} /></Link>
-          <span className="crumb-sep">/</span>
-          {state ? <span className="project-name">{state.project.name}</span> : <Skeleton w={140} h={14} />}
-          {state && <FormatBadge format={info?.spec.format ?? state.project.format} />}
-          {info && <span className="badge subtle mono">{fmtDuration(info.seconds)}</span>}
-          {state && dirty && <span className="dirty-dot" title="Unsaved spec edits — ⌘S to save">Unsaved</span>}
-        </div>
-        <div className="topbar-right">
-          <button className={`icon-btn ghost ${leftOpen ? "" : "is-off"}`} onClick={() => setLeftOpen((o) => !o)} aria-pressed={leftOpen} aria-label="Toggle director panel" title="Toggle director panel"><IconPanelLeft size={15} /></button>
-          <button className={`icon-btn ghost ${rightOpen ? "" : "is-off"}`} onClick={() => setRightOpen((o) => !o)} aria-pressed={rightOpen} aria-label="Toggle inspector" title="Toggle inspector"><IconPanelRight size={15} /></button>
-          <button className="icon-btn ghost" onClick={() => setSettingsOpen(true)} aria-label="Settings" title="Settings"><IconGear size={15} /></button>
-        </div>
-      </header>
+      <AppBar compact
+        crumbs={state ? (
+          <span className="crumbs">
+            <Link to="/" className="crumb-link">Projects</Link>
+            <span className="crumb-slash">/</span>
+            <span className="crumb-title">{state.project.name}</span>
+            {dirty && <span className="tag warn" title="Unsaved spec edits — ⌘S to save">Unsaved</span>}
+          </span>
+        ) : <Skeleton w={160} h={14} />}
+        right={
+          <>
+            {info && (
+              <span className="studio-readouts mono" aria-label="Composition">
+                <span>{fmt}</span><span>{info.width}×{info.height}</span><span>{info.fps} FPS</span><span>{fmtTC(info.seconds, info.fps)}</span>
+              </span>
+            )}
+            <span className="tool-group" role="group" aria-label="Panels">
+              <button className={`icon-btn ghost sm ${leftOpen ? "is-on" : ""}`} onClick={() => setLeftOpen((o) => !o)} aria-pressed={leftOpen} aria-label="Director panel" title="Director panel"><IconPanelLeft size={16} /></button>
+              <button className={`icon-btn ghost sm ${tlOpen ? "is-on" : ""}`} onClick={() => setTlOpen((o) => !o)} aria-pressed={tlOpen} aria-label="Timeline" title="Timeline"><IconPanelBottom size={16} /></button>
+              <button className={`icon-btn ghost sm ${rightOpen ? "is-on" : ""}`} onClick={() => setRightOpen((o) => !o)} aria-pressed={rightOpen} aria-label="Inspector" title="Inspector"><IconPanelRight size={16} /></button>
+              <button className="icon-btn ghost sm" onClick={() => setSettingsOpen(true)} aria-label="Director settings" title="Director settings"><IconGear size={16} /></button>
+            </span>
+          </>
+        } />
 
       {!api_ ? <StudioSkeleton /> : (
         <StudioContext.Provider value={api_}>
           <div className="studio-grid" style={{ gridTemplateColumns: cols }}>
-            <aside className={`pane pane-left ${leftOpen ? "" : "is-collapsed"}`}>
-              {leftOpen && <ErrorBoundary label="Chat"><ChatPanel /></ErrorBoundary>}
+            <aside className={`pane pane-left ${leftOpen ? "" : "is-collapsed"}`} aria-label="Director">
+              {leftOpen && <ErrorBoundary label="Director"><ChatPanel /></ErrorBoundary>}
             </aside>
-            <Resizer side="left" hidden={!leftOpen} value={leftW} onChange={(v) => setLeftW(Math.max(300, Math.min(560, v)))} />
-            <main className="pane pane-center" style={{ gridTemplateRows: `minmax(220px, 1fr) 1px ${tlH}px` }}>
-              <ErrorBoundary label="Player"><PlayerPane /></ErrorBoundary>
-              <Resizer side="bottom" value={tlH} onChange={(v) => setTlH(Math.max(120, Math.min(420, v)))} />
-              <ErrorBoundary label="Timeline" compact><TimelinePanel /></ErrorBoundary>
+            <Resizer side="left" hidden={!leftOpen} value={leftW} onChange={(v) => setLeftW(Math.max(320, Math.min(560, v)))} />
+            <main className="pane pane-center" style={{ gridTemplateRows: tlOpen ? `minmax(240px, 1fr) 1px ${tlH}px` : "minmax(240px, 1fr) 0 0" }}>
+              <ErrorBoundary label="Viewer"><PlayerPane /></ErrorBoundary>
+              <Resizer side="bottom" hidden={!tlOpen} value={tlH} onChange={(v) => setTlH(Math.max(140, Math.min(440, v)))} />
+              {tlOpen ? <ErrorBoundary label="Timeline" compact><TimelinePanel /></ErrorBoundary> : <div />}
             </main>
-            <Resizer side="right" hidden={!rightOpen} value={rightW} onChange={(v) => setRightW(Math.max(320, Math.min(620, v)))} />
-            <aside className={`pane pane-right ${rightOpen ? "" : "is-collapsed"}`}>
+            <Resizer side="right" hidden={!rightOpen} value={rightW} onChange={(v) => setRightW(Math.max(300, Math.min(620, v)))} />
+            <aside className={`pane pane-right ${rightOpen ? "" : "is-collapsed"}`} aria-label="Inspector">
               {rightOpen && <Inspector />}
             </aside>
           </div>
@@ -253,10 +268,24 @@ export const Studio = () => {
   );
 };
 
-const TABS: { id: RightTab; label: string; icon: React.ReactNode }[] = [
-  { id: "assets", label: "Assets", icon: <IconImage size={13} /> },
-  { id: "spec", label: "Spec", icon: <IconCode size={13} /> },
-  { id: "renders", label: "Renders", icon: <IconFilm size={13} /> },
+const BootSlateInline = ({ title, detail, actions }: { title: string; detail: string; actions: React.ReactNode }) => (
+  <div className="center-screen">
+    <div className="nf-card">
+      <SlateStripe />
+      <div className="nf-body">
+        <div className="label">Fault</div>
+        <p className="serif-line">{title}</p>
+        <p className="mono dim small">{detail}</p>
+        <div className="row gap">{actions}</div>
+      </div>
+    </div>
+  </div>
+);
+
+const TABS: { id: RightTab; label: string; key: string }[] = [
+  { id: "assets", label: "Assets", key: "1" },
+  { id: "spec", label: "Spec", key: "2" },
+  { id: "renders", label: "Renders", key: "3" },
 ];
 
 const Inspector = () => {
@@ -270,7 +299,7 @@ const Inspector = () => {
   const count: Partial<Record<RightTab, React.ReactNode>> = {
     assets: assets.length || null,
     renders: renders.length || null,
-    spec: dirty ? <i className="tab-dot" /> : validation && !validation.ok ? <i className="tab-dot error" /> : null,
+    spec: dirty ? <i className="tab-dot warn" /> : validation && !validation.ok ? <i className="tab-dot error" /> : null,
   };
   return (
     <div className="inspector">
@@ -278,7 +307,7 @@ const Inspector = () => {
         {TABS.map((t) => (
           <button key={t.id} ref={(el) => { tabRefs.current[t.id] = el; }} role="tab" aria-selected={rightTab === t.id}
             className={`tab ${rightTab === t.id ? "is-active" : ""}`} onClick={() => setRightTab(t.id)}>
-            {t.icon}{t.label}{count[t.id] != null && <span className="tab-count">{count[t.id]}</span>}
+            <span className="tab-key mono">{t.key}</span>{t.label}{count[t.id] != null && <span className="tab-count mono">{count[t.id]}</span>}
           </button>
         ))}
         <span className="tab-ink" style={{ transform: `translateX(${ink.x}px)`, width: ink.w }} />
@@ -315,14 +344,14 @@ const Resizer = ({ side, value, onChange, hidden }: { side: "left" | "right" | "
 };
 
 const StudioSkeleton = () => (
-  <div className="studio-grid" style={{ gridTemplateColumns: "380px 1px 1fr 1px 380px" }}>
+  <div className="studio-grid" style={{ gridTemplateColumns: "384px 1px 1fr 1px 360px" }}>
     <aside className="pane pane-left sk-pane">
-      <Skeleton h={14} w="40%" />
-      <div className="sk-stack">{[80, 60, 90, 50].map((w, i) => <Skeleton key={i} h={44} w={`${w}%`} r={12} />)}</div>
+      <Skeleton h={10} w="30%" />
+      <div className="sk-stack">{[80, 60, 90, 50].map((w, i) => <Skeleton key={i} h={36} w={`${w}%`} />)}</div>
     </aside>
     <div />
-    <main className="pane pane-center sk-center"><Skeleton className="sk-stage" r={12} /><Skeleton h={150} r={10} /></main>
+    <main className="pane pane-center sk-center"><div className="sk-stage"><span className="label">Loading project</span></div><Skeleton h={180} /></main>
     <div />
-    <aside className="pane pane-right sk-pane"><Skeleton h={30} r={8} /><Skeleton h={90} r={12} /><div className="sk-grid">{Array.from({ length: 4 }, (_, i) => <Skeleton key={i} h={110} r={10} />)}</div></aside>
+    <aside className="pane pane-right sk-pane"><Skeleton h={28} /><Skeleton h={80} /><div className="sk-grid">{Array.from({ length: 4 }, (_, i) => <Skeleton key={i} h={100} />)}</div></aside>
   </div>
 );

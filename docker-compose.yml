@@ -1,0 +1,47 @@
+# Motion Studio on a VPS: the app (hosted mode) behind Caddy (automatic HTTPS).
+#   echo "DOMAIN=studio.example.com" > .env && docker compose up -d
+# See docs/DEPLOY.md for every variable.
+services:
+  app:
+    build: .
+    image: motion-studio:latest
+    restart: unless-stopped
+    environment:
+      MOTION_STUDIO_PUBLIC_URL: https://${DOMAIN:?set DOMAIN in .env}
+      MOTION_STUDIO_TRUST_PROXY: "1"
+      MOTION_STUDIO_SIGNUP: ${MOTION_STUDIO_SIGNUP:-open}
+      MOTION_STUDIO_SECRET: ${MOTION_STUDIO_SECRET:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      RENDER_BACKEND: ${RENDER_BACKEND:-local}
+      REMOTION_AWS_ACCESS_KEY_ID: ${REMOTION_AWS_ACCESS_KEY_ID:-}
+      REMOTION_AWS_SECRET_ACCESS_KEY: ${REMOTION_AWS_SECRET_ACCESS_KEY:-}
+      REMOTION_AWS_REGION: ${REMOTION_AWS_REGION:-us-east-1}
+    volumes:
+      - motion_data:/app/data
+      - motion_projects:/app/projects
+    expose:
+      - "4310"
+    # Headless Chrome needs more shared memory than Docker's 64 MB default.
+    shm_size: "1gb"
+
+  caddy:
+    image: caddy:2.10.2
+    restart: unless-stopped
+    depends_on:
+      - app
+    environment:
+      DOMAIN: ${DOMAIN}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  motion_data:
+  motion_projects:
+  caddy_data:
+  caddy_config:

@@ -1,5 +1,7 @@
 /**
- * DEV-ONLY mock of the Phase 2 server (docs/WEB_API.md), enabled with `MOCK_API=1 pnpm web`.
+ * DEV-ONLY mock of the server (docs/WEB_API.md + docs/PLATFORM.md), enabled with `MOCK_API=1 pnpm web`.
+ * `MOCK_MODE=hosted` requires sign-in (seeded account: demo@motion.studio / motion-demo); default is `local`
+ * (auto-signed-in owner). Phase 3 routes: auth, tokens, jobs (+SSE), connect, OAuth consent decision.
  * Reads the real ../projects folder (read-only); every mutation lives in memory. The chat endpoint streams a
  * scripted director run so the SSE UI can be exercised without an API key. Never used in production builds.
  */
@@ -36,7 +38,72 @@ export const mockApi = (repoRoot: string): Plugin => {
     deletedAssets: new Set<string>(),
     chats: new Map<string, Json[]>(),
     running: new Map<string, { stop: boolean }>(),
-    settings: { model: "claude-opus-4-5", effort: "high", apiKey: "" },
+    settings: { model: "claude-opus-4-5", effort: "high", apiKey: process.env.MOCK_KEY ? "sk-mock" : "" },
+  };
+  // ---- Phase 3 state
+  const mode: "local" | "hosted" = process.env.MOCK_MODE === "hosted" ? "hosted" : "local";
+  const publicUrl = "http://localhost:5173";
+  type User = { id: string; email: string; name: string; password: string };
+  const users = new Map<string, User>();
+  const LOCAL: User = { id: "u_local", email: "local@motion.studio", name: "Local owner", password: "" };
+  users.set("u_demo", { id: "u_demo", email: "demo@motion.studio", name: "Dana Reyes", password: "motion-demo" });
+  const sessions = new Map<string, string>();
+  const tokens: { id: string; userId: string; name: string; prefix: string; createdAt: string; lastUsedAt: string | null }[] = [
+    { id: "tok_1", userId: "u_demo", name: "Claude Code — laptop", prefix: "ms_pat_7f", createdAt: new Date(Date.now() - 86400e3 * 9).toISOString(), lastUsedAt: new Date(Date.now() - 3600e3 * 3).toISOString() },
+    { id: "tok_2", userId: LOCAL.id, name: "CI preview bot", prefix: "ms_pat_c2", createdAt: new Date(Date.now() - 86400e3 * 30).toISOString(), lastUsedAt: null },
+  ];
+  type Job = Json;
+  const jobs = new Map<string, Job>();
+  const jobSubs = new Map<string, Set<(ev: string, data: unknown) => void>>();
+  const publicUser = (u: User) => ({ id: u.id, email: u.email, name: u.name });
+  const cookieSid = (req: IncomingMessage) => /(?:^|;\s*)ms_session=([^;]+)/.exec(req.headers.cookie ?? "")?.[1];
+  const currentUser = (req: IncomingMessage): User | null => {
+    if (mode === "local") return LOCAL;
+    const sid = cookieSid(req);
+    const uid = sid ? sessions.get(sid) : undefined;
+    return uid ? users.get(uid) ?? null : null;
+  };
+  const startSession = (res: ServerResponse, u: User) => {
+    const sid = Math.random().toString(36).slice(2) + Date.now().toString(36);
+    sessions.set(sid, u.id);
+    res.setHeader("set-cookie", `ms_session=${sid}; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000`);
+  };
+  const jobEmit = (j: Job, ev: string) => jobSubs.get(j.id)?.forEach((f) => f(ev, ev === "progress" ? { progress: j.progress, stage: j.stage, position: j.position, status: j.status } : { job: j }));
+  const queuePositions = () => {
+    let n = 0;
+    for (const j of [...jobs.values()].filter((x) => x.status === "queued").sort((a, b) => a.createdAt.localeCompare(b.createdAt))) { j.position = ++n; jobEmit(j, "progress"); }
+  };
+  let working = false;
+  const pump = async () => {
+    if (working) return;
+    const next = [...jobs.values()].filter((j) => j.status === "queued").sort((a, b) => a.createdAt.localeCompare(b.createdAt))[0];
+    if (!next) return;
+    working = true;
+    next.status = "running"; next.startedAt = new Date().toISOString(); delete next.position; next.stage = "bundling";
+    queuePositions();
+    jobEmit(next, "progress");
+    const steps = next.quality === "final" ? 60 : 32;
+    for (let i = 1; i <= steps && next.status === "running"; i++) {
+      await sleep(220);
+      if (next.status !== "running") break;
+      next.progress = i / (steps + 1);
+      next.stage = i < 4 ? "bundling" : i < steps - 3 ? "rendering frames" : "encoding";
+      jobEmit(next, "progress");
+    }
+    if (next.status === "running") {
+      const r = rendersOf(next.projectId)[0];
+      next.finishedAt = new Date().toISOString();
+      if (r && !/fail/i.test(next.projectId)) {
+        next.status = "done"; next.progress = 1; next.stage = "done";
+        next.output = { ...r, quality: next.quality, createdAt: next.finishedAt, seconds: 11.8, width: next.quality === "final" ? 1080 : 540, height: next.quality === "final" ? 1920 : 960 };
+        jobEmit(next, "done");
+      } else {
+        next.status = "error"; next.error = "Render failed: Chrome exited with code 1";
+        jobEmit(next, "error");
+      }
+    }
+    working = false;
+    void pump();
   };
 
   const readJson = (p: string) => { try { return JSON.parse(fs.readFileSync(p, "utf8")); } catch { return null; } };
@@ -189,8 +256,110 @@ export const mockApi = (repoRoot: string): Plugin => {
     let g: RegExpExecArray | null;
     try {
       if ((g = /^\/files\/([^/]+)\/(.+)$/.exec(p))) return serveFile(req, res, decodeURIComponent(g[1]), decodeURIComponent(g[2]));
+      if (p === "/oauth/authorize/decision" && m === "POST") {
+        const u = currentUser(req);
+        if (!u) return send(res, 401, { error: "login_required" });
+        if (req.headers.authorization) return send(res, 400, { error: "invalid_request", error_description: "Authorization header not accepted here" });
+        const origin = req.headers.origin;
+        if (origin && origin !== `http://${req.headers.host}`) return send(res, 403, { error: "invalid_request", error_description: "Origin mismatch" });
+        const b = JSON.parse((await body(req)).toString() || "{}");
+        if (!b.redirect_uri) return send(res, 400, { error: "redirect_uri is required" });
+        const target = new URL(b.redirect_uri);
+        if (b.approve) target.searchParams.set("code", `mock_code_${Date.now().toString(36)}`);
+        else target.searchParams.set("error", "access_denied");
+        if (b.state) target.searchParams.set("state", b.state);
+        return send(res, 200, { redirect: target.toString() });
+      }
       if (!p.startsWith("/api/")) return next();
+      // job events stream immediately (no artificial latency)
+      if ((g = /^\/api\/jobs\/([^/]+)\/events$/.exec(p))) {
+        const j = jobs.get(decodeURIComponent(g[1]));
+        if (!j) return send(res, 404, { error: "No such job" });
+        const emit = sse(res);
+        const fin = j.status === "done" ? "done" : j.status === "error" || j.status === "canceled" ? "error" : null;
+        emit("progress", { progress: j.progress, stage: j.stage, position: j.position, status: j.status });
+        if (fin) { emit(fin, { job: j }); return res.end(); }
+        const subs = jobSubs.get(j.id) ?? new Set();
+        const f = (ev: string, data: unknown) => { emit(ev, data); if (ev !== "progress") { subs.delete(f); res.end(); } };
+        subs.add(f);
+        jobSubs.set(j.id, subs);
+        req.on("close", () => subs.delete(f));
+        return;
+      }
       await sleep(120 + Math.random() * 160); // feel the loading states
+      if (p === "/api/auth/me") { const u = currentUser(req); return send(res, 200, { user: u ? publicUser(u) : null, mode, publicUrl }); }
+      if (p === "/api/auth/login" && m === "POST") {
+        if (mode === "local") return send(res, 200, { user: publicUser(LOCAL) });
+        const b = JSON.parse((await body(req)).toString() || "{}");
+        const u = [...users.values()].find((x) => x.email.toLowerCase() === String(b.email ?? "").trim().toLowerCase());
+        await sleep(300);
+        if (!u || u.password !== b.password) return send(res, 401, { error: "Email or password is incorrect" });
+        startSession(res, u);
+        return send(res, 200, { user: publicUser(u) });
+      }
+      if (p === "/api/auth/signup" && m === "POST") {
+        if (mode === "local") return send(res, 403, { error: "Sign-up is disabled in local mode" });
+        const b = JSON.parse((await body(req)).toString() || "{}");
+        const email = String(b.email ?? "").trim().toLowerCase();
+        if (!/^\S+@\S+\.\S+$/.test(email)) return send(res, 400, { error: "Enter a valid email address" });
+        if (String(b.password ?? "").length < 8) return send(res, 400, { error: "Password must be at least 8 characters" });
+        if ([...users.values()].some((x) => x.email === email)) return send(res, 409, { error: "An account with this email already exists" });
+        const u: User = { id: `u_${Date.now().toString(36)}`, email, name: String(b.name ?? "").trim() || email.split("@")[0], password: String(b.password) };
+        users.set(u.id, u);
+        startSession(res, u);
+        return send(res, 200, { user: publicUser(u) });
+      }
+      if (p === "/api/auth/logout" && m === "POST") {
+        const sid = cookieSid(req);
+        if (sid) sessions.delete(sid);
+        res.setHeader("set-cookie", "ms_session=; Path=/; HttpOnly; Max-Age=0");
+        return send(res, 200, { ok: true });
+      }
+      const user = currentUser(req);
+      if (!user) return send(res, 401, { error: "Sign in required" });
+      if (p === "/api/tokens") {
+        if (m === "POST") {
+          const b = JSON.parse((await body(req)).toString() || "{}");
+          const secret = `ms_pat_${[...Array(40)].map(() => "abcdefghijklmnopqrstuvwxyz0123456789"[Math.floor(Math.random() * 36)]).join("")}`;
+          const t = { id: `tok_${Date.now().toString(36)}`, userId: user.id, name: String(b.name || "Untitled token").slice(0, 60), prefix: secret.slice(0, 9), createdAt: new Date().toISOString(), lastUsedAt: null };
+          tokens.unshift(t);
+          return send(res, 200, { token: secret, id: t.id, name: t.name, prefix: t.prefix });
+        }
+        return send(res, 200, tokens.filter((t) => t.userId === user.id).map(({ userId: _u, ...t }) => t));
+      }
+      if ((g = /^\/api\/tokens\/([^/]+)$/.exec(p)) && m === "DELETE") {
+        const i = tokens.findIndex((t) => t.id === decodeURIComponent(g![1]) && t.userId === user.id);
+        if (i < 0) return send(res, 404, { error: "No such token" });
+        tokens.splice(i, 1);
+        return send(res, 200, { ok: true });
+      }
+      if (p === "/api/connect") {
+        return send(res, 200, {
+          mcpUrl: `${publicUrl}/mcp`, publicUrl,
+          claudeCodeConfig: JSON.stringify({ mcpServers: { "motion-studio": { type: "http", url: `${publicUrl}/mcp`, headers: { Authorization: "Bearer <YOUR_TOKEN>" } } } }, null, 2),
+          steps: [
+            "Open claude.ai → Settings → Connectors.",
+            "Choose “Add custom connector”.",
+            `Paste ${publicUrl}/mcp as the URL and name it Motion Studio.`,
+            "Click Connect, then Approve on the Motion Studio consent screen.",
+            "In a chat, enable Motion Studio from the tools menu and brief it.",
+          ],
+        });
+      }
+      if (p === "/api/jobs") {
+        const pid = url.searchParams.get("projectId");
+        return send(res, 200, [...jobs.values()].filter((j) => !pid || j.projectId === pid).sort((a, b) => b.createdAt.localeCompare(a.createdAt)));
+      }
+      if ((g = /^\/api\/jobs\/([^/]+)(\/cancel)?$/.exec(p))) {
+        const j = jobs.get(decodeURIComponent(g[1]));
+        if (!j) return send(res, 404, { error: "No such job" });
+        if (g[2] && m === "POST" && (j.status === "queued" || j.status === "running")) {
+          j.status = "canceled"; j.finishedAt = new Date().toISOString(); delete j.position;
+          jobEmit(j, "error");
+          queuePositions();
+        }
+        return send(res, 200, j);
+      }
       if (p === "/api/settings") {
         if (m === "PUT") {
           const b = JSON.parse((await body(req)).toString() || "{}");
@@ -272,12 +441,12 @@ export const mockApi = (repoRoot: string): Plugin => {
         return send(res, 200, { sheetUrl: `/files/${id}/previews/sheet.jpg?t=${Date.now()}`, frames: prev.filter((f) => f.startsWith("frame-")).map((f) => ({ time: parseFloat(f.slice(6)), url: `/files/${id}/previews/${f}`, label: f.slice(6, -4) })) });
       }
       if (sub === "/render" && m === "POST") {
-        const emit = sse(res);
-        for (let i = 1; i <= 24; i++) { emit("progress", { progress: i / 25 }); await sleep(150); }
-        const r = rendersOf(id)[0];
-        if (r) emit("done", { render: { ...r, createdAt: new Date().toISOString(), seconds: 11.8, width: 1080, height: 1920 } });
-        else emit("error", { message: "Render failed: Chrome exited with code 1" });
-        return res.end();
+        const b = JSON.parse((await body(req)).toString() || "{}");
+        const j: Job = { id: `job_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 5)}`, projectId: id, kind: "render", quality: b.quality === "final" ? "final" : "draft", backend: "local", status: "queued", progress: 0, stage: "queued", createdAt: new Date().toISOString() };
+        jobs.set(j.id, j);
+        queuePositions();
+        setTimeout(() => void pump(), 400);
+        return send(res, 200, { job: j });
       }
       if (sub === "/chat") {
         if (m === "GET") return send(res, 200, { messages: mem.chats.get(id) ?? [], running: mem.running.has(id) });

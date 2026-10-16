@@ -1,0 +1,82 @@
+{
+  "brew-logo.png": {
+    "mtimeMs": 1792061510119.9426,
+    "size": 91283,
+    "info": {
+      "path": "assets/brew-logo.png",
+      "file": "/home/shashank/motion-studio/projects/test-logo-morph/assets/brew-logo.png",
+      "kind": "image",
+      "sizeBytes": 91283,
+      "width": 1680,
+      "height": 720,
+      "hasAlpha": true,
+      "palette": [
+        "#3a2218",
+        "#2d1b13",
+        "#f1b25c",
+        "#23140e",
+        "#a96d39"
+      ]
+    }
+  },
+  "brew-logo.svg": {
+    "mtimeMs": 1792061510010.225,
+    "size": 5704,
+    "info": {
+      "path": "assets/brew-logo.svg",
+      "file": "/home/shashank/motion-studio/projects/test-logo-morph/assets/brew-logo.svg",
+      "kind": "image",
+      "sizeBytes": 5704,
+      "width": 840,
+      "height": 360,
+      "hasAlpha": true,
+      "palette": [
+        "#3a2218",
+        "#2d1b13",
+        "#f1b25c",
+        "#22140e",
+        "#a86c38"
+      ]
+    }
+  },
+  "orbit-logo.svg": {
+    "mtimeMs": 1792062204675.3125,
+    "size": 429,
+    "info": {
+      "path": "assets/orbit-logo.svg",
+      "file": "/home/shashank/motion-studio/projects/test-logo-morph/assets/orbit-logo.svg",
+      "kind": "image",
+      "sizeBytes": 429,
+      "width": 400,
+      "height": 400,
+      "hasAlpha": true,
+      "palette": [
+        "#5b5bf6",
+        "#f45da2",
+        "#4042ad",
+        "#21c1a4",
+        "#a63f6e"
+      ]
+    }
+  },
+  "window.jpg": {
+    "mtimeMs": 1792061826898.3784,
+    "size": 178422,
+    "info": {
+      "path": "assets/window.jpg",
+      "file": "/home/shashank/motion-studio/projects/test-logo-morph/assets/window.jpg",
+      "kind": "image",
+      "sizeBytes": 178422,
+      "width": 1280,
+      "height": 720,
+      "hasAlpha": false,
+      "palette": [
+        "#0c8c07",
+        "#2f2501",
+        "#769698",
+        "#b2af24",
+        "#da4602"
+      ]
+    }
+  }
+}

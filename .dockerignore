@@ -1,0 +1,16 @@
+.git
+node_modules
+**/node_modules
+data
+projects
+showcase
+out
+.cache
+web/dist
+scratch-smoke
+*.log
+.env
+.env.*
+Dockerfile
+docker-compose.yml
+.dockerignore

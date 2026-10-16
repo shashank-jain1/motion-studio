@@ -16,6 +16,7 @@ import { FONT_NAMES, isKnownFont } from "./fontNames";
 import { probeAsset, type AssetInfo } from "./probe";
 import { analyzeLogoFile, isLogoJson } from "./logo";
 import { syncGlyphs } from "./glyphs";
+import { safeDownload } from "./safe-download";
 
 export type Format = keyof typeof FORMATS;
 
@@ -414,6 +415,17 @@ export const addAsset = async (id: string, src: { path?: string; url?: string; n
     filename = uniqueTarget(dir, filename);
     fs.copyFileSync(from, path.join(dir, filename));
     return withLogoAnalysis(await getAssetInfo(id, filename));
+  }
+
+  // Hosted (multi-user) servers: SSRF-safe download (every redirect hop re-validated, private / loopback / link-local /
+  // CGNAT targets refused, connection pinned to the vetted IP, size + time caps), then import the temp file.
+  if (process.env.MOTION_STUDIO_MODE === "hosted") {
+    const dl = await safeDownload(src.url!, { maxBytes: Number(process.env.MOTION_STUDIO_MAX_DOWNLOAD_MB ?? 200) * 1024 * 1024, name: src.name });
+    try {
+      return await addAsset(id, { path: dl.file, name: dl.filename });
+    } finally {
+      dl.cleanup();
+    }
   }
 
   const url = new URL(src.url!);

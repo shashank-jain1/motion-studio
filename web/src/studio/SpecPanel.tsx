@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import CodeMirror, { EditorSelection, EditorView, keymap, Prec, type ReactCodeMirrorRef } from "@uiw/react-codemirror";
+import CodeMirror, { Decoration, EditorSelection, EditorView, keymap, Prec, RangeSetBuilder, ViewPlugin, type DecorationSet, type ReactCodeMirrorRef, type ViewUpdate } from "@uiw/react-codemirror";
 import { json } from "@codemirror/lang-json";
 import { api, type ValidationResult } from "../api";
 import { useStudio } from "./context";
@@ -8,22 +8,49 @@ import { IconAlert, IconBulb, IconCheck, IconInfo, Spinner } from "../components
 
 /** Editor chrome on top of the one-dark highlight style. */
 const chrome = EditorView.theme({
-  "&": { backgroundColor: "transparent", color: "#d9d9e3", fontSize: "12.5px", height: "100%" },
-  ".cm-scroller": { fontFamily: "'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace", lineHeight: "1.65" },
-  ".cm-content": { padding: "10px 0", caretColor: "#a68bff" },
-  ".cm-gutters": { backgroundColor: "transparent", color: "#4b4b5a", border: "none", paddingLeft: "6px" },
-  ".cm-activeLineGutter": { backgroundColor: "transparent", color: "#9a9aab" },
-  ".cm-activeLine": { backgroundColor: "rgba(255,255,255,0.025)" },
-  ".cm-cursor": { borderLeftColor: "#a68bff", borderLeftWidth: "2px" },
-  "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, ::selection": { backgroundColor: "rgba(124,92,255,0.28) !important" },
-  ".cm-foldGutter .cm-gutterElement": { color: "#5a5a6a" },
-  ".cm-foldPlaceholder": { backgroundColor: "rgba(255,255,255,0.06)", border: "none", color: "#9a9aab", borderRadius: "4px", padding: "0 6px" },
-  ".cm-matchingBracket": { backgroundColor: "rgba(124,92,255,0.25) !important", outline: "none" },
-  ".cm-tooltip": { backgroundColor: "#1b1b22", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px" },
-  ".cm-panels": { backgroundColor: "#131318", color: "#d9d9e3" },
-  ".cm-searchMatch": { backgroundColor: "rgba(255,95,162,0.25)" },
-  ".cm-scene-flash": { backgroundColor: "rgba(124,92,255,0.12)", transition: "background-color 600ms ease-out" },
+  "&": { backgroundColor: "transparent", color: "#ECE8DF", fontSize: "12px", height: "100%" },
+  ".cm-scroller": { fontFamily: "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace", lineHeight: "1.7" },
+  ".cm-content": { padding: "8px 0", caretColor: "#FF3D1F" },
+  ".cm-gutters": { backgroundColor: "transparent", color: "#56534B", border: "none", borderRight: "1px solid #2A2925", paddingLeft: "4px" },
+  ".cm-activeLineGutter": { backgroundColor: "transparent", color: "#ECE8DF" },
+  ".cm-activeLine": { backgroundColor: "rgba(236,232,223,0.035)" },
+  ".cm-cursor": { borderLeftColor: "#FF3D1F", borderLeftWidth: "2px" },
+  "&.cm-focused": { outline: "none" },
+  "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, ::selection": { backgroundColor: "rgba(236,232,223,0.16) !important" },
+  ".cm-foldGutter .cm-gutterElement": { color: "#56534B" },
+  ".cm-foldPlaceholder": { backgroundColor: "#1C1C18", border: "1px solid #2A2925", color: "#8E897D", borderRadius: "2px", padding: "0 6px" },
+  ".cm-matchingBracket": { backgroundColor: "rgba(236,232,223,0.14) !important", outline: "1px solid #56534B" },
+  ".cm-tooltip": { backgroundColor: "#1C1C18", border: "1px solid #2A2925", borderRadius: "2px" },
+  ".cm-panels": { backgroundColor: "#151512", color: "#ECE8DF", borderColor: "#2A2925" },
+  ".cm-searchMatch": { backgroundColor: "rgba(255,61,31,0.25)" },
+  ".cm-scene-flash": { backgroundColor: "rgba(255,61,31,0.12)", transition: "background-color 600ms ease-out" },
 }, { dark: true });
+
+/** Two-ink JSON highlighting (keys Bone, strings warm, numbers Tally-ish, punctuation Smoke) via a tiny tokenizer. */
+const MARK = {
+  key: Decoration.mark({ class: "tk-key" }), str: Decoration.mark({ class: "tk-str" }), num: Decoration.mark({ class: "tk-num" }),
+  lit: Decoration.mark({ class: "tk-lit" }), punc: Decoration.mark({ class: "tk-punc" }),
+};
+const TOKEN = /("(?:[^"\\\n]|\\.)*")(\s*:)?|(-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)|\b(true|false|null)\b|([{}[\],:])/g;
+const buildMarks = (view: EditorView): DecorationSet => {
+  const b = new RangeSetBuilder<Decoration>();
+  for (const { from, to } of view.visibleRanges) {
+    const text = view.state.doc.sliceString(from, to);
+    for (const m of text.matchAll(TOKEN)) {
+      const at = from + (m.index ?? 0);
+      if (m[1]) b.add(at, at + m[1].length, m[2] ? MARK.key : MARK.str);
+      else if (m[3]) b.add(at, at + m[3].length, MARK.num);
+      else if (m[4]) b.add(at, at + m[4].length, MARK.lit);
+      else if (m[5]) b.add(at, at + 1, MARK.punc);
+    }
+  }
+  return b.finish();
+};
+const inks = ViewPlugin.fromClass(class {
+  decorations: DecorationSet;
+  constructor(view: EditorView) { this.decorations = buildMarks(view); }
+  update(u: ViewUpdate) { if (u.docChanged || u.viewportChanged) this.decorations = buildMarks(u.view); }
+}, { decorations: (v) => v.decorations });
 
 type Lint = { kind: "json" | "engine" | "server"; errors: string[]; warnings: string[]; ok: boolean; seconds?: number } | null;
 
@@ -80,6 +107,7 @@ export const SpecPanel = ({ active }: { active: boolean }) => {
   const extensions = useMemo(() => [
     json(),
     chrome,
+    inks,
     EditorView.lineWrapping,
     Prec.highest(keymap.of([{ key: "Mod-s", preventDefault: true, run: () => { void doSave(); return true; } }])),
     // cursor → timeline scene highlight
@@ -104,13 +132,13 @@ export const SpecPanel = ({ active }: { active: boolean }) => {
     <div className="spec-panel">
       <div className="spec-toolbar">
         <span className={`save-state ${dirty ? "is-dirty" : ""}`}>
-          <i />{dirty ? "Unsaved changes" : "Saved"}
+          <i /><span className="mono">{dirty ? "UNSAVED" : "SAVED"}</span>
         </span>
         <div className="spacer" />
         {checking && <Spinner size={12} />}
-        <button className="btn sm" onClick={() => { const v = cm.current?.view; if (!v) return; try { setEditorText(JSON.stringify(JSON.parse(v.state.doc.toString()), null, 2)); } catch { /* invalid */ } }} title="Format JSON">Format</button>
-        <button className={`btn sm ${dirty ? "primary" : ""}`} onClick={doSave} disabled={!dirty || saving} title="Save (⌘/Ctrl+S)">
-          {saving ? <Spinner size={12} /> : null}Save <kbd>⌘S</kbd>
+        <button className="btn xs" onClick={() => { const v = cm.current?.view; if (!v) return; try { setEditorText(JSON.stringify(JSON.parse(v.state.doc.toString()), null, 2)); } catch { /* invalid */ } }} title="Format JSON">Format</button>
+        <button className={`btn xs ${dirty ? "primary" : ""}`} onClick={doSave} disabled={!dirty || saving} title="Save (⌘/Ctrl+S)">
+          {saving ? <Spinner size={12} /> : null}Save <kbd className="kbd">⌘S</kbd>
         </button>
       </div>
       {conflict && (
@@ -123,21 +151,21 @@ export const SpecPanel = ({ active }: { active: boolean }) => {
         </div>
       )}
       <div className="editor-wrap">
-        <CodeMirror ref={cm} value={editorText} onChange={setEditorText} theme="dark" extensions={extensions} height="100%"
-          basicSetup={{ highlightActiveLine: true, foldGutter: true, bracketMatching: true, autocompletion: false, searchKeymap: true, lintKeymap: false }} />
+        <CodeMirror ref={cm} value={editorText} onChange={setEditorText} theme="none" extensions={extensions} height="100%"
+          basicSetup={{ syntaxHighlighting: false, highlightActiveLine: true, foldGutter: true, bracketMatching: true, autocompletion: false, searchKeymap: true, lintKeymap: false }} />
       </div>
       <div className="lint">
-        {!lint && <div className="lint-row muted"><Spinner size={12} />Checking…</div>}
+        {!lint && <div className="lint-row dim"><Spinner size={12} /><span className="mono">CHECKING</span></div>}
         {lint && lint.ok && !warnings.length && (
-          <div className="lint-row ok"><IconCheck size={13} />Valid spec{lint.seconds != null ? ` · ${+lint.seconds.toFixed(2)}s` : ""}</div>
+          <div className="lint-row ok"><IconCheck size={14} /><span className="mono">VALID{lint.seconds != null ? ` · ${lint.seconds.toFixed(2)}S` : ""}</span></div>
         )}
         {lint && lint.ok && !!warnings.length && (
-          <div className="lint-row ok"><IconCheck size={13} />Valid{lint.seconds != null ? ` · ${+lint.seconds.toFixed(2)}s` : ""} · {warnings.length} note{warnings.length === 1 ? "" : "s"}</div>
+          <div className="lint-row ok"><IconCheck size={14} /><span className="mono">VALID{lint.seconds != null ? ` · ${lint.seconds.toFixed(2)}S` : ""} · {warnings.length} NOTE{warnings.length === 1 ? "" : "S"}</span></div>
         )}
-        {lint?.errors.map((e, i) => <div key={`e${i}`} className="lint-row error"><IconAlert size={13} /><code>{e}</code></div>)}
-        {warns.map((w, i) => <div key={`w${i}`} className="lint-row warn"><IconInfo size={13} /><span>{w}</span></div>)}
+        {lint?.errors.map((e, i) => <div key={`e${i}`} className="lint-row error"><IconAlert size={14} /><code>{e}</code></div>)}
+        {warns.map((w, i) => <div key={`w${i}`} className="lint-row warn"><IconInfo size={14} /><span>{w}</span></div>)}
         {tips.map((w, i) => (
-          <div key={`t${i}`} className="lint-row tip"><IconBulb size={13} /><span><b>{w.match(/^craft\/[\w-]+/)?.[0].slice(6)}</b>{w.replace(/^craft\/[\w-]+:?\s*/, " ")}</span></div>
+          <div key={`t${i}`} className="lint-row tip"><IconBulb size={14} /><span><b>{w.match(/^craft\/[\w-]+/)?.[0].slice(6)}</b>{w.replace(/^craft\/[\w-]+:?\s*/, " ")}</span></div>
         ))}
       </div>
     </div>

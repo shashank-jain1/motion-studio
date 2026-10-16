@@ -39,6 +39,7 @@ import { ensureLogoAnalysis, logoJsonPath, logoSummary, renderLogoPreviewPng, LO
 import { analyzeAudio } from "./audio";
 import { renderFrames, renderVideo, type PreviewResult, type RenderQuality, type RenderVideoResult } from "./render";
 import { listCustomComponents, readCustomComponent, writeCustomComponent } from "./custom";
+import { resolvePublic, safeDownload } from "./safe-download";
 
 // ---------------------------------------------------------------- types
 
@@ -98,7 +99,48 @@ export type ToolContext = {
   signal?: AbortSignal;
   /** Long tools (render_video, preview_frames) report progress here (progress 0..1). */
   onProgress?: (p: ToolProgress) => void;
+  /** User / mode scoping (web server, remote MCP). Absent = trusted local caller (MCP stdio, CLI): everything allowed. */
+  policy?: ToolPolicy;
 };
+
+/**
+ * Scoping hooks injected by multi-user transports (src/server/scope.ts → toolPolicyFor(user)).
+ * - hosted: local-path add_asset and write_custom_component / open_studio_hint are removed, URL downloads are SSRF-safe,
+ *   specs may not reference "../" paths or private hosts, results don't reveal server paths.
+ * - canAccessProject: every project-scoped call is checked (false → "Project not found", no existence leak).
+ * - listProjectIds / onProjectCreated: list_projects shows only these; create_project records ownership.
+ * - renderVideo: render_video goes through this (the job queue) instead of rendering in-process.
+ * - projectLink: appended to results of project tools ("Open in Motion Studio: <url>").
+ */
+export type ToolPolicy = {
+  hosted?: boolean;
+  canAccessProject?: (projectId: string) => boolean;
+  listProjectIds?: () => Iterable<string>;
+  onProjectCreated?: (projectId: string) => void;
+  renderVideo?: (projectId: string, quality: RenderQuality, ctx: ToolContext) => Promise<RenderRecord | PendingRender>;
+  /** render_status: a job of this project (latest when jobId is omitted), null if none. */
+  renderStatus?: (projectId: string, jobId?: string) => RenderJobStatus | null;
+  projectLink?: (projectId: string) => string | null | undefined;
+  /** Max bytes for add_asset URL downloads in hosted mode (default 200 MB). */
+  maxDownloadBytes?: number;
+};
+
+/** render_video returned before the job finished (remote MCP waits ~45s at most); poll with render_status. */
+export type PendingRender = { pending: true; jobId: string; status: string; progress: number; stage?: string; position?: number };
+export type RenderJobStatus = {
+  jobId: string;
+  status: "queued" | "running" | "done" | "error" | "canceled";
+  quality: RenderQuality;
+  progress: number;
+  stage?: string;
+  position?: number;
+  error?: string;
+  render?: RenderRecord;
+  createdAt: string;
+  finishedAt?: string;
+};
+
+const isHosted = (ctx: Pick<ToolContext, "policy">) => !!ctx.policy?.hosted;
 
 type Shape = Record<string, z.ZodType>;
 
@@ -114,6 +156,8 @@ export type ToolDef = {
   title: string;
   description: string;
   scope: ToolScope;
+  /** Hosted mode: "hidden" removes the tool; an object removes input fields and swaps the description. */
+  hosted?: "hidden" | { omit: string[]; description: string };
   /** Full input shape (including projectId for project tools) — what MCP registers. */
   shape: Shape;
   /** Human line for a tool call about to run, e.g. "Writing spec · 5 scenes". */
@@ -126,6 +170,7 @@ const defineTool = <S extends Shape>(def: {
   title: string;
   description: string;
   scope: ToolScope;
+  hosted?: ToolDef["hosted"];
   shape: S;
   startSummary?: (input: z.infer<z.ZodObject<S>>) => string;
   handler: (input: z.infer<z.ZodObject<S>>, ctx: ToolContext) => Promise<ToolResult>;
@@ -134,6 +179,7 @@ const defineTool = <S extends Shape>(def: {
   title: def.title,
   description: def.description,
   scope: def.scope,
+  ...(def.hosted ? { hosted: def.hosted } : {}),
   shape: def.shape,
   startSummary: (def.startSummary ?? (() => def.title)) as ToolDef["startSummary"],
   handler: def.handler as ToolDef["handler"],
@@ -240,6 +286,46 @@ export const specSummary = (spec: SpecInput | null) => {
       notes: s.notes,
     })),
   };
+};
+
+// ---------------------------------------------------------------- hosted spec safety
+
+const TRAVERSAL_RE = /(^|[\\/])\.\.([\\/]|$)/;
+const URL_IN_TEXT_RE = /\b(?:https?:)?\/\/[^\s"'()<>\\]+/gi;
+
+/**
+ * Hosted mode: a spec may not reach outside its project ("../other-project/assets/x.png" would be served by the render
+ * asset server) nor make the headless browser fetch private / loopback hosts. Throws with every offending value.
+ */
+export const assertSpecSafe = async (spec: unknown): Promise<void> => {
+  const bad: string[] = [];
+  const hosts = new Set<string>();
+  const walk = (v: unknown, depth: number) => {
+    if (depth > 64) return;
+    if (typeof v === "string") {
+      if (TRAVERSAL_RE.test(v)) bad.push(`"${v.slice(0, 80)}": paths may not contain ".." (assets must be inside the project)`);
+      for (const m of v.matchAll(URL_IN_TEXT_RE)) {
+        try {
+          hosts.add(new URL(m[0].startsWith("//") ? `https:${m[0]}` : m[0]).hostname);
+        } catch {
+          /* not a URL */
+        }
+      }
+    } else if (Array.isArray(v)) v.forEach((x) => walk(x, depth + 1));
+    else if (v && typeof v === "object") Object.values(v).forEach((x) => walk(x, depth + 1));
+  };
+  walk(spec, 0);
+  if (hosts.size > 40) bad.push(`too many distinct external hosts (${hosts.size}); upload the assets instead`);
+  else {
+    for (const h of hosts) {
+      try {
+        await resolvePublic(h);
+      } catch (e) {
+        bad.push((e as Error).message);
+      }
+    }
+  }
+  if (bad.length) throw new Error(`The spec references resources this server will not load:\n${bad.slice(0, 12).map((b) => `  • ${b}`).join("\n")}`);
 };
 
 // ---------------------------------------------------------------- render lock
@@ -568,10 +654,16 @@ export const TOOLS: ToolDef[] = [
       "Create a new video project (a folder with assets/, renders/, previews/). Returns the projectId to use with every other tool. format: 16:9 (YouTube/landscape, default), 9:16 (Reels/TikTok/Shorts), 1:1, 4:5 (feed), 21:9.",
     shape: { name: z.string().min(1).describe("human-readable project name"), format: z.enum(FORMAT_KEYS).optional() },
     startSummary: (i) => `Creating project "${i.name}"`,
-    handler: async ({ name, format }) => {
+    handler: async ({ name, format }, ctx) => {
       const p = createProject({ name, format });
+      ctx.policy?.onProjectCreated?.(p.id);
+      const link = ctx.policy?.projectLink?.(p.id);
       return {
-        content: [json({ projectId: p.id, name: p.name, format: p.format, dir: p.dir }), text("Next: add_asset for any logos/screenshots/music, then set_spec.")],
+        content: [
+          json({ projectId: p.id, name: p.name, format: p.format, ...(isHosted(ctx) ? {} : { dir: p.dir }) }),
+          text("Next: add_asset for any logos/screenshots/music, then set_spec."),
+          ...(link ? [text(`Open in Motion Studio: ${link}`)] : []),
+        ],
         summary: `Created ${p.id} (${p.format})`,
       };
     },
@@ -584,9 +676,13 @@ export const TOOLS: ToolDef[] = [
     description: "List existing projects (most recently edited first).",
     shape: {},
     startSummary: () => "Listing projects",
-    handler: async () => {
-      const list = listProjects().map((p) => ({ projectId: p.id, name: p.name, format: p.format, createdAt: p.createdAt, updatedAt: p.updatedAt, hasSpec: p.hasSpec }));
-      return { content: [list.length ? json(list) : text(`No projects yet in ${PROJECTS_DIR}. Use create_project.`)], summary: plural(list.length, "project") };
+    handler: async (_input, ctx) => {
+      const allowed = ctx.policy?.listProjectIds ? new Set(ctx.policy.listProjectIds()) : null;
+      const list = listProjects()
+        .filter((p) => !allowed || allowed.has(p.id))
+        .map((p) => ({ projectId: p.id, name: p.name, format: p.format, createdAt: p.createdAt, updatedAt: p.updatedAt, hasSpec: p.hasSpec }));
+      const none = isHosted(ctx) ? "No projects yet. Use create_project." : `No projects yet in ${PROJECTS_DIR}. Use create_project.`;
+      return { content: [list.length ? json(list) : text(none)], summary: plural(list.length, "project") };
     },
   }),
 
@@ -598,12 +694,13 @@ export const TOOLS: ToolDef[] = [
       "Project info, its assets (kind, size, duration, dominant palette — reference them in the spec as their `path`), the current spec summary (scenes with start times) and recent renders.",
     shape: { projectId: projectIdField },
     startSummary: () => "Checking the project",
-    handler: async ({ projectId }) => {
+    handler: async ({ projectId }, ctx) => {
       const p = getProject(projectId);
       const assets = (await listAssets(projectId)).map(({ file: _file, ...a }) => a);
-      const renders = listRenders(projectId).slice(0, 5).map((r) => path.join(p.dir, r.file));
+      const hosted = isHosted(ctx);
+      const renders = listRenders(projectId).slice(0, 5).map((r) => (hosted ? r.file : path.join(p.dir, r.file)));
       return {
-        content: [json({ projectId: p.id, name: p.name, format: p.format, createdAt: p.createdAt, dir: p.dir, assets, spec: specSummary(readSpec(projectId)), renders })],
+        content: [json({ projectId: p.id, name: p.name, format: p.format, createdAt: p.createdAt, ...(hosted ? {} : { dir: p.dir }), assets, spec: specSummary(readSpec(projectId)), renders })],
         summary: `${plural(assets.length, "asset")} · ${plural(renders.length, "render")}`,
       };
     },
@@ -613,6 +710,11 @@ export const TOOLS: ToolDef[] = [
     name: "add_asset",
     title: "Add asset",
     scope: "project",
+    hosted: {
+      omit: ["path"],
+      description:
+        "Import an ingredient (logo, product shot, screenshot, screen recording, music, sfx, Lottie JSON) into the project from a public http(s) URL (the user can also upload files in the Motion Studio web app). Returns its spec path (e.g. \"assets/logo.png\"), kind, dimensions, duration, hasAudio and dominant palette (use it to pick theme colors that match the brand). Images and videos also come back as a small preview image so you can see them.",
+    },
     description:
       "Import an ingredient (logo, product shot, screenshot, screen recording, music, sfx, Lottie JSON) into the project from an absolute local path or an http(s) URL. Returns its spec path (e.g. \"assets/logo.png\"), kind, dimensions, duration, hasAudio and dominant palette (use it to pick theme colors that match the brand). Images and videos also come back as a small preview image so you can see them.",
     shape: {
@@ -623,7 +725,17 @@ export const TOOLS: ToolDef[] = [
     },
     startSummary: (i) => `Adding asset ${i.name ?? path.basename(i.path ?? i.url ?? "")}`,
     handler: async ({ projectId, path: p, url, name }, ctx) => {
-      const info = await addAsset(projectId, { path: p, url, name });
+      let info: AssetInfo;
+      if (isHosted(ctx)) {
+        if (p) throw new Error("Local file paths are disabled on this server. Pass a public https `url`, or upload the file in the Motion Studio web app.");
+        if (!url) throw new Error("Provide `url` (a public http(s) URL).");
+        const dl = await safeDownload(url, { maxBytes: ctx.policy?.maxDownloadBytes ?? 200 * 1024 * 1024, name, signal: ctx.signal });
+        try {
+          info = await addAsset(projectId, { path: dl.file, name: dl.filename });
+        } finally {
+          dl.cleanup();
+        }
+      } else info = await addAsset(projectId, { path: p, url, name });
       const { file, ...rest } = info;
       const content: ToolContent[] = [json(rest)];
       if (info.kind === "image" || info.kind === "video") {
@@ -734,8 +846,10 @@ export const TOOLS: ToolDef[] = [
       })();
       return `Writing spec${Array.isArray(s?.scenes) ? ` · ${plural(s.scenes.length, "scene")}` : ""}`;
     },
-    handler: async ({ projectId, spec }) => {
-      const res = await writeSpec(projectId, parseMaybeJson(spec, "spec"));
+    handler: async ({ projectId, spec }, ctx) => {
+      const value = parseMaybeJson(spec, "spec");
+      if (isHosted(ctx)) await assertSpecSafe(value);
+      const res = await writeSpec(projectId, value);
       return { content: [text(formatValidation(res))], isError: !res.ok, summary: specResultSummary("Saved spec", res, projectId), events: specEvent(projectId, res) };
     },
   }),
@@ -765,8 +879,10 @@ export const TOOLS: ToolDef[] = [
       scene: z.union([z.record(z.string(), z.any()), z.string()]).describe("the full scene object (a JSON string is accepted too)"),
     },
     startSummary: (i) => `Updating scene ${i.index}`,
-    handler: async ({ projectId, index, scene }) => {
-      const res = await updateScene(projectId, index, parseMaybeJson(scene, "scene"));
+    handler: async ({ projectId, index, scene }, ctx) => {
+      const value = parseMaybeJson(scene, "scene");
+      if (isHosted(ctx)) await assertSpecSafe(value);
+      const res = await updateScene(projectId, index, value);
       return {
         content: [text(formatValidation(res))],
         isError: !res.ok,
@@ -790,6 +906,7 @@ export const TOOLS: ToolDef[] = [
     },
     startSummary: (i) => `Rendering preview${i.times?.length ? ` · ${plural(i.times.length, "frame")}` : ""}`,
     handler: async ({ projectId, times, scale, individual }, ctx) => {
+      if (isHosted(ctx)) await assertSpecSafe(readSpec(projectId));
       const run = await runPreview(projectId, { times, scale, individual, signal: ctx.signal, onWait: () => ctx.onProgress?.({ progress: 0, message: "Waiting for another render to finish…" }) });
       const lines = run.frames.map((f, i) => `${i + 1}. ${f.label}`);
       const header = `Rendered ${run.frames.length} frame(s) of a ${run.durationSeconds.toFixed(2)}s video at ${run.width}x${run.height} in ${run.seconds.toFixed(1)}s.`;
@@ -813,10 +930,39 @@ export const TOOLS: ToolDef[] = [
     title: "Render MP4",
     scope: "project",
     description:
-      "Render the project to an MP4 (H.264). quality \"draft\" = half resolution, fast (use to check timing/motion); \"final\" = full resolution, high quality. Takes from seconds to minutes depending on length. Returns the file path, duration, size and render time. Only render after preview_frames looks right.",
+      "Render the project to an MP4 (H.264). quality \"draft\" = half resolution, fast (use to check timing/motion); \"final\" = full resolution, high quality. Takes from seconds to minutes depending on length. Returns the file path, duration, size and render time. Only render after preview_frames looks right. On a hosted/remote Motion Studio renders run in a job queue: if the render takes longer than ~45s this returns \"Still rendering\" with a jobId — then poll render_status until it is done.",
     shape: { projectId: projectIdField, quality: z.enum(["draft", "final"]).optional() },
     startSummary: (i) => `Rendering ${i.quality ?? "draft"} video`,
     handler: async ({ projectId, quality }, ctx) => {
+      if (ctx.policy?.renderVideo) {
+        const out = await ctx.policy.renderVideo(projectId, quality ?? "draft", ctx);
+        if ("pending" in out) {
+          const pct = Math.round(out.progress * 100);
+          const state = out.status === "queued" ? `queued${out.position ? ` (#${out.position} in line)` : ""}` : `${out.stage ?? "rendering"} · ${pct}%`;
+          return {
+            content: [
+              text(
+                `Still rendering — job ${out.jobId} is ${state}. The render continues in the background: call render_status {${pidArg(ctx)}jobId: "${out.jobId}"} in ~30s to check (the finished MP4 also shows up in get_project).`,
+              ),
+              json(out),
+            ],
+            summary: `Render ${out.jobId} ${out.status} · ${pct}%`,
+          };
+        }
+        const r = out;
+        const dims = r.width && r.height ? `${r.width}x${r.height}` : "";
+        const where = isHosted(ctx) ? r.file : path.join(getProject(projectId).dir, r.file);
+        return {
+          content: [
+            text(
+              `Rendered ${r.quality} video: ${where}\n${[dims, r.fps ? `${r.fps}fps` : "", r.seconds !== undefined ? `${r.seconds.toFixed(2)}s` : "", `${(r.sizeBytes / 1e6).toFixed(2)} MB`, r.renderSeconds !== undefined ? `took ${r.renderSeconds}s` : ""].filter(Boolean).join(", ")}.`,
+            ),
+            json(r),
+          ],
+          summary: `Rendered ${r.quality}${r.seconds !== undefined ? ` · ${fmtSecs(r.seconds)}` : ""} · ${(r.sizeBytes / 1e6).toFixed(1)} MB`,
+          events: [{ type: "render", projectId, render: r }],
+        };
+      }
       let last = -1;
       const { result: res, record } = await runRender(projectId, {
         quality: quality ?? "draft",
@@ -842,9 +988,47 @@ export const TOOLS: ToolDef[] = [
   }),
 
   defineTool({
+    name: "render_status",
+    title: "Render status",
+    scope: "project",
+    description:
+      "Status of a render job started by render_video (queued / running with progress / done with the file / error / canceled). Omit jobId for the project's latest job. Use it after render_video answered \"Still rendering\".",
+    shape: { projectId: projectIdField, jobId: z.string().optional().describe("job id from render_video; default: latest job of the project") },
+    startSummary: () => "Checking the render",
+    handler: async ({ projectId, jobId }, ctx) => {
+      if (!ctx.policy?.renderStatus) {
+        const latest = listRenders(projectId)[0];
+        return {
+          content: [text(latest ? `Renders run synchronously on this server (no job queue). Latest render: ${JSON.stringify(latest)}` : "Renders run synchronously on this server (no job queue); no renders yet.")],
+          summary: latest ? `Latest render ${latest.quality}` : "No renders",
+        };
+      }
+      const st = ctx.policy.renderStatus(projectId, jobId);
+      if (!st) return { content: [text(jobId ? `No render job "${jobId}" in this project.` : "No render jobs for this project yet. Use render_video.")], isError: !!jobId, summary: "No job" };
+      const pct = Math.round(st.progress * 100);
+      const line =
+        st.status === "done"
+          ? `Done: ${st.render?.file ?? "(file)"}${st.render?.seconds !== undefined ? `, ${st.render.seconds.toFixed(2)}s` : ""}${st.render ? `, ${(st.render.sizeBytes / 1e6).toFixed(2)} MB` : ""}.`
+          : st.status === "queued"
+            ? `Queued${st.position ? ` (#${st.position} in line)` : ""}. Check again in ~30s.`
+            : st.status === "running"
+              ? `Running: ${st.stage ?? "rendering"} · ${pct}%. Check again in ~30s.`
+              : st.status === "canceled"
+                ? "Canceled."
+                : `Failed: ${st.error ?? "unknown error"}`;
+      return {
+        content: [text(`Job ${st.jobId} (${st.quality}): ${line}`), json(st)],
+        isError: st.status === "error",
+        summary: `Render ${st.status}${st.status === "running" ? ` · ${pct}%` : ""}`,
+      };
+    },
+  }),
+
+  defineTool({
     name: "write_custom_component",
     title: "Write custom component",
     scope: "global",
+    hosted: "hidden",
     description:
       "Escape hatch when the kit can't express an idea: write a React (TSX) component that becomes usable in specs as {\"type\":\"custom\",\"component\":\"<Name>\",\"props\":{...}}. The file must `export default` a component receiving { t, duration, width, height, ...props } where t = seconds since the layer started — derive ALL animation from t (no CSS animations, timers, Math.random or useEffect-driven state; it must be deterministic per frame). You may import from \"remotion\" (interpolate, spring, Easing, Img, staticFile...) and \"react\". Size it to fill its layer (width/height). Syntax is checked before saving. Re-writing the same name replaces it.",
     shape: {
@@ -881,6 +1065,7 @@ export const TOOLS: ToolDef[] = [
     name: "open_studio_hint",
     title: "How to open Remotion Studio",
     scope: "unbound",
+    hosted: "hidden",
     description: "Explains how a human can open the live Remotion Studio to scrub through a project interactively.",
     shape: { projectId: z.string().optional() },
     startSummary: () => "Studio hint",
@@ -908,6 +1093,8 @@ export type BoundTool = {
   name: string;
   title: string;
   description: string;
+  /** Visible input shape (projectId removed when bound, hosted-omitted fields removed) — what an MCP server registers. */
+  shape: Shape;
   /** Input schema as seen by the caller (projectId removed when bound). */
   inputSchema: z.ZodObject<Shape>;
   /** JSON Schema of inputSchema (for the Claude API `input_schema`). */
@@ -915,12 +1102,19 @@ export type BoundTool = {
   def: ToolDef;
 };
 
+type Visibility = Pick<ToolContext, "projectId" | "policy">;
+
 const isBound = (ctx: Pick<ToolContext, "projectId">) => !!ctx.projectId;
 
-const visibleShape = (def: ToolDef, bound: boolean): Shape => {
-  if (!bound || def.scope !== "project") return def.shape;
-  const { projectId: _omit, ...rest } = def.shape;
-  return rest;
+const isVisible = (def: ToolDef, ctx: Visibility) => !(isBound(ctx) && def.scope === "unbound") && !(isHosted(ctx) && def.hosted === "hidden");
+
+const hostedOmit = (def: ToolDef, hosted: boolean): string[] => (hosted && def.hosted && def.hosted !== "hidden" ? def.hosted.omit : []);
+
+const visibleShape = (def: ToolDef, bound: boolean, hosted: boolean): Shape => {
+  const omit = new Set(hostedOmit(def, hosted));
+  if (bound && def.scope === "project") omit.add("projectId");
+  if (!omit.size) return def.shape;
+  return Object.fromEntries(Object.entries(def.shape).filter(([k]) => !omit.has(k)));
 };
 
 const cleanJsonSchema = (v: unknown): unknown => {
@@ -937,27 +1131,27 @@ const cleanJsonSchema = (v: unknown): unknown => {
 
 const boundCache = new Map<string, BoundTool>();
 
-const bindTool = (def: ToolDef, bound: boolean): BoundTool => {
-  const key = `${def.name}|${bound}`;
+const bindTool = (def: ToolDef, bound: boolean, hosted: boolean): BoundTool => {
+  const key = `${def.name}|${bound}|${hosted}`;
   const hit = boundCache.get(key);
   if (hit) return hit;
-  const inputSchema = z.object(visibleShape(def, bound));
+  const shape = visibleShape(def, bound, hosted);
+  const inputSchema = z.object(shape);
   const jsonSchema = cleanJsonSchema(z.toJSONSchema(inputSchema)) as Record<string, unknown>;
-  const bt: BoundTool = { name: def.name, title: def.title, description: def.description, inputSchema, jsonSchema, def };
+  const description = hosted && def.hosted && def.hosted !== "hidden" ? def.hosted.description : def.description;
+  const bt: BoundTool = { name: def.name, title: def.title, description, shape, inputSchema, jsonSchema, def };
   boundCache.set(key, bt);
   return bt;
 };
 
 /** Tools visible in this context, in a stable order (keep it deterministic: it is part of the prompt-cache prefix). */
-export const toolsFor = (ctx: Pick<ToolContext, "projectId"> = {}, opts: { exclude?: string[] } = {}): BoundTool[] => {
-  const bound = isBound(ctx);
-  return TOOLS.filter((t) => !(bound && t.scope === "unbound") && !opts.exclude?.includes(t.name)).map((t) => bindTool(t, bound));
-};
+export const toolsFor = (ctx: Visibility = {}, opts: { exclude?: string[] } = {}): BoundTool[] =>
+  TOOLS.filter((t) => isVisible(t, ctx) && !opts.exclude?.includes(t.name)).map((t) => bindTool(t, isBound(ctx), isHosted(ctx)));
 
-export const getTool = (name: string, ctx: Pick<ToolContext, "projectId"> = {}): BoundTool | undefined => {
+export const getTool = (name: string, ctx: Visibility = {}): BoundTool | undefined => {
   const def = TOOLS.find((t) => t.name === name);
-  if (!def || (isBound(ctx) && def.scope === "unbound")) return undefined;
-  return bindTool(def, isBound(ctx));
+  if (!def || !isVisible(def, ctx)) return undefined;
+  return bindTool(def, isBound(ctx), isHosted(ctx));
 };
 
 /** Readable zod issues: `times[2]: Too small: expected number to be >=0`. */
@@ -968,11 +1162,14 @@ export const formatToolIssues = (issues: z.core.$ZodIssue[]): string =>
 export const parseToolInput = (
   name: string,
   input: unknown,
-  ctx: Pick<ToolContext, "projectId"> = {},
+  ctx: Visibility = {},
 ): { ok: true; tool: BoundTool; input: Record<string, unknown> } | { ok: false; error: string } => {
   const tool = getTool(name, ctx);
   if (!tool) return { ok: false, error: `Unknown tool "${name}".` };
-  const parsed = tool.inputSchema.safeParse(input ?? {});
+  const raw = (input ?? {}) as Record<string, unknown>;
+  const omitted = hostedOmit(tool.def, isHosted(ctx)).filter((k) => raw && typeof raw === "object" && raw[k] !== undefined);
+  if (omitted.length) return { ok: false, error: `${omitted.join(", ")}: not available on this server${name === "add_asset" ? " (local file paths are disabled; pass a public https url)" : ""}` };
+  const parsed = tool.inputSchema.safeParse(raw);
   if (!parsed.success) return { ok: false, error: formatToolIssues(parsed.error.issues) };
   const data = parsed.data as Record<string, unknown>;
   if (ctx.projectId && tool.def.scope === "project") data.projectId = ctx.projectId;
@@ -992,13 +1189,20 @@ export const describeToolCall = (name: string, input: unknown): string => {
 
 /**
  * Validate + run a tool. Never throws: invalid input and handler errors come back as `isError` results
- * (an aborted signal is reported as "Aborted").
+ * (an aborted signal is reported as "Aborted"). With a policy, project access is checked first and project results get
+ * the policy's project link appended.
  */
 export const callTool = async (name: string, input: unknown, ctx: ToolContext = {}): Promise<ToolResult> => {
   const parsed = parseToolInput(name, input, ctx);
   if (!parsed.ok) return { content: [text(`Invalid input for ${name}:\n${parsed.error}`)], isError: true, summary: "Invalid input" };
+  const projectId = parsed.tool.def.scope === "project" ? (parsed.input.projectId as string | undefined) : undefined;
+  if (projectId && ctx.policy?.canAccessProject && !ctx.policy.canAccessProject(projectId)) {
+    return { content: [text(`Error: Project "${projectId}" not found. Use list_projects to see your projects.`)], isError: true, summary: "Project not found" };
+  }
   try {
-    return await parsed.tool.def.handler(parsed.input, ctx);
+    const res = await parsed.tool.def.handler(parsed.input, ctx);
+    const link = projectId ? ctx.policy?.projectLink?.(projectId) : undefined;
+    return link ? { ...res, content: [...res.content, text(`Open in Motion Studio: ${link}`)] } : res;
   } catch (e) {
     const aborted = ctx.signal?.aborted || (e as Error)?.name === "AbortError";
     const msg = aborted ? "Aborted" : e instanceof Error ? e.message : String(e);

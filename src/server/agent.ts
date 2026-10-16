@@ -17,7 +17,7 @@ import crypto from "node:crypto";
 import Anthropic from "@anthropic-ai/sdk";
 import type { BetaMessageStreamParams } from "@anthropic-ai/sdk/resources/beta/messages";
 import { getProject, listAssets, readSpec, validateSpec } from "../core/projects";
-import { callTool, describeToolCall, listRenders, parseToolInput, readDoc, specSummary, toolsFor, type Timeline, type ToolResult } from "../core/tools";
+import { callTool, describeToolCall, listRenders, parseToolInput, readDoc, specSummary, toolsFor, type Timeline, type ToolPolicy, type ToolResult } from "../core/tools";
 import { agentSettings, FALLBACK_MODELS, keySource, makeClient } from "./settings";
 
 type MessageParam = Anthropic.Beta.BetaMessageParam;
@@ -264,7 +264,8 @@ const refusalMessage = (msg: Message): string => {
 
 // ---------------------------------------------------------------- the loop
 
-export type RunDeps = { client?: AgentClient; model?: string; effort?: string };
+/** policy: user / mode scoping for the tools (src/server/scope.ts toolPolicyFor); render_video then goes through the job queue. */
+export type RunDeps = { client?: AgentClient; model?: string; effort?: string; policy?: ToolPolicy };
 
 /**
  * One run of the agent loop for a user message. Emits ChatEvents (always ending with "done"); never throws.
@@ -318,7 +319,7 @@ export const runChat = async (projectId: string, userText: string, emit: (e: Cha
     chat.ui.push(assistantUi);
     saveChat(projectId, chat);
 
-    const tools = toolsFor({ projectId }, { exclude: EXCLUDED_TOOLS });
+    const tools = toolsFor({ projectId, policy: deps.policy }, { exclude: EXCLUDED_TOOLS });
     const apiTools: Anthropic.Beta.BetaTool[] = tools.map((t) => ({
       name: t.name,
       description: t.description,
@@ -452,7 +453,7 @@ export const runChat = async (projectId: string, userText: string, emit: (e: Cha
       // ---- run tools (sequentially, in order) and return ALL results in one user message
       const results: ToolResultBlock[] = [];
       for (const tu of toolUses) {
-        results.push(await runTool(projectId, tu, signal, send, assistantUi));
+        results.push(await runTool(projectId, tu, signal, send, assistantUi, deps.policy));
         saveChat(projectId, chat);
       }
       chat.messages.push({ role: "user", content: results });
@@ -489,6 +490,7 @@ const runTool = async (
   signal: AbortSignal,
   send: (e: ChatEvent) => void,
   ui: UiMessage,
+  policy?: ToolPolicy,
 ): Promise<ToolResultBlock> => {
   const part: UiPart & { type: "tool" } = { type: "tool", id: tu.id, name: tu.name, summary: describeToolCall(tu.name, tu.input) };
   ui.parts.push(part);
@@ -507,7 +509,7 @@ const runTool = async (
   }
 
   // Eager input streaming: the server no longer validates inputs — validate before running.
-  const parsed = parseToolInput(tu.name, tu.input, { projectId });
+  const parsed = parseToolInput(tu.name, tu.input, { projectId, policy });
   if (!parsed.ok) {
     finish(false, "Invalid input — asking to resend");
     return {
@@ -521,10 +523,12 @@ const runTool = async (
   let lastPct = -1;
   const res: ToolResult = await callTool(tu.name, tu.input, {
     projectId,
+    policy,
     signal,
     onProgress: (p) => {
       const pct = Math.round(p.progress * 100);
       if (p.message?.startsWith("Waiting")) send({ type: "status", text: p.message });
+      else if (p.message && p.progress === 0) send({ type: "status", text: `${part.summary} · ${p.message}` });
       else if (pct !== lastPct) {
         lastPct = pct;
         send({ type: "status", text: `${part.summary} · ${pct}%` });

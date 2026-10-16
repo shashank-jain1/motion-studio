@@ -13,7 +13,8 @@
     "web": "vite --config web/vite.config.ts",
     "dev": "concurrently -k -n server,web -c blue,magenta \"pnpm server\" \"pnpm web\"",
     "build:web": "vite build --config web/vite.config.ts",
-    "start": "pnpm build:web && pnpm server"
+    "start": "pnpm build:web && pnpm server",
+    "deploy:lambda": "tsx scripts/deploy-lambda.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "0.131.0",
@@ -23,6 +24,7 @@
     "@remotion/bundler": "4.0.532",
     "@remotion/cli": "4.0.532",
     "@remotion/google-fonts": "4.0.532",
+    "@remotion/lambda": "4.0.532",
     "@remotion/lottie": "4.0.532",
     "@remotion/media-utils": "4.0.532",
     "@remotion/motion-blur": "4.0.532",

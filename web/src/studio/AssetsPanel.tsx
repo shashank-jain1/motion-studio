@@ -3,7 +3,7 @@ import { api, uploadAsset, type Asset, type LogoSummary } from "../api";
 import { useStudio } from "./context";
 import { useToast } from "../components/Toast";
 import { Lightbox, Skeleton } from "../components/ui";
-import { IconAt, IconClose, IconFile, IconFilm, IconImage, IconMusic, IconSparkle, IconTrash, IconUpload, Spinner } from "../components/Icons";
+import { IconAt, IconClose, IconFile, IconFilm, IconImage, IconMusic, IconTrash, IconUpload, Spinner } from "../components/Icons";
 import { basename, fmtBytes, fmtDuration } from "../lib/format";
 
 type Upload = { key: string; name: string; progress: number; error?: string };
@@ -64,25 +64,24 @@ export const AssetsPanel = () => {
       <button className={`dropzone ${drag ? "is-drag" : ""}`} onClick={() => inputRef.current?.click()}>
         <span className="dropzone-icon"><IconUpload size={16} /></span>
         <span className="dropzone-text">
-          <strong>{drag ? "Drop to upload" : "Drop files or browse"}</strong>
-          <span>Logos (SVG gets part analysis), images, video, music</span>
+          <strong>{drag ? "Release to ingest" : "Ingest — drop files or browse"}</strong>
+          <span className="mono">SVG LOGO · PNG · JPG · MP4 · MP3 · LOTTIE</span>
         </span>
       </button>
 
       {uploads.map((u) => (
         <div key={u.key} className={`upload-row ${u.error ? "is-error" : ""}`}>
-          {u.error ? <IconClose size={13} /> : <Spinner size={13} />}
+          {u.error ? <IconClose size={12} /> : <Spinner size={12} />}
           <span className="upload-name">{u.name}</span>
-          <span className="upload-pct">{u.error ? "failed" : `${Math.round(u.progress * 100)}%`}</span>
+          <span className="upload-pct mono">{u.error ? "failed" : `${Math.round(u.progress * 100)}%`}</span>
           <div className="upload-bar" style={{ transform: `scaleX(${u.error ? 1 : u.progress})` }} />
         </div>
       ))}
 
       {assets.length === 0 && uploads.length === 0 && (
         <div className="panel-empty">
-          <div className="panel-empty-art"><IconImage size={18} /><IconMusic size={18} /><IconFilm size={18} /></div>
-          <strong>No assets yet</strong>
-          <span>Upload a logo, product shots or a track. Mention them in chat with <code>@</code>.</span>
+          <span className="label">Bin is empty</span>
+          <span className="dim">Upload a logo, product shots or a track, then mention them in a brief with <code className="mono">@</code>. SVG logos get part analysis.</span>
         </div>
       )}
 
@@ -106,21 +105,21 @@ const AssetTile = ({ a, onOpen, onMention, onDelete }: { a: Asset; onOpen: () =>
       <button className="asset-thumb checker" onClick={onOpen} aria-label={`Open ${name}`}>
         {a.kind === "image" && <img src={a.url} alt="" loading="lazy" />}
         {a.kind === "video" && <video ref={vref} src={`${a.url}#t=0.1`} muted loop playsInline preload="metadata" />}
-        {a.kind === "audio" && <div className="asset-audio"><IconMusic size={20} /><Wave seed={name} />{a.duration != null && <span>{fmtDuration(a.duration)}</span>}</div>}
-        {(a.kind === "lottie" || a.kind === "other") && <div className="asset-audio"><IconFile size={20} /><span>{a.kind}</span></div>}
-        {isLogo(a) && <span className="asset-badge"><IconSparkle size={10} />Logo</span>}
-        {a.kind === "video" && a.duration != null && <span className="asset-badge right">{fmtDuration(a.duration)}</span>}
+        {a.kind === "audio" && <div className="asset-audio"><IconMusic size={16} /><Wave seed={name} />{a.duration != null && <span>{fmtDuration(a.duration)}</span>}</div>}
+        {(a.kind === "lottie" || a.kind === "other") && <div className="asset-audio"><IconFile size={16} /><span>{a.kind}</span></div>}
+        {isLogo(a) && <span className="asset-badge mono">LOGO</span>}
+        {a.kind === "video" && a.duration != null && <span className="asset-badge right mono">{fmtDuration(a.duration)}</span>}
       </button>
       <div className="asset-info">
         <span className="asset-name" title={a.path}>{name}</span>
-        <span className="asset-sub">
+        <span className="asset-sub mono">
           {a.width && a.height ? `${a.width}×${a.height} · ` : ""}{fmtBytes(a.sizeBytes)}
         </span>
         {!!a.palette?.length && <span className="swatches">{a.palette.slice(0, 6).map((c) => <i key={c} style={{ background: c }} title={c} />)}</span>}
       </div>
       <div className="asset-actions">
-        <button className="icon-btn xs" onClick={onMention} title="Use in chat" aria-label="Use in chat"><IconAt size={12} /></button>
-        <button className="icon-btn xs danger-hover" onClick={onDelete} title="Delete" aria-label="Delete"><IconTrash size={12} /></button>
+        <button className="icon-btn xs" onClick={onMention} title="Mention in brief" aria-label="Mention in brief"><IconAt size={14} /></button>
+        <button className="icon-btn xs danger-hover" onClick={onDelete} title="Delete" aria-label="Delete"><IconTrash size={14} /></button>
       </div>
     </div>
   );
@@ -156,31 +155,31 @@ const LogoDrawer = ({ a, onClose, onMention }: { a: Asset; onClose: () => void; 
       <div className="drawer-head">
         <div>
           <div className="drawer-title">{basename(a.path)}</div>
-          <div className="drawer-sub">SVG logo · {fmtBytes(a.sizeBytes)}</div>
+          <div className="drawer-sub mono">SVG LOGO · {fmtBytes(a.sizeBytes)}</div>
         </div>
         <button className="icon-btn ghost sm" onClick={onClose} aria-label="Close"><IconClose size={14} /></button>
       </div>
       <div className="drawer-body">
         <div className="logo-hero checker"><img src={a.url} alt="" /></div>
         {err && <div className="callout error">{err}</div>}
-        {!data && !err && <><Skeleton h={120} r={10} /><Skeleton h={14} w="70%" /><Skeleton h={14} w="50%" /></>}
+        {!data && !err && <><Skeleton h={120} /><Skeleton h={14} w="70%" /><Skeleton h={14} w="50%" /></>}
         {data?.partMapUrl && (
           <figure className="partmap">
             <img src={data.partMapUrl} alt="Part map" />
-            <figcaption>Part map — each numbered island can be animated on its own.</figcaption>
+            <figcaption className="dim small">Part map — each numbered island animates on its own.</figcaption>
           </figure>
         )}
         {s && (
           <>
             <div className="stat-grid">
-              <div><b>{s.parts ?? "–"}</b><span>parts</span></div>
-              <div><b>{s.groups?.icon?.length ?? 0}</b><span>icon</span></div>
-              <div><b>{s.groups?.wordmark?.length ?? 0}</b><span>wordmark</span></div>
-              <div><b>{s.holes?.length ?? 0}</b><span>holes</span></div>
+              <div><b className="mono">{s.parts ?? "–"}</b><span className="label">Parts</span></div>
+              <div><b className="mono">{s.groups?.icon?.length ?? 0}</b><span className="label">Icon</span></div>
+              <div><b className="mono">{s.groups?.wordmark?.length ?? 0}</b><span className="label">Wordmark</span></div>
+              <div><b className="mono">{s.holes?.length ?? 0}</b><span className="label">Holes</span></div>
             </div>
             {!!palette.length && (
               <div className="drawer-section">
-                <div className="section-label">Palette</div>
+                <div className="label">Palette</div>
                 <div className="palette-row">
                   {palette.map((c) => (
                     <button key={c.hex} className="palette-chip" onClick={() => navigator.clipboard?.writeText(c.hex)}
@@ -193,7 +192,7 @@ const LogoDrawer = ({ a, onClose, onMention }: { a: Asset; onClose: () => void; 
             )}
             {!!modes.length && (
               <div className="drawer-section">
-                <div className="section-label">Suggested reveals</div>
+                <div className="label">Suggested reveals</div>
                 <div className="modes">
                   {modes.map((m, i) => (
                     <div key={m.mode + i} className="mode">
@@ -209,7 +208,7 @@ const LogoDrawer = ({ a, onClose, onMention }: { a: Asset; onClose: () => void; 
                 </div>
                 {s.secondaryBeat && (
                   <div className="mode secondary">
-                    <div className="mode-head"><span className="tag">then</span><code>{s.secondaryBeat.mode}</code>{s.secondaryBeat.parts && <span className="tag">{s.secondaryBeat.parts}</span>}{s.secondaryBeat.order && <span className="tag">{s.secondaryBeat.order}</span>}</div>
+                    <div className="mode-head"><span className="tag">THEN</span><code>{s.secondaryBeat.mode}</code>{s.secondaryBeat.parts && <span className="tag">{s.secondaryBeat.parts}</span>}{s.secondaryBeat.order && <span className="tag">{s.secondaryBeat.order}</span>}</div>
                     {s.secondaryBeat.why && <p>{s.secondaryBeat.why}</p>}
                   </div>
                 )}
@@ -220,7 +219,7 @@ const LogoDrawer = ({ a, onClose, onMention }: { a: Asset; onClose: () => void; 
         )}
       </div>
       <div className="drawer-foot">
-        <button className="btn primary block" onClick={onMention}><IconAt size={14} />Use in chat</button>
+        <button className="btn block" onClick={onMention}><IconAt size={14} />Use in brief</button>
       </div>
     </div>
   );

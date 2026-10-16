@@ -1,11 +1,17 @@
 import { Link } from "react-router-dom";
-import { Logo } from "../components/Icons";
+import { Wordmark } from "../components/AppBar";
+import { SlateStripe } from "../components/ui";
 
 export const NotFound = () => (
   <div className="center-screen">
-    <Logo size={40} />
-    <h1 className="display-sm">Nothing on this frame</h1>
-    <p className="muted">That page doesn't exist.</p>
-    <Link to="/" className="btn">Back to projects</Link>
+    <div className="nf-card">
+      <SlateStripe />
+      <div className="nf-body">
+        <Wordmark />
+        <div className="nf-code mono">404 <span className="dim">· NO SIGNAL</span></div>
+        <p className="serif-line">Nothing on this frame.</p>
+        <Link to="/" className="btn">Back to projects</Link>
+      </div>
+    </div>
   </div>
 );

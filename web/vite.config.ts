@@ -25,6 +25,15 @@ const streaming: ProxyOptions = {
   },
 };
 
+// OAuth decision is session-authenticated and CSRF-checked by Origin, so keep the browser's Origin (no changeOrigin).
+const proxy: Record<string, ProxyOptions> = {
+  "/api": streaming,
+  "/files": { target, changeOrigin: true },
+  "/oauth": { target },
+  "/mcp": { target },
+  "/.well-known": { target },
+};
+
 export default defineConfig({
   root: webRoot,
   plugins: [react(), ...(useMock ? [mockApi(repoRoot)] : [])],
@@ -32,8 +41,8 @@ export default defineConfig({
   server: {
     port: 5173,
     fs: { allow: [repoRoot] },
-    proxy: useMock ? undefined : { "/api": streaming, "/files": { target, changeOrigin: true } },
+    proxy: useMock ? undefined : proxy,
   },
-  preview: { proxy: { "/api": streaming, "/files": { target, changeOrigin: true } } },
+  preview: { proxy },
   build: { outDir: path.join(webRoot, "dist"), emptyOutDir: true, chunkSizeWarningLimit: 4000 },
 });

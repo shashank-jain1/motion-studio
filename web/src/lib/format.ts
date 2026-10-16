@@ -46,3 +46,24 @@ export const gradientFor = (seed: string) => {
 export const basename = (p: string) => p.split("/").pop() ?? p;
 
 export const ASPECT: Record<string, number> = { "16:9": 16 / 9, "9:16": 9 / 16, "1:1": 1, "4:5": 4 / 5, "21:9": 21 / 9 };
+
+/** Broadcast timecode HH:MM:SS:FF. */
+export const fmtTC = (sec: number, fps = 30) => {
+  const total = Math.max(0, Math.round(sec * fps));
+  const f = total % fps;
+  const s = Math.floor(total / fps);
+  const p = (n: number) => String(n).padStart(2, "0");
+  return `${p(Math.floor(s / 3600))}:${p(Math.floor(s / 60) % 60)}:${p(s % 60)}:${p(f)}`;
+};
+/** Short clock for logs: MM:SS. */
+export const fmtClock = (ms: number) => {
+  const s = Math.max(0, Math.floor(ms / 1000));
+  return `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
+};
+export const fmtDate = (iso?: string) => {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}`;
+};
+export const RES: Record<string, [number, number]> = { "16:9": [1920, 1080], "9:16": [1080, 1920], "1:1": [1080, 1080], "4:5": [1080, 1350], "21:9": [2520, 1080] };
