@@ -195,14 +195,20 @@ export const renderFrames = async (
     let columns = 1;
     let rows = 1;
     if (opts.sheet !== false && frames.length > 0) {
-      const res = await makeContactSheet(
-        frames.map((f) => f.path),
-        path.join(previewsDir, "sheet.jpg"),
-        { labels: frames.map((f) => `${fmtTime(f.time)}s`), tileWidth: width, tileHeight: height },
-      );
-      sheet = res.path;
-      columns = res.columns;
-      rows = res.rows;
+      try {
+        const res = await makeContactSheet(
+          frames.map((f) => f.path),
+          path.join(previewsDir, "sheet.jpg"),
+          { labels: frames.map((f) => `${fmtTime(f.time)}s`), tileWidth: width, tileHeight: height },
+        );
+        sheet = res.path;
+        columns = res.columns;
+        rows = res.rows;
+      } catch (e) {
+        // A missing optional sheet tool must not discard successfully rendered evidence.
+        if ((e as NodeJS.ErrnoException).code !== "ENOENT") throw e;
+        console.warn("[motion-studio] FFmpeg unavailable for contact sheet; returning individual preview frames.");
+      }
     }
     return { frames, sheet, columns, rows, width, height, fps: composition.fps, durationSeconds: composition.durationInFrames / composition.fps };
   } finally {

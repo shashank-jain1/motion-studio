@@ -58,6 +58,30 @@ export const Loop = z.object({
   speed: z.number().optional().describe("cycles per second, default ~0.5"),
 });
 
+export const GESTURES = ["magnetic", "orbit-land", "elastic-slam", "vortex", "hinge", "rubber-stamp"] as const;
+export const GestureSchema = z.object({
+  preset: z.enum(GESTURES),
+  delay: z.number().min(0).optional(),
+  duration: z.number().min(0.2).max(8).optional(),
+  distance: z.number().min(0).max(5000).optional(),
+  direction: z.enum(["left", "right", "up", "down"]).optional(),
+  strength: z.number().min(0).max(2).optional(),
+}).describe("choreographed anticipation → rush → contact → settle; sound uses the SAME contact clock as picture");
+export type Gesture = z.infer<typeof GestureSchema>;
+
+export const ACCENT_ROLES = ["move", "impact", "slam", "click", "morph", "shimmer", "riser", "logoHit", "glitch", "ding", "pop"] as const;
+export const AccentSchema = z.object({
+  at: z.union([z.number().min(0), z.enum(["rush", "contact", "settle"])]),
+  offset: z.number().min(-8).max(8).optional().describe("seconds added to the motion landmark"),
+  role: z.enum(ACCENT_ROLES),
+  importance: z.enum(["hero", "structural", "supporting", "micro"]).optional(),
+  material: z.string().optional(),
+  volume: z.number().min(0).max(1).optional(),
+  src: z.string().optional().describe("optional library or asset override; library apex metadata is respected"),
+  sourcePeak: z.number().min(0).optional().describe("for imported audio: seconds of the transient inside the source file"),
+  sourceDuration: z.number().positive().optional().describe("for imported audio: full source duration in seconds"),
+}).describe("intentional SFX apex tied to a local second or a motion landmark; never shifted to a nearby music beat");
+
 const commonLayer = {
   id: z.string().optional(),
   start: z.number().min(0).optional().describe("seconds after scene start, default 0"),
@@ -82,6 +106,8 @@ const commonLayer = {
   exit: Motion.optional(),
   animate: z.array(Keyframe).optional().describe("keyframes, t relative to layer start; applied on top of base transform"),
   loop: Loop.optional(),
+  gesture: GestureSchema.optional(),
+  accents: z.array(AccentSchema).max(32).optional().describe("explicit sound gestures; replaces this layer's inferred sounds. [] keeps the layer silent without silencing its children"),
   motionBlur: z.union([z.boolean(), z.object({ samples: z.number().int().min(2).max(16).optional(), shutter: z.number().optional() })]).optional(),
   css: z.record(z.string(), z.any()).optional().describe("raw CSS escape hatch for the layer wrapper"),
 
@@ -320,6 +346,7 @@ export const ThreeLayer = z.object({
   material: z.enum(MATERIALS_3D).optional(),
   color: z.string().optional().describe("base color (default: the logo's own colors for svg sources, else $accent)"),
   lighting: z.enum(["studio", "softbox", "sunset", "neon", "rim", "dramatic"]).optional(),
+  exposure: z.number().min(0.2).max(2).optional().describe("3D exposure multiplier, default 1; reduce to preserve bright material detail"),
   animation: z.enum([
     "none", "turntable", "spin-in", "flip-in", "float", "assemble", "explode", "rise",
     "rail", "extrude-grow", "cascade-flip", "stack-echo", "orbit-ring", "drop", "wave",
@@ -639,6 +666,7 @@ export const ThemeSchema = z.object({
 /** A persistent hero element that lives ABOVE all scenes and survives every cut (shared-element continuity). */
 export const ActorSchema = z.object({
   id: z.string(),
+  motion: z.enum(["hold", "flow"]).optional().describe("hold = pose-to-pose stops; flow = continuous spline velocity across scene boundaries (no snapTo)"),
   layer: z.lazy(() => LayerSchema).describe("any layer (morph, logo, shape, media, text…); its x/y/scale are driven by poses"),
   poses: z.array(z.object({
     scene: z.union([z.string(), z.number()]).describe("scene id or index"),
@@ -763,6 +791,12 @@ export const SpecSchema = z.object({
     restraint: z.number().min(0).max(1).optional().describe("0..1 how much is left silent: density budget, pre-hero silence + stopdown length (default 0.5)"),
     signature: z.union([z.literal("auto"), z.literal(false), z.string()]).optional().describe("sonic logo on the final logo resolve: \"auto\" (mnemonic in key from the brand, default), \"sfx:<name>\" or an assets/ path, false = a plain hit"),
     stereo: z.boolean().optional().describe("pan cues by on-screen x / lateral motion (default true; subtler on 9:16)"),
+    continuity: z.union([z.literal(false), z.object({
+      cohesion: z.number().min(0).max(1).optional().describe("related sound families rather than unrelated round-robin picks; default 0.8"),
+      bridges: z.boolean().optional().describe("carry material tails into the next action's anticipation; default true"),
+      bridgeVolume: z.number().min(0).max(0.5).optional().describe("quiet connecting texture, default 0.22; never replaces the picture accent"),
+      maxGap: z.number().min(0.3).max(6).optional().describe("largest gap to connect; larger gaps remain deliberate silence, default 4.5s"),
+    })]).optional().describe("film-wide sonic continuity, enabled by default; false restores independent cue selection"),
     music: z.object({
       key: z.string().optional(), keyConfidence: z.number().optional(), bpm: z.number().optional(),
       beats: z.array(z.number()).optional(), onsets: z.array(z.number()).optional(),

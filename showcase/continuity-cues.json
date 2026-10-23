@@ -1,0 +1,189 @@
+{
+  "projectId": "continuous-motion-one-sonic-world-0dce",
+  "enabled": true,
+  "total": 14,
+  "fps": 30,
+  "brief": "voice luxury · mixed · materials glass/air · space plate · key D minor (brief, conf 1) · energy [0.66, 0.49, 0.72, 0.82] · variation 0.3 · restraint 0.55",
+  "cues": [
+    {
+      "frame": 26,
+      "peak": 0.8667,
+      "start": -0.0003,
+      "end": 1.2417,
+      "role": "move",
+      "importance": "structural",
+      "volume": 0.474,
+      "pan": 0,
+      "locked": true,
+      "syncErrorFrames": 0,
+      "layers": [
+        "A:air",
+        "W:swish-1@+0.2"
+      ],
+      "reason": "motion accent living-sculpture (0.85)",
+      "family": "swish"
+    },
+    {
+      "frame": 128,
+      "peak": 4.2667,
+      "start": 2.4667,
+      "end": 4.6417,
+      "role": "move",
+      "importance": "structural",
+      "volume": 0.474,
+      "pan": 0,
+      "locked": true,
+      "syncErrorFrames": 0,
+      "layers": [
+        "A:air",
+        "W:swish-5@+0.2"
+      ],
+      "reason": "motion accent living-sculpture (4.25)",
+      "family": "swish"
+    },
+    {
+      "frame": 234,
+      "peak": 7.8,
+      "start": 6,
+      "end": 8.175,
+      "role": "move",
+      "importance": "structural",
+      "volume": 0.474,
+      "pan": 0,
+      "locked": true,
+      "syncErrorFrames": 0,
+      "layers": [
+        "A:air",
+        "W:swish-1@+0.1"
+      ],
+      "reason": "motion accent living-sculpture (7.8)",
+      "family": "swish"
+    },
+    {
+      "frame": 341,
+      "peak": 11.3667,
+      "start": 10.7353,
+      "end": 13.5846,
+      "role": "logoHit",
+      "importance": "hero",
+      "volume": 1,
+      "pan": 0,
+      "locked": true,
+      "syncErrorFrames": 0,
+      "layers": [
+        "SIG:ping(D5 F5 A5 D6)",
+        "B:glass-thud-2@+0.0",
+        "S:sub(D2)",
+        "A:air",
+        "R:swell(D4)"
+      ],
+      "reason": "motion accent living-sculpture (11.35)",
+      "family": "glass-thud"
+    }
+  ],
+  "manual": [],
+  "mix": [
+    {
+      "kind": "stopdown",
+      "from": 10.742,
+      "to": 11.357,
+      "depth": 0.743,
+      "release": 0.18,
+      "reason": "stopdown before hero (motion accent living-sculpture (11.35))"
+    }
+  ],
+  "dropped": [],
+  "warnings": [],
+  "beats": [],
+  "bridges": [
+    {
+      "id": "bridge-1",
+      "at": 0.9017000000000001,
+      "dur": 3.325,
+      "peak": 2.5642,
+      "volume": 0.3,
+      "priority": -1,
+      "role": "bridge",
+      "duck": 0,
+      "from": 0.8667,
+      "to": 4.2667,
+      "family": "swish → swish",
+      "reason": "carry move decay into move anticipation",
+      "layers": [
+        "tail:swish-1",
+        "prelap:swish-5",
+        "phase-continuous thread"
+      ]
+    },
+    {
+      "id": "bridge-2",
+      "at": 4.3017,
+      "dur": 3.4582999999999995,
+      "peak": 6.03085,
+      "volume": 0.3,
+      "priority": -1,
+      "role": "bridge",
+      "duck": 0,
+      "from": 4.2667,
+      "to": 7.8,
+      "family": "swish → swish",
+      "reason": "carry move decay into move anticipation",
+      "layers": [
+        "tail:swish-5",
+        "prelap:swish-1",
+        "phase-continuous thread"
+      ]
+    },
+    {
+      "id": "bridge-3",
+      "at": 7.835,
+      "dur": 2.9067,
+      "peak": 9.28835,
+      "volume": 0.3,
+      "priority": -1,
+      "role": "bridge",
+      "duck": 0,
+      "from": 7.8,
+      "to": 11.3667,
+      "family": "swish → glass-thud",
+      "reason": "carry move decay into logoHit anticipation",
+      "layers": [
+        "tail:swish-1",
+        "phase-continuous thread"
+      ]
+    }
+  ],
+  "phrases": [
+    {
+      "id": "phrase-1",
+      "from": 0,
+      "to": 13.5846,
+      "cueFrames": [
+        26,
+        128,
+        234,
+        341
+      ],
+      "families": [
+        "swish",
+        "glass-thud"
+      ],
+      "bridges": 3
+    }
+  ],
+  "previewTimes": [
+    0.8,
+    0.8666666666666667,
+    0.9333333333333333,
+    4.2,
+    4.266666666666667,
+    4.333333333333333,
+    7.733333333333333,
+    7.8,
+    7.866666666666666,
+    11.3,
+    11.366666666666667,
+    11.433333333333334
+  ],
+  "review": "Inspect contact ±2 frames, then play the rendered MP4 with audio. Planner timing does not measure exported PCM sync or perceived sound quality."
+}

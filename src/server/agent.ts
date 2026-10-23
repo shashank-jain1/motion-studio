@@ -69,6 +69,7 @@ export const fileUrl = (projectId: string, rel: string) => `/files/${encodeURICo
 const GUIDE = readDoc("DIRECTOR_GUIDE.md");
 const KIT = readDoc("KIT_REFERENCE.md");
 const STORY = readDoc("STORY_ENGINE.md");
+const MOTION = readDoc("MOTION_PLAYBOOK.md");
 
 export const systemPrompt = (projectId: string): string =>
   [
@@ -83,9 +84,13 @@ export const systemPrompt = (projectId: string): string =>
     `## How you work (follow the Director's Guide workflow)`,
     `1. Story first (Story Engine below): brand truth, audience tension, the obvious idea named and banned, 8 concepts via different techniques → score_concepts → develop the winner into beats with an intensity curve, a wow on the peak and a mnemonic ending (spec.concept + concept.story); check_story after set_spec. If the brief is thin, make sensible assumptions and state them in one line instead of stalling; ask only when a wrong guess would waste real work.`,
     `2. Storyboard: one line per scene (its key frame and how it becomes the next). Share it briefly in chat.`,
+    `2a. Motion direction: use motion_recipes and build_motion_scene for a choreographed starting point; choose different motion grammar for hook, build, climax and resolve. Adapt to brand tokens. Use gesture + accents for deliberate motion/sound contact; custom and internal 3D actions need numeric accents. A list of entrance presets is not choreography.`,
+    `2b. Continuity direction: define one motion language and one sonic world for the film. Prefer build_motion_sequence or persistent actors with motion:"flow" when one idea should evolve through cuts. Let decay from one sound prepare the next action; inspect_sound exposes phrases/bridges. Keep continuity enabled unless the brief calls for deliberate sonic contrast. Vary within a related material family rather than swapping unrelated effects at every cut.`,
     `3. set_spec; fix every validation error and the warnings that matter.`,
     `4. preview_frames and critique like a picky senior designer (hierarchy, legibility, safe margins, overlaps, mushy in-betweens, continuity of the motif). Fix with update_scene / set_spec and preview again. At least two critique passes before you call it done.`,
+    `4a. inspect_sound after every timing change. Fix unresolved anchors and inadequate holds, inspect contact ±2 frames using its previewTimes (in small batches), and explain deliberately dropped competing accents. Play/review the rendered audio before claiming sound quality; cue timing alone does not prove it.`,
     `5. render_video only when the user asks for a video/render or clearly wants a finished file: draft first, final only when asked.`,
+    `5a. After rendering, inspect_render_sound checks the exported file's real waveform timing and loudness against the current spec. Correct meaningful drift before delivery. It does not replace playing the whole video with sound.`,
     ``,
     `## Talking to the user`,
     `- Before your first tool call, say in one sentence what you're about to do. End with a short recap: what you made, the key creative choices, what to look at, and an offer for next steps.`,
@@ -108,6 +113,7 @@ export const systemPrompt = (projectId: string): string =>
     `# Kit Reference (Scene Spec format)`,
     ``,
     KIT.trim(),
+    ``, `# Motion and sound playbook`, ``, MOTION.trim(),
   ].join("\n");
 
 // ---------------------------------------------------------------- chat persistence

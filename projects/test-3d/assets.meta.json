@@ -1,42 +1,28 @@
 {
   "loopa-logo.svg": {
-    "mtimeMs": 1792141881107.4795,
+    "mtimeMs": 1792173324275.4866,
     "size": 3138,
     "info": {
       "path": "assets/loopa-logo.svg",
-      "file": "/home/shashank/motion-studio/projects/test-3d/assets/loopa-logo.svg",
+      "file": "/Users/shashank/motion-studio/projects/test-3d/assets/loopa-logo.svg",
       "kind": "image",
       "sizeBytes": 3138,
       "width": 805.84,
       "height": 280,
-      "hasAlpha": true,
-      "palette": [
-        "#13223b",
-        "#2cb5a8",
-        "#0e172a",
-        "#f2565a",
-        "#945858"
-      ]
+      "hasAlpha": true
     }
   },
   "brew-logo.svg": {
-    "mtimeMs": 1792141881233.4773,
+    "mtimeMs": 1792173324275.3684,
     "size": 5704,
     "info": {
       "path": "assets/brew-logo.svg",
-      "file": "/home/shashank/motion-studio/projects/test-3d/assets/brew-logo.svg",
+      "file": "/Users/shashank/motion-studio/projects/test-3d/assets/brew-logo.svg",
       "kind": "image",
       "sizeBytes": 5704,
       "width": 840,
       "height": 360,
-      "hasAlpha": true,
-      "palette": [
-        "#3a2218",
-        "#2d1b13",
-        "#f1b25c",
-        "#22140e",
-        "#a86c38"
-      ]
+      "hasAlpha": true
     }
   }
 }

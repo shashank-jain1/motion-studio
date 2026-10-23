@@ -1,0 +1,473 @@
+{
+  "version": 1,
+  "title": "One continuous idea",
+  "format": "16:9",
+  "fps": 30,
+  "style": "minimal-dark",
+  "theme": {
+    "fonts": {
+      "display": "Inter",
+      "body": "Inter"
+    },
+    "colors": {
+      "bg": "#101613",
+      "fg": "#f0f5ed",
+      "accent": "#c6e8d5",
+      "accent2": "#c6e8d5",
+      "muted": "#93a69b"
+    }
+  },
+  "sound": {
+    "volume": 0.78,
+    "brief": {
+      "voice": "luxury",
+      "realism": "mixed",
+      "materials": [
+        "glass",
+        "air"
+      ],
+      "space": "plate",
+      "key": "D minor"
+    },
+    "variation": 0.3,
+    "restraint": 0.55,
+    "continuity": {
+      "cohesion": 0.9,
+      "bridgeVolume": 0.3,
+      "maxGap": 6
+    }
+  },
+  "concept": {
+    "truth": "A system feels coherent when each action grows from the previous one.",
+    "metaphor": "One impulse takes form.",
+    "motif": "One evolving sculpture",
+    "verb": "connect",
+    "arc": [
+      "hook",
+      "build",
+      "transform",
+      "resolve"
+    ]
+  },
+  "actors": [
+    {
+      "id": "continuous-hero",
+      "motion": "flow",
+      "layer": {
+        "id": "living-sculpture",
+        "width": 1207.44,
+        "height": 1207.44,
+        "accents": [
+          {
+            "at": 0.85,
+            "role": "move",
+            "importance": "structural",
+            "material": "glass"
+          },
+          {
+            "at": 4.25,
+            "role": "move",
+            "importance": "structural",
+            "material": "glass"
+          },
+          {
+            "at": 7.8,
+            "role": "move",
+            "importance": "structural",
+            "material": "glass"
+          },
+          {
+            "at": 11.35,
+            "role": "logoHit",
+            "importance": "hero",
+            "material": "glass"
+          }
+        ],
+        "type": "three",
+        "source": "primitive:knot",
+        "material": "pearl",
+        "color": "#c6e8d5",
+        "lighting": "studio",
+        "exposure": 0.55,
+        "animation": "turntable",
+        "orbit": [
+          {
+            "t": 0,
+            "yaw": -35,
+            "pitch": 18,
+            "distance": 1.15
+          },
+          {
+            "t": 14,
+            "yaw": 18,
+            "pitch": -8,
+            "distance": 0.94,
+            "ease": "linear"
+          }
+        ],
+        "shadow3d": true,
+        "post": {
+          "bloom": {
+            "strength": 0.08,
+            "threshold": 1.1
+          }
+        },
+        "deform": [
+          {
+            "type": "twist",
+            "keys": [
+              {
+                "t": 0,
+                "amount": 0
+              },
+              {
+                "t": 4.25,
+                "amount": 0.18
+              },
+              {
+                "t": 7.8,
+                "amount": -0.08
+              },
+              {
+                "t": 11.35,
+                "amount": 0.06
+              }
+            ]
+          }
+        ]
+      },
+      "poses": [
+        {
+          "scene": 0,
+          "t": 0,
+          "x": 806.3999999999999,
+          "y": 108,
+          "scale": 0.55,
+          "rotate": -25
+        },
+        {
+          "scene": 0,
+          "t": 0.85,
+          "x": 460.79999999999995,
+          "y": -21.6,
+          "scale": 0.86,
+          "rotate": -10
+        },
+        {
+          "scene": 1,
+          "t": 0.75,
+          "x": 508.79999999999995,
+          "y": -108,
+          "scale": 1.05,
+          "rotate": 12
+        },
+        {
+          "scene": 2,
+          "t": 0.8,
+          "x": 393.59999999999997,
+          "y": 27,
+          "scale": 0.78,
+          "rotate": -8
+        },
+        {
+          "scene": 3,
+          "t": 0.85,
+          "x": 460.79999999999995,
+          "y": -21.6,
+          "scale": 0.92,
+          "rotate": 0
+        },
+        {
+          "scene": 3,
+          "t": 3.2,
+          "x": 460.79999999999995,
+          "y": -21.6,
+          "scale": 0.92,
+          "rotate": 0
+        }
+      ]
+    }
+  ],
+  "scenes": [
+    {
+      "id": "impulse",
+      "duration": 3.5,
+      "background": {
+        "type": "solid",
+        "color": "#101613"
+      },
+      "layers": [
+        {
+          "id": "chapter",
+          "start": 0.1,
+          "x": -451.2,
+          "y": -324,
+          "sound": false,
+          "type": "text",
+          "text": "01 / CONTINUOUS BY DESIGN",
+          "preset": "mask-up",
+          "by": "line",
+          "fontSize": 20,
+          "weight": 500,
+          "color": "#c6e8d5",
+          "letterSpacing": 0.13
+        },
+        {
+          "id": "headline",
+          "x": -460.79999999999995,
+          "y": 0,
+          "sound": false,
+          "type": "text",
+          "text": "A single\nimpulse.",
+          "preset": "mask-up",
+          "by": "line",
+          "stagger": 0.12,
+          "unitDuration": 0.75,
+          "fontSize": 154,
+          "weight": 750,
+          "color": "#f0f5ed",
+          "letterSpacing": -0.045,
+          "lineHeight": 1.03,
+          "align": "left",
+          "maxWidth": 825.6
+        },
+        {
+          "y": 388.8,
+          "width": 1536,
+          "height": 1,
+          "opacity": 0.2,
+          "sound": false,
+          "type": "shape",
+          "shape": "line",
+          "color": "#c6e8d5"
+        },
+        {
+          "y": 432,
+          "sound": false,
+          "type": "text",
+          "text": "ONE FORM / ONE MOTION LANGUAGE / ONE SONIC THREAD",
+          "preset": "none",
+          "fontSize": 17,
+          "weight": 500,
+          "color": "#c6e8d5",
+          "letterSpacing": 0.09,
+          "maxWidth": 1689.6
+        }
+      ],
+      "notes": "Preserve the hero's global clock and velocity. These are chapters of one object, not four separate reveals."
+    },
+    {
+      "id": "rhythm",
+      "duration": 3.5,
+      "background": {
+        "type": "solid",
+        "color": "#101613"
+      },
+      "layers": [
+        {
+          "id": "chapter",
+          "start": 0.1,
+          "x": -451.2,
+          "y": -324,
+          "sound": false,
+          "type": "text",
+          "text": "02 / CONTINUOUS BY DESIGN",
+          "preset": "mask-up",
+          "by": "line",
+          "fontSize": 20,
+          "weight": 500,
+          "color": "#c6e8d5",
+          "letterSpacing": 0.13
+        },
+        {
+          "id": "headline",
+          "x": -460.79999999999995,
+          "y": 0,
+          "sound": false,
+          "type": "text",
+          "text": "Becomes\na rhythm.",
+          "preset": "mask-up",
+          "by": "line",
+          "stagger": 0.12,
+          "unitDuration": 0.75,
+          "fontSize": 154,
+          "weight": 750,
+          "color": "#f0f5ed",
+          "letterSpacing": -0.045,
+          "lineHeight": 1.03,
+          "align": "left",
+          "maxWidth": 825.6
+        },
+        {
+          "y": 388.8,
+          "width": 1536,
+          "height": 1,
+          "opacity": 0.2,
+          "sound": false,
+          "type": "shape",
+          "shape": "line",
+          "color": "#c6e8d5"
+        },
+        {
+          "y": 432,
+          "sound": false,
+          "type": "text",
+          "text": "ONE FORM / ONE MOTION LANGUAGE / ONE SONIC THREAD",
+          "preset": "none",
+          "fontSize": 17,
+          "weight": 500,
+          "color": "#c6e8d5",
+          "letterSpacing": 0.09,
+          "maxWidth": 1689.6
+        }
+      ],
+      "transition": {
+        "type": "cut",
+        "sound": false
+      },
+      "notes": "Preserve the hero's global clock and velocity. These are chapters of one object, not four separate reveals."
+    },
+    {
+      "id": "form",
+      "duration": 3.5,
+      "background": {
+        "type": "solid",
+        "color": "#101613"
+      },
+      "layers": [
+        {
+          "id": "chapter",
+          "start": 0.1,
+          "x": -451.2,
+          "y": -324,
+          "sound": false,
+          "type": "text",
+          "text": "03 / CONTINUOUS BY DESIGN",
+          "preset": "mask-up",
+          "by": "line",
+          "fontSize": 20,
+          "weight": 500,
+          "color": "#c6e8d5",
+          "letterSpacing": 0.13
+        },
+        {
+          "id": "headline",
+          "x": -460.79999999999995,
+          "y": 0,
+          "sound": false,
+          "type": "text",
+          "text": "Finds\nits form.",
+          "preset": "mask-up",
+          "by": "line",
+          "stagger": 0.12,
+          "unitDuration": 0.75,
+          "fontSize": 154,
+          "weight": 750,
+          "color": "#f0f5ed",
+          "letterSpacing": -0.045,
+          "lineHeight": 1.03,
+          "align": "left",
+          "maxWidth": 825.6
+        },
+        {
+          "y": 388.8,
+          "width": 1536,
+          "height": 1,
+          "opacity": 0.2,
+          "sound": false,
+          "type": "shape",
+          "shape": "line",
+          "color": "#c6e8d5"
+        },
+        {
+          "y": 432,
+          "sound": false,
+          "type": "text",
+          "text": "ONE FORM / ONE MOTION LANGUAGE / ONE SONIC THREAD",
+          "preset": "none",
+          "fontSize": 17,
+          "weight": 500,
+          "color": "#c6e8d5",
+          "letterSpacing": 0.09,
+          "maxWidth": 1689.6
+        }
+      ],
+      "transition": {
+        "type": "cut",
+        "sound": false
+      },
+      "notes": "Preserve the hero's global clock and velocity. These are chapters of one object, not four separate reveals."
+    },
+    {
+      "id": "resolve",
+      "duration": 3.5,
+      "background": {
+        "type": "solid",
+        "color": "#101613"
+      },
+      "layers": [
+        {
+          "id": "chapter",
+          "start": 0.1,
+          "x": -451.2,
+          "y": -324,
+          "sound": false,
+          "type": "text",
+          "text": "04 / CONTINUOUS BY DESIGN",
+          "preset": "mask-up",
+          "by": "line",
+          "fontSize": 20,
+          "weight": 500,
+          "color": "#c6e8d5",
+          "letterSpacing": 0.13
+        },
+        {
+          "id": "headline",
+          "x": -460.79999999999995,
+          "y": 0,
+          "sound": false,
+          "type": "text",
+          "text": "Everything\nconnects.",
+          "preset": "mask-up",
+          "by": "line",
+          "stagger": 0.12,
+          "unitDuration": 0.75,
+          "fontSize": 154,
+          "weight": 750,
+          "color": "#f0f5ed",
+          "letterSpacing": -0.045,
+          "lineHeight": 1.03,
+          "align": "left",
+          "maxWidth": 825.6
+        },
+        {
+          "y": 388.8,
+          "width": 1536,
+          "height": 1,
+          "opacity": 0.2,
+          "sound": false,
+          "type": "shape",
+          "shape": "line",
+          "color": "#c6e8d5"
+        },
+        {
+          "y": 432,
+          "sound": false,
+          "type": "text",
+          "text": "ONE FORM / ONE MOTION LANGUAGE / ONE SONIC THREAD",
+          "preset": "none",
+          "fontSize": 17,
+          "weight": 500,
+          "color": "#c6e8d5",
+          "letterSpacing": 0.09,
+          "maxWidth": 1689.6
+        }
+      ],
+      "transition": {
+        "type": "cut",
+        "sound": false
+      },
+      "notes": "Preserve the hero's global clock and velocity. These are chapters of one object, not four separate reveals."
+    }
+  ]
+}

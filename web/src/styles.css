@@ -703,6 +703,17 @@ body.is-resizing-v { cursor: row-resize; user-select: none; }
 .track { position: relative; border-bottom: 1px solid var(--line); }
 .scene-track { height: 80px; }
 .actor-track { height: 26px; }
+.sound-head, .sound-track { height: 36px; }
+.sound-bridge { position: absolute; bottom: 1px; height: 5px; border-radius: 3px; background: linear-gradient(90deg, #7caa9130, #bce7c5a0, #7caa9130); }
+.sound-track { overflow: hidden; background: color-mix(in srgb, var(--panel) 85%, #173930); }
+.sound-beat { position: absolute; top: 0; bottom: 0; width: 1px; background: #83b5a526; pointer-events: none; }
+.sound-cue { position: absolute; top: 5px; height: 25px; padding: 0; border: 1px solid #73b8a348; border-radius: 3px; background: #3c8c7040; color: #b9e3d3; text-align: left; cursor: pointer; }
+.sound-cue.is-hero { background: #a8803045; border-color: #dfb45a80; color: #f2d79c; z-index: 1; }
+.sound-cue:hover, .sound-cue:focus-visible { outline: 1px solid currentColor; z-index: 2; }
+.sound-apex { position: absolute; top: -3px; bottom: -3px; width: 2px; background: currentColor; pointer-events: none; }
+.sound-apex::before { content: ''; position: absolute; top: -1px; left: -2px; width: 6px; height: 6px; background: currentColor; transform: rotate(45deg); }
+.sound-cue-label { display: block; overflow: hidden; padding: 0 5px; font-size: 9px; line-height: 23px; white-space: nowrap; }
+.sound-track-empty { padding-left: 12px; font-size: 11px; color: var(--smoke); line-height: 36px; }
 .clip {
   position: absolute; top: 4px; bottom: 4px; left: 0; overflow: hidden; border-radius: var(--r1); cursor: pointer;
   box-shadow: inset 0 0 0 1px rgba(13, 13, 11, 0.35);

@@ -1,22 +1,15 @@
 {
   "kova-logo.svg": {
-    "mtimeMs": 1792143780464.218,
+    "mtimeMs": 1792173324271.2852,
     "size": 1706,
     "info": {
       "path": "assets/kova-logo.svg",
-      "file": "/home/shashank/motion-studio/projects/kova-every-platform-3bb0/assets/kova-logo.svg",
+      "file": "/Users/shashank/motion-studio/projects/kova-every-platform-3bb0/assets/kova-logo.svg",
       "kind": "image",
       "sizeBytes": 1706,
       "width": 762,
       "height": 280,
-      "hasAlpha": true,
-      "palette": [
-        "#19e29f",
-        "#d5e8e0",
-        "#082027",
-        "#129c70",
-        "#929f99"
-      ]
+      "hasAlpha": true
     }
   }
 }

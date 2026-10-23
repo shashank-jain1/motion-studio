@@ -1,0 +1,509 @@
+{
+  "title": "alex.makes — creator intro",
+  "fps": 30,
+  "style": "editorial",
+  "formats": [
+    "16:9",
+    "1:1",
+    "4:5"
+  ],
+  "sound": {
+    "palette": "playful",
+    "intensity": 0.55
+  },
+  "theme": {
+    "fonts": {
+      "display": "Instrument Serif",
+      "body": "Inter"
+    },
+    "colors": {
+      "bg": "#f3eee6",
+      "fg": "#141210",
+      "muted": "#7a7268",
+      "accent": "#ff5b2e",
+      "accent2": "#2c4bd2",
+      "card": "#fffaf2",
+      "paper": "#f3eee6",
+      "ink": "#141210"
+    }
+  },
+  "fx": {
+    "grain": 0.22
+  },
+  "concept": {
+    "truth": "Alex helps designers ship better portfolios, feeling confident.",
+    "metaphor": "juxtaposition → fusion — a hand-drawn scribble around the name sparks into the sparkle mark",
+    "motif": "an orange sparkle (actor) born from the scribble",
+    "verb": "delight",
+    "hook": "'Hi, I'm Alex.' slams in serif as a scribble circles the name",
+    "arc": [
+      "hook: hi, I'm Alex",
+      "proof: what people say (chat)",
+      "promise: three pillars",
+      "lockup: sparkle mark + follow"
+    ],
+    "colorScript": [
+      "paper + ink",
+      "paper + chat blue",
+      "ink pillars",
+      "paper lockup"
+    ],
+    "niche": "creator",
+    "story": {
+      "insight": "People follow the person who shows the how, not just the result.",
+      "audienceTension": "I like the work, but I want to know how it's made.",
+      "inherentDrama": "the scribble around the name sparking into the mark",
+      "orthodoxy": [
+        "like hearts floating up",
+        "follower counters ticking up",
+        "a ring light",
+        "'link in bio' arrows as the payoff"
+      ],
+      "structure": "abt",
+      "clicheControl": {
+        "obvious": "Like hearts float up over a follower counter ticking up: 'link in bio'.",
+        "banned": [
+          "followers",
+          "link in bio",
+          "ring light"
+        ]
+      },
+      "beats": [
+        {
+          "t": 0,
+          "beat": "hook",
+          "emotion": "curiosity",
+          "intensity": 7,
+          "sound": "type slam"
+        },
+        {
+          "t": 1.9,
+          "beat": "and (proof)",
+          "emotion": "curiosity",
+          "intensity": 6,
+          "to": 7
+        },
+        {
+          "t": 4.2,
+          "beat": "therefore (promise)",
+          "emotion": "anticipation",
+          "intensity": 6,
+          "to": 7
+        },
+        {
+          "t": 7,
+          "beat": "hold",
+          "emotion": "anticipation",
+          "intensity": 5
+        },
+        {
+          "t": 7.7,
+          "beat": "peak",
+          "emotion": "delight",
+          "intensity": 9,
+          "wow": "the sparkle born from the scribble snaps into the alex.makes mark (camera punch)",
+          "sound": "auto playful chime on the logo reveal"
+        },
+        {
+          "t": 8.2,
+          "beat": "lock",
+          "emotion": "warmth",
+          "intensity": 8
+        }
+      ],
+      "peakAt": 7.7,
+      "mnemonic": {
+        "visual": "the orange sparkle becomes the mark",
+        "sonic": "playful-palette chime on the logo reveal (auto sound)"
+      }
+    }
+  },
+  "actors": [
+    {
+      "id": "spark",
+      "from": "hello",
+      "until": "lockup",
+      "layer": {
+        "type": "morph",
+        "width": 240,
+        "height": 240,
+        "inertia": true,
+        "stepRate": 12,
+        "enter": {
+          "type": "pop",
+          "duration": 0.4
+        },
+        "loop": {
+          "type": "spin",
+          "speed": 0.08
+        },
+        "shapes": [
+          {
+            "at": 0,
+            "shape": "sparkle",
+            "fill": "$accent"
+          },
+          {
+            "at": 8,
+            "shape": "svg:assets/alexmakes-logo.svg#icon",
+            "morph": 0.6
+          }
+        ]
+      },
+      "poses": [
+        {
+          "scene": "hello",
+          "t": 0.6,
+          "x": 300,
+          "y": -330,
+          "scale": 0.45
+        },
+        {
+          "scene": "proof",
+          "t": 0.6,
+          "x": -300,
+          "y": -520,
+          "scale": 0.4,
+          "move": 0.6,
+          "ease": "expoOut"
+        },
+        {
+          "scene": "pillars",
+          "t": 0.5,
+          "x": 0,
+          "y": -520,
+          "scale": 0.55,
+          "move": 0.6,
+          "ease": "expoOut"
+        },
+        {
+          "scene": "lockup",
+          "t": 0.9,
+          "snapTo": "lockup-logo",
+          "move": 0.9,
+          "ease": "expoOut"
+        }
+      ]
+    }
+  ],
+  "scenes": [
+    {
+      "id": "hello",
+      "duration": 2.4,
+      "background": {
+        "type": "solid",
+        "color": "$paper"
+      },
+      "camera": {
+        "keyframes": [
+          {
+            "t": 0,
+            "zoom": 1.08
+          },
+          {
+            "t": 2.4,
+            "zoom": 1,
+            "ease": "outQuint"
+          }
+        ]
+      },
+      "layers": [
+        {
+          "type": "text",
+          "text": "Hi, I'm",
+          "preset": "blur-rise",
+          "fontSize": 110,
+          "italic": true,
+          "color": "$muted",
+          "y": -250
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "text": "Alex.",
+          "preset": "stretch",
+          "fontSize": 300,
+          "color": "$ink",
+          "y": -40,
+          "start": 0.15
+        },
+        {
+          "type": "path",
+          "preset": "circle-scribble",
+          "width": 720,
+          "height": 360,
+          "y": -40,
+          "strokeWidth": 9,
+          "color": "$accent",
+          "drawStart": 0.35,
+          "drawDuration": 0.8,
+          "stepRate": 12
+        },
+        {
+          "type": "text",
+          "text": "I design. Then I show you how.",
+          "preset": "slide-words",
+          "fontSize": 54,
+          "weight": 500,
+          "font": "$body",
+          "color": "$fg",
+          "y": 220,
+          "start": 0.9
+        }
+      ]
+    },
+    {
+      "id": "proof",
+      "duration": 2.8,
+      "transition": {
+        "type": "push-cut",
+        "direction": "up",
+        "duration": 0.45
+      },
+      "background": {
+        "type": "solid",
+        "color": "$paper"
+      },
+      "camera": {
+        "keyframes": [
+          {
+            "t": 0,
+            "zoom": 1
+          },
+          {
+            "t": 2.8,
+            "zoom": 1.04,
+            "ease": "inOut"
+          }
+        ]
+      },
+      "layers": [
+        {
+          "type": "card",
+          "variant": "chat-left",
+          "title": "wait how did you make this??",
+          "fontSize": 38,
+          "x": -90,
+          "y": -300,
+          "start": 0.2,
+          "enter": {
+            "type": "pop",
+            "duration": 0.35
+          },
+          "inertia": true
+        },
+        {
+          "type": "card",
+          "variant": "chat-right",
+          "title": "breakdown tomorrow 👀",
+          "fontSize": 38,
+          "accent": "$accent2",
+          "x": 110,
+          "y": -150,
+          "start": 0.75,
+          "enter": {
+            "type": "pop",
+            "duration": 0.35
+          },
+          "inertia": true
+        },
+        {
+          "type": "card",
+          "variant": "chat-left",
+          "title": "this saved my portfolio 🙏",
+          "fontSize": 38,
+          "x": -60,
+          "y": 0,
+          "start": 1.3,
+          "enter": {
+            "type": "pop",
+            "duration": 0.35
+          },
+          "inertia": true
+        },
+        {
+          "type": "text",
+          "text": "Great design,\nexplained in 60s.",
+          "preset": "mask-up",
+          "fontSize": 104,
+          "color": "$ink",
+          "y": 300,
+          "start": 0.5,
+          "highlight": {
+            "words": [
+              "60s."
+            ],
+            "color": "$accent",
+            "style": "marker",
+            "at": 1.4
+          }
+        }
+      ]
+    },
+    {
+      "id": "pillars",
+      "duration": 2.8,
+      "transition": {
+        "type": "wipe",
+        "direction": "left",
+        "duration": 0.5
+      },
+      "background": {
+        "type": "solid",
+        "color": "$ink"
+      },
+      "camera": {
+        "keyframes": [
+          {
+            "t": 0,
+            "zoom": 1.04
+          },
+          {
+            "t": 2.8,
+            "zoom": 1,
+            "ease": "outQuint"
+          }
+        ]
+      },
+      "layers": [
+        {
+          "type": "text",
+          "text": "Every week:",
+          "preset": "blur-rise",
+          "fontSize": 90,
+          "italic": true,
+          "color": "$muted",
+          "y": -330
+        },
+        {
+          "type": "card",
+          "variant": "pill",
+          "icon": "🔍",
+          "title": "Breakdowns",
+          "fontSize": 50,
+          "background": "#24211d",
+          "color": "$paper",
+          "y": -150,
+          "start": 0.3,
+          "enter": {
+            "type": "slide-right",
+            "duration": 0.4
+          },
+          "inertia": true
+        },
+        {
+          "type": "card",
+          "variant": "pill",
+          "icon": "📐",
+          "title": "Free templates",
+          "fontSize": 50,
+          "background": "#24211d",
+          "color": "$paper",
+          "y": -10,
+          "start": 0.45,
+          "enter": {
+            "type": "slide-left",
+            "duration": 0.4
+          },
+          "inertia": true
+        },
+        {
+          "type": "card",
+          "variant": "pill",
+          "icon": "🎙️",
+          "title": "Live critiques",
+          "fontSize": 50,
+          "background": "#24211d",
+          "color": "$paper",
+          "y": 130,
+          "start": 0.6,
+          "enter": {
+            "type": "slide-right",
+            "duration": 0.4
+          },
+          "inertia": true
+        },
+        {
+          "type": "path",
+          "preset": "underline",
+          "width": 520,
+          "height": 80,
+          "y": 250,
+          "strokeWidth": 8,
+          "color": "$accent",
+          "drawStart": 0.9,
+          "drawDuration": 0.6,
+          "stepRate": 12
+        }
+      ]
+    },
+    {
+      "id": "lockup",
+      "duration": 3,
+      "transition": {
+        "type": "match"
+      },
+      "background": {
+        "type": "solid",
+        "color": "$paper"
+      },
+      "camera": {
+        "keyframes": [
+          {
+            "t": 0,
+            "zoom": 1.05
+          },
+          {
+            "t": 3,
+            "zoom": 1,
+            "ease": "outQuint"
+          }
+        ],
+        "punch": [
+          0.9
+        ]
+      },
+      "layers": [
+        {
+          "type": "logo",
+          "id": "lockup-logo",
+          "src": "assets/alexmakes-logo.svg",
+          "parts": "wordmark",
+          "frame": "full",
+          "mode": "cascade",
+          "height": 150,
+          "y": -150,
+          "start": 0.7
+        },
+        {
+          "type": "text",
+          "text": "New breakdown every Tuesday.",
+          "preset": "blur-rise",
+          "fontSize": 54,
+          "weight": 500,
+          "font": "$body",
+          "color": "$muted",
+          "y": 20,
+          "start": 1.2
+        },
+        {
+          "type": "card",
+          "variant": "button",
+          "title": "Follow @alex.makes",
+          "accent": "$accent",
+          "color": "#ffffff",
+          "fontSize": 44,
+          "y": 170,
+          "start": 1.6,
+          "press": 2.4,
+          "enter": {
+            "type": "grow",
+            "duration": 0.5
+          },
+          "inertia": true
+        }
+      ]
+    }
+  ],
+  "format": "9:16"
+}

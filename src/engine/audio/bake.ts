@@ -36,6 +36,8 @@ export type BakeLayer = {
   w?: number;
   /** max length (s) of the layer after pitching (fade-out at the cut) */
   x?: number;
+  /** Trim source after varispeed, seconds; used for carrying the previous material's decay. */
+  i?: number;
 };
 export type Space = "dry" | "room" | "plate" | "hall";
 export type Recipe = {
@@ -81,6 +83,7 @@ export const validateRecipe = (r: Recipe, exists: (name: string) => boolean) => 
     if (l.f && (!/^[a-z0-9-]+$/.test(l.f) || !exists(l.f))) throw new Error(`unknown sound ${l.f}`);
     if (l.s) { const m = synthMeta(l.s); if (!(m.dur > 0 && m.dur <= 8)) throw new Error("bad synth length"); }
     if (Math.abs(l.o) > 8 || Math.abs(l.g) > 48 || Math.abs(l.p ?? 0) > 12) throw new Error("layer params out of range");
+    if (l.i !== undefined && (!Number.isFinite(l.i) || l.i < 0 || l.i > 30)) throw new Error("bad source trim");
   }
 };
 
@@ -110,11 +113,12 @@ export const renderRecipe = (r: Recipe, load: (name: string) => Buf | null): Buf
   };
   for (const l of r.l) {
     let src: Buf | null;
-    if (l.s) { src = synthesize(l.s); normalize(src, -16, -1); }
+    if (l.s) { src = synthesize(l.s); if (l.s.k !== "thread") normalize(src, -16, -1); }
     else { const b = load(l.f!); src = b ? { L: b.L.slice(), R: b.R.slice(), n: b.n } : null; }
     if (!src) continue;
     if (l.rv) reverseBuf(src);
     if (l.p) src = varispeed(src, Math.pow(2, l.p / 12));
+    if (l.i) { const at = Math.min(src.n, Math.round(l.i * SR)); src = { L: src.L.slice(at), R: src.R.slice(at), n: src.n - at }; }
     if (l.hp) filterBuf(src, "hp", l.hp);
     if (l.lp) filterBuf(src, "lp", l.lp);
     if (l.x && src.n > l.x * SR) { const n = Math.round(l.x * SR); src = { L: src.L.slice(0, n), R: src.R.slice(0, n), n }; fadeEdges(src, 0, Math.min(120, l.x * 300)); }

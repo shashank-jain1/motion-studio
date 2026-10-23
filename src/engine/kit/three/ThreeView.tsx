@@ -169,7 +169,8 @@ export const ThreeView: React.FC<Props> = ({ layer, t }) => {
       s.rigKey = rigKey + (draft ? "|lite" : "");
     }
     const rig = s.rig;
-    if (post) post.exposure = rig.exposure;
+    const exposure = rig.exposure * (layer.exposure ?? 1);
+    if (post) post.exposure = exposure;
     const postKey = post ? `${pw}x${ph}|${draft}|${!!post.bloom}|${!!post.dof}` : "";
     if (s.postKey !== postKey) {
       s.post?.dispose();
@@ -182,7 +183,7 @@ export const ThreeView: React.FC<Props> = ({ layer, t }) => {
     rig.update(t, aspect, ph);
     if (!post || !s.post) {
       r.toneMapping = THREE.NeutralToneMapping;
-      r.toneMappingExposure = rig.exposure;
+      r.toneMappingExposure = exposure;
       rig.prepass(r);
       r.setRenderTarget(null);
       if (bgColor) r.setClearColor(new THREE.Color().setRGB(bgColor.r, bgColor.g, bgColor.b, THREE.SRGBColorSpace), 1);

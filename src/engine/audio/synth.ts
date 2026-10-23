@@ -17,6 +17,7 @@ import { SR, TAU, SVF, clamp, expMix, hz, makeBuf, mix, panGains, pinkGen, rever
 
 export type Timbre = "glass" | "bell" | "soft" | "marimba" | "metal";
 export type SynthSpec =
+  | { k: "thread"; d: number; m: number; phase: number; brightness: number; tension: number; seed: number }
   | { k: "sub"; m: number; d: number; drop?: number; drive?: number; seed: number }
   | { k: "boom"; m: number; d: number; seed: number }
   | { k: "air"; pre: number; post: number; b: number; s: number; dir?: number; seed: number }
@@ -30,6 +31,7 @@ export type SynthSpec =
 /** Duration and apex (seconds from file start) of a synth layer. */
 export const synthMeta = (s: SynthSpec): { dur: number; peakAt: number } => {
   switch (s.k) {
+    case "thread": return { dur: s.d, peakAt: s.d * 0.5 };
     case "sub": case "boom": return { dur: s.d, peakAt: 0.004 };
     case "air": return { dur: s.pre + s.post, peakAt: s.pre };
     case "riser": case "swell": return { dur: s.d + 0.03, peakAt: s.d };
@@ -79,6 +81,26 @@ const strike = (b: Buf, at: number, f: number, amp: number, t: Timbre, pan: numb
 export const synthesize = (s: SynthSpec): Buf => {
   const rnd = rng(s.seed >>> 0 || 1);
   switch (s.k) {
+    case "thread": {
+      const b = makeBuf(s.d), root = hz(s.m);
+      const noise = (x: number) => {
+        const i = Math.floor(x), u = x - i, q = u * u * (3 - 2 * u);
+        const h = (n: number) => { let v = Math.imul(n ^ s.seed, 0x45d9f3b); v = Math.imul(v ^ (v >>> 16), 0x45d9f3b); return ((v ^ (v >>> 16)) >>> 0) / 2147483648 - 1; };
+        return h(i) * (1 - q) + h(i + 1) * q;
+      };
+      for (let i = 0; i < b.n; i++) {
+        const t = i / SR, global = s.phase + t, u = t / Math.max(0.001, s.d);
+        const attack = Math.sin(Math.min(1, t / 0.16) * Math.PI / 2);
+        const release = Math.sin(Math.min(1, (s.d - t) / 0.22) * Math.PI / 2);
+        const breath = 0.45 + 0.55 * Math.sin(Math.PI * u) ** 2;
+        const air = noise(global * 900) * 0.1 + noise(global * 3400) * (0.025 + s.brightness * 0.045);
+        const tone = (Math.sin(TAU * root * global) + 0.35 * Math.sin(TAU * root * 1.5 * global)) * 0.045;
+        const env = attack * release * breath * (0.7 + s.tension * 0.3);
+        b.L[i] = (air + tone) * env;
+        b.R[i] = (noise(global * 900 + 0.17) * 0.1 + tone) * env;
+      }
+      return b;
+    }
     case "sub": {
       const b = makeBuf(s.d);
       const f1 = hz(s.m), f0 = hz(s.m + (s.drop ?? 7));

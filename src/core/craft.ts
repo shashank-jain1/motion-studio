@@ -6,6 +6,7 @@ import { FORMATS, type Layer, type Spec } from "../engine/spec/schema";
 import { sceneTimeline } from "../engine/spec/preprocess";
 import { SAFE_ZONES } from "../engine/spec/reflow";
 import { storyIssues } from "./story";
+import { motionSoundWarnings } from "../engine/audio/inspect";
 
 const HERO_TYPES = new Set(["logo", "device"]);
 const READ_WPS = 1 / 0.3; // ~3.3 words/s → hold ≥ words × 0.3s
@@ -20,7 +21,7 @@ const layerText = (l: Layer): string | null => {
 };
 
 export const craftWarnings = (spec: Spec): string[] => {
-  const out: string[] = [];
+  const out: string[] = motionSoundWarnings(spec).map((w) => `craft/motion-sound: ${w}`);
   const fmt = spec.format ?? "16:9";
   const [W, H] = spec.width && spec.height ? [spec.width, spec.height] : FORMATS[fmt];
   const vertical = H > W;

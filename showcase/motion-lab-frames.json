@@ -1,0 +1,91 @@
+{
+  "frames": [
+    {
+      "time": 0.5666666666666667,
+      "frame": 17,
+      "path": "/Users/shashank/motion-studio/projects/motion-lab-choreography-6218/previews/frame-0.57s.jpg"
+    },
+    {
+      "time": 2.566666666666667,
+      "frame": 77,
+      "path": "/Users/shashank/motion-studio/projects/motion-lab-choreography-6218/previews/frame-2.57s.jpg"
+    },
+    {
+      "time": 3.7666666666666666,
+      "frame": 113,
+      "path": "/Users/shashank/motion-studio/projects/motion-lab-choreography-6218/previews/frame-3.77s.jpg"
+    },
+    {
+      "time": 5.766666666666667,
+      "frame": 173,
+      "path": "/Users/shashank/motion-studio/projects/motion-lab-choreography-6218/previews/frame-5.77s.jpg"
+    },
+    {
+      "time": 6.966666666666667,
+      "frame": 209,
+      "path": "/Users/shashank/motion-studio/projects/motion-lab-choreography-6218/previews/frame-6.97s.jpg"
+    },
+    {
+      "time": 8.966666666666667,
+      "frame": 269,
+      "path": "/Users/shashank/motion-studio/projects/motion-lab-choreography-6218/previews/frame-8.97s.jpg"
+    },
+    {
+      "time": 10.166666666666666,
+      "frame": 305,
+      "path": "/Users/shashank/motion-studio/projects/motion-lab-choreography-6218/previews/frame-10.17s.jpg"
+    },
+    {
+      "time": 12.166666666666666,
+      "frame": 365,
+      "path": "/Users/shashank/motion-studio/projects/motion-lab-choreography-6218/previews/frame-12.17s.jpg"
+    },
+    {
+      "time": 13.366666666666667,
+      "frame": 401,
+      "path": "/Users/shashank/motion-studio/projects/motion-lab-choreography-6218/previews/frame-13.37s.jpg"
+    },
+    {
+      "time": 15.366666666666667,
+      "frame": 461,
+      "path": "/Users/shashank/motion-studio/projects/motion-lab-choreography-6218/previews/frame-15.37s.jpg"
+    },
+    {
+      "time": 16.566666666666666,
+      "frame": 497,
+      "path": "/Users/shashank/motion-studio/projects/motion-lab-choreography-6218/previews/frame-16.57s.jpg"
+    },
+    {
+      "time": 18.566666666666666,
+      "frame": 557,
+      "path": "/Users/shashank/motion-studio/projects/motion-lab-choreography-6218/previews/frame-18.57s.jpg"
+    },
+    {
+      "time": 19.766666666666666,
+      "frame": 593,
+      "path": "/Users/shashank/motion-studio/projects/motion-lab-choreography-6218/previews/frame-19.77s.jpg"
+    },
+    {
+      "time": 21.766666666666666,
+      "frame": 653,
+      "path": "/Users/shashank/motion-studio/projects/motion-lab-choreography-6218/previews/frame-21.77s.jpg"
+    },
+    {
+      "time": 22.966666666666665,
+      "frame": 689,
+      "path": "/Users/shashank/motion-studio/projects/motion-lab-choreography-6218/previews/frame-22.97s.jpg"
+    },
+    {
+      "time": 24.966666666666665,
+      "frame": 749,
+      "path": "/Users/shashank/motion-studio/projects/motion-lab-choreography-6218/previews/frame-24.97s.jpg"
+    }
+  ],
+  "sheet": null,
+  "columns": 1,
+  "rows": 1,
+  "width": 768,
+  "height": 432,
+  "fps": 30,
+  "durationSeconds": 25.6
+}

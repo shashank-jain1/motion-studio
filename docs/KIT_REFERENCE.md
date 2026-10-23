@@ -357,3 +357,7 @@ SwiftShader (Lambda) is about 15–40× slower and runs draft automatically.
 - Neon clones don't take per-clone colors. Use plastic or chrome for colored clones.
 - Deformers bend the mesh, not its contact shadow. DOF on particles uses their cores only.
 - No `repeat` or `motionBlur` layer options on 3D layers. Use `post.motionBlur`.
+
+## Choreographed motion and sound accents
+
+See [MOTION_PLAYBOOK.md](MOTION_PLAYBOOK.md) for `gesture`, `accents`, the eight shot recipes and contact-frame review. These are supported Scene Spec fields on every layer, including groups and actor content. Use `motion_recipes`, `build_motion_scene`, and `inspect_sound` through MCP or the in-app director.

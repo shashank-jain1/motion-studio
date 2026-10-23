@@ -96,7 +96,7 @@ export const soundFilesForSpec = (raw: unknown): string[] => {
   const { spec, plan } = planForSpec(raw);
   const out = new Set<string>();
   const base = "http://x/_library";
-  for (const s of [...(spec.sfx ?? []).map((x) => x.src), ...(plan?.cues ?? []).map((c) => c.src)]) {
+  for (const s of [...(spec.sfx ?? []).map((x) => x.src), ...(plan?.cues ?? []).map((c) => c.src), ...(plan?.bridges ?? []).map((c) => c.src)]) {
     const url = resolveSfx(s, base);
     if (!url || !url.startsWith(base)) continue;
     const u = new URL(url);

@@ -1,0 +1,685 @@
+{
+  "title": "Halo — focus, beautifully",
+  "fps": 30,
+  "style": "minimal-dark",
+  "formats": [
+    "16:9",
+    "1:1",
+    "4:5"
+  ],
+  "sound": {
+    "palette": "tech",
+    "intensity": 0.6
+  },
+  "theme": {
+    "fonts": {
+      "display": "Sora",
+      "body": "Inter"
+    },
+    "colors": {
+      "bg": "#0b0a14",
+      "fg": "#f4f2ff",
+      "muted": "#8f8aa8",
+      "accent": "#7c5cff",
+      "accent2": "#3ee0c5",
+      "card": "#16142a",
+      "lilac": "#efeaff",
+      "ink": "#0b0a14"
+    }
+  },
+  "fx": {
+    "grain": 0.07,
+    "vignette": 0.35
+  },
+  "concept": {
+    "truth": "Halo helps busy people focus on one thing at a time, feeling calm.",
+    "metaphor": "fusion — the noise of a hundred pings collapses into one calm violet dot, and the dot IS the app icon",
+    "motif": "one violet dot (actor) that survives every cut and becomes the icon",
+    "verb": "clarify (many → one)",
+    "hook": "notifications rain in while a counter ticks to 127 — before lunch",
+    "arc": [
+      "hook: 127 pings before lunch",
+      "tension: the noise piles up",
+      "transformation: everything collapses into one dot",
+      "proof: the dot is the focus timer in the app",
+      "lockup: the dot becomes the icon"
+    ],
+    "colorScript": [
+      "ink + grey noise",
+      "ink → violet",
+      "lilac calm",
+      "ink + violet lockup"
+    ],
+    "niche": "app",
+    "story": {
+      "insight": "Nobody chooses distraction; it arrives one ping at a time.",
+      "audienceTension": "I want deep work, but I'm afraid to miss something.",
+      "inherentDrama": "the moment every notification goes quiet at once",
+      "orthodoxy": [
+        "a phone spinning in space",
+        "app icons raining down",
+        "confetti on download",
+        "'Download now' badges as the climax"
+      ],
+      "structure": "transformation",
+      "clicheControl": {
+        "obvious": "A phone spins in space while app icons rain down and confetti bursts: 'Download now'.",
+        "banned": [
+          "confetti",
+          "spinning phone",
+          "download now",
+          "app store"
+        ]
+      },
+      "beats": [
+        {
+          "t": 0,
+          "beat": "hook",
+          "emotion": "overwhelm",
+          "intensity": 7,
+          "sound": "notification pops + counter ticks"
+        },
+        {
+          "t": 1.8,
+          "beat": "tension",
+          "emotion": "overwhelm",
+          "intensity": 7,
+          "to": 8,
+          "sound": "zoom-into whoosh"
+        },
+        {
+          "t": 2.6,
+          "beat": "release",
+          "emotion": "relief",
+          "intensity": 5,
+          "sound": "noise drops out"
+        },
+        {
+          "t": 3.8,
+          "beat": "proof",
+          "emotion": "calm control",
+          "intensity": 6,
+          "to": 7
+        },
+        {
+          "t": 7,
+          "beat": "hold",
+          "emotion": "anticipation",
+          "intensity": 5
+        },
+        {
+          "t": 7.7,
+          "beat": "peak",
+          "emotion": "delight",
+          "intensity": 9,
+          "wow": "the calm violet dot snaps into the Halo icon as the wordmark cascades (camera punch + sparkles)",
+          "sound": "auto chime on the logo reveal"
+        },
+        {
+          "t": 8.3,
+          "beat": "lock",
+          "emotion": "calm",
+          "intensity": 8
+        }
+      ],
+      "peakAt": 7.7,
+      "mnemonic": {
+        "visual": "the violet dot becomes the app icon",
+        "sonic": "tech-palette chime on the logo reveal (auto sound)"
+      }
+    }
+  },
+  "actors": [
+    {
+      "id": "dot",
+      "from": "noise",
+      "until": "lockup",
+      "layer": {
+        "type": "morph",
+        "width": 300,
+        "height": 300,
+        "inertia": true,
+        "enter": {
+          "type": "grow",
+          "duration": 0.5
+        },
+        "shapes": [
+          {
+            "at": 0,
+            "shape": "circle",
+            "fill": "$accent"
+          },
+          {
+            "at": 7.8,
+            "shape": "svg:assets/halo-logo.svg#icon",
+            "morph": 0.9,
+            "twist": 20
+          }
+        ]
+      },
+      "poses": [
+        {
+          "scene": "noise",
+          "t": 0,
+          "x": 0,
+          "y": -520,
+          "scale": 0.28
+        },
+        {
+          "scene": "collapse",
+          "t": 0.7,
+          "x": 0,
+          "y": -210,
+          "scale": 1.1,
+          "move": 0.7,
+          "ease": "expoOut"
+        },
+        {
+          "scene": "app",
+          "t": 0.4,
+          "x": 0,
+          "y": -80,
+          "scale": 0.42,
+          "move": 0.6,
+          "ease": "expoOut"
+        },
+        {
+          "scene": "lockup",
+          "t": 0.9,
+          "snapTo": "lockup-logo",
+          "move": 0.9,
+          "ease": "expoOut"
+        }
+      ]
+    }
+  ],
+  "scenes": [
+    {
+      "id": "noise",
+      "duration": 2.4,
+      "background": [
+        {
+          "type": "solid",
+          "color": "$ink"
+        },
+        {
+          "type": "spotlight",
+          "base": "transparent",
+          "color": "#1c1838",
+          "y": -200
+        }
+      ],
+      "camera": {
+        "keyframes": [
+          {
+            "t": 0,
+            "zoom": 1.04
+          },
+          {
+            "t": 2.4,
+            "zoom": 1.12,
+            "ease": "inOut"
+          }
+        ],
+        "shake": {
+          "amount": 3,
+          "start": 0.6,
+          "duration": 1.6,
+          "speed": 3
+        }
+      },
+      "layers": [
+        {
+          "type": "card",
+          "variant": "notification-dark",
+          "icon": "💬",
+          "title": "Team chat",
+          "body": "12 new messages in #launch",
+          "meta": "now",
+          "width": 720,
+          "fontSize": 28,
+          "x": -40,
+          "y": 380,
+          "rotate": -4,
+          "start": 0,
+          "enter": {
+            "type": "drop",
+            "duration": 0.45
+          },
+          "inertia": true
+        },
+        {
+          "type": "card",
+          "variant": "notification-dark",
+          "icon": "📅",
+          "title": "Calendar",
+          "body": "Standup moved to 9:45",
+          "meta": "1m",
+          "width": 700,
+          "fontSize": 28,
+          "x": 60,
+          "y": 250,
+          "rotate": 3,
+          "start": 0.12,
+          "enter": {
+            "type": "drop",
+            "duration": 0.45
+          },
+          "inertia": true
+        },
+        {
+          "type": "card",
+          "variant": "notification-dark",
+          "icon": "📧",
+          "title": "Mail",
+          "body": "Re: Re: Re: quick question",
+          "meta": "2m",
+          "width": 700,
+          "fontSize": 28,
+          "x": -70,
+          "y": 120,
+          "rotate": -2,
+          "start": 0.24,
+          "enter": {
+            "type": "drop",
+            "duration": 0.45
+          },
+          "inertia": true
+        },
+        {
+          "type": "card",
+          "variant": "notification-dark",
+          "icon": "🔔",
+          "title": "Reminder",
+          "body": "You have 9 unread tasks",
+          "meta": "4m",
+          "width": 680,
+          "fontSize": 28,
+          "x": 40,
+          "y": -10,
+          "rotate": 5,
+          "start": 0.36,
+          "enter": {
+            "type": "drop",
+            "duration": 0.45
+          },
+          "inertia": true
+        },
+        {
+          "type": "counter",
+          "from": 0,
+          "to": 127,
+          "countDuration": 1.1,
+          "countDelay": 0.05,
+          "ease": "outQuint",
+          "fontSize": 240,
+          "weight": 800,
+          "color": "$fg",
+          "y": -300,
+          "enter": {
+            "type": "pop",
+            "duration": 0.35
+          }
+        },
+        {
+          "type": "text",
+          "text": "pings before lunch.",
+          "preset": "blur-rise",
+          "fontSize": 70,
+          "weight": 600,
+          "font": "$body",
+          "color": "$muted",
+          "y": -150,
+          "start": 0.35
+        }
+      ]
+    },
+    {
+      "id": "collapse",
+      "duration": 2.6,
+      "transition": {
+        "type": "zoom-into",
+        "from": "dot",
+        "duration": 0.6,
+        "shape": "circle"
+      },
+      "background": [
+        {
+          "type": "gradient",
+          "colors": [
+            "#1a1240",
+            "#0b0a14"
+          ],
+          "radial": true
+        }
+      ],
+      "camera": {
+        "keyframes": [
+          {
+            "t": 0,
+            "zoom": 1
+          },
+          {
+            "t": 2.6,
+            "zoom": 1.06,
+            "ease": "inOut"
+          }
+        ]
+      },
+      "layers": [
+        {
+          "type": "particles",
+          "preset": "dust",
+          "count": 40,
+          "colors": [
+            "#7c5cff",
+            "#b9a8ff"
+          ],
+          "speed": 0.4
+        },
+        {
+          "type": "shape",
+          "shape": "ring",
+          "width": 520,
+          "height": 520,
+          "stroke": "$accent",
+          "strokeWidth": 3,
+          "y": -210,
+          "opacity": 0.5,
+          "draw": true,
+          "drawDuration": 1.2,
+          "start": 0.5,
+          "loop": {
+            "type": "breathe",
+            "amplitude": 0.04,
+            "speed": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "One thing\nat a time.",
+          "preset": "mask-up",
+          "fontSize": 128,
+          "weight": 700,
+          "color": "$fg",
+          "y": 250,
+          "start": 0.6,
+          "highlight": {
+            "words": [
+              "One"
+            ],
+            "color": "$accent",
+            "at": 1.2
+          }
+        }
+      ]
+    },
+    {
+      "id": "app",
+      "duration": 3.2,
+      "transition": {
+        "type": "expand",
+        "from": "dot",
+        "color": "$lilac",
+        "duration": 0.6
+      },
+      "background": {
+        "type": "mesh",
+        "colors": [
+          "#e7defe",
+          "#f6f2ff",
+          "#d8f7f0"
+        ],
+        "base": "#f6f2ff"
+      },
+      "camera": {
+        "keyframes": [
+          {
+            "t": 0,
+            "zoom": 1
+          },
+          {
+            "t": 3.2,
+            "zoom": 1.05,
+            "ease": "inOut"
+          }
+        ]
+      },
+      "layers": [
+        {
+          "type": "text",
+          "text": "Deep work, on tap.",
+          "preset": "slide-words",
+          "fontSize": 84,
+          "weight": 700,
+          "color": "$ink",
+          "y": -640,
+          "start": 0.2
+        },
+        {
+          "type": "device",
+          "model": "iphone",
+          "frameColor": "titanium",
+          "height": 1060,
+          "y": 120,
+          "shadow": true,
+          "enter": {
+            "type": "rise",
+            "duration": 0.7,
+            "ease": "expoOut"
+          },
+          "animate": [
+            {
+              "t": 0,
+              "rotateX": 10,
+              "rotateY": -8
+            },
+            {
+              "t": 3.2,
+              "rotateX": 2,
+              "rotateY": 4,
+              "ease": "inOut"
+            }
+          ],
+          "island": {
+            "activity": "timer",
+            "at": 1.2,
+            "duration": 1.8
+          },
+          "screens": [
+            {
+              "background": "#0b0a14",
+              "layers": [
+                {
+                  "type": "text",
+                  "text": "Focus",
+                  "preset": "blur-rise",
+                  "fontSize": 30,
+                  "weight": 600,
+                  "font": "$body",
+                  "color": "#8f8aa8",
+                  "y": -320,
+                  "start": 0.5
+                },
+                {
+                  "type": "shape",
+                  "shape": "ring",
+                  "width": 360,
+                  "height": 360,
+                  "stroke": "#7c5cff",
+                  "strokeWidth": 14,
+                  "y": -200,
+                  "draw": true,
+                  "drawDuration": 2.4,
+                  "start": 0.6
+                },
+                {
+                  "type": "counter",
+                  "from": 25,
+                  "to": 24,
+                  "countDelay": 1.8,
+                  "countDuration": 0.4,
+                  "suffix": ":59",
+                  "fontSize": 64,
+                  "weight": 700,
+                  "color": "#f4f2ff",
+                  "y": 40,
+                  "start": 0.6,
+                  "enter": {
+                    "type": "fade",
+                    "duration": 0.4
+                  }
+                },
+                {
+                  "type": "card",
+                  "variant": "glass",
+                  "icon": "✍️",
+                  "title": "Write the launch post",
+                  "body": "1 of 1 · notifications paused",
+                  "width": 380,
+                  "fontSize": 18,
+                  "y": 210,
+                  "start": 1,
+                  "enter": {
+                    "type": "rise",
+                    "duration": 0.5
+                  }
+                },
+                {
+                  "type": "card",
+                  "variant": "button",
+                  "title": "Pause all pings",
+                  "accent": "#7c5cff",
+                  "color": "#ffffff",
+                  "width": 300,
+                  "fontSize": 22,
+                  "y": 330,
+                  "start": 1.4,
+                  "press": 2.2,
+                  "enter": {
+                    "type": "pop",
+                    "duration": 0.4
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "card",
+          "variant": "pill",
+          "icon": "🔕",
+          "title": "126 pings snoozed",
+          "fontSize": 30,
+          "x": 250,
+          "y": 560,
+          "start": 1.6,
+          "enter": {
+            "type": "pop",
+            "duration": 0.45
+          },
+          "inertia": true
+        }
+      ]
+    },
+    {
+      "id": "lockup",
+      "duration": 3.4,
+      "transition": {
+        "type": "match"
+      },
+      "background": [
+        {
+          "type": "solid",
+          "color": "$ink"
+        },
+        {
+          "type": "spotlight",
+          "base": "transparent",
+          "color": "#221a4d",
+          "y": -120
+        }
+      ],
+      "camera": {
+        "keyframes": [
+          {
+            "t": 0,
+            "zoom": 1.05
+          },
+          {
+            "t": 3.4,
+            "zoom": 1,
+            "ease": "outQuint"
+          }
+        ],
+        "punch": [
+          0.9
+        ]
+      },
+      "layers": [
+        {
+          "type": "logo",
+          "id": "lockup-logo",
+          "src": "assets/halo-logo.svg",
+          "parts": "wordmark",
+          "frame": "full",
+          "mode": "cascade",
+          "height": 170,
+          "y": -160,
+          "start": 0.7
+        },
+        {
+          "type": "particles",
+          "preset": "sparkles",
+          "start": 0.9,
+          "count": 36,
+          "colors": [
+            "#7c5cff",
+            "#3ee0c5",
+            "#ffffff"
+          ],
+          "originY": -160
+        },
+        {
+          "type": "text",
+          "text": "Focus, beautifully.",
+          "preset": "blur-rise",
+          "fontSize": 72,
+          "weight": 600,
+          "font": "$body",
+          "color": "$fg",
+          "y": 30,
+          "start": 1.3
+        },
+        {
+          "type": "card",
+          "variant": "button",
+          "title": "Download free",
+          "accent": "$accent",
+          "color": "#ffffff",
+          "fontSize": 46,
+          "y": 200,
+          "start": 1.8,
+          "press": 2.8,
+          "enter": {
+            "type": "grow",
+            "duration": 0.5
+          },
+          "inertia": true
+        },
+        {
+          "type": "text",
+          "text": "iOS · Android · Mac",
+          "preset": "tracking",
+          "fontSize": 34,
+          "weight": 500,
+          "font": "$body",
+          "color": "$muted",
+          "y": 320,
+          "start": 2.1
+        }
+      ]
+    }
+  ],
+  "format": "9:16"
+}

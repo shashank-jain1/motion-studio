@@ -1,0 +1,51 @@
+{
+  "frames": [
+    {
+      "time": 0.9,
+      "frame": 27,
+      "path": "/Users/shashank/motion-studio/projects/continuous-motion-one-sonic-world-0dce/previews/frame-0.90s.jpg"
+    },
+    {
+      "time": 3.3,
+      "frame": 99,
+      "path": "/Users/shashank/motion-studio/projects/continuous-motion-one-sonic-world-0dce/previews/frame-3.30s.jpg"
+    },
+    {
+      "time": 4.4,
+      "frame": 132,
+      "path": "/Users/shashank/motion-studio/projects/continuous-motion-one-sonic-world-0dce/previews/frame-4.40s.jpg"
+    },
+    {
+      "time": 6.8,
+      "frame": 204,
+      "path": "/Users/shashank/motion-studio/projects/continuous-motion-one-sonic-world-0dce/previews/frame-6.80s.jpg"
+    },
+    {
+      "time": 7.9,
+      "frame": 237,
+      "path": "/Users/shashank/motion-studio/projects/continuous-motion-one-sonic-world-0dce/previews/frame-7.90s.jpg"
+    },
+    {
+      "time": 10.3,
+      "frame": 309,
+      "path": "/Users/shashank/motion-studio/projects/continuous-motion-one-sonic-world-0dce/previews/frame-10.30s.jpg"
+    },
+    {
+      "time": 11.4,
+      "frame": 342,
+      "path": "/Users/shashank/motion-studio/projects/continuous-motion-one-sonic-world-0dce/previews/frame-11.40s.jpg"
+    },
+    {
+      "time": 13.8,
+      "frame": 414,
+      "path": "/Users/shashank/motion-studio/projects/continuous-motion-one-sonic-world-0dce/previews/frame-13.80s.jpg"
+    }
+  ],
+  "sheet": null,
+  "columns": 1,
+  "rows": 1,
+  "width": 768,
+  "height": 432,
+  "fps": 30,
+  "durationSeconds": 14
+}

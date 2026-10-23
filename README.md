@@ -41,12 +41,18 @@ pnpm cli render <projectId> --final
 
 `get_guide`, `list_styles`, `create_project`, `list_projects`, `get_project`, `add_asset`, `analyze_logo`, `analyze_audio`, `set_spec`,
 `get_spec`, `update_scene`, `preview_frames`, `render_video`, `write_custom_component`, `list_custom_components`,
-`open_studio_hint`.
+`open_studio_hint`, `motion_recipes`, `build_motion_scene`, `build_motion_sequence`, `inspect_sound`, `inspect_render_sound`.
 
 The AI's craft knowledge lives in [docs/DIRECTOR_GUIDE.md](docs/DIRECTOR_GUIDE.md) and the spec format in
 [docs/KIT_REFERENCE.md](docs/KIT_REFERENCE.md); both are served by `get_guide`.
 
 ## Notes
+
+Premium motion workflow: [Motion and sound playbook](docs/MOTION_PLAYBOOK.md). The director can compose eight editable shot recipes, author six shared-clock gestures, pin sound to contact/velocity landmarks and inspect the cue plan. The editor shows clickable SFX apex markers. Research and capability gaps are recorded in the [skills audit](docs/research/07-motion-skills-upgrade.md).
+
+Run `npm run test:motion` for timing contracts and `npm run showcase:motion` for an eight-shot motion/audio lab (new project, draft MP4, frames and cue report).
+
+Continuous films: `npm run showcase:continuity` builds a persistent 3D hero with connected sonic phrases and an isolated/connected audio comparison. [Studio research](docs/research/08-studio-motion-and-sonic-continuity.md) explains the family-cohesion, sound bridges and continuous spline motion. `npm run verify:motion` includes the continuity regression suite.
 
 - Rendering is local: no API keys, no cloud cost. Draft (540p) ≈ 1.5× real time; final 1080p is slower.
 - Set `MOTION_STUDIO_GL=swangle` if WebGL shaders/transitions fail on a machine without a GPU.

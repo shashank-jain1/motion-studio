@@ -34,6 +34,9 @@ import { pitchedLength, type BakeLayer, type Recipe } from "./bake";
 import { synthMeta, type SynthSpec, type Timbre } from "./synth";
 import { deriveBrief, keyName, midiIn, scalePcs, shiftTo, VOICE_BRIGHT, type Brief, type Voice } from "./brief";
 import { midiOf } from "./dsp";
+import { analyseLayerMotion } from "./motionEvents";
+import { gestureTiming, motionFrameTime } from "../core/choreography";
+import { connectSound, type SoundBridge, type SoundPhrase } from "./continuity";
 
 export type Importance = "hero" | "structural" | "supporting" | "micro";
 export type Cue = {
@@ -58,10 +61,14 @@ export type Cue = {
   /** human-readable layer list (cue sheets) */
   layers?: string[];
   pan?: number;
+  /** Picture anchor, retained for cue-sheet / timeline QA. */
+  eventTime?: number;
+  locked?: boolean;
+  family?: string;
 };
 /** A music move (not a sound): stopdown / filter-down before a hero, executed by the music volume envelope. */
 export type MixEvent = { kind: "stopdown"; from: number; to: number; depth: number; release: number; reason: string };
-export type SoundPlan = { cues: Cue[]; mix: MixEvent[]; brief: Brief; dropped: { t: number; role: string; why: string }[] };
+export type SoundPlan = { cues: Cue[]; bridges: SoundBridge[]; phrases: SoundPhrase[]; mix: MixEvent[]; brief: Brief; dropped: { t: number; role: string; why: string }[] };
 
 export type PlanOpts = {
   fps: number;
@@ -114,6 +121,9 @@ type Ev = {
   key: string;
   importance?: Importance;
   onBeat?: boolean;
+  locked?: boolean;
+  sourcePeak?: number;
+  sourceDuration?: number;
 };
 
 const SLAM_TEXT = new Set(["stretch", "zoom-from-camera", "drop-in", "physics", "pop"]);
@@ -206,8 +216,8 @@ class Events {
 
   private layer(l: Layer, base: number, parentEnd: number, key: string, scene: Scene, si: number) {
     if (l.sound === false) return;
-    const g0 = base + (l.start ?? 0);
-    const end = Math.min(parentEnd, l.duration !== undefined ? g0 + l.duration : Infinity);
+    const g0 = base + Math.round((l.start ?? 0) * this.fps) / this.fps;
+    const end = Math.min(parentEnd, l.duration !== undefined ? g0 + Math.max(1, Math.round(l.duration * this.fps)) / this.fps : Infinity);
     if (g0 >= end) return;
     const name = l.id ?? `${l.type}#${key}`;
     const en = l.enter && l.enter.type !== "none" ? l.enter : undefined;
@@ -216,7 +226,10 @@ class Events {
     const before = this.evs.length;
     const geo = { x: l.x ?? 0, scene: si, key };
 
-    switch (l.type) {
+    // Explicit accents and choreographed gestures own their sound. Children still get their own events.
+    const authored = l.accents !== undefined || !!l.gesture;
+    if (authored) this.authored(l, g0, end - g0, name, geo);
+    if (!authored) switch (l.type) {
       case "text": this.text(l, g0, name, geo); break;
       case "counter": this.counter(l, g0, name, geo); break;
       case "morph": this.morph(l, g0, name, geo); break;
@@ -242,10 +255,22 @@ class Events {
       case "group": this.walk(l.layers, g0, end, key, scene, si); break;
       default: break;
     }
+    if (authored && l.type === "group") this.walk(l.layers, g0, end, key, scene, si);
+    if (authored && l.type === "device") (l.screens ?? []).forEach((s, k) => {
+      if (s.layers) this.walk(s.layers, g0 + (s.at ?? 0), end, `${key}.s${k}`, scene, si);
+    });
+    // Arbitrary keyframes and curved paths used to play silently. Derive whooshes from measured peak velocity.
+    if (!authored && (l.animate?.length || l.path)) {
+      for (const [n, m] of analyseLayerMotion(l, end - g0, this.fps).entries()) {
+        this.push({ ...geo, key: `${key}.motion${n}`, t: g0 + m.rush, role: "move", priority: 0.58,
+          reason: `${m.kind} velocity peak ${name}`, lead: m.rush - m.start, x: m.x, dir: m.direction,
+          size: Math.min(1, m.travel / 1000), locked: true });
+      }
+    }
     for (let k = this.evs.length - 1; k >= before; k--) if (this.evs[k].t > end + 0.02) this.evs.splice(k, 1);
 
     const own = this.evs.length > before && l.type !== "group" && l.type !== "device";
-    if (en && !own) {
+    if (en && !own && !authored) {
       const casc = `${key.split(".").slice(0, -1).join(".")}|${en.type}|${l.type}`;
       const size = l.type === "device" ? 0.75 : l.type === "card" ? 0.45 : l.type === "media" ? 0.6 : 0.4;
       const mat = l.type === "device" ? ["metal-thin", "glass"] : l.type === "card" ? ["paper", "plastic"] : (l.type as string) === "three" ? ["metal", "glass"] : undefined;
@@ -259,10 +284,34 @@ class Events {
       }
     }
 
-    if (typeof l.sound === "string") {
+    if (typeof l.sound === "string" && !authored) {
       const mine = this.evs.splice(before);
       const main = mine.sort((a, b) => b.priority - a.priority)[0];
       this.push({ ...geo, t: main ? main.t : en ? landing : g0, role: main?.role ?? "impact", priority: 2, reason: `layer ${name} sound override`, src: l.sound, lead: main?.lead, align: main?.align });
+    }
+  }
+
+  private authored(l: Layer, g0: number, duration: number, name: string, geo: { x: number; scene: number; key: string }) {
+    const motions = analyseLayerMotion(l, duration, this.fps);
+    const main = [...motions].sort((a, b) => b.travel - a.travel)[0];
+    const timing = l.gesture ? gestureTiming(l.gesture) : undefined;
+    const fallback = { rush: main?.rush, contact: timing?.contact ?? main?.contact, settle: timing?.settle ?? main?.settle };
+    const preset = l.gesture?.preset;
+    const role = preset === "elastic-slam" || preset === "rubber-stamp" ? "slam" : preset === "vortex" ? "morph" : "move";
+    const accents = l.accents ?? [{ at: "contact" as const, role }];
+    for (const [i, a] of accents.entries()) {
+      const local = typeof a.at === "number" ? a.at : fallback[a.at];
+      if (local === undefined) continue;
+      const anchored = typeof a.at === "number" || a.at === "rush" ? local : motionFrameTime(l, local, this.fps);
+      const t = Math.round((anchored + (a.offset ?? 0)) * this.fps) / this.fps;
+      if (t < 0 || t >= duration) continue;
+      this.push({ ...geo, key: `${geo.key}.accent${i}`, t: g0 + t, role: a.role as Role,
+        priority: 2.1, reason: `motion accent ${name} (${a.at})`, locked: true,
+        lead: Math.max(0.04, t - (main?.start ?? l.gesture?.delay ?? 0)),
+        x: main?.x ?? geo.x, dir: main?.direction, size: Math.min(1, (main?.travel ?? 500) / 1000),
+        mat: a.material ? [a.material] : undefined, vol: a.volume,
+        src: a.src ?? (typeof l.sound === "string" ? l.sound : undefined), importance: a.importance,
+        sourcePeak: a.sourcePeak, sourceDuration: a.sourceDuration });
     }
   }
 
@@ -375,6 +424,20 @@ class Events {
   actors() {
     for (const a of this.spec.actors ?? []) {
       if (a.layer.sound === false) continue;
+      if (a.layer.gesture || a.layer.accents !== undefined) {
+        const valid = a.poses.map((p) => {
+          const si = sceneIndexOf(this.spec.scenes, p.scene);
+          return si < 0 ? null : { si, g: this.slots[si].start + (p.t ?? 0) };
+        }).filter((p): p is { si: number; g: number } => !!p).sort((a, b) => a.g - b.g);
+        if (valid.length) {
+          const fi = a.from === undefined ? -1 : sceneIndexOf(this.spec.scenes, a.from);
+          const ui = a.until === undefined ? -1 : sceneIndexOf(this.spec.scenes, a.until);
+          const start = fi < 0 ? this.slots[valid[0].si].start : this.slots[fi].start;
+          const end = ui < 0 ? this.slots[this.slots.length - 1].end : this.slots[ui].end;
+          this.layer(a.layer, start, end, `actor.${a.id}`, this.spec.scenes[valid[0].si], valid[0].si);
+        }
+      }
+      if (a.layer.accents !== undefined) continue; // authored actor phrases own their complete motion, including pose travel
       let px: number | undefined, py: number | undefined, ps: number | undefined;
       a.poses.forEach((p, k) => {
         const si = sceneIndexOf(this.spec.scenes, p.scene);
@@ -401,11 +464,11 @@ const STRUCTURAL = new Set<Role>(["trans", "transFast", "zoom", "expand", "flash
 const MICRO = new Set<Role>(["tick", "type"]);
 
 const classify = (evs: Ev[], brief: Brief, total: number, storyPeak?: number) => {
-  for (const e of evs) e.importance = MICRO.has(e.role) ? "micro" : STRUCTURAL.has(e.role) ? "structural" : "supporting";
+  for (const e of evs) e.importance ??= MICRO.has(e.role) ? "micro" : STRUCTURAL.has(e.role) ? "structural" : "supporting";
   // heroes: the (last) logo resolve + the single biggest slam / flash, at least 2.5 s apart
   const logos = evs.filter((e) => e.role === "logoHit").sort((a, b) => b.t - a.t);
-  const heroes: Ev[] = [];
-  if (logos[0]) heroes.push(logos[0]);
+  const heroes: Ev[] = evs.filter((e) => e.importance === "hero");
+  if (logos[0] && !heroes.includes(logos[0])) heroes.push(logos[0]);
   for (const l of logos.slice(1)) l.importance = "structural";
   const big = evs.filter((e) => (e.role === "slam" || e.role === "flash" || e.role === "impact" || e.role === "boom") && e.priority < 2)
     .map((e) => ({ e, s: (e.size ?? 0.5) + e.priority + brief.energy[e.scene] * 0.6 + (e.t / Math.max(1, total)) * 0.2 }))
@@ -451,6 +514,7 @@ class Chooser {
   used = new Map<string, number[]>();
   usedGroup = new Map<string, number[]>();
   lastBySlot = new Map<string, string[]>();
+  anchors = new Map<Slot, SfxEntry>();
   constructor(private brief: Brief, private seed: number) {}
 
   note(e: SfxEntry, t: number, slotKey: string) {
@@ -480,7 +544,7 @@ class Chooser {
       const cf = cats[e.category];
       if (!cf) continue;
       if (o.exclude?.has(e.name) || this.avoided(e)) continue;
-      if (recent.includes(e.name)) continue; // hard ban: never one of the last 3 picks for this slot
+      if (recent.slice(0, b.cohesion > 0 ? 1 : 3).includes(e.name)) continue;
       const uses = this.used.get(e.name) ?? [];
       if (uses.some((u) => Math.abs(u - ev.t) < 1.5)) continue;
       // tuning: tonal items must reach a chord tone within ±3 semitones
@@ -501,8 +565,12 @@ class Chooser {
       const bright = 1 - Math.abs(e.brightness - VOICE_BRIGHT[b.voice]);
       const pal = e.palettes.length ? (e.palettes.includes(b.palette) ? 1 : 0) : 0.5;
       const gamey = e.emotions.includes("gamey") && (b.voice === "luxury" || b.voice === "calm" || b.voice === "epic" || b.voice === "warm") ? 3 : 0;
-      const rec = uses.reduce((s, u) => s + Math.exp(-Math.abs(ev.t - u) / 4), 0) + 0.5 * (this.usedGroup.get(e.group) ?? []).reduce((s, u) => s + Math.exp(-Math.abs(ev.t - u) / 3), 0);
-      const s = 3 * cf + 2 * matHit + 1.5 * world + 1.5 * wFit + 1 * sFit + 1 * leadFit + 0.5 * bright + 0.6 * pal - 2.5 * rec - tonalRisk - gamey;
+      const rec = uses.reduce((s, u) => s + Math.exp(-Math.abs(ev.t - u) / 4), 0) + (0.5 - 0.4 * b.cohesion) * (this.usedGroup.get(e.group) ?? []).reduce((s, u) => s + Math.exp(-Math.abs(ev.t - u) / 3), 0);
+      const anchor = this.anchors.get(slot);
+      const related = anchor ? (e.group === anchor.group ? 1 : 0) * 2 +
+        (e.material.some((m) => anchor.material.includes(m)) ? 1 : 0) +
+        Math.max(0, 1 - Math.abs(e.brightness - anchor.brightness) * 3) : 0;
+      const s = 3 * cf + 2 * matHit + 1.5 * world + 1.5 * wFit + 1 * sFit + 1 * leadFit + 0.5 * bright + 0.6 * pal - 2.5 * rec - tonalRisk - gamey + related * b.cohesion * 2.5;
       cand.push({ e, s, semis });
     }
     if (!cand.length) return null;
@@ -514,6 +582,7 @@ class Chooser {
     let chosen = top[0];
     for (let i = 0; i < top.length; i++) { acc -= ws[i]; if (acc <= 0) { chosen = top[i]; break; } }
     this.note(chosen.e, ev.t, o.slotKey);
+    if (!this.anchors.has(slot)) this.anchors.set(slot, chosen.e);
     return { e: chosen.e, semis: chosen.semis };
   }
 }
@@ -534,7 +603,7 @@ class Designer {
   private jit(ev: Ev, tag: string, range: number) {
     if (!range) return 0;
     const r = rng(hashStr(`${tag}|${ev.key}|${ev.t.toFixed(3)}`, this.seed));
-    return (r() * 2 - 1) * range * (this.brief.variation / 0.5);
+    return (r() * 2 - 1) * range * (this.brief.variation / 0.5) * (1 - 0.55 * this.brief.cohesion);
   }
 
   /** A recorded layer, varispeed-pitched (size + jitter + key), with its apex / length after pitching. */
@@ -818,6 +887,7 @@ export const planSoundV2 = (spec: Spec, timeline: { scenes: SceneSlot[] }, opts:
     for (const e of evs) {
       let best = Infinity;
       for (const bt of brief.beats) if (Math.abs(bt - e.t) < Math.abs(best)) best = bt - e.t;
+      if (e.locked) { e.onBeat = Math.abs(best) <= 0.5 / fps; continue; }
       if (best >= -1 / fps - 1e-6 && best <= 2 / fps + 1e-6) { e.t += best; e.onBeat = true; }
       else if (e.role === "tick") {
         // counter ticks: quantize to the 1/8 grid when close
@@ -901,10 +971,10 @@ export const planSoundV2 = (spec: Spec, timeline: { scenes: SceneSlot[] }, opts:
     if (e.src) {
       // explicit override: play it as-is (whole sound), apex on the event
       const isLib = sfxName(e.src) !== null;
-      const info = isLib ? sfxInfo(e.src) : DEFAULT_ASSET;
+      const info = isLib ? sfxInfo(e.src) : { peakAt: e.sourcePeak ?? 0, durationSec: e.sourceDuration ?? Math.max(1, (e.sourcePeak ?? 0) + 0.35) };
       if (!info) continue;
       const peak = e.align === "start" ? e.t + info.peakAt : e.t;
-      cands.push({ src: e.src, at: r4(peak - info.peakAt), volume: r4(Math.min(1, volBase)), peak: r4(peak), dur: r4(info.durationSec), duck: IMP_DUCK[imp], priority: e.priority, role: e.role, reason: e.reason, importance: imp, layers: [`override:${e.src}`] });
+      cands.push({ src: e.src, at: r4(peak - info.peakAt), volume: r4(Math.min(1, volBase)), peak: r4(peak), dur: r4(info.durationSec), duck: IMP_DUCK[imp], priority: e.priority, role: e.role, reason: e.reason, importance: imp, layers: [`override:${e.src}`], eventTime: e.t, locked: e.locked });
       continue;
     }
     const L = designer.design(e, signature);
@@ -918,6 +988,7 @@ export const planSoundV2 = (spec: Spec, timeline: { scenes: SceneSlot[] }, opts:
       src: bakeSrc(asm.recipe), at: r4(asm.at), volume: r4(vol), peak: r4(apexT), dur: r4(asm.dur),
       duck: IMP_DUCK[imp] * (HITS.has(e.role) ? 1 : 0.7), priority: e.priority + IMP_RANK[imp] * 0.01, role: e.role, reason: e.reason, importance: imp,
       layers: L.map((l) => l.label), ...(asm.pan ? { pan: r4(asm.pan) } : {}),
+      eventTime: e.t, locked: e.locked,
     });
   }
 
@@ -932,15 +1003,18 @@ export const planSoundV2 = (spec: Spec, timeline: { scenes: SceneSlot[] }, opts:
   const accepted: { c: Cue; start: number; end: number }[] = [];
   const body = (c: Cue) => ({ start: Math.max(c.at, c.peak - 0.08), end: Math.min(c.at + c.dur, c.peak + 0.35) });
   for (const c of [...cands].sort((a, b) => b.priority - a.priority || a.peak - b.peak)) {
-    if (c.priority < 2 && fixed.some((f) => Math.abs(f.peak - c.peak) < 0.08)) continue;
-    if (accepted.some((a) => Math.abs(a.c.peak - c.peak) < 0.08)) continue;
-    if (HITS.has(c.role) && accepted.some((a) => HITS.has(a.c.role) && Math.abs(a.c.peak - c.peak) < 0.22)) continue;
+    const reject = (why: string) => dropped.push({ t: c.peak, role: c.role, why: `${why} — ${c.reason}` });
+    if (fixed.some((f) => Math.abs(f.peak - c.peak) < 0.08)) { reject("manual SFX owns this accent"); continue; }
+    if (accepted.some((a) => Math.abs(a.c.peak - c.peak) < 0.08)) { reject("another cue owns this apex (80 ms spacing)"); continue; }
+    if (HITS.has(c.role) && accepted.some((a) => HITS.has(a.c.role) && Math.abs(a.c.peak - c.peak) < 0.22)) { reject("impact spacing (220 ms)"); continue; }
     const bd = body(c);
     const overlapping = [...accepted, ...fixed.map((f) => ({ start: f.start, end: f.end }))].filter((a) => a.start < c.peak + 0.05 && a.end > c.peak - 0.05).length;
-    if (overlapping >= 3 && c.priority < 2) continue;
+    if (overlapping >= 3 && c.priority < 2) { reject("three overlapping sound bodies"); continue; }
     accepted.push({ c, ...bd });
   }
-  return { cues: accepted.map((a) => a.c).sort((a, b) => a.at - b.at), mix, brief, dropped };
+  const cues = accepted.map((a) => a.c).sort((a, b) => a.at - b.at);
+  const continuity = connectSound(spec, cues, brief, total);
+  return { cues, ...continuity, mix, brief, dropped };
 };
 
 /** v1-compatible entry point: just the cues. */

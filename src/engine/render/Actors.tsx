@@ -8,6 +8,7 @@ import { AbsoluteFill } from "remotion";
 import type { z } from "zod";
 import type { ActorSchema, Keyframe, Layer, Spec } from "../spec/schema";
 import { evalKeyframes } from "../core/animate";
+import { flowKeyframes } from "../core/flow";
 import { ContainerProvider } from "../core/container";
 import { sceneIndexOf, type SceneSlot } from "../spec/preprocess";
 import type { LogoAnalysis } from "../shapes/resolve";
@@ -137,10 +138,11 @@ export const resolveActor = (actor: Actor, index: number, spec: Pick<Spec, "scen
   // Hold-then-move: each pose's move takes `move` seconds (default 1s) ending at its time; before that the actor
   // holds the previous pose (80/20 rhythm). A hold keyframe carrying the evaluated previous values is inserted.
   const DEFAULT_MOVE = 1.0;
-  const keyframes: Keyframe[] = [];
+  let keyframes: Keyframe[] = [];
+  const continuous = actor.motion === "flow" && !poses.some(({ p }) => p.snapTo);
   poses.forEach(({ p, g }, i) => {
     const t = Math.max(0, g - start);
-    if (i > 0) {
+    if (i > 0 && !continuous) {
       const prevT = keyframes[keyframes.length - 1].t;
       const holdT = t - Math.min(p.move ?? DEFAULT_MOVE, t - prevT);
       if (holdT > prevT + 1e-3) {
@@ -177,6 +179,7 @@ export const resolveActor = (actor: Actor, index: number, spec: Pick<Spec, "scen
     }
     keyframes.push(kf);
   });
+  if (continuous) keyframes = flowKeyframes(keyframes, snap?.fps ?? 30);
 
   // Props the poses drive become absolute: strip them from the inner layer so they don't double up.
   const driven = new Set(POSE_PROPS.filter((k) => k !== "opacity" && k !== "blur" && (poses.some(({ p }) => p[k] !== undefined) || (["x", "y", "scale"].includes(k) && poses.some(({ p }) => p.snapTo)))));

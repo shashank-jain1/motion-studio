@@ -1,22 +1,15 @@
 {
   "brew-logo.svg": {
-    "mtimeMs": 1792062575594.1396,
+    "mtimeMs": 1792173324270.3464,
     "size": 5704,
     "info": {
       "path": "assets/brew-logo.svg",
-      "file": "/home/shashank/motion-studio/projects/brew-film-f96a/assets/brew-logo.svg",
+      "file": "/Users/shashank/motion-studio/projects/brew-film-f96a/assets/brew-logo.svg",
       "kind": "image",
       "sizeBytes": 5704,
       "width": 840,
       "height": 360,
-      "hasAlpha": true,
-      "palette": [
-        "#3a2218",
-        "#2d1b13",
-        "#f1b25c",
-        "#22140e",
-        "#a86c38"
-      ]
+      "hasAlpha": true
     }
   }
 }

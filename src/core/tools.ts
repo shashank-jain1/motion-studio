@@ -43,6 +43,10 @@ import { resolvePublic, safeDownload } from "./safe-download";
 import { FORMAT_LIST, adaptTargets, type Format } from "../engine/spec/reflow";
 import { NICHES } from "../engine/spec/schema";
 import { pickWinner, storyKit, storyReport, type CandidateInput } from "./story";
+import { MOTION_RECIPES, buildMotionScene, type MotionRecipeId } from "../engine/choreo/recipes";
+import { inspectSound } from "../engine/audio/inspect";
+import { reviewExportAudio } from "./renderAudioReview";
+import { buildMotionSequence } from "../engine/choreo/sequences";
 
 // ---------------------------------------------------------------- types
 
@@ -447,6 +451,13 @@ export const autoPreviewTimes = (projectId: string): { times: number[]; labels: 
   // In-betweens are where craft shows: sample the middle of every transition (up to 6).
   const trans = tl.scenes.filter((s) => s.index > 0 && s.overlapIn > 0).slice(0, 6);
   for (const s of trans) pts.push({ t: s.start + s.overlapIn * 0.5, label: `transition into ${sceneName(s.index)} @50%` });
+  // Include motion contacts in the default critique pass; a settled frame alone cannot prove choreography.
+  const contacts = inspectSound(spec).cues.filter((c) => c.locked).slice(0, 2);
+  if (contacts.length && pts.length > 10) {
+    const sampled = Array.from({ length: 10 }, (_, i) => pts[Math.round(i * (pts.length - 1) / 9)]);
+    pts.splice(0, pts.length, ...sampled);
+  }
+  for (const c of contacts) for (const df of [-2, 0, 2]) pts.push({ t: (c.frame + df) / fps, label: `${c.role} contact ${df > 0 ? "+" : ""}${df}f` });
   pts.sort((a, b) => a.t - b.t);
   const labels = new Map<number, string>();
   const times: number[] = [];
@@ -625,6 +636,51 @@ const projectIdField = z.string().describe("project id (from create_project / li
 
 export const TOOLS: ToolDef[] = [
   defineTool({
+    name: "build_motion_sequence", title: "Compose continuous motion", scope: "global",
+    description: "Build an editable 10–30s film around one persistent evolving hero, spline motion across cuts, unified typography/materials and linked sound phrases. Use for a cohesive film rather than unrelated preset shots. Returns a full spec without saving; adapt story/headlines/brand, then set_spec and inspect_sound.",
+    shape: { treatment: z.enum(["sculpture-flow", "metamorphosis"]).optional(), title: z.string().optional(), seconds: z.number().min(10).max(30).optional(),
+      format: z.enum(FORMAT_KEYS).optional(), accent: z.string().optional(), background: z.string().optional(), foreground: z.string().optional(),
+      headlines: z.array(z.string().max(100)).min(1).max(4).optional(), source: z.string().optional().describe("optional 3D source: primitive:<name> or svg:assets/<logo>.svg") },
+    handler: async (input) => ({ content: [json(buildMotionSequence(input))], summary: "Composed four continuous motion chapters with a shared sonic thread" }),
+  }),
+  defineTool({
+    name: "motion_recipes", title: "Motion recipes", scope: "global",
+    description: "Browse eight editable, choreographed shot recipes with sound anchors, energy and rendering cost. Use before designing premium motion; each recipe is a starting point to art-direct, not a whole film.",
+    shape: {},
+    handler: async () => ({ content: [json(MOTION_RECIPES)], summary: "8 motion recipes · 2D, 2.5D and WebGL" }),
+  }),
+  defineTool({
+    name: "build_motion_scene", title: "Compose a motion shot", scope: "global",
+    description: "Return an editable Scene Spec for a motion recipe. Does not save. Insert the returned scene with set_spec/update_scene, adapt its typography and colors to the brand, then inspect_sound and preview contact frames. src is an image for deck/orbit; an SVG for 3D recipes. Use the project's canvas dimensions.",
+    shape: {
+      recipe: z.enum(MOTION_RECIPES.map((r) => r.id) as [MotionRecipeId, ...MotionRecipeId[]]),
+      id: z.string().optional(), text: z.string().max(80).optional(), subtitle: z.string().optional(), src: z.string().optional(),
+      width: z.number().int().min(240).max(7680).optional(), height: z.number().int().min(240).max(7680).optional(),
+      duration: z.number().min(2.4).max(20).optional(), accent: z.string().optional(), background: z.string().optional(), foreground: z.string().optional(),
+    },
+    handler: async (input) => ({ content: [json(buildMotionScene(input))], summary: `Composed ${input.recipe} · editable scene` }),
+  }),
+  defineTool({
+    name: "inspect_sound", title: "Inspect motion and sound", scope: "project",
+    description: "Inspect the exact sound plan used by Player/render: cue apex frames, motion locks, sound layers, music stopdowns, dropped-cue reasons, unresolved anchors and contact ±2-frame preview times. Run after set_spec and after timing changes. This does not listen to sound or analyse exported PCM.",
+    shape: { projectId: projectIdField },
+    handler: async ({ projectId }) => {
+      const report = inspectSound(loadSpec(projectId));
+      return { content: [json(report)], summary: `${report.cues.length} sound cues · ${report.warnings.length} timing warnings` };
+    },
+  }),
+  defineTool({
+    name: "inspect_render_sound", title: "Check exported sound sync", scope: "project",
+    description: "Decode a project MP4 (up to 180s), measure LUFS/true peak and correlate baked SFX against the CURRENT spec to check actual exported sound offsets. Run after render_video. Imported/manual cues are not correlated. This is timing evidence, not a listening review.",
+    shape: { projectId: projectIdField, file: z.string().describe("project-relative renders/<file>.mp4") },
+    handler: async ({ projectId, file }, ctx) => {
+      if (!/^renders\/[^/\\]+\.mp4$/i.test(file) || file.includes("..")) throw new Error("Choose a project-relative renders/<file>.mp4 file.");
+      const project = getProject(projectId);
+      const report = await withRenderLock(() => reviewExportAudio(loadSpec(projectId), path.join(project.dir, file)), { signal: ctx.signal });
+      return { content: [json(report)], summary: `${report.checkedCues} exported cues · ${report.syncPassed ? "sync passed" : "needs review"}` };
+    },
+  }),
+  defineTool({
     name: "get_guide",
     title: "Director guide",
     scope: "global",
@@ -633,7 +689,7 @@ export const TOOLS: ToolDef[] = [
     shape: {},
     startSummary: () => "Reading the director guide",
     handler: async () => ({
-      content: [text(readDoc("DIRECTOR_GUIDE.md")), text(readDoc("STORY_ENGINE.md")), text(readDoc("KIT_REFERENCE.md"))],
+      content: [text(readDoc("DIRECTOR_GUIDE.md")), text(readDoc("STORY_ENGINE.md")), text(readDoc("KIT_REFERENCE.md")), text(readDoc("MOTION_PLAYBOOK.md"))],
       summary: "Read the director guide",
     }),
   }),

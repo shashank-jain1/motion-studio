@@ -1,0 +1,255 @@
+{
+  "projectId": "motion-lab-choreography-6218",
+  "enabled": true,
+  "total": 25.6,
+  "fps": 30,
+  "brief": "voice precise · mixed · materials metal-thin/paper/air · space room · key D minor (brief, conf 1) · energy [0.68, 0.53, 0.56, 0.59, 0.61, 0.64, 0.67, 0.88] · variation 0.45 · restraint 0.65",
+  "cues": [
+    {
+      "frame": 32,
+      "peak": 1.0667,
+      "start": 0.3903,
+      "end": 2.6826,
+      "role": "slam",
+      "importance": "hero",
+      "volume": 1,
+      "pan": 0,
+      "locked": true,
+      "syncErrorFrames": 0,
+      "layers": [
+        "B:scifi-metal-1@-0.5",
+        "T:toaster-click-1@+0.5",
+        "S:sub(D2)",
+        "Tl:shimmer(D6 F6 G6 A6 C6)",
+        "R:swell(D4)"
+      ],
+      "reason": "motion accent hero-type (contact)"
+    },
+    {
+      "frame": 134,
+      "peak": 4.4667,
+      "start": 4.0982,
+      "end": 4.8102,
+      "role": "impact",
+      "importance": "structural",
+      "volume": 0.62,
+      "pan": 0,
+      "locked": true,
+      "syncErrorFrames": 0,
+      "layers": [
+        "B:card-place-3@-2.4",
+        "T:desk-tick-1@+0.5"
+      ],
+      "reason": "motion accent deck-0 (contact)"
+    },
+    {
+      "frame": 209,
+      "peak": 6.9667,
+      "start": 6.3997,
+      "end": 7.5167,
+      "role": "move",
+      "importance": "supporting",
+      "volume": 0.459,
+      "pan": 0,
+      "locked": true,
+      "syncErrorFrames": 0,
+      "layers": [
+        "A:air"
+      ],
+      "reason": "motion accent orbit-subject (rush)"
+    },
+    {
+      "frame": 224,
+      "peak": 7.4667,
+      "start": 7.4362,
+      "end": 7.752400000000001,
+      "role": "click",
+      "importance": "structural",
+      "volume": 0.4223,
+      "pan": 0,
+      "locked": true,
+      "syncErrorFrames": 0,
+      "layers": [
+        "T:toaster-click-1@-0.2"
+      ],
+      "reason": "motion accent orbit-subject (contact)"
+    },
+    {
+      "frame": 313,
+      "peak": 10.4333,
+      "start": 9.6003,
+      "end": 10.9833,
+      "role": "move",
+      "importance": "supporting",
+      "volume": 0.4635,
+      "pan": 0,
+      "locked": true,
+      "syncErrorFrames": 0,
+      "layers": [
+        "A:air"
+      ],
+      "reason": "motion accent flight (rush)"
+    },
+    {
+      "frame": 330,
+      "peak": 11,
+      "start": 10.88,
+      "end": 11.354800000000001,
+      "role": "pop",
+      "importance": "structural",
+      "volume": 0.4635,
+      "pan": 0,
+      "locked": true,
+      "syncErrorFrames": 0,
+      "layers": [
+        "L:goo-3@-2.3"
+      ],
+      "reason": "motion accent flight (contact)"
+    },
+    {
+      "frame": 405,
+      "peak": 13.5,
+      "start": 12.8,
+      "end": 13.814,
+      "role": "move",
+      "importance": "supporting",
+      "volume": 0.4665,
+      "pan": -0.318,
+      "locked": true,
+      "syncErrorFrames": 0,
+      "layers": [
+        "A:air"
+      ],
+      "reason": "motion accent panel-0 (rush)"
+    },
+    {
+      "frame": 512,
+      "peak": 17.0667,
+      "start": 16.4267,
+      "end": 17.3367,
+      "role": "morph",
+      "importance": "structural",
+      "volume": 0.4898,
+      "pan": 0,
+      "locked": true,
+      "syncErrorFrames": 0,
+      "layers": [
+        "L:goo-4@-2.4",
+        "A:air"
+      ],
+      "reason": "motion accent tunnel (contact)"
+    },
+    {
+      "frame": 593,
+      "peak": 19.7667,
+      "start": 19.1997,
+      "end": 20.1417,
+      "role": "move",
+      "importance": "supporting",
+      "volume": 0.4755,
+      "pan": 0,
+      "locked": true,
+      "syncErrorFrames": 0,
+      "layers": [
+        "A:air"
+      ],
+      "reason": "motion accent chrome (0.55)"
+    },
+    {
+      "frame": 626,
+      "peak": 20.8667,
+      "start": 20.8517,
+      "end": 21.782600000000002,
+      "role": "impact",
+      "importance": "structural",
+      "volume": 0.62,
+      "pan": 0,
+      "locked": true,
+      "syncErrorFrames": 0,
+      "layers": [
+        "B:metal-hit-2@-0.6",
+        "T:toaster-click-2@+0.1",
+        "S:sub(A1)"
+      ],
+      "reason": "motion accent chrome (1.65)"
+    },
+    {
+      "frame": 718,
+      "peak": 23.9333,
+      "start": 23.257,
+      "end": 25.549300000000002,
+      "role": "impact",
+      "importance": "hero",
+      "volume": 1,
+      "pan": 0,
+      "locked": true,
+      "syncErrorFrames": 0,
+      "layers": [
+        "B:glass-thud-3@+0.4",
+        "T:desk-tick-3@-0.1",
+        "S:sub(D2)",
+        "Tl:shimmer(D6 F6 G6 A6 C6)",
+        "R:swell(D4)"
+      ],
+      "reason": "motion accent forge (1.53)"
+    }
+  ],
+  "manual": [],
+  "mix": [
+    {
+      "kind": "stopdown",
+      "from": 0.392,
+      "to": 1.057,
+      "depth": 0.778,
+      "release": 0.18,
+      "reason": "stopdown before hero (motion accent hero-type (contact))"
+    },
+    {
+      "kind": "stopdown",
+      "from": 23.258,
+      "to": 23.923,
+      "depth": 0.778,
+      "release": 0.18,
+      "reason": "stopdown before hero (motion accent forge (1.53))"
+    }
+  ],
+  "dropped": [],
+  "warnings": [],
+  "beats": [],
+  "previewTimes": [
+    1,
+    1.0666666666666667,
+    1.1333333333333333,
+    4.4,
+    4.466666666666667,
+    4.533333333333333,
+    6.9,
+    6.966666666666667,
+    7.033333333333333,
+    7.4,
+    7.466666666666667,
+    7.533333333333333,
+    10.366666666666667,
+    10.433333333333334,
+    10.5,
+    10.933333333333334,
+    11,
+    11.066666666666666,
+    13.433333333333334,
+    13.5,
+    13.566666666666666,
+    17,
+    17.066666666666666,
+    17.133333333333333,
+    19.7,
+    19.766666666666666,
+    19.833333333333332,
+    20.8,
+    20.866666666666667,
+    20.933333333333334,
+    23.866666666666667,
+    23.933333333333334,
+    24
+  ],
+  "review": "Inspect contact ±2 frames, then play the rendered MP4 with audio. Planner timing does not measure exported PCM sync or perceived sound quality."
+}

@@ -39,6 +39,7 @@ export type Brief = {
   palette: SfxPalette;
   /** stable id for the brand's sonic signature */
   brand: string;
+  cohesion: number;
 };
 
 export const VOICE_PALETTE: Record<Voice, SfxPalette> = { precise: "tech", warm: "minimal", playful: "playful", epic: "cinematic", luxury: "luxury", raw: "hype", calm: "minimal" };
@@ -189,6 +190,7 @@ export const deriveBrief = (spec: Spec, slots: { start: number; end: number }[],
     key, hasMusic, bpm: music.bpm ?? spec.bpm, beats, onsets: music.onsets ?? [], energy,
     variation: clamp01(s.variation ?? 0.5), restraint: clamp01(s.restraint ?? 0.5), stereo: s.stereo !== false,
     aspect: w / h, width: w, palette: (s.palette as SfxPalette | undefined) ?? VOICE_PALETTE[voice], brand,
+    cohesion: s.continuity === false ? 0 : clamp01(s.continuity?.cohesion ?? 0.8),
   };
 };
 const clamp01 = (v: number) => Math.max(0, Math.min(1, v));

@@ -1,0 +1,738 @@
+{
+  "version": 1,
+  "title": "Motion Lab / One clock",
+  "format": "16:9",
+  "fps": 30,
+  "style": "minimal-dark",
+  "theme": {
+    "fonts": {
+      "display": "Inter",
+      "body": "Inter",
+      "mono": "Inter"
+    },
+    "colors": {
+      "bg": "#11120f",
+      "fg": "#f0f0e8",
+      "accent": "#caff4b",
+      "accent2": "#ff6147"
+    }
+  },
+  "sound": {
+    "volume": 0.75,
+    "brief": {
+      "voice": "precise",
+      "realism": "mixed",
+      "materials": [
+        "metal-thin",
+        "paper",
+        "air"
+      ],
+      "space": "room",
+      "key": "D minor",
+      "avoid": [
+        "cartoon",
+        "gamey"
+      ]
+    },
+    "restraint": 0.65,
+    "variation": 0.45
+  },
+  "scenes": [
+    {
+      "id": "shot-1-type-impact",
+      "duration": 3.2,
+      "background": {
+        "type": "solid",
+        "color": "#11120f"
+      },
+      "layers": [
+        {
+          "id": "hero-type",
+          "gesture": {
+            "preset": "elastic-slam",
+            "delay": 0,
+            "duration": 1.65,
+            "distance": 378
+          },
+          "accents": [
+            {
+              "at": "contact",
+              "role": "slam",
+              "importance": "hero",
+              "material": "metal"
+            }
+          ],
+          "type": "text",
+          "text": "FEEL IT.",
+          "preset": "none",
+          "fontSize": 210,
+          "weight": 900,
+          "color": "#caff4b",
+          "letterSpacing": -0.055,
+          "lineHeight": 0.94,
+          "maxWidth": 1768.8
+        },
+        {
+          "id": "impact-rule",
+          "start": 1.056,
+          "y": 205.2,
+          "width": 1497.6000000000001,
+          "height": 3,
+          "enter": {
+            "type": "unfold-x",
+            "duration": 0.35
+          },
+          "sound": false,
+          "type": "shape",
+          "shape": "line",
+          "color": "#caff4b"
+        },
+        {
+          "id": "caption",
+          "start": 1.7,
+          "y": 367.20000000000005,
+          "sound": false,
+          "type": "text",
+          "text": "01 / WEIGHT HAS A SOUND",
+          "preset": "mask-up",
+          "by": "line",
+          "unitDuration": 0.4,
+          "fontSize": 23,
+          "weight": 500,
+          "color": "#f0f0e8",
+          "letterSpacing": 0.16,
+          "maxWidth": 1632
+        }
+      ],
+      "notes": "Type impact: Oversized type compresses on contact and releases. Contact accents share the motion clock. Keep the final reading hold."
+    },
+    {
+      "id": "shot-2-magnetic-deck",
+      "duration": 3.2,
+      "background": {
+        "type": "solid",
+        "color": "#eeede6"
+      },
+      "layers": [
+        {
+          "id": "deck-2",
+          "x": 56,
+          "y": -48,
+          "width": 1050,
+          "height": 510,
+          "rotate": -10,
+          "shadow": "premium",
+          "gesture": {
+            "preset": "magnetic",
+            "delay": 0,
+            "duration": 1.65,
+            "distance": 921.5999999999999
+          },
+          "accents": [],
+          "type": "group",
+          "layers": [
+            {
+              "width": 1050,
+              "height": 510,
+              "sound": false,
+              "type": "shape",
+              "shape": "rect",
+              "color": "#141711",
+              "radius": 30
+            }
+          ]
+        },
+        {
+          "id": "deck-1",
+          "x": 28,
+          "y": -24,
+          "width": 1050,
+          "height": 510,
+          "rotate": -5,
+          "shadow": "premium",
+          "gesture": {
+            "preset": "magnetic",
+            "delay": 0.1,
+            "duration": 1.65,
+            "distance": 921.5999999999999
+          },
+          "accents": [],
+          "type": "group",
+          "layers": [
+            {
+              "width": 1050,
+              "height": 510,
+              "sound": false,
+              "type": "shape",
+              "shape": "rect",
+              "color": "#ff6147",
+              "radius": 30
+            }
+          ]
+        },
+        {
+          "id": "deck-0",
+          "x": 0,
+          "y": 0,
+          "width": 1050,
+          "height": 510,
+          "rotate": 0,
+          "shadow": "premium",
+          "gesture": {
+            "preset": "magnetic",
+            "delay": 0.2,
+            "duration": 1.65,
+            "distance": 921.5999999999999
+          },
+          "accents": [
+            {
+              "at": "contact",
+              "role": "impact",
+              "importance": "structural",
+              "material": "paper"
+            }
+          ],
+          "type": "group",
+          "layers": [
+            {
+              "width": 1050,
+              "height": 510,
+              "sound": false,
+              "type": "shape",
+              "shape": "rect",
+              "color": "#141711",
+              "radius": 30
+            },
+            {
+              "id": "hero-type",
+              "sound": false,
+              "type": "text",
+              "text": "PULL\nTOGETHER.",
+              "preset": "none",
+              "fontSize": 116,
+              "weight": 900,
+              "color": "#eeede6",
+              "letterSpacing": -0.055,
+              "lineHeight": 0.94,
+              "maxWidth": 892.5
+            }
+          ]
+        },
+        {
+          "id": "caption",
+          "start": 1.7,
+          "y": 367.20000000000005,
+          "sound": false,
+          "type": "text",
+          "text": "02 / ANTICIPATION. CONTACT. RELEASE.",
+          "preset": "mask-up",
+          "by": "line",
+          "unitDuration": 0.4,
+          "fontSize": 23,
+          "weight": 500,
+          "color": "#141711",
+          "letterSpacing": 0.16,
+          "maxWidth": 1632
+        }
+      ],
+      "notes": "Magnetic deck: Product cards converge into a single hero. Contact accents share the motion clock. Keep the final reading hold."
+    },
+    {
+      "id": "shot-3-orbit-hero",
+      "duration": 3.2,
+      "background": {
+        "type": "solid",
+        "color": "#171826"
+      },
+      "layers": [
+        {
+          "id": "orbit-subject",
+          "width": 1120,
+          "height": 594,
+          "shadow": "premium",
+          "gesture": {
+            "preset": "orbit-land",
+            "delay": 0,
+            "duration": 1.65,
+            "distance": 921.5999999999999
+          },
+          "accents": [
+            {
+              "at": "rush",
+              "role": "move",
+              "material": "air"
+            },
+            {
+              "at": "contact",
+              "role": "click",
+              "importance": "structural",
+              "material": "metal-thin"
+            }
+          ],
+          "type": "group",
+          "layers": [
+            {
+              "width": 1120,
+              "height": 594,
+              "sound": false,
+              "type": "shape",
+              "shape": "rect",
+              "color": "#a9b9ff",
+              "radius": 26
+            },
+            {
+              "id": "hero-type",
+              "sound": false,
+              "type": "text",
+              "text": "TAKE\nA TURN.",
+              "preset": "none",
+              "fontSize": 130,
+              "weight": 900,
+              "color": "#171826",
+              "letterSpacing": -0.055,
+              "lineHeight": 0.94,
+              "maxWidth": 952
+            }
+          ]
+        },
+        {
+          "id": "caption",
+          "start": 1.7,
+          "y": 367.20000000000005,
+          "sound": false,
+          "type": "text",
+          "text": "03 / AN ARC WITH INTENTION",
+          "preset": "mask-up",
+          "by": "line",
+          "unitDuration": 0.4,
+          "fontSize": 23,
+          "weight": 500,
+          "color": "#eeefff",
+          "letterSpacing": 0.16,
+          "maxWidth": 1632
+        }
+      ],
+      "notes": "Orbit hero: An image or product card arcs into a perspective landing. Contact accents share the motion clock. Keep the final reading hold."
+    },
+    {
+      "id": "shot-4-ribbon-flight",
+      "duration": 3.2,
+      "background": {
+        "type": "solid",
+        "color": "#eeeae1"
+      },
+      "layers": [
+        {
+          "id": "flight",
+          "width": 100,
+          "height": 100,
+          "animate": [
+            {
+              "t": 1.5524999999999998,
+              "scale": 1
+            },
+            {
+              "t": 1.9024999999999999,
+              "scale": 0,
+              "ease": "inExpo"
+            }
+          ],
+          "accents": [
+            {
+              "at": "rush",
+              "role": "move",
+              "material": "air"
+            },
+            {
+              "at": "contact",
+              "role": "pop",
+              "importance": "structural",
+              "material": "liquid"
+            }
+          ],
+          "path": {
+            "points": [
+              [
+                -1248,
+                162
+              ],
+              [
+                -480,
+                -324
+              ],
+              [
+                384,
+                -129.6
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "duration": 1.4024999999999999,
+            "ease": "inOutQuint",
+            "orient": true
+          },
+          "repeat": {
+            "count": 12,
+            "delay": 0.025,
+            "scale": 0.94,
+            "opacity": 0.8
+          },
+          "type": "shape",
+          "shape": "circle",
+          "color": "#ff5a42"
+        },
+        {
+          "id": "hero-type",
+          "start": 1.5025,
+          "sound": false,
+          "type": "text",
+          "text": "FOLLOW\nTHE FLOW.",
+          "preset": "split-reveal",
+          "by": "line",
+          "unitDuration": 0.5,
+          "fontSize": 210,
+          "weight": 900,
+          "color": "#171915",
+          "letterSpacing": -0.055,
+          "lineHeight": 0.94,
+          "maxWidth": 1768.8
+        },
+        {
+          "id": "caption",
+          "start": 1.7,
+          "y": 367.20000000000005,
+          "sound": false,
+          "type": "text",
+          "text": "04 / SOUND FOLLOWS VELOCITY",
+          "preset": "mask-up",
+          "by": "line",
+          "unitDuration": 0.4,
+          "fontSize": 23,
+          "weight": 500,
+          "color": "#171915",
+          "letterSpacing": 0.16,
+          "maxWidth": 1632
+        }
+      ],
+      "notes": "Ribbon flight: An object follows a curved path with delayed echoes. Contact accents share the motion clock. Keep the final reading hold."
+    },
+    {
+      "id": "shot-5-hinge-editorial",
+      "duration": 3.2,
+      "background": {
+        "type": "solid",
+        "color": "#181712"
+      },
+      "layers": [
+        {
+          "id": "panel-0",
+          "x": -508.8,
+          "width": 480,
+          "height": 518.4,
+          "gesture": {
+            "preset": "hinge",
+            "delay": 0,
+            "duration": 1.65,
+            "distance": 921.5999999999999
+          },
+          "accents": [
+            {
+              "at": "rush",
+              "role": "move",
+              "material": "paper"
+            }
+          ],
+          "type": "shape",
+          "shape": "rect",
+          "color": "#f2e9db"
+        },
+        {
+          "id": "panel-1",
+          "x": 0,
+          "width": 480,
+          "height": 518.4,
+          "gesture": {
+            "preset": "hinge",
+            "delay": 0.09,
+            "duration": 1.65,
+            "distance": 921.5999999999999
+          },
+          "accents": [],
+          "type": "shape",
+          "shape": "rect",
+          "color": "#ffac46"
+        },
+        {
+          "id": "panel-2",
+          "x": 508.8,
+          "width": 480,
+          "height": 518.4,
+          "gesture": {
+            "preset": "hinge",
+            "delay": 0.18,
+            "duration": 1.65,
+            "distance": 921.5999999999999
+          },
+          "accents": [],
+          "type": "shape",
+          "shape": "rect",
+          "color": "#f2e9db"
+        },
+        {
+          "id": "hero-type",
+          "start": 0.7,
+          "sound": false,
+          "type": "text",
+          "text": "OPEN UP.",
+          "preset": "mask-up",
+          "by": "line",
+          "unitDuration": 0.5,
+          "fontSize": 140,
+          "weight": 900,
+          "color": "#181712",
+          "letterSpacing": -0.055,
+          "lineHeight": 0.94,
+          "maxWidth": 1768.8
+        },
+        {
+          "id": "caption",
+          "start": 1.7,
+          "y": 367.20000000000005,
+          "sound": false,
+          "type": "text",
+          "text": "05 / A MATERIAL WORLD",
+          "preset": "mask-up",
+          "by": "line",
+          "unitDuration": 0.4,
+          "fontSize": 23,
+          "weight": 500,
+          "color": "#f2e9db",
+          "letterSpacing": 0.16,
+          "maxWidth": 1632
+        }
+      ],
+      "notes": "Hinge editorial: Folded panels open into clean editorial typography. Contact accents share the motion clock. Keep the final reading hold."
+    },
+    {
+      "id": "shot-6-vortex-tunnel",
+      "duration": 3.2,
+      "background": {
+        "type": "solid",
+        "color": "#10201a"
+      },
+      "layers": [
+        {
+          "id": "tunnel",
+          "width": 1056,
+          "height": 518.4,
+          "gesture": {
+            "preset": "vortex",
+            "delay": 0,
+            "duration": 1.65,
+            "distance": 921.5999999999999
+          },
+          "accents": [
+            {
+              "at": "contact",
+              "role": "morph",
+              "importance": "structural",
+              "material": "air"
+            }
+          ],
+          "repeat": {
+            "count": 9,
+            "delay": 0.035,
+            "scale": 1.22,
+            "rotate": 4,
+            "opacity": 0.76
+          },
+          "type": "shape",
+          "shape": "rect",
+          "color": "transparent",
+          "radius": 40,
+          "stroke": "#a6ffcf",
+          "strokeWidth": 2
+        },
+        {
+          "id": "hero-type",
+          "gesture": {
+            "preset": "vortex",
+            "delay": 0.12,
+            "duration": 1.65,
+            "distance": 921.5999999999999
+          },
+          "accents": [],
+          "type": "text",
+          "text": "INTO\nTHE NEXT.",
+          "preset": "none",
+          "fontSize": 134,
+          "weight": 900,
+          "color": "#e8fff3",
+          "letterSpacing": -0.055,
+          "lineHeight": 0.94,
+          "maxWidth": 1768.8
+        },
+        {
+          "id": "caption",
+          "start": 1.7,
+          "y": 367.20000000000005,
+          "sound": false,
+          "type": "text",
+          "text": "06 / DEPTH WITHOUT THE NOISE",
+          "preset": "mask-up",
+          "by": "line",
+          "unitDuration": 0.4,
+          "fontSize": 23,
+          "weight": 500,
+          "color": "#e8fff3",
+          "letterSpacing": 0.16,
+          "maxWidth": 1632
+        }
+      ],
+      "notes": "Vortex tunnel: Concentric outline geometry contracts around a typographic hero. Contact accents share the motion clock. Keep the final reading hold."
+    },
+    {
+      "id": "shot-7-chrome-echo",
+      "duration": 3.2,
+      "background": {
+        "type": "solid",
+        "color": "#111722"
+      },
+      "layers": [
+        {
+          "id": "chrome",
+          "width": 1920,
+          "height": 1080,
+          "accents": [
+            {
+              "at": 0.55,
+              "role": "move",
+              "material": "metal-thin"
+            },
+            {
+              "at": 1.65,
+              "role": "impact",
+              "importance": "structural",
+              "material": "metal"
+            }
+          ],
+          "type": "three",
+          "source": "text:SHIFT",
+          "material": "chrome",
+          "color": "#d9deef",
+          "lighting": "studio",
+          "animation": "stack-echo",
+          "echo": {
+            "count": 6,
+            "gap": 0.12,
+            "color": "#111722"
+          },
+          "orbit": [
+            {
+              "t": 0,
+              "yaw": -34,
+              "pitch": 16,
+              "distance": 1.16
+            },
+            {
+              "t": 1.65,
+              "yaw": -8,
+              "pitch": 4,
+              "distance": 1,
+              "ease": "outQuint"
+            }
+          ],
+          "weight": 900,
+          "background": "#111722",
+          "post": {
+            "bloom": 0.25,
+            "vignette": 0.2
+          }
+        },
+        {
+          "id": "caption",
+          "start": 1.7,
+          "y": 367.20000000000005,
+          "sound": false,
+          "type": "text",
+          "text": "07 / LIGHT. DEPTH. MOTION.",
+          "preset": "mask-up",
+          "by": "line",
+          "unitDuration": 0.4,
+          "fontSize": 23,
+          "weight": 500,
+          "color": "#e9edf6",
+          "letterSpacing": 0.16,
+          "maxWidth": 1632
+        }
+      ],
+      "notes": "Chrome echo: Extruded type with depth echoes, a camera orbit and controlled bloom. Contact accents share the motion clock. Keep the final reading hold."
+    },
+    {
+      "id": "shot-8-particle-forge",
+      "duration": 3.2,
+      "background": {
+        "type": "solid",
+        "color": "#10120b"
+      },
+      "layers": [
+        {
+          "id": "forge",
+          "width": 1920,
+          "height": 1080,
+          "accents": [
+            {
+              "at": 1.53,
+              "role": "impact",
+              "importance": "hero",
+              "material": "glass"
+            }
+          ],
+          "type": "three",
+          "source": "text:MOTION",
+          "weight": 800,
+          "background": "#10120b",
+          "mode": "particles",
+          "particles": {
+            "count": 16000,
+            "from": "vortex",
+            "duration": 1.35,
+            "spread": 0.18,
+            "trail": 2,
+            "seed": 71,
+            "colors": [
+              "#caff4b",
+              "#f4ffd9"
+            ]
+          },
+          "post": {
+            "bloom": {
+              "strength": 0.45,
+              "threshold": 0.8
+            },
+            "vignette": 0.25
+          }
+        },
+        {
+          "id": "caption",
+          "start": 1.7,
+          "y": 367.20000000000005,
+          "sound": false,
+          "type": "text",
+          "text": "08 / CHAOS BECOMES CLARITY",
+          "preset": "mask-up",
+          "by": "line",
+          "unitDuration": 0.4,
+          "fontSize": 23,
+          "weight": 500,
+          "color": "#f4ffd9",
+          "letterSpacing": 0.16,
+          "maxWidth": 1632
+        }
+      ],
+      "notes": "Particle forge: Seeded 3D particles form extruded type or an SVG logo. Contact accents share the motion clock. Keep the final reading hold."
+    }
+  ]
+}

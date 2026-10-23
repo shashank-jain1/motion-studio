@@ -487,6 +487,7 @@ const scaleMoves = (l: Any, k: number, mxk: number, myk: number) => {
     if (num(kf.y)) kf.y = r1(kf.y * myk);
   }
   for (const m of [l.enter, l.exit]) if (m && num(m.distance)) m.distance = r1(m.distance * k);
+  if (l.gesture) l.gesture.distance = r1((l.gesture.distance ?? 480) * k);
   if (l.repeat) { if (num(l.repeat.x)) l.repeat.x = r1(l.repeat.x * k); if (num(l.repeat.y)) l.repeat.y = r1(l.repeat.y * k); }
 };
 

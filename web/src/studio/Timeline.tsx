@@ -6,6 +6,8 @@ import { IconFit, IconMagnet, IconMinus, IconPlus } from "../components/Icons";
 import { fmtTC } from "../lib/format";
 import { inkOn, sceneColor, themeColors } from "../lib/sceneColor";
 import type { ParsedInfo } from "../lib/specInfo";
+import { inspectSound } from "../../../src/engine/audio/inspect";
+import { sfxInfo } from "../../../src/engine/audio/library";
 
 const HEAD_W = 112; // track label column
 const MIN_PPS = 8;
@@ -19,6 +21,15 @@ export const TimelinePanel = () => {
   const timeline = info?.timeline ?? serverTimeline;
   const scenesMeta = info?.scenes;
   const total = Math.max(0.1, timeline?.total ?? 0);
+  const sound = useMemo(() => info ? inspectSound(info.spec) : null, [info]);
+  const soundCues = useMemo(() => [
+    ...(sound?.cues ?? []).map((c) => ({ peak: c.peak, start: c.start, end: c.end, role: c.role, hero: c.importance === "hero", locked: c.locked, reason: c.reason })),
+    ...(sound?.manual ?? []).map((c) => {
+      const meta = sfxInfo(c.src), rate = c.rate ?? 1;
+      return { peak: c.at + (meta?.peakAt ?? 0) / rate, start: c.at, end: c.at + (meta?.durationSec ?? 0.5) / rate, role: "manual", hero: false, locked: true, reason: c.src };
+    }),
+  ].sort((a, b) => a.peak - b.peak), [sound]);
+  const hasSoundTrack = !!info?.spec.sound || soundCues.length > 0;
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const playheadRef = useRef<HTMLDivElement>(null);
@@ -59,7 +70,7 @@ export const TimelinePanel = () => {
     return bus.subscribe(update);
   }, [bus, scale, fps, pps]);
 
-  const bounds = useMemo(() => (timeline ? [0, ...timeline.scenes.flatMap((s) => [s.start, s.end])] : []), [timeline]);
+  const bounds = useMemo(() => (timeline ? [0, ...timeline.scenes.flatMap((s) => [s.start, s.end]), ...soundCues.map((c) => c.peak)] : []), [timeline, soundCues]);
   const timeAt = useCallback((clientX: number, allowSnap: boolean) => {
     const sc = scrollRef.current!;
     const r = sc.getBoundingClientRect();
@@ -75,6 +86,7 @@ export const TimelinePanel = () => {
   const onPointerDown = (e: React.PointerEvent) => {
     if (e.button !== 0 || !timeline) return;
     const target = e.target as HTMLElement;
+    if (target.closest("[data-sound-cue]")) { bus.player?.pause(); return; }
     const sceneEl = target.closest<HTMLElement>("[data-scene]");
     if (sceneEl) selectScene(Number(sceneEl.dataset.scene), { scrollEditor: true });
     (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
@@ -126,7 +138,7 @@ export const TimelinePanel = () => {
         <span className="label">Timeline</span>
         {timeline && <span className="mono dim">{String(timeline.scenes.length).padStart(2, "0")} SC · {fmtTC(total, fps)}</span>}
         <span className="spacer" />
-        <button className={`icon-btn ghost xs ${snap ? "is-on" : ""}`} onClick={() => setSnap((v) => !v)} aria-pressed={snap} aria-label="Snap to scene boundaries" title="Snap to cuts (hold ⇧ to invert)"><IconMagnet size={14} /></button>
+        <button className={`icon-btn ghost xs ${snap ? "is-on" : ""}`} onClick={() => setSnap((v) => !v)} aria-pressed={snap} aria-label="Snap to cuts and sound accents" title="Snap to cuts and sound accents (hold ⇧ to invert)"><IconMagnet size={14} /></button>
         <span className="tl-div" />
         <button className="icon-btn ghost xs" onClick={() => zoomBy(1 / 1.5)} aria-label="Zoom out" title="Zoom out (⌘/Ctrl + wheel)"><IconMinus size={14} /></button>
         <span className="mono zoom-pct">{zoomPct}%</span>
@@ -144,6 +156,7 @@ export const TimelinePanel = () => {
             <div className="track-head ruler-head mono">{fps} FPS</div>
             <div className="track-head scenes-head"><span className="mono">V1</span><span>Scenes</span></div>
             {actors.map((a, i) => <div key={a.id} className="track-head actor-head" title={`Actor “${a.id}” — persists across cuts`}><span className="mono">A{i + 1}</span><span className="ellipsis">{a.id}</span></div>)}
+            {hasSoundTrack && <div className="track-head sound-head" title={`${soundCues.length} sound accents. Click a marker to inspect the picture at its sound apex.`}><span className="mono">SFX</span><span>Accents</span></div>}
           </div>
           <div className="timeline-scroll" ref={scrollRef} onPointerDown={onPointerDown} onPointerMove={onPointerMove} onWheel={onWheel}>
             <div className="timeline-content" style={{ width: contentW }}>
@@ -200,6 +213,23 @@ export const TimelinePanel = () => {
                   </div>
                 </div>
               ))}
+              {hasSoundTrack && <div className="track sound-track">
+                {(sound?.bridges ?? []).map((b) => <span key={b.id} className="sound-bridge" style={{ left: b.at * scale, width: b.dur * scale }} title={`${b.reason}\n${b.family}`} />)}
+                {(sound?.beats ?? []).filter((t) => t >= 0 && t < total).map((t, i) => <span key={`beat-${i}`} className="sound-beat" style={{ left: t * scale }} aria-hidden />)}
+                {soundCues.map((c, i) => {
+                  const from = Math.max(0, c.start), end = Math.min(total, c.end);
+                  if (c.peak < 0 || c.peak >= total) return null;
+                  return <button key={i} data-sound-cue className={`sound-cue ${c.hero ? "is-hero" : ""}`}
+                    style={{ left: from * scale, width: Math.max(8, (end - from) * scale) }}
+                    title={`${c.role} · ${fmtTC(c.peak, fps)}${c.locked ? " · locked to picture" : ""}\n${c.reason}`}
+                    aria-label={`${c.role} sound at ${c.peak.toFixed(2)} seconds${c.hero ? ", hero accent" : ""}`}
+                    onClick={() => { bus.player?.pause(); seekTime(c.peak); }}>
+                    <span className="sound-apex" style={{ left: (c.peak - from) * scale }} />
+                    <span className="sound-cue-label mono">{c.role}</span>
+                  </button>;
+                })}
+                {!soundCues.length && <span className="sound-track-empty">{sound?.enabled ? "No accents planned" : "Automatic sound is off"}</span>}
+              </div>}
               <div className="playhead" ref={playheadRef}><div className="playhead-head" /></div>
             </div>
           </div>

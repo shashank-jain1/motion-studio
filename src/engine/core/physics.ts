@@ -11,6 +11,7 @@
  * Craft references: docs/research/01-motion-craft.md §3 (Ebberts inertia, anticipation, arcs, 180° shutter).
  */
 import type { Keyframe, Layer } from "../spec/schema";
+import { gestureTransform } from "./choreography";
 import {
   type EaseName, type KfProp, type KfTrack, type Stretch, type Transform,
   EASING, addInto, clamp01, identity, keyframeTracks, loopTransform, presetTransform,
@@ -355,6 +356,7 @@ export const computeLayerTransform = (layer: Layer, t: number, duration: number,
   }
 
   applyKeyframes(out, layer.animate, t, antic, inertia, fps);
+  if (layer.gesture) addInto(out, gestureTransform(layer.gesture, t));
   if (layer.loop) addInto(out, loopTransform(layer.loop, t));
 
   // Enter --------------------------------------------------------------------------------------------------------

@@ -24,7 +24,7 @@ const EMPTY: Cue[] = [];
 const NO_MIX: MixEvent[] = [];
 const FADE_FRAMES = 3;
 
-type Voice = { key: string; url: string; from: number; frames: number; trim: number; volume: number; rate?: number; fadeOut: boolean; name: string };
+type Voice = { key: string; url: string; from: number; frames: number; trim: number; volume: number; rate?: number; fadeOut: boolean; name: string; priority: number };
 
 const duckFor = (src: string) => {
   const c = sfxInfo(src)?.category.split(".")[0];
@@ -100,7 +100,7 @@ export const SoundTrack: React.FC<{
         dur: (info?.durationSec ?? 30) / (rate ?? 1), duck: duckFor(s.src), priority: 3, role: "manual", reason: `spec.sfx[${i}]`,
       };
     });
-    const all = [...manual, ...autoCues]
+    const all = [...manual, ...autoCues, ...(plan?.bridges ?? [])]
       .map((c) => ({ c, url: resolveSfx(c.src, libBase) ?? null }))
       .filter((x): x is { c: Cue; url: string } => {
         if (x.url !== null) return true;
@@ -121,8 +121,12 @@ export const SoundTrack: React.FC<{
       for (let v = 0; v < MAX_VOICES; v++) { const o = busy[v]; if (o !== null && out[o].from + out[o].frames <= from) busy[v] = null; }
       let slot = busy.findIndex((b) => b === null);
       if (slot < 0) {
-        // steal the voice that would end first, cutting its tail with a fade
-        slot = busy.reduce<number>((best, b, v) => (out[b!].from + out[b!].frames < out[busy[best]!].from + out[busy[best]!].frames ? v : best), 0);
+        // A quiet bridge may never interrupt a picture accent. New accents retire a bridge before a foreground tail.
+        if (c.role === "bridge") return;
+        slot = busy.reduce<number>((best, b, v) => {
+          const a = out[b!], p = out[busy[best]!];
+          return a.priority < p.priority || (a.priority === p.priority && a.from + a.frames < p.from + p.frames) ? v : best;
+        }, 0);
         const victim = out[busy[slot]!];
         victim.frames = Math.max(1, from - victim.from);
         victim.fadeOut = true;
@@ -132,10 +136,11 @@ export const SoundTrack: React.FC<{
         key: `${i}-${c.src}-${start}`, url, from, frames: end - from, trim: Math.max(0, from - start) * (c.rate ?? 1),
         volume: Math.max(0, Math.min(1, c.volume * master)), rate: c.rate, fadeOut: false,
         name: `${c.role === "manual" ? "sfx" : "auto"} ${c.src}`,
+        priority: c.priority,
       });
     });
     return { voices: out, duckCues: spec.sound?.duck === false ? [] : [...manual, ...autoCues].map((c) => ({ ...c, volume: c.volume * master })) };
-  }, [spec, autoCues, libBase, assetBase, fps, total, master]); // eslint-disable-line react-hooks/exhaustive-deps -- `asset` is rebuilt every render; it only depends on assetBase
+  }, [spec, autoCues, plan, libBase, assetBase, fps, total, master]); // eslint-disable-line react-hooks/exhaustive-deps -- `asset` is rebuilt every render; it only depends on assetBase
 
   // Player: fetch the SFX ahead of time so short hits are not late on first play
   const urls = useMemo(() => [...new Set(voices.map((v) => v.url))], [voices]);
