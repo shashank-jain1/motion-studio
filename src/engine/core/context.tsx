@@ -1,10 +1,12 @@
 import React, { createContext, useContext } from "react";
 import { staticFile } from "remotion";
 import { ensureFont } from "./fonts";
+import type { FontFaceDefinition } from "./fontIdentity";
 
 export type RuntimeContext = {
   colors: Record<string, string>;
   fonts: { display: string; body: string; mono: string };
+  fontFaces?: FontFaceDefinition[];
   /** Base URL for project assets during headless renders (served by the MCP/CLI asset server). */
   assetBase?: string;
   /** Project folder name, used with Remotion Studio's --public-dir=projects. */
@@ -42,21 +44,22 @@ export const useFont = () => {
   return (name: string | undefined, fallback: "display" | "body" | "mono" = "body") => {
     let n = name ?? `$${fallback}`;
     if (n.startsWith("$")) n = rt.fonts[n.slice(1) as "display" | "body" | "mono"] ?? rt.fonts.body;
-    return ensureFont(n);
+    return ensureFont(n, rt.fontFaces, (src) => assetUrl(rt, src));
   };
 };
 
 export const isEmoji = (s: string) => /\p{Extended_Pictographic}/u.test(s) && !s.includes("/") && s.length <= 16;
 
-export const useAsset = () => {
-  const rt = useRuntime();
-  return (src: string) => {
+const assetUrl = (rt: RuntimeContext, src: string) => {
     if (/^(https?:|data:|blob:)/.test(src)) return src;
     const clean = src.replace(/^\.?\//, "");
     if (rt.assetBase) return rt.assetBase.replace(/\/$/, "") + "/" + clean;
     if (rt.projectId) return staticFile(`${rt.projectId}/${clean}`);
     return staticFile(clean);
-  };
+};
+export const useAsset = () => {
+  const rt = useRuntime();
+  return (src: string) => assetUrl(rt, src);
 };
 
 export const isVideoSrc = (src: string) => /\.(mp4|mov|webm|m4v|mkv)(\?|$)/i.test(src);

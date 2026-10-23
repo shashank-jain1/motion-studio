@@ -60,7 +60,6 @@ const LayerInstance: React.FC<InstanceProps> = ({ layer, tr, t, duration, vblur,
     opacity: Math.max(0, Math.min(1, tr.opacity)),
     filter: filters.length ? filters.join(" ") : undefined,
     clipPath: tr.clip,
-    mixBlendMode: layer.blendMode as React.CSSProperties["mixBlendMode"],
     boxShadow,
     ...((layer.css ?? {}) as React.CSSProperties),
   };
@@ -137,7 +136,9 @@ const LayerInner: React.FC<HostProps> = ({ layer, duration, index, start, layerI
   }
 
   return (
-    <div style={{ position: "absolute", inset: 0, zIndex: layer.zIndex ?? index, pointerEvents: "none", ...camStyle }}>
+    <div style={{ position: "absolute", inset: 0, zIndex: layer.zIndex ?? index, pointerEvents: "none",
+      // Composite the completed layer against its siblings, outside perspective/filter isolation.
+      mixBlendMode: !layer.motionBlur ? layer.blendMode as React.CSSProperties["mixBlendMode"] : undefined, ...camStyle }}>
       {instances}
     </div>
   );
@@ -149,7 +150,7 @@ const LayerHost: React.FC<HostProps> = (props) => {
   if (!mb) return body;
   const opts = typeof mb === "object" ? mb : {};
   return (
-    <div style={{ position: "absolute", inset: 0, zIndex: props.layer.zIndex ?? props.index }}>
+    <div style={{ position: "absolute", inset: 0, zIndex: props.layer.zIndex ?? props.index, mixBlendMode: props.layer.blendMode as React.CSSProperties["mixBlendMode"] }}>
       <CameraMotionBlur samples={opts.samples ?? 8} shutterAngle={opts.shutter ?? 220}>{body}</CameraMotionBlur>
     </div>
   );

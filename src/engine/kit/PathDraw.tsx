@@ -6,6 +6,7 @@ import type { PathLayer } from "../spec/schema";
 import { progress } from "../core/animate";
 import { isEmoji, useAsset, useColor, useFont } from "../core/context";
 import { useContainer } from "../core/container";
+import { CursorGlyph } from "./Interaction";
 
 type Props = { layer: z.infer<typeof PathLayer>; t: number; duration: number };
 
@@ -56,17 +57,17 @@ export const PathDraw: React.FC<Props> = ({ layer, t }) => {
 
   let follower: React.ReactNode = null;
   const f = layer.follower;
-  if (f && p > 0 && p < 1.0001) {
+  if (f && p > 0 && p < 1.0001 && (!f.hideAfterDraw || t <= (layer.drawStart ?? 0) + (layer.drawDuration ?? 1.2))) {
     const at = Math.min(len - 0.01, Math.max(0.01, p * len));
     const pt = getPointAtLength(d, at) ?? { x: 0, y: 0 };
     const tan = getTangentAtLength(d, at) ?? { x: 1, y: 0 };
     const ang = (Math.atan2(tan.y, tan.x) * 180) / Math.PI + (f.rotateOffset ?? 0);
     const size = f.size ?? 80;
     const rot = f.rotate === false ? 0 : ang;
-    const inner = f.src && !isEmoji(f.src) ? <Img src={asset(f.src)} style={{ width: size, height: size, objectFit: "contain" }} />
+    const inner = f.cursor ? <CursorGlyph kind={f.cursor} size={size} color={color(f.color, "$accent")} label={f.label} /> : f.src && !isEmoji(f.src) ? <Img src={asset(f.src)} style={{ width: size, height: size, objectFit: "contain" }} />
       : <div style={{ fontSize: size, lineHeight: 1, fontFamily: font(undefined, "display") }}>{f.emoji ?? f.text ?? f.src ?? "✈️"}</div>;
     follower = (
-      <div style={{ position: "absolute", left: pt.x, top: pt.y, transform: `translate(-50%, -50%) rotate(${rot}deg)` }}>{inner}</div>
+      <div style={{ position: "absolute", left: pt.x, top: pt.y, transform: `${f.cursor ? "" : "translate(-50%, -50%) "}rotate(${f.cursor && f.rotate === undefined ? 0 : rot}deg)` }}>{inner}</div>
     );
   }
 
@@ -80,6 +81,7 @@ export const PathDraw: React.FC<Props> = ({ layer, t }) => {
             </linearGradient>
           </defs>
         )}
+        {layer.fill && <path d={d} fill={color(layer.fill)} opacity={progress(t, layer.fillAt ?? ((layer.drawStart ?? 0) + (layer.drawDuration ?? 1.2)), layer.fillDuration ?? 0.25, "outQuint")} />}
         <path d={d} fill="none" stroke={strokeColor} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round"
           strokeDasharray={layer.dashed ? `${sw * 2} ${sw * 2}` : dashArray} strokeDashoffset={layer.dashed ? 0 : dashOffset}
           style={layer.dashed ? { clipPath: `inset(0 ${(1 - p) * 100}% 0 0)` } : undefined} />

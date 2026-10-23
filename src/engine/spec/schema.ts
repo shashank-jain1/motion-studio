@@ -230,6 +230,9 @@ export const PathLayer = z.object({
   trail: z.number().optional().describe("0..1: if set, only a comet segment of this length is visible"),
   glow: z.union([z.boolean(), z.string()]).optional(),
   dashed: z.boolean().optional(),
+  fill: z.string().optional().describe("optional closed-path fill, revealed after drawing"),
+  fillAt: z.number().min(0).optional().describe("local second to begin filling; default = end of drawing"),
+  fillDuration: z.number().positive().optional(),
   follower: z.object({
     src: z.string().optional().describe("image asset that rides the path"),
     emoji: z.string().optional(),
@@ -237,7 +240,32 @@ export const PathLayer = z.object({
     size: z.number().optional(),
     rotate: z.boolean().optional().describe("align to path tangent, default true"),
     rotateOffset: z.number().optional(),
+    cursor: z.enum(["pointer", "pen"]).optional().describe("vector tool cursor whose TIP follows the drawn path"),
+    color: z.string().optional(),
+    label: z.string().optional(),
+    hideAfterDraw: z.boolean().optional().describe("hide the follower when the drawing finishes"),
   }).optional(),
+});
+
+/** Interaction motion primitives use local seconds, so scrubbing and export share the same state clock. */
+export const CursorLayer = z.object({
+  ...commonLayer, type: z.literal("cursor"),
+  kind: z.enum(["pointer", "pen"]).optional(),
+  size: z.number().min(8).max(200).optional(), color: z.string().optional(), label: z.string().optional(),
+  clicks: z.array(z.number().min(0)).max(32).optional().describe("local click seconds: press/ripple and automatic click SFX share this clock"),
+});
+export const SelectionLayer = z.object({
+  ...commonLayer, type: z.literal("selection"),
+  color: z.string().optional(), label: z.string().optional(), dimensions: z.boolean().optional(),
+  handles: z.enum(["corners", "all", "none"]).optional(),
+  drawDuration: z.number().min(0.05).max(4).optional(), fillOpacity: z.number().min(0).max(0.3).optional(),
+});
+export const ToggleLayer = z.object({
+  ...commonLayer, type: z.literal("toggle"),
+  initial: z.boolean().optional(), color: z.string().optional(), offColor: z.string().optional(), thumbColor: z.string().optional(),
+  stateDuration: z.number().min(0.05).max(2).optional(),
+  states: z.array(z.object({ at: z.number().min(0), on: z.boolean() })).max(32).default([])
+    .describe("state changes at local seconds; automatic click SFX uses the same second"),
 });
 
 export const ParticlesLayer = z.object({
@@ -511,6 +539,7 @@ export type Layer =
   | z.infer<typeof ParticlesLayer> | z.infer<typeof CardLayer> | z.infer<typeof CounterLayer> | z.infer<typeof CaptionsLayer>
   | z.infer<typeof CloudLayer> | z.infer<typeof ShaderLayer> | z.infer<typeof LottieLayer> | z.infer<typeof CustomLayer>
   | z.infer<typeof MorphLayer> | z.infer<typeof LogoLayer> | z.infer<typeof ThreeLayer>
+  | z.infer<typeof CursorLayer> | z.infer<typeof SelectionLayer> | z.infer<typeof ToggleLayer>
   | DeviceLayerT | GroupLayerT;
 
 const commonLayerSchema = z.object(commonLayer);
@@ -546,7 +575,7 @@ export type GroupLayerT = Common & {
 export const LayerSchema: z.ZodType<Layer> = z.lazy(() =>
   z.discriminatedUnion("type", [
     TextLayer, MediaLayer, ShapeLayer, PathLayer, ParticlesLayer, CardLayer, CounterLayer,
-    CaptionsLayer, CloudLayer, ShaderLayer, LottieLayer, CustomLayer, MorphLayer, LogoLayer, ThreeLayer, DeviceLayer, GroupLayer,
+    CaptionsLayer, CloudLayer, ShaderLayer, LottieLayer, CustomLayer, MorphLayer, LogoLayer, ThreeLayer, CursorLayer, SelectionLayer, ToggleLayer, DeviceLayer, GroupLayer,
   ]),
 ) as z.ZodType<Layer>;
 
@@ -663,6 +692,13 @@ export const ThemeSchema = z.object({
   colors: z.record(z.string(), z.string()).optional().describe("named colors referenced as $name, e.g. bg, fg, accent, accent2, muted"),
 });
 
+export const FontFaceSchema = z.object({
+  family: z.string().trim().min(1).max(100),
+  src: z.string().regex(/^assets\/[A-Za-z0-9][A-Za-z0-9._-]*\.(?:ttf|otf|woff2?)$/i).describe("project font asset; import_font copies shared fonts here"),
+  weight: z.union([z.number().int().min(1).max(1000), z.string().regex(/^(?:[1-9]\d{0,2}|1000) (?:[1-9]\d{0,2}|1000)$/)]).optional(),
+  style: z.enum(["normal", "italic", "oblique"]).optional(),
+});
+
 /** A persistent hero element that lives ABOVE all scenes and survives every cut (shared-element continuity). */
 export const ActorSchema = z.object({
   id: z.string(),
@@ -757,6 +793,7 @@ export const ConceptSchema = z.object({
 }).describe("director's concept (ignored by the renderer, required by the director workflow)");
 
 export const SpecSchema = z.object({
+  fontFaces: z.array(FontFaceSchema).max(64).optional().describe("project-local font faces, shared by browser text and generated text outlines; use family names in theme.fonts/layer.font"),
   version: z.literal(1).default(1),
   title: z.string().optional(),
   format: z.enum(Object.keys(FORMATS) as [keyof typeof FORMATS, ...(keyof typeof FORMATS)[]]).optional(),

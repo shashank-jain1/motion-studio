@@ -18,3 +18,9 @@ showcase/*.webm
 
 # baked sound cues
 library/bake/
+
+# user-supplied font binaries (projects retain their imported copies)
+fonts/**/*.ttf
+fonts/**/*.otf
+fonts/**/*.woff
+fonts/**/*.woff2

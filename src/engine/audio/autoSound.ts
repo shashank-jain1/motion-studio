@@ -37,6 +37,7 @@ import { midiOf } from "./dsp";
 import { analyseLayerMotion } from "./motionEvents";
 import { gestureTiming, motionFrameTime } from "../core/choreography";
 import { connectSound, type SoundBridge, type SoundPhrase } from "./continuity";
+import { interactionFrame } from "../core/interaction";
 
 export type Importance = "hero" | "structural" | "supporting" | "micro";
 export type Cue = {
@@ -235,6 +236,17 @@ class Events {
       case "morph": this.morph(l, g0, name, geo); break;
       case "logo": this.logo(l, g0 + enDelay, name, geo); break;
       case "card": this.card(l, g0, landing, name, !!en, geo); break;
+      case "cursor":
+        (l.clicks ?? []).forEach((at, i) => { if (g0 + interactionFrame(at, this.fps) < end) this.push({ ...geo, key: `${key}.click${i}`, t: g0 + interactionFrame(at, this.fps), role: "click", priority: 0.65, locked: true, reason: `cursor press ${name}`, size: 0.18, mat: ["plastic"] }); });
+        break;
+      case "toggle": {
+        let on = l.initial ?? false;
+        [...l.states].sort((a, b) => a.at - b.at).forEach((state, i) => {
+          if (state.on !== on && g0 + interactionFrame(state.at, this.fps) < end) this.push({ ...geo, key: `${key}.state${i}`, t: g0 + interactionFrame(state.at, this.fps), role: "click", priority: 0.7, locked: true, reason: `toggle ${state.on ? "on" : "off"} ${name}`, size: 0.3, mat: ["plastic"] });
+          on = state.on;
+        });
+        break;
+      }
       case "particles": {
         if (l.preset === "confetti") this.push({ ...geo, t: g0, role: "sparkle", priority: 0.5, reason: `confetti ${name}`, align: "start", size: 0.6 });
         else if (l.preset === "burst") this.push({ ...geo, t: g0 + 0.02, role: "pop", priority: 0.5, reason: `particle burst ${name}`, size: 0.5 });

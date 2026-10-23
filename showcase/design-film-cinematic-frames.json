@@ -1,0 +1,106 @@
+{
+  "frames": [
+    {
+      "time": 0.2,
+      "frame": 6,
+      "path": "/Users/shashank/motion-studio/projects/motion-with-meaning-cinematic-type-2262/previews/frame-0.20s.jpg"
+    },
+    {
+      "time": 1.6,
+      "frame": 48,
+      "path": "/Users/shashank/motion-studio/projects/motion-with-meaning-cinematic-type-2262/previews/frame-1.60s.jpg"
+    },
+    {
+      "time": 2.6,
+      "frame": 78,
+      "path": "/Users/shashank/motion-studio/projects/motion-with-meaning-cinematic-type-2262/previews/frame-2.60s.jpg"
+    },
+    {
+      "time": 3.7,
+      "frame": 111,
+      "path": "/Users/shashank/motion-studio/projects/motion-with-meaning-cinematic-type-2262/previews/frame-3.70s.jpg"
+    },
+    {
+      "time": 4.7,
+      "frame": 141,
+      "path": "/Users/shashank/motion-studio/projects/motion-with-meaning-cinematic-type-2262/previews/frame-4.70s.jpg"
+    },
+    {
+      "time": 5.7,
+      "frame": 171,
+      "path": "/Users/shashank/motion-studio/projects/motion-with-meaning-cinematic-type-2262/previews/frame-5.70s.jpg"
+    },
+    {
+      "time": 6.7,
+      "frame": 201,
+      "path": "/Users/shashank/motion-studio/projects/motion-with-meaning-cinematic-type-2262/previews/frame-6.70s.jpg"
+    },
+    {
+      "time": 7.6,
+      "frame": 228,
+      "path": "/Users/shashank/motion-studio/projects/motion-with-meaning-cinematic-type-2262/previews/frame-7.60s.jpg"
+    },
+    {
+      "time": 8.4,
+      "frame": 252,
+      "path": "/Users/shashank/motion-studio/projects/motion-with-meaning-cinematic-type-2262/previews/frame-8.40s.jpg"
+    },
+    {
+      "time": 9.6,
+      "frame": 288,
+      "path": "/Users/shashank/motion-studio/projects/motion-with-meaning-cinematic-type-2262/previews/frame-9.60s.jpg"
+    },
+    {
+      "time": 10.8,
+      "frame": 324,
+      "path": "/Users/shashank/motion-studio/projects/motion-with-meaning-cinematic-type-2262/previews/frame-10.80s.jpg"
+    },
+    {
+      "time": 12,
+      "frame": 360,
+      "path": "/Users/shashank/motion-studio/projects/motion-with-meaning-cinematic-type-2262/previews/frame-12.00s.jpg"
+    },
+    {
+      "time": 13,
+      "frame": 390,
+      "path": "/Users/shashank/motion-studio/projects/motion-with-meaning-cinematic-type-2262/previews/frame-13.00s.jpg"
+    },
+    {
+      "time": 14.2,
+      "frame": 426,
+      "path": "/Users/shashank/motion-studio/projects/motion-with-meaning-cinematic-type-2262/previews/frame-14.20s.jpg"
+    },
+    {
+      "time": 15.466666666666667,
+      "frame": 464,
+      "path": "/Users/shashank/motion-studio/projects/motion-with-meaning-cinematic-type-2262/previews/frame-15.47s.jpg"
+    },
+    {
+      "time": 15.8,
+      "frame": 474,
+      "path": "/Users/shashank/motion-studio/projects/motion-with-meaning-cinematic-type-2262/previews/frame-15.80s.jpg"
+    },
+    {
+      "time": 16.7,
+      "frame": 501,
+      "path": "/Users/shashank/motion-studio/projects/motion-with-meaning-cinematic-type-2262/previews/frame-16.70s.jpg"
+    },
+    {
+      "time": 18.5,
+      "frame": 555,
+      "path": "/Users/shashank/motion-studio/projects/motion-with-meaning-cinematic-type-2262/previews/frame-18.50s.jpg"
+    },
+    {
+      "time": 19.8,
+      "frame": 594,
+      "path": "/Users/shashank/motion-studio/projects/motion-with-meaning-cinematic-type-2262/previews/frame-19.80s.jpg"
+    }
+  ],
+  "sheet": null,
+  "columns": 1,
+  "rows": 1,
+  "width": 960,
+  "height": 540,
+  "fps": 30,
+  "durationSeconds": 20
+}

@@ -1,0 +1,1520 @@
+{
+  "version": 1,
+  "title": "Motion with meaning",
+  "format": "16:9",
+  "fps": 30,
+  "style": "editorial",
+  "theme": {
+    "fonts": {
+      "display": "Inter",
+      "body": "Inter",
+      "mono": "JetBrains Mono"
+    },
+    "colors": {
+      "bg": "#f1f0eb",
+      "fg": "#17161c",
+      "accent": "#7040ff",
+      "accent2": "#d5fa65",
+      "muted": "#7b7984"
+    }
+  },
+  "sound": {
+    "volume": 0.74,
+    "brief": {
+      "voice": "precise",
+      "realism": "mixed",
+      "materials": [
+        "plastic",
+        "paper"
+      ],
+      "space": "room",
+      "key": "D minor"
+    },
+    "variation": 0.2,
+    "restraint": 0.45,
+    "continuity": {
+      "cohesion": 0.95,
+      "bridgeVolume": 0.16,
+      "maxGap": 4.5
+    }
+  },
+  "concept": {
+    "truth": "MOTION STUDIO helps creators turn ideas into deliberate, connected motion.",
+    "metaphor": "An editor's cursor gives a moving shape a purpose.",
+    "motif": "The purple design gesture becomes the spark mark.",
+    "verb": "connect",
+    "hook": "A giant unfinished command is selected and completed by a cursor.",
+    "arc": [
+      "select",
+      "shape",
+      "activate",
+      "build",
+      "deliver",
+      "resolve"
+    ],
+    "colorScript": [
+      "#f1f0eb",
+      "#f1f0eb",
+      "#17161c",
+      "#7040ff",
+      "#f1f0eb",
+      "#f1f0eb"
+    ],
+    "niche": "creator",
+    "story": {
+      "insight": "The gesture matters when the next action inherits its intent.",
+      "audienceTension": "A film can contain many effects and still feel arbitrary.",
+      "inherentDrama": "A cursor turns motion into an explicit design choice.",
+      "orthodoxy": [
+        "unrelated effect montage",
+        "claims about quality without a visible example",
+        "generic logo outro"
+      ],
+      "structure": "transformation",
+      "candidates": [
+        {
+          "title": "Portfolio montage",
+          "technique": "control",
+          "logline": "Fast typography lists the studio's tools and ends on a logo.",
+          "scores": {
+            "hook": 2,
+            "surprise": 1,
+            "emotionalPeak": 2,
+            "payoff": 2,
+            "brandLinkage": 2,
+            "clarity": 4,
+            "uniqueness": 1,
+            "feasibility": 5
+          },
+          "total": 45,
+          "gatesPassed": false,
+          "typicality": 0.8
+        },
+        {
+          "title": "The cursor composes",
+          "technique": "inherent-drama",
+          "logline": "A cursor selects a word, draws an idea and turns a finished design into the studio's mark.",
+          "scores": {
+            "hook": 4,
+            "surprise": 4,
+            "emotionalPeak": 4,
+            "payoff": 4,
+            "brandLinkage": 4,
+            "clarity": 5,
+            "uniqueness": 4,
+            "feasibility": 5
+          },
+          "total": 84,
+          "gatesPassed": true,
+          "typicality": 0.2
+        },
+        {
+          "title": "Sound draws the picture",
+          "technique": "sound-led / sensory-transposition",
+          "logline": "A click becomes a contour, each contour becomes a syllable of the studio's identity.",
+          "scores": {
+            "hook": 4,
+            "surprise": 4,
+            "emotionalPeak": 4,
+            "payoff": 4,
+            "brandLinkage": 4,
+            "clarity": 3,
+            "uniqueness": 4,
+            "feasibility": 4
+          },
+          "total": 78,
+          "gatesPassed": true,
+          "typicality": 0.22
+        },
+        {
+          "title": "The ornament resigns",
+          "technique": "humour / inversion",
+          "logline": "Decorative shapes quit until the cursor gives them a useful job in a design system.",
+          "scores": {
+            "hook": 4,
+            "surprise": 4,
+            "emotionalPeak": 3,
+            "payoff": 4,
+            "brandLinkage": 4,
+            "clarity": 3,
+            "uniqueness": 4,
+            "feasibility": 4
+          },
+          "total": 75,
+          "gatesPassed": true,
+          "typicality": 0.18
+        },
+        {
+          "title": "Inside the handle",
+          "technique": "perspective-shift",
+          "logline": "A selection handle becomes a portal into the studio's design process.",
+          "scores": {
+            "hook": 4,
+            "surprise": 4,
+            "emotionalPeak": 4,
+            "payoff": 4,
+            "brandLinkage": 3,
+            "clarity": 3,
+            "uniqueness": 4,
+            "feasibility": 4
+          },
+          "total": 75,
+          "gatesPassed": true,
+          "typicality": 0.22
+        },
+        {
+          "title": "One line only",
+          "technique": "constraint",
+          "logline": "A single purple line must become every interaction before resolving into a studio signature.",
+          "scores": {
+            "hook": 4,
+            "surprise": 4,
+            "emotionalPeak": 4,
+            "payoff": 4,
+            "brandLinkage": 4,
+            "clarity": 3,
+            "uniqueness": 4,
+            "feasibility": 3
+          },
+          "total": 76,
+          "gatesPassed": true,
+          "typicality": 0.2
+        },
+        {
+          "title": "Design is a relay",
+          "technique": "forced-connection / pictorial-analogy",
+          "logline": "A moving design token passes through research, prototype and delivery as a relay baton.",
+          "scores": {
+            "hook": 3,
+            "surprise": 3,
+            "emotionalPeak": 4,
+            "payoff": 4,
+            "brandLinkage": 4,
+            "clarity": 4,
+            "uniqueness": 3,
+            "feasibility": 5
+          },
+          "total": 74,
+          "gatesPassed": true,
+          "typicality": 0.25
+        },
+        {
+          "title": "Everything is a button",
+          "technique": "exaggeration",
+          "logline": "A giant switch turns an overloaded canvas into one coherent identity.",
+          "scores": {
+            "hook": 4,
+            "surprise": 3,
+            "emotionalPeak": 4,
+            "payoff": 4,
+            "brandLinkage": 3,
+            "clarity": 4,
+            "uniqueness": 3,
+            "feasibility": 5
+          },
+          "total": 74,
+          "gatesPassed": true,
+          "typicality": 0.25
+        }
+      ],
+      "chosen": 1,
+      "clicheControl": {
+        "obvious": "List features over unrelated showreel shots.",
+        "banned": [
+          "unrelated effect montage",
+          "borrowed creator identity",
+          "invented client metrics"
+        ]
+      },
+      "beats": [
+        {
+          "t": 0,
+          "beat": "hook",
+          "intensity": 6,
+          "to": 7
+        },
+        {
+          "t": 3,
+          "beat": "tension",
+          "intensity": 5,
+          "to": 7
+        },
+        {
+          "t": 6,
+          "beat": "transformation",
+          "intensity": 6,
+          "to": 8
+        },
+        {
+          "t": 9,
+          "beat": "build",
+          "intensity": 7,
+          "to": 8
+        },
+        {
+          "t": 12.6,
+          "beat": "transformation",
+          "intensity": 7,
+          "to": 5
+        },
+        {
+          "t": 15.4,
+          "beat": "peak",
+          "intensity": 10,
+          "wow": "The travelling process token reaches SHIP IT; the spark becomes a brand signature."
+        },
+        {
+          "t": 16,
+          "beat": "lock",
+          "intensity": 8.5,
+          "to": 8.5
+        }
+      ],
+      "peakAt": 15.4,
+      "mnemonic": {
+        "visual": "The drawn spark returns as the studio's mark.",
+        "sonic": "A related, tuned signature closes the same plastic/paper sonic family.",
+        "loop": false
+      }
+    }
+  },
+  "scenes": [
+    {
+      "id": "select",
+      "duration": 3,
+      "background": {
+        "type": "solid",
+        "color": "#f1f0eb"
+      },
+      "layers": [
+        {
+          "x": -698,
+          "y": -458,
+          "sound": false,
+          "type": "text",
+          "text": "MOTION STUDIO",
+          "preset": "none",
+          "fontSize": 17,
+          "font": "Inter",
+          "weight": 600,
+          "color": "#17161c",
+          "letterSpacing": 0.06,
+          "lineHeight": 0.94
+        },
+        {
+          "x": 665,
+          "y": -458,
+          "sound": false,
+          "type": "text",
+          "text": "01 / THE GESTURE",
+          "preset": "none",
+          "fontSize": 16,
+          "font": "Inter",
+          "weight": 500,
+          "color": "#17161c",
+          "letterSpacing": 0.04,
+          "lineHeight": 0.94
+        },
+        {
+          "y": 415,
+          "width": 1660,
+          "height": 1,
+          "opacity": 0.18,
+          "sound": false,
+          "type": "shape",
+          "shape": "line",
+          "color": "#17161c"
+        },
+        {
+          "x": -575,
+          "y": 448,
+          "sound": false,
+          "type": "text",
+          "text": "DESIGNED IN MOTION / BUILT TO CONNECT",
+          "preset": "none",
+          "fontSize": 15,
+          "font": "Inter",
+          "weight": 500,
+          "color": "#17161c",
+          "letterSpacing": 0.08,
+          "lineHeight": 0.94
+        },
+        {
+          "x": 670,
+          "y": 448,
+          "sound": false,
+          "type": "text",
+          "text": "00:20 / MOTION STUDY 02",
+          "preset": "none",
+          "fontSize": 14,
+          "font": "Inter",
+          "weight": 500,
+          "color": "#17161c",
+          "letterSpacing": 0.06,
+          "lineHeight": 0.94
+        },
+        {
+          "y": -270,
+          "width": 1920,
+          "height": 1,
+          "opacity": 0.13,
+          "sound": false,
+          "type": "shape",
+          "shape": "line",
+          "color": "#17161c"
+        },
+        {
+          "y": 220,
+          "width": 1920,
+          "height": 1,
+          "opacity": 0.13,
+          "sound": false,
+          "type": "shape",
+          "shape": "line",
+          "color": "#17161c"
+        },
+        {
+          "id": "make",
+          "y": -150,
+          "accents": [
+            {
+              "at": 0.4,
+              "role": "move",
+              "importance": "structural",
+              "material": "paper"
+            }
+          ],
+          "type": "text",
+          "text": "MAKE IT",
+          "preset": "mask-up",
+          "by": "line",
+          "unitDuration": 0.55,
+          "fontSize": 240,
+          "font": "Inter",
+          "weight": 800,
+          "color": "#17161c",
+          "letterSpacing": -0.065,
+          "lineHeight": 0.94
+        },
+        {
+          "id": "move",
+          "start": 0.25,
+          "y": 90,
+          "sound": false,
+          "type": "text",
+          "text": "MOVE",
+          "preset": "mask-up",
+          "by": "line",
+          "unitDuration": 0.6,
+          "fontSize": 310,
+          "font": "Inter",
+          "weight": 800,
+          "color": "#17161c",
+          "letterSpacing": -0.065,
+          "lineHeight": 0.94
+        },
+        {
+          "start": 1.25,
+          "x": 510,
+          "y": 160,
+          "width": 48,
+          "height": 48,
+          "enter": {
+            "type": "grow",
+            "duration": 0.2
+          },
+          "sound": false,
+          "type": "shape",
+          "shape": "circle",
+          "color": "#7040ff"
+        },
+        {
+          "start": 1.25,
+          "y": 90,
+          "width": 1080,
+          "height": 260,
+          "exit": {
+            "type": "fade",
+            "duration": 0.25
+          },
+          "sound": false,
+          "type": "selection",
+          "color": "#7040ff",
+          "label": "Motion / 01",
+          "dimensions": true
+        },
+        {
+          "id": "select-pointer",
+          "animate": [
+            {
+              "t": 0,
+              "x": 740,
+              "y": 370,
+              "opacity": 0
+            },
+            {
+              "t": 0.5,
+              "x": 740,
+              "y": 370,
+              "opacity": 1
+            },
+            {
+              "t": 1.25,
+              "x": 485,
+              "y": 165,
+              "ease": "inOutQuint"
+            },
+            {
+              "t": 2.35,
+              "x": 485,
+              "y": 165
+            },
+            {
+              "t": 2.9,
+              "x": 820,
+              "y": 520,
+              "ease": "inExpo"
+            }
+          ],
+          "type": "cursor",
+          "size": 40,
+          "color": "#7040ff",
+          "label": "Create",
+          "clicks": [
+            1.25
+          ]
+        }
+      ],
+      "fx": {
+        "grain": 0.025
+      }
+    },
+    {
+      "id": "shape",
+      "duration": 3,
+      "background": {
+        "type": "solid",
+        "color": "#f1f0eb"
+      },
+      "layers": [
+        {
+          "x": -698,
+          "y": -458,
+          "sound": false,
+          "type": "text",
+          "text": "MOTION STUDIO",
+          "preset": "none",
+          "fontSize": 17,
+          "font": "Inter",
+          "weight": 600,
+          "color": "#17161c",
+          "letterSpacing": 0.06,
+          "lineHeight": 0.94
+        },
+        {
+          "x": 665,
+          "y": -458,
+          "sound": false,
+          "type": "text",
+          "text": "02 / GIVE IT PURPOSE",
+          "preset": "none",
+          "fontSize": 16,
+          "font": "Inter",
+          "weight": 500,
+          "color": "#17161c",
+          "letterSpacing": 0.04,
+          "lineHeight": 0.94
+        },
+        {
+          "y": 415,
+          "width": 1660,
+          "height": 1,
+          "opacity": 0.18,
+          "sound": false,
+          "type": "shape",
+          "shape": "line",
+          "color": "#17161c"
+        },
+        {
+          "x": -575,
+          "y": 448,
+          "sound": false,
+          "type": "text",
+          "text": "DESIGNED IN MOTION / BUILT TO CONNECT",
+          "preset": "none",
+          "fontSize": 15,
+          "font": "Inter",
+          "weight": 500,
+          "color": "#17161c",
+          "letterSpacing": 0.08,
+          "lineHeight": 0.94
+        },
+        {
+          "x": 670,
+          "y": 448,
+          "sound": false,
+          "type": "text",
+          "text": "00:20 / MOTION STUDY 02",
+          "preset": "none",
+          "fontSize": 14,
+          "font": "Inter",
+          "weight": 500,
+          "color": "#17161c",
+          "letterSpacing": 0.06,
+          "lineHeight": 0.94
+        },
+        {
+          "id": "draw-spark",
+          "x": 330,
+          "y": 15,
+          "width": 820,
+          "height": 820,
+          "animate": [
+            {
+              "t": 0,
+              "scale": 0.9,
+              "rotate": -12
+            },
+            {
+              "t": 2.8,
+              "scale": 1.05,
+              "rotate": 18,
+              "ease": "inOut"
+            }
+          ],
+          "accents": [
+            {
+              "at": 0.5,
+              "role": "move",
+              "importance": "structural",
+              "material": "paper"
+            },
+            {
+              "at": 1.27,
+              "role": "impact",
+              "importance": "structural",
+              "material": "plastic",
+              "volume": 0.5
+            }
+          ],
+          "type": "path",
+          "d": "M500 40 C560 260 740 440 960 500 C740 560 560 740 500 960 C440 740 260 560 40 500 C260 440 440 260 500 40 Z",
+          "color": "#7040ff",
+          "strokeWidth": 3,
+          "drawDuration": 1.1,
+          "fill": "#17161c",
+          "fillAt": 1.1,
+          "fillDuration": 0.18,
+          "follower": {
+            "size": 35,
+            "cursor": "pen",
+            "color": "#7040ff",
+            "label": "Shape",
+            "hideAfterDraw": true
+          }
+        },
+        {
+          "start": 0.3,
+          "x": -210,
+          "y": -130,
+          "blendMode": "difference",
+          "sound": false,
+          "type": "text",
+          "text": "LESS",
+          "preset": "mask-up",
+          "by": "line",
+          "unitDuration": 0.5,
+          "fontSize": 240,
+          "font": "Inter",
+          "weight": 800,
+          "color": "white",
+          "letterSpacing": -0.065,
+          "lineHeight": 0.94
+        },
+        {
+          "start": 0.5,
+          "y": 95,
+          "blendMode": "difference",
+          "sound": false,
+          "type": "text",
+          "text": "DECORATION.",
+          "preset": "mask-up",
+          "by": "line",
+          "unitDuration": 0.5,
+          "fontSize": 178,
+          "font": "Inter",
+          "weight": 800,
+          "color": "white",
+          "letterSpacing": -0.065,
+          "lineHeight": 0.94
+        }
+      ],
+      "transition": {
+        "type": "cut",
+        "sound": false
+      },
+      "fx": {
+        "grain": 0.025
+      }
+    },
+    {
+      "id": "activate",
+      "duration": 3,
+      "background": {
+        "type": "solid",
+        "color": "#17161c"
+      },
+      "layers": [
+        {
+          "x": -698,
+          "y": -458,
+          "sound": false,
+          "type": "text",
+          "text": "MOTION STUDIO",
+          "preset": "none",
+          "fontSize": 17,
+          "font": "Inter",
+          "weight": 600,
+          "color": "#f1f0eb",
+          "letterSpacing": 0.06,
+          "lineHeight": 0.94
+        },
+        {
+          "x": 665,
+          "y": -458,
+          "sound": false,
+          "type": "text",
+          "text": "03 / THE DECISION",
+          "preset": "none",
+          "fontSize": 16,
+          "font": "Inter",
+          "weight": 500,
+          "color": "#f1f0eb",
+          "letterSpacing": 0.04,
+          "lineHeight": 0.94
+        },
+        {
+          "y": 415,
+          "width": 1660,
+          "height": 1,
+          "opacity": 0.18,
+          "sound": false,
+          "type": "shape",
+          "shape": "line",
+          "color": "#f1f0eb"
+        },
+        {
+          "x": -575,
+          "y": 448,
+          "sound": false,
+          "type": "text",
+          "text": "DESIGNED IN MOTION / BUILT TO CONNECT",
+          "preset": "none",
+          "fontSize": 15,
+          "font": "Inter",
+          "weight": 500,
+          "color": "#f1f0eb",
+          "letterSpacing": 0.08,
+          "lineHeight": 0.94
+        },
+        {
+          "x": 670,
+          "y": 448,
+          "sound": false,
+          "type": "text",
+          "text": "00:20 / MOTION STUDY 02",
+          "preset": "none",
+          "fontSize": 14,
+          "font": "Inter",
+          "weight": 500,
+          "color": "#f1f0eb",
+          "letterSpacing": 0.06,
+          "lineHeight": 0.94
+        },
+        {
+          "y": -250,
+          "sound": false,
+          "type": "text",
+          "text": "MORE INTENTION.",
+          "preset": "mask-up",
+          "by": "line",
+          "unitDuration": 0.6,
+          "fontSize": 150,
+          "font": "Inter",
+          "weight": 800,
+          "color": "#f1f0eb",
+          "letterSpacing": -0.065,
+          "lineHeight": 0.94
+        },
+        {
+          "id": "intention-switch",
+          "y": -5,
+          "width": 360,
+          "height": 164,
+          "type": "toggle",
+          "color": "#7040ff",
+          "stateDuration": 0.32,
+          "states": [
+            {
+              "at": 1.3,
+              "on": true
+            }
+          ]
+        },
+        {
+          "duration": 1.3,
+          "y": 165,
+          "sound": false,
+          "type": "text",
+          "text": "JUST MOVING",
+          "preset": "none",
+          "fontSize": 30,
+          "font": "Inter",
+          "weight": 500,
+          "color": "#94909d",
+          "letterSpacing": 0.06,
+          "lineHeight": 0.94
+        },
+        {
+          "start": 1.3,
+          "y": 165,
+          "sound": false,
+          "type": "text",
+          "text": "MOVING WITH PURPOSE",
+          "preset": "mask-up",
+          "by": "line",
+          "unitDuration": 0.4,
+          "fontSize": 36,
+          "font": "Inter",
+          "weight": 600,
+          "color": "#d5fa65",
+          "letterSpacing": 0.03,
+          "lineHeight": 0.94
+        },
+        {
+          "animate": [
+            {
+              "t": 0,
+              "x": 650,
+              "y": 300,
+              "opacity": 0
+            },
+            {
+              "t": 0.3,
+              "x": 500,
+              "y": 250,
+              "opacity": 1
+            },
+            {
+              "t": 1.3,
+              "x": -90,
+              "y": 0,
+              "ease": "inOutQuint"
+            },
+            {
+              "t": 1.65,
+              "x": -90,
+              "y": 0
+            },
+            {
+              "t": 2.4,
+              "x": 640,
+              "y": 320,
+              "ease": "inOutQuint"
+            },
+            {
+              "t": 2.7,
+              "opacity": 0
+            }
+          ],
+          "sound": false,
+          "type": "cursor",
+          "size": 40,
+          "color": "#d5fa65",
+          "clicks": [
+            1.3
+          ]
+        }
+      ],
+      "transition": {
+        "type": "cut",
+        "sound": false
+      }
+    },
+    {
+      "id": "build",
+      "duration": 3.6,
+      "background": {
+        "type": "solid",
+        "color": "#7040ff"
+      },
+      "layers": [
+        {
+          "x": -698,
+          "y": -458,
+          "sound": false,
+          "type": "text",
+          "text": "MOTION STUDIO",
+          "preset": "none",
+          "fontSize": 17,
+          "font": "Inter",
+          "weight": 600,
+          "color": "#f1f0eb",
+          "letterSpacing": 0.06,
+          "lineHeight": 0.94
+        },
+        {
+          "x": 665,
+          "y": -458,
+          "sound": false,
+          "type": "text",
+          "text": "04 / ONE VISUAL LANGUAGE",
+          "preset": "none",
+          "fontSize": 16,
+          "font": "Inter",
+          "weight": 500,
+          "color": "#f1f0eb",
+          "letterSpacing": 0.04,
+          "lineHeight": 0.94
+        },
+        {
+          "y": 415,
+          "width": 1660,
+          "height": 1,
+          "opacity": 0.18,
+          "sound": false,
+          "type": "shape",
+          "shape": "line",
+          "color": "#f1f0eb"
+        },
+        {
+          "x": -575,
+          "y": 448,
+          "sound": false,
+          "type": "text",
+          "text": "DESIGNED IN MOTION / BUILT TO CONNECT",
+          "preset": "none",
+          "fontSize": 15,
+          "font": "Inter",
+          "weight": 500,
+          "color": "#f1f0eb",
+          "letterSpacing": 0.08,
+          "lineHeight": 0.94
+        },
+        {
+          "x": 670,
+          "y": 448,
+          "sound": false,
+          "type": "text",
+          "text": "00:20 / MOTION STUDY 02",
+          "preset": "none",
+          "fontSize": 14,
+          "font": "Inter",
+          "weight": 500,
+          "color": "#f1f0eb",
+          "letterSpacing": 0.06,
+          "lineHeight": 0.94
+        },
+        {
+          "y": -260,
+          "sound": false,
+          "type": "text",
+          "text": "BUILD",
+          "preset": "none",
+          "fontSize": 36,
+          "font": "Inter",
+          "weight": 500,
+          "color": "#f1f0eb",
+          "letterSpacing": 0.16,
+          "lineHeight": 0.94
+        },
+        {
+          "id": "deliverable-0",
+          "start": 0,
+          "duration": 1.2,
+          "y": -30,
+          "accents": [
+            {
+              "at": 0.2,
+              "role": "move",
+              "importance": "structural",
+              "material": "paper",
+              "volume": 0.6
+            }
+          ],
+          "type": "text",
+          "text": "SYSTEMS.",
+          "preset": "mask-up",
+          "by": "line",
+          "unitDuration": 0.4,
+          "fontSize": 225,
+          "font": "Inter",
+          "weight": 800,
+          "color": "#f1f0eb",
+          "letterSpacing": -0.065,
+          "lineHeight": 0.94
+        },
+        {
+          "id": "deliverable-1",
+          "start": 1.2,
+          "duration": 1.2,
+          "y": -30,
+          "accents": [
+            {
+              "at": 0.2,
+              "role": "move",
+              "importance": "structural",
+              "material": "paper",
+              "volume": 0.6
+            }
+          ],
+          "type": "text",
+          "text": "PRODUCTS.",
+          "preset": "mask-up",
+          "by": "line",
+          "unitDuration": 0.4,
+          "fontSize": 225,
+          "font": "Inter",
+          "weight": 800,
+          "color": "#f1f0eb",
+          "letterSpacing": -0.065,
+          "lineHeight": 0.94
+        },
+        {
+          "id": "deliverable-2",
+          "start": 2.4,
+          "duration": 1.2,
+          "y": -30,
+          "accents": [
+            {
+              "at": 0.2,
+              "role": "move",
+              "importance": "structural",
+              "material": "paper",
+              "volume": 0.6
+            }
+          ],
+          "type": "text",
+          "text": "EXPERIENCES.",
+          "preset": "mask-up",
+          "by": "line",
+          "unitDuration": 0.4,
+          "fontSize": 185,
+          "font": "Inter",
+          "weight": 800,
+          "color": "#f1f0eb",
+          "letterSpacing": -0.065,
+          "lineHeight": 0.94
+        },
+        {
+          "y": 145,
+          "width": 740,
+          "height": 40,
+          "sound": false,
+          "type": "path",
+          "preset": "underline",
+          "color": "#d5fa65",
+          "strokeWidth": 5,
+          "drawStart": 0.3,
+          "drawDuration": 0.6
+        },
+        {
+          "y": 270,
+          "sound": false,
+          "type": "text",
+          "text": "A consistent idea. Across every interaction.",
+          "preset": "none",
+          "fontSize": 29,
+          "font": "Inter",
+          "weight": 400,
+          "color": "#f1f0eb",
+          "letterSpacing": -0.02,
+          "lineHeight": 0.94
+        }
+      ],
+      "transition": {
+        "type": "cut",
+        "sound": false
+      }
+    },
+    {
+      "id": "process",
+      "duration": 3.4,
+      "background": {
+        "type": "solid",
+        "color": "#f1f0eb"
+      },
+      "layers": [
+        {
+          "x": -698,
+          "y": -458,
+          "sound": false,
+          "type": "text",
+          "text": "MOTION STUDIO",
+          "preset": "none",
+          "fontSize": 17,
+          "font": "Inter",
+          "weight": 600,
+          "color": "#17161c",
+          "letterSpacing": 0.06,
+          "lineHeight": 0.94
+        },
+        {
+          "x": 665,
+          "y": -458,
+          "sound": false,
+          "type": "text",
+          "text": "05 / FOLLOW THROUGH",
+          "preset": "none",
+          "fontSize": 16,
+          "font": "Inter",
+          "weight": 500,
+          "color": "#17161c",
+          "letterSpacing": 0.04,
+          "lineHeight": 0.94
+        },
+        {
+          "y": 415,
+          "width": 1660,
+          "height": 1,
+          "opacity": 0.18,
+          "sound": false,
+          "type": "shape",
+          "shape": "line",
+          "color": "#17161c"
+        },
+        {
+          "x": -575,
+          "y": 448,
+          "sound": false,
+          "type": "text",
+          "text": "DESIGNED IN MOTION / BUILT TO CONNECT",
+          "preset": "none",
+          "fontSize": 15,
+          "font": "Inter",
+          "weight": 500,
+          "color": "#17161c",
+          "letterSpacing": 0.08,
+          "lineHeight": 0.94
+        },
+        {
+          "x": 670,
+          "y": 448,
+          "sound": false,
+          "type": "text",
+          "text": "00:20 / MOTION STUDY 02",
+          "preset": "none",
+          "fontSize": 14,
+          "font": "Inter",
+          "weight": 500,
+          "color": "#17161c",
+          "letterSpacing": 0.06,
+          "lineHeight": 0.94
+        },
+        {
+          "y": -225,
+          "sound": false,
+          "type": "text",
+          "text": "GOOD MOTION\nGOES SOMEWHERE.",
+          "preset": "none",
+          "fontSize": 96,
+          "font": "Inter",
+          "weight": 800,
+          "color": "#17161c",
+          "letterSpacing": -0.065,
+          "lineHeight": 1.05
+        },
+        {
+          "id": "process-rail",
+          "y": 100,
+          "width": 1920,
+          "height": 300,
+          "animate": [
+            {
+              "t": 0,
+              "x": 0
+            },
+            {
+              "t": 0.8,
+              "x": -660,
+              "ease": "inOutQuint"
+            },
+            {
+              "t": 1.6,
+              "x": -1320,
+              "ease": "inOutQuint"
+            },
+            {
+              "t": 2.8,
+              "x": -1980,
+              "ease": "inOutQuint"
+            },
+            {
+              "t": 3.4,
+              "x": -1980
+            }
+          ],
+          "accents": [
+            {
+              "at": 0.4,
+              "role": "move",
+              "importance": "structural",
+              "material": "paper",
+              "volume": 0.6
+            },
+            {
+              "at": 1.2,
+              "role": "move",
+              "importance": "structural",
+              "material": "paper",
+              "volume": 0.6
+            },
+            {
+              "at": 2.8,
+              "role": "impact",
+              "importance": "hero",
+              "material": "plastic",
+              "volume": 0.85
+            }
+          ],
+          "type": "group",
+          "layers": [
+            {
+              "x": 0,
+              "width": 460,
+              "height": 150,
+              "sound": false,
+              "type": "shape",
+              "shape": "rect",
+              "color": "#7040ff",
+              "radius": 75
+            },
+            {
+              "x": 0,
+              "sound": false,
+              "type": "text",
+              "text": "RESEARCH",
+              "preset": "none",
+              "fontSize": 64,
+              "font": "Inter",
+              "weight": 700,
+              "color": "#f1f0eb",
+              "letterSpacing": -0.04,
+              "lineHeight": 0.94
+            },
+            {
+              "x": 330,
+              "width": 200,
+              "height": 100,
+              "sound": false,
+              "type": "path",
+              "d": "M0 500 C300 50 700 950 1000 500 M920 390 L1000 500 L900 570",
+              "color": "#7040ff",
+              "strokeWidth": 3,
+              "drawStart": 0.1,
+              "drawDuration": 0.5
+            },
+            {
+              "x": 660,
+              "width": 460,
+              "height": 150,
+              "sound": false,
+              "type": "shape",
+              "shape": "rect",
+              "color": "#7040ff",
+              "radius": 75
+            },
+            {
+              "x": 660,
+              "sound": false,
+              "type": "text",
+              "text": "SHAPE",
+              "preset": "none",
+              "fontSize": 64,
+              "font": "Inter",
+              "weight": 700,
+              "color": "#f1f0eb",
+              "letterSpacing": -0.04,
+              "lineHeight": 0.94
+            },
+            {
+              "x": 990,
+              "width": 200,
+              "height": 100,
+              "sound": false,
+              "type": "path",
+              "d": "M0 500 C300 50 700 950 1000 500 M920 390 L1000 500 L900 570",
+              "color": "#7040ff",
+              "strokeWidth": 3,
+              "drawStart": 0.9,
+              "drawDuration": 0.5
+            },
+            {
+              "x": 1320,
+              "width": 460,
+              "height": 150,
+              "sound": false,
+              "type": "shape",
+              "shape": "rect",
+              "color": "#7040ff",
+              "radius": 75
+            },
+            {
+              "x": 1320,
+              "sound": false,
+              "type": "text",
+              "text": "PROTOTYPE",
+              "preset": "none",
+              "fontSize": 55,
+              "font": "Inter",
+              "weight": 700,
+              "color": "#f1f0eb",
+              "letterSpacing": -0.04,
+              "lineHeight": 0.94
+            },
+            {
+              "x": 1650,
+              "width": 200,
+              "height": 100,
+              "sound": false,
+              "type": "path",
+              "d": "M0 500 C300 50 700 950 1000 500 M920 390 L1000 500 L900 570",
+              "color": "#7040ff",
+              "strokeWidth": 3,
+              "drawStart": 1.7000000000000002,
+              "drawDuration": 0.5
+            },
+            {
+              "x": 1980,
+              "width": 460,
+              "height": 150,
+              "sound": false,
+              "type": "shape",
+              "shape": "rect",
+              "color": "#d5fa65",
+              "radius": 75
+            },
+            {
+              "x": 1980,
+              "sound": false,
+              "type": "text",
+              "text": "SHIP IT",
+              "preset": "none",
+              "fontSize": 64,
+              "font": "Inter",
+              "weight": 700,
+              "color": "#17161c",
+              "letterSpacing": -0.04,
+              "lineHeight": 0.94
+            }
+          ]
+        },
+        {
+          "id": "process-focus",
+          "y": 100,
+          "width": 492,
+          "height": 182,
+          "sound": false,
+          "type": "selection",
+          "color": "#7040ff",
+          "label": "The active idea",
+          "handles": "corners",
+          "fillOpacity": 0
+        },
+        {
+          "start": 2.8,
+          "x": 0,
+          "y": 290,
+          "width": 95,
+          "height": 95,
+          "animate": [
+            {
+              "t": 0,
+              "scale": 0.3,
+              "rotate": -90
+            },
+            {
+              "t": 0.5,
+              "scale": 1,
+              "rotate": 0,
+              "ease": "outBack"
+            }
+          ],
+          "sound": false,
+          "type": "path",
+          "d": "M500 40 C560 260 740 440 960 500 C740 560 560 740 500 960 C440 740 260 560 40 500 C260 440 440 260 500 40 Z",
+          "color": "#7040ff",
+          "drawDuration": 0.4,
+          "fill": "#7040ff",
+          "fillAt": 0.4
+        }
+      ],
+      "transition": {
+        "type": "cut",
+        "sound": false
+      },
+      "fx": {
+        "grain": 0.025
+      }
+    },
+    {
+      "id": "resolve",
+      "duration": 4,
+      "background": {
+        "type": "solid",
+        "color": "#f1f0eb"
+      },
+      "layers": [
+        {
+          "x": -698,
+          "y": -458,
+          "sound": false,
+          "type": "text",
+          "text": "MOTION STUDIO",
+          "preset": "none",
+          "fontSize": 17,
+          "font": "Inter",
+          "weight": 600,
+          "color": "#17161c",
+          "letterSpacing": 0.06,
+          "lineHeight": 0.94
+        },
+        {
+          "x": 665,
+          "y": -458,
+          "sound": false,
+          "type": "text",
+          "text": "06 / EVERY FRAME CONNECTED",
+          "preset": "none",
+          "fontSize": 16,
+          "font": "Inter",
+          "weight": 500,
+          "color": "#17161c",
+          "letterSpacing": 0.04,
+          "lineHeight": 0.94
+        },
+        {
+          "y": 415,
+          "width": 1660,
+          "height": 1,
+          "opacity": 0.18,
+          "sound": false,
+          "type": "shape",
+          "shape": "line",
+          "color": "#17161c"
+        },
+        {
+          "x": -575,
+          "y": 448,
+          "sound": false,
+          "type": "text",
+          "text": "DESIGNED IN MOTION / BUILT TO CONNECT",
+          "preset": "none",
+          "fontSize": 15,
+          "font": "Inter",
+          "weight": 500,
+          "color": "#17161c",
+          "letterSpacing": 0.08,
+          "lineHeight": 0.94
+        },
+        {
+          "x": 670,
+          "y": 448,
+          "sound": false,
+          "type": "text",
+          "text": "00:20 / MOTION STUDY 02",
+          "preset": "none",
+          "fontSize": 14,
+          "font": "Inter",
+          "weight": 500,
+          "color": "#17161c",
+          "letterSpacing": 0.06,
+          "lineHeight": 0.94
+        },
+        {
+          "id": "signature",
+          "x": -565,
+          "y": -35,
+          "width": 290,
+          "height": 290,
+          "animate": [
+            {
+              "t": 0,
+              "x": 565,
+              "y": 325,
+              "scale": 0.33,
+              "rotate": -45
+            },
+            {
+              "t": 0.6,
+              "x": 0,
+              "y": 0,
+              "scale": 1,
+              "rotate": 0,
+              "ease": "outQuint"
+            }
+          ],
+          "accents": [
+            {
+              "at": 0.6,
+              "role": "logoHit",
+              "importance": "structural",
+              "material": "plastic",
+              "volume": 0.7
+            }
+          ],
+          "type": "path",
+          "d": "M500 40 C560 260 740 440 960 500 C740 560 560 740 500 960 C440 740 260 560 40 500 C260 440 440 260 500 40 Z",
+          "color": "#7040ff",
+          "drawDuration": 0.4,
+          "fill": "#7040ff",
+          "fillAt": 0,
+          "fillDuration": 0.1
+        },
+        {
+          "start": 0.2,
+          "x": 155,
+          "y": -40,
+          "sound": false,
+          "type": "text",
+          "text": "MOTION\nSTUDIO",
+          "preset": "mask-up",
+          "by": "line",
+          "stagger": 0.08,
+          "unitDuration": 0.55,
+          "fontSize": 150,
+          "font": "Inter",
+          "weight": 800,
+          "color": "#17161c",
+          "letterSpacing": -0.065,
+          "lineHeight": 0.95,
+          "align": "left",
+          "maxWidth": 1000
+        },
+        {
+          "start": 0.6,
+          "y": 240,
+          "sound": false,
+          "type": "text",
+          "text": "Motion with meaning.",
+          "preset": "mask-up",
+          "by": "line",
+          "unitDuration": 0.5,
+          "fontSize": 44,
+          "font": "Inter",
+          "weight": 500,
+          "color": "#17161c",
+          "letterSpacing": -0.03,
+          "lineHeight": 0.94
+        }
+      ],
+      "transition": {
+        "type": "cut",
+        "sound": false
+      },
+      "fx": {
+        "grain": 0.025
+      }
+    }
+  ]
+}

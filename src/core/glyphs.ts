@@ -14,6 +14,7 @@ import opentype from "opentype.js";
 import { CACHE_DIR } from "./paths";
 import { FONT_NAMES } from "./fontNames";
 import { DEFAULT_STYLE, STYLES } from "../engine/spec/styles";
+import { facesForFamily, glyphFontFamily, type FontFaceDefinition } from "../engine/core/fontIdentity";
 
 export type GlyphEntry = {
   size: 1000;
@@ -38,7 +39,7 @@ export const glyphKey = (family: string, weight: number, text: string) => `${fam
 
 // ---------------------------------------------------------------- font resolution
 
-type SpecLike = { style?: string; theme?: { fonts?: { display?: string; body?: string; mono?: string } } };
+type SpecLike = { style?: string; theme?: { fonts?: { display?: string; body?: string; mono?: string } }; fontFaces?: FontFaceDefinition[] };
 
 /** Resolve a layer's `font` (undefined, "$display", "Inter, sans-serif", "inter", …) to a Google Fonts family name. */
 export const resolveFontFamily = (font: string | undefined, spec: SpecLike): string => {
@@ -311,6 +312,32 @@ export const loadFont = (family: string, weight: number): Promise<{ font: openty
 
 // ---------------------------------------------------------------- outlines
 
+/** Project fonts use the same family/face mapping as browser text; never download a substitute for a local family. */
+const loadOutlineFont = (projectDir: string, spec: SpecLike, family: string, requested: number) => {
+  const faces = facesForFamily(family, spec.fontFaces);
+  if (!faces.length) return loadFont(family, requested);
+  const range = (weight: number | string | undefined) => typeof weight === "string" ? weight.split(" ").map(Number) : [weight ?? 400, weight ?? 400];
+  const distance = (weight: number | string | undefined) => { const [lo, hi] = range(weight); return Math.max(lo - requested, requested - hi, 0); };
+  const face = [...faces].sort((a, b) => Number((a.style ?? "normal") !== "normal") - Number((b.style ?? "normal") !== "normal") || distance(a.weight) - distance(b.weight))[0];
+  const file = fs.realpathSync(path.resolve(projectDir, face.src)), assets = fs.realpathSync(path.join(projectDir, "assets"));
+  if (!file.startsWith(assets + path.sep)) throw new Error("Font outline source must be a project asset.");
+  if (/\.woff2$/i.test(file)) throw new Error(`"${family}" needs a TTF/OTF/WOFF counterpart for morph/3D outlines; WOFF2 is supported for browser text only`);
+  const [lo, hi] = range(face.weight), used = Math.max(lo, Math.min(hi, requested)), stat = fs.statSync(file);
+  const key = `local|${file}|${stat.size}|${stat.mtimeMs}|${used}`;
+  let pending = fontCache.get(key);
+  if (!pending) {
+    pending = Promise.resolve().then(() => {
+      const font = parseFont(fs.readFileSync(file));
+      const variable = font as unknown as { variation?: { set: (coords: { wght: number }) => void }; tables: { fvar?: { axes?: { tag: string }[] } } };
+      if (variable.tables.fvar?.axes?.some((a) => a.tag === "wght")) variable.variation?.set({ wght: used });
+      return { font, weight: used, file };
+    });
+    fontCache.set(key, pending);
+    void pending.catch(() => fontCache.delete(key));
+  }
+  return pending;
+};
+
 // Glyph-by-glyph layout (cmap + kerning) instead of opentype's shaper: 1 glyph per character (no ligatures, so
 // letters can cascade individually) and immune to GSUB lookups opentype.js 2.0 cannot apply (it throws on some fonts).
 type Positioner = { getDefaultScriptName(): string; getKerningTables(script: string, lang?: string): unknown; getKerningValue(t: unknown, a: number, b: number): number };
@@ -408,14 +435,14 @@ export const syncGlyphs = async (projectDirAbs: string, spec: SpecLike & Record<
   const existing = readGlyphFile(projectDirAbs);
   const todo = new Map<string, TextShapeRef>();
   for (const r of refs) {
-    const k = glyphKey(r.family, r.weight, r.text);
+    const k = glyphKey(glyphFontFamily(r.family, spec.fontFaces), r.weight, r.text);
     if (!existing[k] && !todo.has(k)) todo.set(k, r);
   }
   if (!todo.size) return { added, warnings };
   const fresh: GlyphFile = {};
   for (const [k, r] of todo) {
     try {
-      const { font, weight: used } = await loadFont(r.family, r.weight);
+      const { font, weight: used } = await loadOutlineFont(projectDirAbs, spec, r.family, r.weight);
       fresh[k] = textToGlyphs(font, r.text);
       added.push(k);
       if (used !== r.weight) warnings.push(`${r.at}: font "${r.family}" has no weight ${r.weight}; "text:" outlines use weight ${used}`);

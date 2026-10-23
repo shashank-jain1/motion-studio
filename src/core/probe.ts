@@ -3,10 +3,11 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import fs from "node:fs";
 import path from "node:path";
+import { runMediaTool } from "./mediaTool";
 
 const execFileP = promisify(execFile);
 
-export type AssetKind = "image" | "video" | "audio" | "lottie" | "other";
+export type AssetKind = "image" | "video" | "audio" | "lottie" | "font" | "other";
 
 export type AssetInfo = {
   /** Path to use in specs, e.g. "assets/logo.png" */
@@ -49,8 +50,12 @@ type FfprobeStream = {
 type FfprobeOut = { streams?: FfprobeStream[]; format?: { duration?: string; format_name?: string } };
 
 export const ffprobe = async (file: string): Promise<FfprobeOut> => {
-  const out = await runBinary("ffprobe", ["-v", "error", "-print_format", "json", "-show_streams", "-show_format", file]);
-  return JSON.parse(out.toString("utf8")) as FfprobeOut;
+  const args = ["-v", "error", "-print_format", "json", "-show_streams", "-show_format", file];
+  try { return JSON.parse((await runBinary("ffprobe", args)).toString("utf8")) as FfprobeOut; }
+  catch (e) {
+    if ((e as NodeJS.ErrnoException).code !== "ENOENT") throw e;
+    return JSON.parse((await runMediaTool("ffprobe", args)).stdout) as FfprobeOut;
+  }
 };
 
 const parseRate = (r?: string): number | undefined => {
@@ -71,6 +76,7 @@ export const probeAsset = async (absPath: string, specPath?: string): Promise<As
     kind: "other",
     sizeBytes: stat.size,
   };
+  if ([".ttf", ".otf", ".woff", ".woff2"].includes(ext)) { info.kind = "font"; return info; }
 
   if (ext === ".json") {
     try {

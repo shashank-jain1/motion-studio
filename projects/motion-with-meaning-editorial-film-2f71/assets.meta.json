@@ -1,0 +1,18 @@
+{
+  "reference.mp4": {
+    "mtimeMs": 1792770675250.9558,
+    "size": 1286186,
+    "info": {
+      "path": "assets/reference.mp4",
+      "file": "/Users/shashank/motion-studio/projects/motion-with-meaning-editorial-film-2f71/assets/reference.mp4",
+      "kind": "video",
+      "sizeBytes": 1286186,
+      "width": 1276,
+      "height": 718,
+      "hasAlpha": false,
+      "duration": 20.082,
+      "fps": 30,
+      "hasAudio": true
+    }
+  }
+}

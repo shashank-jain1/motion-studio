@@ -7,7 +7,7 @@ export type ProjectCard = {
   hasSpec: boolean; thumbnail?: string; durationSeconds?: number;
 };
 export type AssetInfo = {
-  path: string; kind: "image" | "video" | "audio" | "lottie" | "other"; sizeBytes: number;
+  path: string; kind: "image" | "video" | "audio" | "lottie" | "font" | "other"; sizeBytes: number;
   width?: number; height?: number; duration?: number; hasAudio?: boolean; palette?: string[];
 };
 export type Asset = AssetInfo & { url: string };

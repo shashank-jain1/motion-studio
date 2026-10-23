@@ -14,6 +14,7 @@ import { useDelayRender } from "remotion";
 import { useAsset, useRuntime } from "../core/context";
 import { type BBox, dBBox, fitAffine, strokeOutline, transformD, unionBBox } from "./geom";
 import { libraryShape } from "./library";
+import { customFontIdentity, glyphFontFamily } from "../core/fontIdentity";
 
 // ---------------------------------------------------------------------------------------------
 // data contracts (produced Node-side by the logo analyzer / glyph extractor)
@@ -96,7 +97,11 @@ export const useJsonAssets = (paths: string[]): { ready: boolean; get: <T>(path:
   const rt = useRuntime();
   const { delayRender, continueRender } = useDelayRender();
   const key = paths.join("|");
-  const urls = useMemo(() => [...new Set(paths)].map((p) => [p, asset(p)] as const), [key, rt.assetBase, rt.projectId]); // eslint-disable-line react-hooks/exhaustive-deps
+  const fontKey = rt.fontFaces?.length ? customFontIdentity(rt.fontFaces) : "";
+  const urls = useMemo(() => [...new Set(paths)].map((p) => {
+    const url = asset(p);
+    return [p, p === "glyphs.json" && fontKey ? `${url}${url.includes("?") ? "&" : "?"}fonts=${fontKey}` : url] as const;
+  }), [key, rt.assetBase, rt.projectId, fontKey]); // eslint-disable-line react-hooks/exhaustive-deps
   const [, bump] = useState(0);
   const [handle] = useState(() => {
     const pending = urls.some(([, u]) => !loadJson(u).done);
@@ -193,6 +198,7 @@ export const findGlyphRun = (file: GlyphFile | null, family: string, weight: num
   const keys = Object.keys(file).filter((k) => k.endsWith(`|${text}`));
   if (!keys.length) return null;
   const sameFamily = keys.filter((k) => k.split("|")[0].toLowerCase() === family.toLowerCase());
+  if (family.includes("@font-") && !sameFamily.length) return null; // no unrelated fallback for a versioned project font
   const pool = sameFamily.length ? sameFamily : keys;
   pool.sort((a, b) => Math.abs(Number(a.split("|")[1]) - weight) - Math.abs(Number(b.split("|")[1]) - weight));
   return file[pool[0]];
@@ -257,7 +263,7 @@ export const useFontKey = (font?: string, weight?: number) => {
   const rt = useRuntime();
   let family = font ?? "$display";
   if (family.startsWith("$")) family = rt.fonts[family.slice(1) as "display" | "body" | "mono"] ?? rt.fonts.display;
-  return { family, weight: weight ?? 700 };
+  return { family: glyphFontFamily(family, rt.fontFaces), weight: weight ?? 700 };
 };
 
 /** Resolve many sources at once (one asset load, one delayRender). */

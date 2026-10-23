@@ -107,6 +107,7 @@ export const SpecVideo: React.FC<SpecVideoProps> = ({ spec: input, assetBase, pr
   const rt: RuntimeContext = {
     colors: { ...style.colors, ...(spec.theme?.colors ?? {}) },
     fonts: { ...style.fonts, ...(spec.theme?.fonts ?? {}) } as RuntimeContext["fonts"],
+    fontFaces: spec.fontFaces,
     assetBase, projectId, libraryBase, width, height, fps,
   };
   const fx = { ...(style.fx ?? {}), ...(spec.fx ?? {}) };

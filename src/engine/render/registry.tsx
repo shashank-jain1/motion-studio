@@ -16,6 +16,7 @@ import { LottieView } from "../kit/Lottie";
 import { Morph } from "../kit/Morph";
 import { Logo } from "../kit/Logo";
 import { ThreeView } from "../kit/three";
+import { Cursor, Selection, Toggle } from "../kit/Interaction";
 import { ContainerProvider, useContainer } from "../core/container";
 import { CUSTOM } from "../custom";
 import { LayerList } from "./LayerList";
@@ -61,5 +62,8 @@ export const renderLayerContent = (layer: Layer, t: number, duration: number): R
     case "morph": return <Morph layer={layer} t={t} duration={duration} />;
     case "logo": return <Logo layer={layer} t={t} duration={duration} />;
     case "three": return <ThreeView layer={layer} t={t} duration={duration} />;
+    case "cursor": return <Cursor layer={layer} t={t} />;
+    case "selection": return <Selection layer={layer} t={t} />;
+    case "toggle": return <Toggle layer={layer} t={t} />;
   }
 };

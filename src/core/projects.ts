@@ -225,7 +225,7 @@ const specWarnings = (id: string, spec: Spec): string[] => {
   const themeFonts = spec.theme?.fonts ?? {};
   for (const [k, v] of Object.entries(themeFonts)) if (typeof v === "string") fonts.push({ font: v, at: `theme.fonts.${k}` });
   for (const f of fonts) {
-    if (!isKnownFont(f.font)) {
+    if (!isKnownFont(f.font, spec.fontFaces)) {
       warnings.push(`${f.at}: unknown font "${f.font}" — it will fall back to a system font. Available: ${FONT_NAMES.join(", ")} (or $display/$body/$mono)`);
     }
   }

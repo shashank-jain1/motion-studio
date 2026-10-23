@@ -149,6 +149,9 @@ export const estimateBox = (l: Any, W: number, H: number): Box => {
       return { w, h: num(l.height) ? l.height : l.shape === "line" ? 4 : w };
     }
     case "morph": return { w: num(l.width) ? l.width : 400, h: num(l.height) ? l.height : 400 };
+    case "cursor": return { w: (l.size ?? 36) * (l.label ? 3.5 : 1), h: (l.size ?? 36) * (l.label ? 1.5 : 1) };
+    case "selection": return { w: l.width ?? 640, h: l.height ?? 180 };
+    case "toggle": return { w: l.width ?? 280, h: l.height ?? 132 };
     case "group": {
       const kids: Any[] = Array.isArray(l.layers) ? l.layers : [];
       if (!kids.length) return { w: 1, h: 1 };

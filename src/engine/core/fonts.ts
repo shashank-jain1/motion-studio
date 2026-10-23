@@ -29,13 +29,22 @@ import * as Sora from "@remotion/google-fonts/Sora";
 import * as SpaceGrotesk from "@remotion/google-fonts/SpaceGrotesk";
 import * as Syne from "@remotion/google-fonts/Syne";
 import * as Unbounded from "@remotion/google-fonts/Unbounded";
+import * as Cinzel from "@remotion/google-fonts/Cinzel";
+import * as BodoniModa from "@remotion/google-fonts/BodoniModa";
+import * as CormorantGaramond from "@remotion/google-fonts/CormorantGaramond";
+import * as Italiana from "@remotion/google-fonts/Italiana";
+import * as LeagueGothic from "@remotion/google-fonts/LeagueGothic";
+import { cancelRender, continueRender, delayRender } from "remotion";
+import { FONT_NAMES } from "./fontCatalog";
+import { canonicalFontFamily, customFontIdentity, facesForFamily, type FontFaceDefinition } from "./fontIdentity";
 
 type FontModule = {
   loadFont: (style?: any, options?: any) => { fontFamily: string; waitUntilDone: () => Promise<unknown> };
   getInfo: () => { fontFamily: string; fonts: Record<string, Record<string, unknown>> };
 };
 
-export const FONTS: Record<string, FontModule> = {
+export const FONTS: Record<(typeof FONT_NAMES)[number], FontModule> = {
+  "Cinzel": Cinzel, "Bodoni Moda": BodoniModa, "Cormorant Garamond": CormorantGaramond, "Italiana": Italiana, "League Gothic": LeagueGothic,
   "Anton": Anton, "Archivo Black": ArchivoBlack, "Bebas Neue": BebasNeue, "Bricolage Grotesque": BricolageGrotesque,
   "Bungee": Bungee, "Caveat": Caveat, "DM Sans": DMSans, "DM Serif Display": DMSerifDisplay, "Fraunces": Fraunces,
   "Geist": Geist, "Instrument Sans": InstrumentSans, "Instrument Serif": InstrumentSerif, "Inter": Inter,
@@ -54,10 +63,30 @@ export const fontReady = (stack: string): Promise<unknown> => ready.get(stack) ?
 const WANTED_WEIGHTS = ["300", "400", "500", "600", "700", "800", "900"];
 
 /** Returns a CSS font-family stack; loads the font (once per page) if it's in the curated set. */
-export const ensureFont = (name: string): string => {
+export const ensureFont = (name: string, definitions: readonly FontFaceDefinition[] = [], resolve = (src: string) => src): string => {
+  const faces = facesForFamily(name, definitions);
+  if (faces.length) {
+    // Private CSS alias prevents same-named fonts in two Players/projects from replacing one another.
+    const alias = `motion-font-${customFontIdentity(faces, resolve)}`, family = `"${alias}", sans-serif`;
+    if (!ready.has(family)) {
+      const handle = delayRender(`Loading project font ${faces[0].family}`);
+      const promise = Promise.all(faces.map(async (f) => {
+        const face = new FontFace(alias, `url(${JSON.stringify(resolve(f.src))})`, { weight: String(f.weight ?? 400), style: f.style ?? "normal" });
+        document.fonts.add(await face.load());
+      })).then(() => { continueRender(handle); }).catch((e) => {
+        cancelRender(new Error(`Could not load project font ${faces[0].family}: ${(e as Error).message}`));
+        throw e;
+      });
+      ready.set(family, promise);
+      // A non-measuring text layer may never call fontReady; cancellation above still reports the failure.
+      void promise.catch(() => undefined);
+    }
+    return family;
+  }
+  name = canonicalFontFamily(name);
   const hit = loaded.get(name);
   if (hit) return hit;
-  const mod = FONTS[name];
+  const mod = (FONTS as Record<string, FontModule>)[name];
   if (!mod) {
     const fallback = `"${name}", Inter, system-ui, sans-serif`;
     loaded.set(name, fallback);

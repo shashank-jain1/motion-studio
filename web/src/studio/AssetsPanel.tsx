@@ -58,14 +58,14 @@ export const AssetsPanel = () => {
       onDragOver={(e) => { if (e.dataTransfer.types.includes("Files")) e.preventDefault(); }}
       onDragLeave={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setDrag(false); }}
       onDrop={(e) => { e.preventDefault(); setDrag(false); if (e.dataTransfer.files.length) void upload(e.dataTransfer.files); }}>
-      <input ref={inputRef} type="file" multiple hidden accept="image/*,video/*,audio/*,.svg,.json,.lottie"
+      <input ref={inputRef} type="file" multiple hidden accept="image/*,video/*,audio/*,.svg,.json,.lottie,.ttf,.otf,.woff,.woff2"
         onChange={(e) => { if (e.target.files?.length) void upload(e.target.files); e.target.value = ""; }} />
 
       <button className={`dropzone ${drag ? "is-drag" : ""}`} onClick={() => inputRef.current?.click()}>
         <span className="dropzone-icon"><IconUpload size={16} /></span>
         <span className="dropzone-text">
           <strong>{drag ? "Release to ingest" : "Ingest — drop files or browse"}</strong>
-          <span className="mono">SVG LOGO · PNG · JPG · MP4 · MP3 · LOTTIE</span>
+          <span className="mono">SVG LOGO · IMAGES · VIDEO · AUDIO · FONTS · LOTTIE</span>
         </span>
       </button>
 
@@ -106,7 +106,7 @@ const AssetTile = ({ a, onOpen, onMention, onDelete }: { a: Asset; onOpen: () =>
         {a.kind === "image" && <img src={a.url} alt="" loading="lazy" />}
         {a.kind === "video" && <video ref={vref} src={`${a.url}#t=0.1`} muted loop playsInline preload="metadata" />}
         {a.kind === "audio" && <div className="asset-audio"><IconMusic size={16} /><Wave seed={name} />{a.duration != null && <span>{fmtDuration(a.duration)}</span>}</div>}
-        {(a.kind === "lottie" || a.kind === "other") && <div className="asset-audio"><IconFile size={16} /><span>{a.kind}</span></div>}
+        {(a.kind === "lottie" || a.kind === "font" || a.kind === "other") && <div className="asset-audio"><IconFile size={16} /><span>{a.kind}</span></div>}
         {isLogo(a) && <span className="asset-badge mono">LOGO</span>}
         {a.kind === "video" && a.duration != null && <span className="asset-badge right mono">{fmtDuration(a.duration)}</span>}
       </button>

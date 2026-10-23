@@ -1,0 +1,279 @@
+{
+  "projectId": "motion-with-meaning-editorial-film-2f71",
+  "file": "/Users/shashank/motion-studio/showcase/design-film.mp4",
+  "seconds": 20.01,
+  "streams": [
+    {
+      "codec_name": "h264",
+      "codec_type": "video",
+      "width": 1920,
+      "height": 1080,
+      "r_frame_rate": "30/1",
+      "nb_frames": "600",
+      "side_data_list": [
+        {}
+      ]
+    },
+    {
+      "codec_name": "aac",
+      "codec_type": "audio",
+      "r_frame_rate": "0/0",
+      "nb_frames": "939"
+    }
+  ],
+  "loudness": {
+    "lufs": -23.91,
+    "truePeak": -1.05
+  },
+  "checkedCues": 14,
+  "syncPassed": true,
+  "cues": [
+    {
+      "role": "move",
+      "reason": "motion accent make (0.4)",
+      "expectedFrame": 12,
+      "offsetMs": 0,
+      "offsetFrames": 0,
+      "correlation": 0.99,
+      "passed": true
+    },
+    {
+      "role": "move",
+      "reason": "keyframe velocity peak select-pointer",
+      "expectedFrame": 27,
+      "offsetMs": 0,
+      "offsetFrames": 0,
+      "correlation": 0.993,
+      "passed": true
+    },
+    {
+      "role": "click",
+      "reason": "cursor press select-pointer",
+      "expectedFrame": 38,
+      "offsetMs": 0.3,
+      "offsetFrames": 0.01,
+      "correlation": 0.996,
+      "passed": true
+    },
+    {
+      "role": "move",
+      "reason": "keyframe velocity peak select-pointer",
+      "expectedFrame": 87,
+      "offsetMs": 0,
+      "offsetFrames": 0,
+      "correlation": 0.993,
+      "passed": true
+    },
+    {
+      "role": "move",
+      "reason": "motion accent draw-spark (0.5)",
+      "expectedFrame": 105,
+      "offsetMs": 13.3,
+      "offsetFrames": 0.4,
+      "correlation": 0.993,
+      "passed": true
+    },
+    {
+      "role": "impact",
+      "reason": "motion accent draw-spark (1.27)",
+      "expectedFrame": 128,
+      "offsetMs": -10.2,
+      "offsetFrames": -0.31,
+      "correlation": 0.996,
+      "passed": true
+    },
+    {
+      "role": "click",
+      "reason": "toggle on intention-switch",
+      "expectedFrame": 219,
+      "offsetMs": 0,
+      "offsetFrames": 0,
+      "correlation": 1,
+      "passed": true
+    },
+    {
+      "role": "move",
+      "reason": "motion accent deliverable-0 (0.2)",
+      "expectedFrame": 276,
+      "offsetMs": 9.3,
+      "offsetFrames": 0.28,
+      "correlation": 0.988,
+      "passed": true
+    },
+    {
+      "role": "move",
+      "reason": "motion accent deliverable-1 (0.2)",
+      "expectedFrame": 312,
+      "offsetMs": 7.5,
+      "offsetFrames": 0.22,
+      "correlation": 0.989,
+      "passed": true
+    },
+    {
+      "role": "move",
+      "reason": "motion accent deliverable-2 (0.2)",
+      "expectedFrame": 348,
+      "offsetMs": -10.4,
+      "offsetFrames": -0.31,
+      "correlation": 0.991,
+      "passed": true
+    },
+    {
+      "role": "move",
+      "reason": "motion accent process-rail (0.4)",
+      "expectedFrame": 390,
+      "offsetMs": 0,
+      "offsetFrames": 0,
+      "correlation": 0.978,
+      "passed": true
+    },
+    {
+      "role": "move",
+      "reason": "motion accent process-rail (1.2)",
+      "expectedFrame": 414,
+      "offsetMs": 0,
+      "offsetFrames": 0,
+      "correlation": 0.99,
+      "passed": true
+    },
+    {
+      "role": "impact",
+      "reason": "motion accent process-rail (2.8)",
+      "expectedFrame": 462,
+      "offsetMs": -13.7,
+      "offsetFrames": -0.41,
+      "correlation": 0.999,
+      "passed": true
+    },
+    {
+      "role": "logoHit",
+      "reason": "motion accent signature (0.6)",
+      "expectedFrame": 498,
+      "offsetMs": -13.7,
+      "offsetFrames": -0.41,
+      "correlation": 0.972,
+      "passed": true
+    }
+  ],
+  "checkedBridges": 13,
+  "bridges": [
+    {
+      "role": "bridge",
+      "reason": "carry move decay into move anticipation",
+      "expectedFrame": 19,
+      "offsetMs": -2,
+      "offsetFrames": -0.06,
+      "correlation": 0.285,
+      "passed": false
+    },
+    {
+      "role": "bridge",
+      "reason": "carry move decay into click anticipation",
+      "expectedFrame": 32,
+      "offsetMs": -2,
+      "offsetFrames": -0.06,
+      "correlation": 0.703,
+      "passed": true
+    },
+    {
+      "role": "bridge",
+      "reason": "carry click decay into move anticipation",
+      "expectedFrame": 62,
+      "offsetMs": -1.7,
+      "offsetFrames": -0.05,
+      "correlation": 1,
+      "passed": true
+    },
+    {
+      "role": "bridge",
+      "reason": "carry move decay into move anticipation",
+      "expectedFrame": 96,
+      "offsetMs": -2,
+      "offsetFrames": -0.06,
+      "correlation": 0.49,
+      "passed": false
+    },
+    {
+      "role": "bridge",
+      "reason": "carry move decay into impact anticipation",
+      "expectedFrame": 116,
+      "offsetMs": -2,
+      "offsetFrames": -0.06,
+      "correlation": 0.998,
+      "passed": true
+    },
+    {
+      "role": "bridge",
+      "reason": "carry impact decay into click anticipation",
+      "expectedFrame": 173,
+      "offsetMs": -1.7,
+      "offsetFrames": -0.05,
+      "correlation": 1,
+      "passed": true
+    },
+    {
+      "role": "bridge",
+      "reason": "carry click decay into move anticipation",
+      "expectedFrame": 247,
+      "offsetMs": -2,
+      "offsetFrames": -0.06,
+      "correlation": 1,
+      "passed": true
+    },
+    {
+      "role": "bridge",
+      "reason": "carry move decay into move anticipation",
+      "expectedFrame": 294,
+      "offsetMs": -2,
+      "offsetFrames": -0.06,
+      "correlation": 1,
+      "passed": true
+    },
+    {
+      "role": "bridge",
+      "reason": "carry move decay into move anticipation",
+      "expectedFrame": 330,
+      "offsetMs": -2,
+      "offsetFrames": -0.06,
+      "correlation": 0.992,
+      "passed": true
+    },
+    {
+      "role": "bridge",
+      "reason": "carry move decay into move anticipation",
+      "expectedFrame": 369,
+      "offsetMs": -2,
+      "offsetFrames": -0.06,
+      "correlation": 1,
+      "passed": true
+    },
+    {
+      "role": "bridge",
+      "reason": "carry move decay into move anticipation",
+      "expectedFrame": 402,
+      "offsetMs": -2,
+      "offsetFrames": -0.06,
+      "correlation": 0.527,
+      "passed": false
+    },
+    {
+      "role": "bridge",
+      "reason": "carry move decay into impact anticipation",
+      "expectedFrame": 430,
+      "offsetMs": -2,
+      "offsetFrames": -0.06,
+      "correlation": 1,
+      "passed": true
+    },
+    {
+      "role": "bridge",
+      "reason": "carry impact decay into logoHit anticipation",
+      "expectedFrame": 472,
+      "offsetMs": -62.1,
+      "offsetFrames": -1.86,
+      "correlation": 0.175,
+      "passed": false
+    }
+  ],
+  "limitations": "Compares baked cues against the CURRENT spec; imported/manual audio is not correlated. Low correlation can indicate overlap or an outdated spec. This is technical timing evidence, not a listening review."
+}

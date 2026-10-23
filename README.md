@@ -41,7 +41,7 @@ pnpm cli render <projectId> --final
 
 `get_guide`, `list_styles`, `create_project`, `list_projects`, `get_project`, `add_asset`, `analyze_logo`, `analyze_audio`, `set_spec`,
 `get_spec`, `update_scene`, `preview_frames`, `render_video`, `write_custom_component`, `list_custom_components`,
-`open_studio_hint`, `motion_recipes`, `build_motion_scene`, `build_motion_sequence`, `inspect_sound`, `inspect_render_sound`.
+`open_studio_hint`, `motion_recipes`, `build_motion_scene`, `build_motion_sequence`, `build_design_film`, `inspect_video_reference`, `inspect_sound`, `inspect_render_sound`, `list_fonts`, `import_font`, `register_font`.
 
 The AI's craft knowledge lives in [docs/DIRECTOR_GUIDE.md](docs/DIRECTOR_GUIDE.md) and the spec format in
 [docs/KIT_REFERENCE.md](docs/KIT_REFERENCE.md); both are served by `get_guide`.
@@ -53,6 +53,10 @@ Premium motion workflow: [Motion and sound playbook](docs/MOTION_PLAYBOOK.md). T
 Run `npm run test:motion` for timing contracts and `npm run showcase:motion` for an eight-shot motion/audio lab (new project, draft MP4, frames and cue report).
 
 Continuous films: `npm run showcase:continuity` builds a persistent 3D hero with connected sonic phrases and an isolated/connected audio comparison. [Studio research](docs/research/08-studio-motion-and-sonic-continuity.md) explains the family-cohesion, sound bridges and continuous spline motion. `npm run verify:motion` includes the continuity regression suite.
+
+Editorial films: `npm run showcase:design` creates an original 20-second design film with native cursor/selection/toggle layers, pen tracing, draw-to-fill vectors, contrast compositing and linked sound. `inspect_video_reference` examines imported footage at chosen timestamps before planning a comparable film. [Reference analysis and coverage](docs/research/09-editorial-reference-upgrade.md) documents the comparison and its limits.
+
+Typography: put your font files in [`fonts/inbox/`](fonts/inbox/). `list_fonts` discovers them; `import_font` copies and registers selected faces in a project. Fonts can also be uploaded in Assets and registered with `register_font`. Five cinematic pairings and four style presets are built in. `npm run showcase:design -- --cinematic` renders the serif/body revision separately. See [typography guidance](docs/TYPOGRAPHY.md) for formats, weight/style handling, custom outlines and the Instagram reference.
 
 - Rendering is local: no API keys, no cloud cost. Draft (540p) ≈ 1.5× real time; final 1080p is slower.
 - Set `MOTION_STUDIO_GL=swangle` if WebGL shaders/transitions fail on a machine without a GPU.

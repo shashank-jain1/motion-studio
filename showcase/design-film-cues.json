@@ -1,0 +1,602 @@
+{
+  "projectId": "motion-with-meaning-editorial-film-2f71",
+  "enabled": true,
+  "total": 20,
+  "fps": 30,
+  "brief": "voice precise · mixed · materials plastic/paper · space room · key D minor (brief, conf 1) · energy [0.68, 0.54, 0.58, 0.55, 0.66, 0.88] · variation 0.2 · restraint 0.45",
+  "cues": [
+    {
+      "frame": 12,
+      "peak": 0.4,
+      "start": 0,
+      "end": 0.775,
+      "role": "move",
+      "importance": "structural",
+      "volume": 0.477,
+      "pan": 0,
+      "locked": true,
+      "syncErrorFrames": 0,
+      "layers": [
+        "A:air",
+        "W:paper-slide-4@+0.1"
+      ],
+      "reason": "motion accent make (0.4)",
+      "family": "paper-slide"
+    },
+    {
+      "frame": 27,
+      "peak": 0.9,
+      "start": 0.5,
+      "end": 1.2149999999999999,
+      "role": "move",
+      "importance": "supporting",
+      "volume": 0.477,
+      "pan": 0.3031,
+      "locked": true,
+      "syncErrorFrames": 0,
+      "layers": [
+        "A:air"
+      ],
+      "reason": "keyframe velocity peak select-pointer",
+      "family": "synth:air"
+    },
+    {
+      "frame": 38,
+      "peak": 1.2667,
+      "start": 1.2667,
+      "end": 1.3839,
+      "role": "click",
+      "importance": "supporting",
+      "volume": 0.4388,
+      "pan": 0,
+      "locked": true,
+      "syncErrorFrames": 0,
+      "layers": [
+        "T:ui-click-1@-0.0"
+      ],
+      "reason": "cursor press select-pointer",
+      "family": "ui-click"
+    },
+    {
+      "frame": 87,
+      "peak": 2.9,
+      "start": 2.367,
+      "end": 3.271,
+      "role": "move",
+      "importance": "supporting",
+      "volume": 0.477,
+      "pan": 0.5125,
+      "locked": true,
+      "syncErrorFrames": 0,
+      "layers": [
+        "A:air"
+      ],
+      "reason": "keyframe velocity peak select-pointer",
+      "family": "synth:air"
+    },
+    {
+      "frame": 105,
+      "peak": 3.5,
+      "start": 2.9867,
+      "end": 3.875,
+      "role": "move",
+      "importance": "structural",
+      "volume": 0.456,
+      "pan": 0.2063,
+      "locked": true,
+      "syncErrorFrames": 0,
+      "layers": [
+        "A:air",
+        "W:paper-slide-1@+0.2"
+      ],
+      "reason": "motion accent draw-spark (0.5)",
+      "family": "paper-slide"
+    },
+    {
+      "frame": 128,
+      "peak": 4.2667,
+      "start": 3.8102,
+      "end": 4.707,
+      "role": "impact",
+      "importance": "structural",
+      "volume": 0.456,
+      "pan": 0.2063,
+      "locked": true,
+      "syncErrorFrames": 0,
+      "layers": [
+        "B:card-place-2@-0.1",
+        "T:ui-click-2@-0.0"
+      ],
+      "reason": "motion accent draw-spark (1.27)",
+      "family": "card-place"
+    },
+    {
+      "frame": 219,
+      "peak": 7.3,
+      "start": 7.3,
+      "end": 7.327,
+      "role": "click",
+      "importance": "supporting",
+      "volume": 0.425,
+      "pan": 0,
+      "locked": true,
+      "syncErrorFrames": 0,
+      "layers": [
+        "T:ui-click-3@+0.1"
+      ],
+      "reason": "toggle on intention-switch",
+      "family": "ui-click"
+    },
+    {
+      "frame": 276,
+      "peak": 9.2,
+      "start": 8.9577,
+      "end": 9.575000000000001,
+      "role": "move",
+      "importance": "structural",
+      "volume": 0.2745,
+      "pan": 0,
+      "locked": true,
+      "syncErrorFrames": 0,
+      "layers": [
+        "A:air",
+        "W:paper-slide-3@+0.1"
+      ],
+      "reason": "motion accent deliverable-0 (0.2)",
+      "family": "paper-slide"
+    },
+    {
+      "frame": 312,
+      "peak": 10.4,
+      "start": 10.0255,
+      "end": 10.774999999999999,
+      "role": "move",
+      "importance": "structural",
+      "volume": 0.2745,
+      "pan": 0,
+      "locked": true,
+      "syncErrorFrames": 0,
+      "layers": [
+        "A:air",
+        "W:paper-slide-4@+0.2"
+      ],
+      "reason": "motion accent deliverable-1 (0.2)",
+      "family": "paper-slide"
+    },
+    {
+      "frame": 348,
+      "peak": 11.6,
+      "start": 11.0774,
+      "end": 11.975000000000001,
+      "role": "move",
+      "importance": "structural",
+      "volume": 0.2745,
+      "pan": 0,
+      "locked": true,
+      "syncErrorFrames": 0,
+      "layers": [
+        "A:air",
+        "W:paper-slide-1@-0.2"
+      ],
+      "reason": "motion accent deliverable-2 (0.2)",
+      "family": "paper-slide"
+    },
+    {
+      "frame": 390,
+      "peak": 13,
+      "start": 12.6,
+      "end": 13.431,
+      "role": "move",
+      "importance": "structural",
+      "volume": 0.2844,
+      "pan": -0.4125,
+      "locked": true,
+      "syncErrorFrames": 0,
+      "layers": [
+        "A:air",
+        "W:paper-slide-3@-0.1"
+      ],
+      "reason": "motion accent process-rail (0.4)",
+      "family": "paper-slide"
+    },
+    {
+      "frame": 414,
+      "peak": 13.8,
+      "start": 12.6,
+      "end": 14.231,
+      "role": "move",
+      "importance": "structural",
+      "volume": 0.2844,
+      "pan": -0.4125,
+      "locked": true,
+      "syncErrorFrames": 0,
+      "layers": [
+        "A:air",
+        "W:paper-slide-1@-0.2"
+      ],
+      "reason": "motion accent process-rail (1.2)",
+      "family": "paper-slide"
+    },
+    {
+      "frame": 462,
+      "peak": 15.4,
+      "start": 14.8137,
+      "end": 17.016000000000002,
+      "role": "impact",
+      "importance": "hero",
+      "volume": 1,
+      "pan": -0.4125,
+      "locked": true,
+      "syncErrorFrames": 0,
+      "layers": [
+        "B:card-place-3@-1.0",
+        "T:ui-click-1",
+        "S:sub(D2)",
+        "Tl:shimmer(D6 F6 G6 A6 C6)",
+        "R:swell(D4)"
+      ],
+      "reason": "motion accent process-rail (2.8)",
+      "family": "card-place"
+    },
+    {
+      "frame": 498,
+      "peak": 16.6,
+      "start": 16.0137,
+      "end": 18.818,
+      "role": "logoHit",
+      "importance": "hero",
+      "volume": 1,
+      "pan": -0.3531,
+      "locked": true,
+      "syncErrorFrames": 0,
+      "layers": [
+        "SIG:ping(D6 A5 Bb5 D6)",
+        "B:card-place-1",
+        "S:sub(D2)",
+        "A:air",
+        "R:swell(D4)"
+      ],
+      "reason": "motion accent signature (0.6)",
+      "family": "card-place"
+    }
+  ],
+  "manual": [],
+  "mix": [
+    {
+      "kind": "stopdown",
+      "from": 14.825,
+      "to": 15.39,
+      "depth": 0.708,
+      "release": 0.18,
+      "reason": "stopdown before hero (motion accent process-rail (2.8))"
+    },
+    {
+      "kind": "stopdown",
+      "from": 16.025,
+      "to": 16.59,
+      "depth": 0.708,
+      "release": 0.18,
+      "reason": "stopdown before hero (motion accent signature (0.6))"
+    }
+  ],
+  "dropped": [],
+  "warnings": [],
+  "beats": [],
+  "bridges": [
+    {
+      "id": "bridge-1",
+      "at": 0.43500000000000005,
+      "dur": 0.42499999999999993,
+      "peak": 0.6475,
+      "volume": 0.16,
+      "priority": -1,
+      "role": "bridge",
+      "duck": 0,
+      "from": 0.4,
+      "to": 0.9,
+      "family": "paper-slide → synth:air",
+      "reason": "carry move decay into move anticipation",
+      "layers": [
+        "tail:paper-slide-4",
+        "phase-continuous thread"
+      ]
+    },
+    {
+      "id": "bridge-2",
+      "at": 0.935,
+      "dur": 0.29169999999999985,
+      "peak": 1.0808499999999999,
+      "volume": 0.16,
+      "priority": -1,
+      "role": "bridge",
+      "duck": 0,
+      "from": 0.9,
+      "to": 1.2667,
+      "family": "synth:air → ui-click",
+      "reason": "carry move decay into click anticipation",
+      "layers": [
+        "prelap:ui-click-1",
+        "phase-continuous thread"
+      ]
+    },
+    {
+      "id": "bridge-3",
+      "at": 1.3016999999999999,
+      "dur": 1.5583,
+      "peak": 2.08085,
+      "volume": 0.16,
+      "priority": -1,
+      "role": "bridge",
+      "duck": 0,
+      "from": 1.2667,
+      "to": 2.9,
+      "family": "ui-click → synth:air",
+      "reason": "carry click decay into move anticipation",
+      "layers": [
+        "tail:ui-click-1",
+        "phase-continuous thread"
+      ]
+    },
+    {
+      "id": "bridge-4",
+      "at": 2.935,
+      "dur": 0.5249999999999999,
+      "peak": 3.1975,
+      "volume": 0.16,
+      "priority": -1,
+      "role": "bridge",
+      "duck": 0,
+      "from": 2.9,
+      "to": 3.5,
+      "family": "synth:air → paper-slide",
+      "reason": "carry move decay into move anticipation",
+      "layers": [
+        "prelap:paper-slide-1",
+        "phase-continuous thread"
+      ]
+    },
+    {
+      "id": "bridge-5",
+      "at": 3.535,
+      "dur": 0.6917,
+      "peak": 3.88085,
+      "volume": 0.16,
+      "priority": -1,
+      "role": "bridge",
+      "duck": 0,
+      "from": 3.5,
+      "to": 4.2667,
+      "family": "paper-slide → card-place",
+      "reason": "carry move decay into impact anticipation",
+      "layers": [
+        "tail:paper-slide-1",
+        "prelap:card-place-2",
+        "phase-continuous thread"
+      ]
+    },
+    {
+      "id": "bridge-6",
+      "at": 4.3017,
+      "dur": 2.9582999999999995,
+      "peak": 5.78085,
+      "volume": 0.16,
+      "priority": -1,
+      "role": "bridge",
+      "duck": 0,
+      "from": 4.2667,
+      "to": 7.3,
+      "family": "card-place → ui-click",
+      "reason": "carry impact decay into click anticipation",
+      "layers": [
+        "tail:card-place-2",
+        "prelap:ui-click-3",
+        "phase-continuous thread"
+      ]
+    },
+    {
+      "id": "bridge-7",
+      "at": 7.335,
+      "dur": 1.8250000000000002,
+      "peak": 8.2475,
+      "volume": 0.16,
+      "priority": -1,
+      "role": "bridge",
+      "duck": 0,
+      "from": 7.3,
+      "to": 9.2,
+      "family": "ui-click → paper-slide",
+      "reason": "carry click decay into move anticipation",
+      "layers": [
+        "prelap:paper-slide-3",
+        "phase-continuous thread"
+      ]
+    },
+    {
+      "id": "bridge-8",
+      "at": 9.235,
+      "dur": 1.1250000000000018,
+      "peak": 9.7975,
+      "volume": 0.16,
+      "priority": -1,
+      "role": "bridge",
+      "duck": 0,
+      "from": 9.2,
+      "to": 10.4,
+      "family": "paper-slide → paper-slide",
+      "reason": "carry move decay into move anticipation",
+      "layers": [
+        "tail:paper-slide-3",
+        "prelap:paper-slide-4",
+        "phase-continuous thread"
+      ]
+    },
+    {
+      "id": "bridge-9",
+      "at": 10.435,
+      "dur": 1.125,
+      "peak": 10.9975,
+      "volume": 0.16,
+      "priority": -1,
+      "role": "bridge",
+      "duck": 0,
+      "from": 10.4,
+      "to": 11.6,
+      "family": "paper-slide → paper-slide",
+      "reason": "carry move decay into move anticipation",
+      "layers": [
+        "tail:paper-slide-4",
+        "prelap:paper-slide-1",
+        "phase-continuous thread"
+      ]
+    },
+    {
+      "id": "bridge-10",
+      "at": 11.635,
+      "dur": 1.325000000000001,
+      "peak": 12.2975,
+      "volume": 0.16,
+      "priority": -1,
+      "role": "bridge",
+      "duck": 0,
+      "from": 11.6,
+      "to": 13,
+      "family": "paper-slide → paper-slide",
+      "reason": "carry move decay into move anticipation",
+      "layers": [
+        "tail:paper-slide-1",
+        "prelap:paper-slide-3",
+        "phase-continuous thread"
+      ]
+    },
+    {
+      "id": "bridge-11",
+      "at": 13.035,
+      "dur": 0.7250000000000014,
+      "peak": 13.3975,
+      "volume": 0.16,
+      "priority": -1,
+      "role": "bridge",
+      "duck": 0,
+      "from": 13,
+      "to": 13.8,
+      "family": "paper-slide → paper-slide",
+      "reason": "carry move decay into move anticipation",
+      "layers": [
+        "tail:paper-slide-3",
+        "prelap:paper-slide-1",
+        "phase-continuous thread"
+      ]
+    },
+    {
+      "id": "bridge-12",
+      "at": 13.835,
+      "dur": 0.9900000000000002,
+      "peak": 14.330000000000002,
+      "volume": 0.16,
+      "priority": -1,
+      "role": "bridge",
+      "duck": 0,
+      "from": 13.8,
+      "to": 15.4,
+      "family": "paper-slide → card-place",
+      "reason": "carry move decay into impact anticipation",
+      "layers": [
+        "tail:paper-slide-1",
+        "phase-continuous thread"
+      ]
+    },
+    {
+      "id": "bridge-13",
+      "at": 15.435,
+      "dur": 0.5900000000000016,
+      "peak": 15.73,
+      "volume": 0.16,
+      "priority": -1,
+      "role": "bridge",
+      "duck": 0,
+      "from": 15.4,
+      "to": 16.6,
+      "family": "card-place → card-place",
+      "reason": "carry impact decay into logoHit anticipation",
+      "layers": [
+        "tail:card-place-3",
+        "phase-continuous thread"
+      ]
+    }
+  ],
+  "phrases": [
+    {
+      "id": "phrase-1",
+      "from": 0,
+      "to": 18.818,
+      "cueFrames": [
+        12,
+        27,
+        38,
+        87,
+        105,
+        128,
+        219,
+        276,
+        312,
+        348,
+        390,
+        414,
+        462,
+        498
+      ],
+      "families": [
+        "paper-slide",
+        "synth:air",
+        "ui-click",
+        "card-place"
+      ],
+      "bridges": 13
+    }
+  ],
+  "previewTimes": [
+    0.3333333333333333,
+    0.4,
+    0.4666666666666667,
+    0.8333333333333334,
+    0.9,
+    0.9666666666666667,
+    1.2,
+    1.2666666666666666,
+    1.3333333333333333,
+    2.8333333333333335,
+    2.9,
+    2.966666666666667,
+    3.433333333333333,
+    3.5,
+    3.566666666666667,
+    4.2,
+    4.266666666666667,
+    4.333333333333333,
+    7.233333333333333,
+    7.3,
+    7.366666666666666,
+    9.133333333333333,
+    9.2,
+    9.266666666666667,
+    10.333333333333334,
+    10.4,
+    10.466666666666667,
+    11.533333333333333,
+    11.6,
+    11.666666666666666,
+    12.933333333333334,
+    13,
+    13.066666666666666,
+    13.733333333333333,
+    13.8,
+    13.866666666666667,
+    15.333333333333334,
+    15.4,
+    15.466666666666667,
+    16.533333333333335,
+    16.6,
+    16.666666666666668
+  ],
+  "review": "Inspect contact ±2 frames, then play the rendered MP4 with audio. Planner timing does not measure exported PCM sync or perceived sound quality."
+}

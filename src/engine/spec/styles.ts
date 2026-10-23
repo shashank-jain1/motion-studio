@@ -10,6 +10,30 @@ export type StylePreset = {
 };
 
 export const STYLES: Record<string, StylePreset> = {
+  "cinematic-editorial": {
+    description: "Expressive editorial film titles: sculptural serif, warm paper, aubergine ink; pair italic moments with restrained sans labels.",
+    fonts: { display: "Cormorant Garamond", body: "Space Grotesk", mono: "JetBrains Mono" },
+    colors: { bg: "#eee7db", fg: "#241c2b", muted: "#817681", accent: "#9b4c48", accent2: "#bdab8b", card: "#f6f0e6" },
+    fx: { grain: 0.08, vignette: 0.16 },
+  },
+  "cinematic-monumental": {
+    description: "Monumental film titles: restrained Roman capitals, wide tracking, warm gold on ink. Use medium weights and generous holds.",
+    fonts: { display: "Cinzel", body: "Manrope", mono: "JetBrains Mono" },
+    colors: { bg: "#111310", fg: "#e9dfc7", muted: "#a29a87", accent: "#c8aa72", accent2: "#616d5e", card: "#1b1d19" },
+    fx: { grain: 0.08, vignette: 0.35 },
+  },
+  "cinematic-fashion": {
+    description: "High-contrast fashion titles: large Bodoni letterforms, ivory and oxblood, fine rules and spacious pacing.",
+    fonts: { display: "Bodoni Moda", body: "Manrope", mono: "JetBrains Mono" },
+    colors: { bg: "#eae4da", fg: "#341a20", muted: "#8c7577", accent: "#7e233a", accent2: "#ad9e84", card: "#f2ede6" },
+    fx: { grain: 0.07 },
+  },
+  "cinematic-condensed": {
+    description: "Contemporary title sequence: tall condensed type, acid accents on charcoal, decisive cuts and quiet supporting labels.",
+    fonts: { display: "League Gothic", body: "DM Sans", mono: "JetBrains Mono" },
+    colors: { bg: "#171717", fg: "#ece9df", muted: "#8e8c86", accent: "#d9f77a", accent2: "#998bb6", card: "#252525" },
+    fx: { grain: 0.08 },
+  },
   apple: {
     description: "Clean Apple-keynote look: white/soft-grey, tight sans, deep shadows, restrained color. Product launches, fintech, SaaS.",
     fonts: { display: "Inter", body: "Inter", mono: "JetBrains Mono" },
