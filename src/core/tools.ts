@@ -32,8 +32,12 @@ import {
   readSpec,
   updateScene,
   writeSpec,
+  listSpecVersions,
+  getSpecVersion,
+  restoreSpecVersion,
   type ValidationResult,
 } from "./projects";
+import { authorLabel, type SpecAuthor, type VersionMeta } from "./versions";
 import { thumbnail, type AssetInfo } from "./probe";
 import { ensureLogoAnalysis, logoJsonPath, logoSummary, renderLogoPreviewPng, LOGO_ORDERS, type LogoBrief } from "./logo";
 import { analyzeAudio } from "./audio";
@@ -115,7 +119,11 @@ export type ToolContext = {
   onProgress?: (p: ToolProgress) => void;
   /** User / mode scoping (web server, remote MCP). Absent = trusted local caller (MCP stdio, CLI): everything allowed. */
   policy?: ToolPolicy;
+  /** Who is calling, recorded on every spec version this call writes (default: an MCP client). */
+  author?: SpecAuthor;
 };
+
+const authorOf = (ctx: ToolContext): SpecAuthor => ctx.author ?? { kind: "mcp" };
 
 /**
  * Scoping hooks injected by multi-user transports (src/server/scope.ts → toolPolicyFor(user)).
@@ -228,7 +236,7 @@ export const formatValidation = (res: ValidationResult): string => {
     return ["INVALID — spec was NOT saved. Fix these and call again:", ...res.errors.map((e) => `  • ${e}`)].join("\n");
   }
   return [
-    `OK — spec ${res.written ? "saved" : "is valid"}. Total duration: ${res.durationSeconds.toFixed(2)}s.`,
+    `OK — spec ${res.written ? "saved" : "is valid"}${res.version ? ` as version ${res.version.n} (${res.version.summary})` : ""}. Total duration: ${res.durationSeconds.toFixed(2)}s.`,
     res.warnings.length ? `Warnings (${res.warnings.length}):\n${res.warnings.map((w) => `  • ${w}`).join("\n")}` : "No warnings.",
     res.written ? "Next: preview_frames to look at it." : "",
   ]
@@ -654,7 +662,7 @@ export const TOOLS: ToolDef[] = [
       style: z.enum(["normal", "italic", "oblique"]).optional(), role: z.enum(["display", "body", "mono"]).optional() },
     handler: async ({ projectId, file, ...options }, ctx) => {
       if (isHosted(ctx)) throw new Error("Upload fonts into this project and use register_font.");
-      const result = await importLibraryFont(projectId, file, options);
+      const result = await importLibraryFont(projectId, file, { ...options, author: authorOf(ctx) });
       return { content: [json(result)], events: result.saved ? specEvent(projectId, { ok: true, durationSeconds: computeTimeline(loadSpec(projectId)).total, warnings: result.warnings, written: true }) : [], summary: `Imported ${result.face.family}` };
     },
   }),
@@ -663,8 +671,8 @@ export const TOOLS: ToolDef[] = [
     description: "Register a TTF/OTF/WOFF/WOFF2 project asset in spec.fontFaces, optionally assign display/body/mono. Reads metadata; family/weight/style overrides are available (especially for WOFF2). TTF/OTF/WOFF also supply morph/3D outlines. WOFF2 is browser text only unless a supported counterpart exists. If the project has no spec yet, returns a face to include in set_spec.",
     shape: { projectId: projectIdField, asset: z.string(), family: z.string().min(1).max(100).optional(), weight: z.union([z.number().int().min(1).max(1000), z.string().regex(/^(?:[1-9]\d{0,2}|1000) (?:[1-9]\d{0,2}|1000)$/)]).optional(),
       style: z.enum(["normal", "italic", "oblique"]).optional(), role: z.enum(["display", "body", "mono"]).optional() },
-    handler: async ({ projectId, asset, ...options }) => {
-      const result = await registerProjectFont(projectId, asset, options);
+    handler: async ({ projectId, asset, ...options }, ctx) => {
+      const result = await registerProjectFont(projectId, asset, { ...options, author: authorOf(ctx) });
       return { content: [json(result)], events: result.saved ? specEvent(projectId, { ok: true, durationSeconds: computeTimeline(loadSpec(projectId)).total, warnings: result.warnings, written: true }) : [], summary: `Registered ${result.face.family}` };
     },
   }),
@@ -1038,8 +1046,41 @@ export const TOOLS: ToolDef[] = [
     handler: async ({ projectId, spec }, ctx) => {
       const value = parseMaybeJson(spec, "spec");
       if (isHosted(ctx)) await assertSpecSafe(value);
-      const res = await writeSpec(projectId, value);
+      const res = await writeSpec(projectId, value, { author: authorOf(ctx) });
       return { content: [text(formatValidation(res))], isError: !res.ok, summary: specResultSummary("Saved spec", res, projectId), events: specEvent(projectId, res) };
+    },
+  }),
+
+  defineTool({
+    name: "list_versions",
+    title: "Version history",
+    scope: "project",
+    description:
+      "List saved versions of the project's spec, newest first: number, time, who saved it (you = the user in the studio, director, an MCP client, template) and what changed. Every set_spec / update_scene / studio save that changes the spec creates a version. Use restore_version to go back (e.g. when the user says 'undo that' or 'go back to the earlier cut').",
+    shape: { projectId: projectIdField, limit: z.number().int().min(1).max(200).optional().describe("default 20") },
+    startSummary: () => "Reading version history",
+    handler: async ({ projectId, limit }) => {
+      const all = listSpecVersions(projectId);
+      const list = all.slice(0, limit ?? 20);
+      if (!list.length) return { content: [text("No versions yet (the history starts with the next saved change).")], summary: "No versions yet" };
+      const line = (v: VersionMeta) => `v${v.n} · ${v.at.replace("T", " ").slice(0, 19)}Z · ${authorLabel(v.author)}${v.restoredFrom ? ` · restored v${v.restoredFrom}` : ""} · ${v.scenes} scenes${v.seconds != null ? ` · ${v.seconds.toFixed(1)}s` : ""}\n    ${v.summary}${v.changes.length ? "\n" + v.changes.slice(0, 4).map((c) => `      - ${c}`).join("\n") : ""}`;
+      return { content: [text(`${all.length} version${all.length === 1 ? "" : "s"} (v${list[0].n} is current):\n${list.map(line).join("\n")}`)], summary: `${plural(all.length, "version")}` };
+    },
+  }),
+
+  defineTool({
+    name: "restore_version",
+    title: "Restore a version",
+    scope: "project",
+    description:
+      "Make an earlier version (from list_versions) the current spec. The restore is itself saved as a new version, so it can be undone too. Then preview_frames to check it.",
+    shape: { projectId: projectIdField, version: z.number().int().min(1).describe("version number, e.g. 12 for v12") },
+    startSummary: (i) => `Restoring v${i.version}`,
+    handler: async ({ projectId, version }, ctx) => {
+      const v = getSpecVersion(projectId, version);
+      if (isHosted(ctx)) await assertSpecSafe(v.spec);
+      const res = await restoreSpecVersion(projectId, version, authorOf(ctx));
+      return { content: [text(formatValidation(res))], isError: !res.ok, summary: specResultSummary(`Restored v${version}`, res, projectId), events: specEvent(projectId, res) };
     },
   }),
 
@@ -1071,7 +1112,7 @@ export const TOOLS: ToolDef[] = [
     handler: async ({ projectId, index, scene }, ctx) => {
       const value = parseMaybeJson(scene, "scene");
       if (isHosted(ctx)) await assertSpecSafe(value);
-      const res = await updateScene(projectId, index, value);
+      const res = await updateScene(projectId, index, value, { author: authorOf(ctx) });
       return {
         content: [text(formatValidation(res))],
         isError: !res.ok,

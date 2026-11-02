@@ -24,8 +24,13 @@ export type TemplateMeta = {
 };
 export type TimelineScene = { index: number; id?: string; start: number; end: number; duration: number; overlapIn: number; transition?: string };
 export type Timeline = { total: number; scenes: TimelineScene[]; actors?: { id: string; from: number; until: number }[] };
+export type AuthorKind = "you" | "director" | "mcp" | "template" | "system";
+export type SpecVersion = {
+  n: number; at: string; author: { kind: AuthorKind; name?: string }; summary: string; changes: string[];
+  scenes: number; seconds?: number; hash: string; bytes: number; restoredFrom?: number; label?: string;
+};
 export type ValidationResult =
-  | { ok: true; durationSeconds: number; warnings: string[] }
+  | { ok: true; durationSeconds: number; warnings: string[]; version?: SpecVersion | null }
   | { ok: false; errors: string[]; warnings: string[] };
 export type LogoSummary = {
   source?: string; parts?: number; subpaths?: number; strokeOnlyParts?: number;
@@ -110,6 +115,9 @@ export const api = {
   project: (id: string, signal?: AbortSignal) => req<ProjectState>("GET", P(id), undefined, signal),
   deleteProject: (id: string) => req<{ ok: true }>("DELETE", P(id)),
   saveSpec: (id: string, spec: unknown) => req<ValidationResult & { timeline?: Timeline }>("PUT", `${P(id)}/spec`, { spec }),
+  versions: (id: string, signal?: AbortSignal) => req<{ versions: SpecVersion[] }>("GET", `${P(id)}/versions`, undefined, signal),
+  version: (id: string, n: number) => req<{ meta: SpecVersion; spec: Record<string, unknown> }>("GET", `${P(id)}/versions/${n}`),
+  restoreVersion: (id: string, n: number) => req<ValidationResult & { timeline?: Timeline; spec?: Record<string, unknown> }>("POST", `${P(id)}/versions/${n}/restore`),
   validate: (id: string, spec: unknown, signal?: AbortSignal) => req<ValidationResult & { timeline?: Timeline }>("POST", `${P(id)}/validate`, { spec }, signal),
   deleteAsset: (id: string, assetPath: string) => req<{ ok: true }>("DELETE", `${P(id)}/assets/${encodeURIComponent(base(assetPath))}`),
   logo: (id: string, assetPath: string) => req<{ summary: LogoSummary; partMapUrl?: string }>("GET", `${P(id)}/logo/${encodeURIComponent(base(assetPath))}`),

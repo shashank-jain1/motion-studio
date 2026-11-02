@@ -1,8 +1,8 @@
 {
   "mcpServers": {
     "motion-studio": {
-      "command": "/home/shashank/motion-studio/node_modules/.bin/tsx",
-      "args": ["/home/shashank/motion-studio/src/mcp/server.ts"]
+      "command": "/Users/shashank/motion-studio/node_modules/.bin/tsx",
+      "args": ["/Users/shashank/motion-studio/src/mcp/server.ts"]
     }
   }
 }

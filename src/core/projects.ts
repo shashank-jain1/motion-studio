@@ -17,6 +17,7 @@ import { probeAsset, type AssetInfo } from "./probe";
 import { analyzeLogoFile, isLogoJson } from "./logo";
 import { syncGlyphs } from "./glyphs";
 import { safeDownload } from "./safe-download";
+import { listVersions, readVersion, recordVersion, type SpecAuthor, type VersionMeta } from "./versions";
 
 export type Format = keyof typeof FORMATS;
 
@@ -29,7 +30,7 @@ export type ProjectInfo = {
 };
 
 export type ValidationResult =
-  | { ok: true; durationSeconds: number; warnings: string[]; written: boolean }
+  | { ok: true; durationSeconds: number; warnings: string[]; written: boolean; version?: VersionMeta | null }
   | { ok: false; errors: string[]; warnings: string[]; written: false };
 
 const MAX_DOWNLOAD_BYTES = 500 * 1024 * 1024;
@@ -289,11 +290,15 @@ export const validateSpec = (id: string, input: unknown): ValidationResult => {
  * Validate and, if valid, write spec.json (stored as given — defaults are applied at render time),
  * except that the project's format is filled in when the spec specifies no format/size.
  * After writing, outlines for "text:" shape sources are added to glyphs.json (problems become warnings).
+ * Every write that changes the spec is recorded in the project's version history (src/core/versions.ts) with `opts.author`.
  */
-export const writeSpec = async (id: string, input: unknown): Promise<ValidationResult> => {
+export type WriteSpecOptions = { author?: SpecAuthor; summary?: string; restoredFrom?: number; label?: string };
+export const writeSpec = async (id: string, input: unknown, opts: WriteSpecOptions = {}): Promise<ValidationResult> => {
   const res = validateSpec(id, input);
   if (!res.ok) return res;
-  const spec = { ...(input as Record<string, unknown>) };
+  let prev: Record<string, unknown> | null = null;
+  try { prev = readSpec(id) as Record<string, unknown> | null; } catch { /* unreadable old spec: no baseline */ }
+  let spec = { ...(input as Record<string, unknown>) };
   if (!spec.format && !(spec.width && spec.height)) {
     // Put format right after version/title for readability.
     const { version, title, ...rest } = spec;
@@ -301,10 +306,35 @@ export const writeSpec = async (id: string, input: unknown): Promise<ValidationR
     if (version !== undefined) ordered.version = version;
     if (title !== undefined) ordered.title = title;
     ordered.format = getProject(id).format;
-    writeJson(specPath(id), { ...ordered, ...rest });
-  } else writeJson(specPath(id), spec);
-  const glyphWarnings = await syncSpecGlyphs(id, input);
-  return { ...res, warnings: [...res.warnings, ...glyphWarnings], written: true };
+    spec = { ...ordered, ...rest };
+  }
+  writeJson(specPath(id), spec);
+  const warnings = [...res.warnings, ...(await syncSpecGlyphs(id, input))];
+  let version: VersionMeta | null = null;
+  try {
+    version = recordVersion(projectDir(id), spec, prev, {
+      author: opts.author ?? { kind: "system" }, seconds: res.durationSeconds, summary: opts.summary, restoredFrom: opts.restoredFrom, label: opts.label,
+    });
+  } catch (e) {
+    warnings.push(`version history: ${(e as Error).message}`);
+  }
+  return { ...res, warnings, written: true, version };
+};
+
+// ---------------------------------------------------------------- version history
+
+export const listSpecVersions = (id: string): VersionMeta[] => listVersions(getProject(id).dir);
+
+export const getSpecVersion = (id: string, n: number) => {
+  const v = readVersion(getProject(id).dir, n);
+  if (!v) throw new Error(`Version ${n} not found in project "${id}". Use list_versions to see the available versions.`);
+  return v;
+};
+
+/** Write version `n` back as the current spec (a NEW version, so the restore itself can be undone). */
+export const restoreSpecVersion = async (id: string, n: number, author: SpecAuthor): Promise<ValidationResult> => {
+  const v = getSpecVersion(id, n);
+  return writeSpec(id, v.spec, { author, restoredFrom: n, summary: `Restored v${n}` });
 };
 
 const syncSpecGlyphs = async (id: string, input: unknown): Promise<string[]> => {
@@ -318,7 +348,7 @@ const syncSpecGlyphs = async (id: string, input: unknown): Promise<string[]> => 
 };
 
 /** Replace scene `index` (0-based; index === scenes.length appends) and validate the whole spec before writing. */
-export const updateScene = async (id: string, index: number, scene: unknown): Promise<ValidationResult> => {
+export const updateScene = async (id: string, index: number, scene: unknown, opts: WriteSpecOptions = {}): Promise<ValidationResult> => {
   const raw = readSpec(id);
   if (!raw) throw new Error(`Project "${id}" has no spec yet. Write one with set_spec first.`);
   const scenes = [...(raw.scenes ?? [])];
@@ -327,7 +357,7 @@ export const updateScene = async (id: string, index: number, scene: unknown): Pr
   }
   // Validated as part of the whole spec (beat strings need the full timeline to resolve).
   scenes[index] = scene as SpecInput["scenes"][number];
-  return writeSpec(id, { ...raw, scenes });
+  return writeSpec(id, { ...raw, scenes }, opts);
 };
 
 // ---------------------------------------------------------------- assets

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { api, ApiError, type Asset, type ProjectState, type RenderInfo, type Settings, type Timeline, type ValidationResult } from "../api";
-import { StudioContext, useStudio, type RightTab, type StudioApi } from "./context";
+import { StudioContext, useStudio, type RightTab, type StudioApi, type VersionPreview } from "./context";
 import { PlayerBus } from "./bus";
 import { analyzeSpec, type ParsedInfo } from "../lib/specInfo";
 import { useToast } from "../components/Toast";
@@ -15,9 +15,14 @@ import { AssetsPanel } from "./AssetsPanel";
 import { SpecPanel } from "./SpecPanel";
 import { RendersPanel } from "./RendersPanel";
 import { SettingsDialog } from "../pages/Settings";
+import { EditPanel } from "./EditPanel";
+import { HistoryPanel } from "./HistoryPanel";
+import { getLayer, parentList, type LayerSel } from "../lib/specEdit";
 import { fmtTC } from "../lib/format";
 
 const pretty = (spec: unknown) => (spec ? JSON.stringify(spec, null, 2) : "");
+const HISTORY_MAX = 100;
+const COALESCE_MS = 900;
 
 const usePersisted = (key: string, initial: number) => {
   const [v, setV] = useState<number>(() => {
@@ -44,7 +49,11 @@ export const Studio = () => {
   const [renders, setRenders] = useState<RenderInfo[]>([]);
   const [selectedScene, setSelectedScene] = useState<number | null>(null);
   const [sceneFocus, setSceneFocus] = useState<{ index: number; nonce: number } | null>(null);
-  const [rightTab, setRightTab] = useState<RightTab>("assets");
+  const [rightTab, setRightTab] = useState<RightTab>("edit");
+  const [selectedLayer, setSelectedLayer] = useState<LayerSel | null>(null);
+  const [specNonce, setSpecNonce] = useState(0);
+  const [versionPreview, setVersionPreviewState] = useState<VersionPreview | null>(null);
+  const previewRef = useRef<VersionPreview | null>(null);
   const [uploaderNonce, setUploaderNonce] = useState(0);
   const [chatRunning, setChatRunning] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -69,7 +78,9 @@ export const Studio = () => {
       setLiveSpec(s.spec); liveRef.current = s.spec ? JSON.stringify(s.spec) : "";
       setValidation(s.validation); setServerTimeline(s.timeline);
       setAssetsState(s.assets); setRenders(s.renders);
-      if (!s.spec) setRightTab("assets");
+      setRightTab(s.spec ? "edit" : "assets");
+      setSelectedLayer(null);
+      clearHistory();
       document.title = `${s.project.name} — Motion Studio`;
     }).catch((e) => { if (e.name !== "AbortError") setLoadError({ message: e.message, status: (e as ApiError).status ?? 0 }); });
     return () => ctl.abort();
@@ -87,26 +98,51 @@ export const Studio = () => {
 
   const dirty = editorText !== savedText;
 
+  // ---- visual edit history (snapshots of the editor text; CodeMirror keeps its own history for typed edits)
+  const undoStack = useRef<string[]>([]);
+  const redoStack = useRef<string[]>([]);
+  const lastEdit = useRef<{ key: string; at: number } | null>(null);
+  const [, setHistVer] = useState(0);
+  const clearHistory = () => { undoStack.current = []; redoStack.current = []; lastEdit.current = null; setHistVer((v) => v + 1); };
+
+  /** Put a text in the editor and preview it at once (the Spec panel's debounced lint re-validates it). */
+  const showText = (text: string) => {
+    editorRef.current = text;
+    setEditorTextState(text);
+    try { const spec = JSON.parse(text); if (spec && typeof spec === "object") setDraftSpec(spec); } catch { /* invalid JSON stays in the editor */ }
+  };
+
   const setDraftSpec = useCallback((spec: Record<string, unknown> | null, v?: ValidationResult | null) => {
     const key = spec ? JSON.stringify(spec) : "";
     if (key !== liveRef.current) { liveRef.current = key; setLiveSpec(spec); }
     if (v !== undefined) setValidation(v);
   }, []);
 
-  const applyServerSpec = useCallback((spec: Record<string, unknown>, timeline?: Timeline | null) => {
+  const applyServerSpec = useCallback((spec: Record<string, unknown>, timeline?: Timeline | null, opts?: { force?: boolean }) => {
     const txt = pretty(spec);
     const wasDirty = editorRef.current !== savedRef.current;
     setSavedText(txt);
-    if (!wasDirty || editorRef.current === txt) setEditorTextState(txt);
+    // The director replaced the film: visual undo steps no longer apply to this text.
+    if (opts?.force || !wasDirty || editorRef.current === txt) { setEditorTextState(txt); editorRef.current = txt; clearHistory(); setConflict(false); }
     else setConflict(true);
     const key = JSON.stringify(spec);
-    if (key !== liveRef.current) { liveRef.current = key; setLiveSpec(spec); }
+    // while a past version is on screen, keep showing it; leaving the preview shows the new spec
+    if (!previewRef.current && key !== liveRef.current) { liveRef.current = key; setLiveSpec(spec); }
     if (timeline) setServerTimeline(timeline);
+    setSpecNonce((v) => v + 1);
   }, []);
+
+  /** Show a past version in the viewer (read-only); null returns to the editor's spec. */
+  const setVersionPreview = useCallback((v: VersionPreview | null) => {
+    previewRef.current = v;
+    setVersionPreviewState(v);
+    if (v) { setSelectedLayer(null); setDraftSpec(v.spec); return; }
+    try { const spec = JSON.parse(editorRef.current); if (spec && typeof spec === "object") setDraftSpec(spec); } catch { /* broken JSON: keep last */ }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const resolveConflict = useCallback((keepMine: boolean) => {
     setConflict(false);
-    if (!keepMine) setEditorTextState(savedRef.current);
+    if (!keepMine) { setEditorTextState(savedRef.current); editorRef.current = savedRef.current; clearHistory(); }
   }, []);
 
   const saveEditor = useCallback(async () => {
@@ -121,7 +157,8 @@ export const Studio = () => {
         setValidation(r);
         if (r.timeline) setServerTimeline(r.timeline);
         setDraftSpec(spec);
-        toast.success("Spec saved", `${+r.durationSeconds.toFixed(2)}s${r.warnings.length ? ` · ${r.warnings.length} note${r.warnings.length === 1 ? "" : "s"}` : ""}`);
+        setSpecNonce((v) => v + 1);
+        toast.success(r.version ? `Saved as v${r.version.n}` : "Spec saved", `${+r.durationSeconds.toFixed(2)}s${r.warnings.length ? ` · ${r.warnings.length} note${r.warnings.length === 1 ? "" : "s"}` : ""}`);
         return true;
       }
       setValidation(r);
@@ -132,6 +169,74 @@ export const Studio = () => {
       return false;
     }
   }, [id, toast, setDraftSpec]);
+
+  const editSpec = useCallback((fn: (draft: Record<string, unknown>) => void, coalesce?: string) => {
+    const before = editorRef.current;
+    let draft: Record<string, unknown>;
+    try { draft = JSON.parse(before); } catch {
+      toast.error("Visual edits paused", "The Spec editor has a JSON syntax error. Fix it, then edit again.");
+      return false;
+    }
+    if (!draft || typeof draft !== "object") return false;
+    if (previewRef.current) { previewRef.current = null; setVersionPreviewState(null); }
+    fn(draft);
+    const next = pretty(draft);
+    if (next === before) return true;
+    const now = Date.now();
+    const merge = !!coalesce && lastEdit.current?.key === coalesce && now - lastEdit.current.at < COALESCE_MS && undoStack.current.length > 0;
+    if (!merge) {
+      undoStack.current.push(before);
+      if (undoStack.current.length > HISTORY_MAX) undoStack.current.shift();
+    }
+    redoStack.current = [];
+    lastEdit.current = coalesce ? { key: coalesce, at: now } : null;
+    editorRef.current = next;
+    setEditorTextState(next);
+    setDraftSpec(draft);
+    setHistVer((v) => v + 1);
+    return true;
+  }, [toast, setDraftSpec]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const undo = useCallback(() => {
+    const prev = undoStack.current.pop();
+    if (prev == null) return;
+    redoStack.current.push(editorRef.current);
+    lastEdit.current = null;
+    showText(prev);
+    setHistVer((v) => v + 1);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const redo = useCallback(() => {
+    const next = redoStack.current.pop();
+    if (next == null) return;
+    undoStack.current.push(editorRef.current);
+    lastEdit.current = null;
+    showText(next);
+    setHistVer((v) => v + 1);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const infoRef = useRef<ParsedInfo | null>(null);
+  infoRef.current = info;
+  const selectLayer = useCallback((sel: LayerSel | null, opts?: { seek?: boolean }) => {
+    setSelectedLayer(sel);
+    if (!sel) return;
+    setSelectedScene(sel.scene);
+    const inf = infoRef.current;
+    const slot = inf?.timeline.scenes[sel.scene];
+    if (!opts?.seek || !inf || !slot) return;
+    // seek into the layer's lifetime if the playhead is outside it, so the viewer shows what is being edited
+    let t0 = slot.start, list = inf.spec.scenes[sel.scene]?.layers as { start?: number; duration?: number; layers?: unknown }[] | undefined;
+    let dur = slot.end - slot.start;
+    for (const i of sel.path) {
+      const l = list?.[i];
+      if (!l) return;
+      t0 += l.start ?? 0;
+      dur = l.duration ?? Math.max(0.1, slot.end - t0);
+      list = l.layers as typeof list;
+    }
+    const now = bus.frame / (bus.fps || inf.fps);
+    if (now < t0 || now >= t0 + dur) { bus.player?.pause(); bus.seek((t0 + Math.min(1, dur * 0.5)) * inf.fps); }
+  }, [bus]);
 
   const refreshSide = useCallback(() => {
     api.project(id).then((s) => { setAssetsState(s.assets); setRenders(s.renders); }).catch(() => {});
@@ -146,9 +251,12 @@ export const Studio = () => {
     id, project: state.project, bus,
     liveSpec, info, parseError, serverTimeline, validation,
     editorText, setEditorText: setEditorTextState, dirty, conflict, resolveConflict, saveEditor, setDraftSpec, applyServerSpec,
+    specNonce, versionPreview, setVersionPreview,
     assets, setAssets: (fn) => setAssetsState(fn), renders,
     addRender: (r) => setRenders((rs) => [r, ...rs.filter((x) => x.file !== r.file)]),
     refreshSide,
+    editSpec, undo, redo, canUndo: undoStack.current.length > 0, canRedo: redoStack.current.length > 0,
+    selectedLayer, selectLayer,
     selectedScene, selectScene, sceneFocus,
     rightTab, setRightTab,
     openUploader: () => { setRightTab("assets"); setRightOpen(true); setUploaderNonce(Date.now()); },
@@ -159,7 +267,30 @@ export const Studio = () => {
     chatRunning, setChatRunning,
   };
 
+  // layer keyboard actions read the latest selection through a ref (the key handler is bound once)
+  const layerKeys = useRef<{ del: () => void; nudge: (dx: number, dy: number) => void; clear: () => void }>({ del: () => {}, nudge: () => {}, clear: () => {} });
+  layerKeys.current = {
+    clear: () => { if (previewRef.current) setVersionPreview(null); else setSelectedLayer(null); },
+    del: () => {
+      const sel = selectedLayer;
+      if (!sel) return;
+      editSpec((d) => { const p = parentList(d, sel); if (p) p.list.splice(p.index, 1); });
+      setSelectedLayer(null);
+    },
+    nudge: (dx, dy) => {
+      const sel = selectedLayer;
+      if (!sel) return;
+      editSpec((d) => {
+        const l = getLayer(d, sel);
+        if (!l) return;
+        l.x = Math.round(((typeof l.x === "number" ? l.x : 0) + dx) * 100) / 100;
+        l.y = Math.round(((typeof l.y === "number" ? l.y : 0) + dy) * 100) / 100;
+      }, `nudge:${sel.scene}:${sel.path.join(".")}`);
+    },
+  };
+
   // ---- keyboard: Space · J/K/L shuttle · ←/→ frame (⇧ = 1s) · Home/End · S safe zones · F fullscreen · ⌘S save
+  // ⌘Z / ⇧⌘Z visual undo/redo · ⌥+arrows nudge the selected layer (⇧ = 10px) · ⌫ delete it · Esc deselect
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const t = e.target instanceof HTMLElement ? e.target : null;
@@ -169,8 +300,22 @@ export const Studio = () => {
         if (!t?.closest(".cm-editor")) void saveEditor();
         return;
       }
-      if (typing || e.metaKey || e.ctrlKey || e.altKey || document.querySelector(".dialog-backdrop, .lightbox, .menu, .select-list")) return;
+      const overlay = !!document.querySelector(".dialog-backdrop, .lightbox, .menu, .select-list");
       const k = e.key.toLowerCase();
+      if ((e.metaKey || e.ctrlKey) && !typing && !overlay && (k === "z" || k === "y")) {
+        e.preventDefault();
+        if (k === "y" || e.shiftKey) redo(); else undo();
+        return;
+      }
+      if (!typing && !overlay && e.altKey && !e.metaKey && !e.ctrlKey && e.key.startsWith("Arrow")) {
+        e.preventDefault();
+        const d = e.shiftKey ? 10 : 1;
+        layerKeys.current.nudge(e.key === "ArrowLeft" ? -d : e.key === "ArrowRight" ? d : 0, e.key === "ArrowUp" ? -d : e.key === "ArrowDown" ? d : 0);
+        return;
+      }
+      if (typing || e.metaKey || e.ctrlKey || e.altKey || overlay) return;
+      if (e.key === "Escape") { layerKeys.current.clear(); return; }
+      if (e.key === "Delete" || e.key === "Backspace") { e.preventDefault(); layerKeys.current.del(); return; }
       if (e.key === " " && !(t instanceof HTMLButtonElement)) { e.preventDefault(); bus.toggle(); }
       else if (k === "k") { e.preventDefault(); bus.halt(); }
       else if (k === "l") { e.preventDefault(); bus.shuttle(1); }
@@ -181,11 +326,11 @@ export const Studio = () => {
       else if (e.key === "End") { e.preventDefault(); bus.seek(bus.durationInFrames - 1); }
       else if (k === "s" && !e.shiftKey) { e.preventDefault(); bus.safe = bus.safe === "off" ? "title" : "off"; bus.emit(); }
       else if (k === "f") { e.preventDefault(); bus.player?.requestFullscreen(); }
-      else if (k === "1" || k === "2" || k === "3") { e.preventDefault(); setRightTab((["assets", "spec", "renders"] as const)[Number(k) - 1]); setRightOpen(true); }
+      else if (k >= "1" && k <= String(TAB_ORDER.length) && k.length === 1) { e.preventDefault(); setRightTab(TAB_ORDER[Number(k) - 1]); setRightOpen(true); }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [bus, saveEditor]);
+  }, [bus, saveEditor, undo, redo]);
 
   // warn before leaving with unsaved edits
   useEffect(() => {
@@ -283,10 +428,13 @@ const BootSlateInline = ({ title, detail, actions }: { title: string; detail: st
 );
 
 const TABS: { id: RightTab; label: string; key: string }[] = [
-  { id: "assets", label: "Assets", key: "1" },
-  { id: "spec", label: "Spec", key: "2" },
-  { id: "renders", label: "Renders", key: "3" },
+  { id: "edit", label: "Edit", key: "1" },
+  { id: "assets", label: "Assets", key: "2" },
+  { id: "spec", label: "Spec", key: "3" },
+  { id: "history", label: "History", key: "4" },
+  { id: "renders", label: "Renders", key: "5" },
 ];
+const TAB_ORDER = TABS.map((t) => t.id);
 
 const Inspector = () => {
   const { rightTab, setRightTab, assets, renders, dirty, validation } = useStudio();
@@ -313,8 +461,10 @@ const Inspector = () => {
         <span className="tab-ink" style={{ transform: `translateX(${ink.x}px)`, width: ink.w }} />
       </div>
       <div className="tab-panels">
+        <div className="tab-panel no-pad" hidden={rightTab !== "edit"}><ErrorBoundary label="Edit"><EditPanel active={rightTab === "edit"} /></ErrorBoundary></div>
         <div className="tab-panel" hidden={rightTab !== "assets"}><ErrorBoundary label="Assets"><AssetsPanel /></ErrorBoundary></div>
         <div className="tab-panel no-pad" hidden={rightTab !== "spec"}><ErrorBoundary label="Spec editor"><SpecPanel active={rightTab === "spec"} /></ErrorBoundary></div>
+        <div className="tab-panel no-pad" hidden={rightTab !== "history"}><ErrorBoundary label="History"><HistoryPanel active={rightTab === "history"} /></ErrorBoundary></div>
         <div className="tab-panel" hidden={rightTab !== "renders"}><ErrorBoundary label="Renders"><RendersPanel /></ErrorBoundary></div>
       </div>
     </div>

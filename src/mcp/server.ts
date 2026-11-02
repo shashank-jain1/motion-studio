@@ -34,6 +34,7 @@ for (const tool of TOOLS) {
     async (args: Record<string, unknown>, extra: Extra) => {
       const token = extra._meta?.progressToken;
       const res = await callTool(tool.name, args, {
+        author: { kind: "mcp", name: server.server.getClientVersion()?.name },
         signal: extra.signal,
         onProgress:
           token === undefined

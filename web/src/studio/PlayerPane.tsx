@@ -9,6 +9,8 @@ import { useStudio } from "./context";
 import { useBus, type SafeMode } from "./bus";
 import { ASPECT, fmtDate, fmtTC } from "../lib/format";
 import { splitErrors } from "../lib/specInfo";
+import { getLayer, layerLabel, num, parentOffset, selKey } from "../lib/specEdit";
+import { useRestoreVersion } from "./HistoryPanel";
 import { CropMarks, SlateStripe, TallyDot } from "../components/ui";
 import {
   IconAlert, IconChevronDown, IconFullscreen, IconLoop, IconMute, IconPause, IconPlay, IconStepBack, IconStepFwd, IconToEnd, IconToStart, IconVolume, Spinner,
@@ -123,9 +125,11 @@ export const PlayerPane = () => {
               errorFallback={({ error }) => <div className="player-crash"><IconAlert size={16} /><span className="mono">{error.message}</span></div>}
             />
             {safe !== "off" && <SafeOverlay mode={safe} w={view!.width} h={view!.height} format={fmt} />}
+            {fmt === master && <LayerOverlay w={view!.width} h={view!.height} screenW={fit.w} />}
             {fmt !== master && <span className="reflow-tag mono" aria-hidden>REFLOW {master} → {fmt}</span>}
           </div>
         )}
+        {s.versionPreview && <VersionBanner />}
         {!liveSpec && <EmptyStage format={s.project.format} name={s.project.name} running={s.chatRunning} />}
         {parseError && <ErrorOverlay message={parseError} hasFallback={!!playerSpec} />}
       </div>
@@ -224,6 +228,86 @@ const PLATFORM: Record<"tiktok" | "reels" | "shorts", { name: string; clear: [nu
   tiktok: { name: "TIKTOK", clear: [160, 150, 480, 60], rail: 1080 - 130, caption: 1920 - 440 },
   reels: { name: "REELS", clear: [220, 140, 420, 60], rail: 1080 - 120, caption: 1920 - 380 },
   shorts: { name: "SHORTS", clear: [190, 130, 380, 60], rail: 1080 - 115, caption: 1920 - 350 },
+};
+
+/** Shown while the viewer plays a past version instead of the editor's spec. */
+const VersionBanner = () => {
+  const { versionPreview, setVersionPreview } = useStudio();
+  const { restore, busy, armed } = useRestoreVersion();
+  if (!versionPreview) return null;
+  const n = versionPreview.n;
+  return (
+    <div className="version-banner" role="status">
+      <span className="tally-dot" aria-hidden />
+      <span className="mono">VIEWING v{n}</span>
+      <span className="version-banner-sum ellipsis">{versionPreview.summary}</span>
+      <span className="spacer" />
+      <button className={`btn xs ${armed === n ? "danger" : "primary"}`} disabled={busy != null} onClick={() => void restore(n)}>
+        {busy === n ? <Spinner size={12} /> : null}{armed === n ? "Discard edits & restore" : "Restore"}
+      </button>
+      <button className="btn xs ghost" onClick={() => setVersionPreview(null)} title="Back to the current spec (Esc)">Exit <kbd className="kbd">Esc</kbd></button>
+    </div>
+  );
+};
+
+/**
+ * Selected-layer overlay (composition coordinates): the layer's layout position — before camera moves and keyframes —
+ * as a crosshair, plus its box when the layer has an explicit width/height. Drag the handle to move it
+ * (⇧ locks the axis, snaps to the frame's center lines; every drag is one undo step).
+ */
+const LayerOverlay = ({ w, h, screenW }: { w: number; h: number; screenW: number }) => {
+  const { liveSpec, selectedLayer, editSpec } = useStudio();
+  const layer = getLayer(liveSpec, selectedLayer);
+  const drag = useRef<{ sx: number; sy: number; x0: number; y0: number } | null>(null);
+  if (!layer || !selectedLayer) return null;
+  const k = w / screenW; // composition px per screen px
+  const off = parentOffset(liveSpec, selectedLayer);
+  const lx = num(layer.x) ?? 0, ly = num(layer.y) ?? 0;
+  const cx = w / 2 + off.x + lx, cy = h / 2 + off.y + ly;
+  const sc = num(layer.scale) ?? 1;
+  const bw = num(layer.width), bh = num(layer.height);
+  const rot = num(layer.rotate) ?? 0;
+  const key = `drag:${selKey(selectedLayer)}`;
+  const r = 7 * k;
+  const label = `${String(layer.type).toUpperCase()} · ${layerLabel(layer)}`;
+  const snapPx = 8 * k;
+  return (
+    <svg className="layer-overlay" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" aria-hidden>
+      <g stroke="#FF3D1F" fill="none" strokeWidth={1.25 * k}>
+        {bw != null && bh != null && (
+          <rect x={cx - (bw * sc) / 2} y={cy - (bh * sc) / 2} width={bw * sc} height={bh * sc} transform={rot ? `rotate(${rot} ${cx} ${cy})` : undefined} strokeDasharray={`${6 * k} ${4 * k}`} />
+        )}
+        <line x1={cx - 18 * k} x2={cx + 18 * k} y1={cy} y2={cy} />
+        <line x1={cx} x2={cx} y1={cy - 18 * k} y2={cy + 18 * k} />
+      </g>
+      <text x={cx + 12 * k} y={cy - 12 * k} fontFamily="Geist Mono, monospace" fontSize={11 * k} letterSpacing={0.6 * k} fill="#ECE8DF" stroke="#0D0D0B" strokeWidth={3 * k} paintOrder="stroke">
+        {label.length > 42 ? label.slice(0, 41) + "…" : label} · {Math.round(lx)}, {Math.round(ly)}
+      </text>
+      <circle className="layer-handle" cx={cx} cy={cy} r={r} fill="#FF3D1F" stroke="#0D0D0B" strokeWidth={2 * k}
+        onPointerDown={(e) => {
+          e.stopPropagation();
+          (e.currentTarget as Element).setPointerCapture(e.pointerId);
+          drag.current = { sx: e.clientX, sy: e.clientY, x0: lx, y0: ly };
+        }}
+        onPointerMove={(e) => {
+          const d = drag.current;
+          if (!d || !(e.currentTarget as Element).hasPointerCapture(e.pointerId)) return;
+          let dx = (e.clientX - d.sx) * k, dy = (e.clientY - d.sy) * k;
+          if (e.shiftKey) { if (Math.abs(dx) > Math.abs(dy)) dy = 0; else dx = 0; }
+          let nx = Math.round(d.x0 + dx), ny = Math.round(d.y0 + dy);
+          // snap the layer's absolute center to the frame center lines
+          if (Math.abs(off.x + nx) < snapPx) nx = -off.x;
+          if (Math.abs(off.y + ny) < snapPx) ny = -off.y;
+          const sel = selectedLayer;
+          editSpec((dr) => { const l = getLayer(dr, sel); if (l) { l.x = nx; l.y = ny; } }, key);
+        }}
+        onPointerUp={() => { drag.current = null; }}
+        onPointerCancel={() => { drag.current = null; }}
+        onClick={(e) => e.stopPropagation()}>
+        <title>Drag to move · ⇧ lock axis · ⌥+arrows nudge</title>
+      </circle>
+    </svg>
+  );
 };
 
 /** Hairline safe-zone overlay in composition coordinates. */

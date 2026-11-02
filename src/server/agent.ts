@@ -538,6 +538,7 @@ const runTool = async (
   const res: ToolResult = await callTool(tu.name, tu.input, {
     projectId,
     policy,
+    author: { kind: "director" },
     signal,
     onProgress: (p) => {
       const pct = Math.round(p.progress * 100);

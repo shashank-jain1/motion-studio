@@ -17,7 +17,7 @@ const THUMB_H = 56;
 
 /** NLE timeline: timecode ruler, scene clips colored by their real background with thumbnail strips, transition joins, actor tracks. */
 export const TimelinePanel = () => {
-  const { info, bus, selectedScene, selectScene, serverTimeline, id } = useStudio();
+  const { info, bus, selectedScene, selectScene, serverTimeline, id, editSpec } = useStudio();
   const timeline = info?.timeline ?? serverTimeline;
   const scenesMeta = info?.scenes;
   const total = Math.max(0.1, timeline?.total ?? 0);
@@ -96,6 +96,31 @@ export const TimelinePanel = () => {
   const onPointerMove = (e: React.PointerEvent) => {
     if ((e.currentTarget as HTMLElement).hasPointerCapture(e.pointerId)) seekTime(timeAt(e.clientX, snap !== e.shiftKey));
   };
+
+  // trim: drag a clip's right edge to change that scene's duration (frame-snapped; one undo step per drag)
+  const trim = useRef<{ i: number; x0: number; d0: number } | null>(null);
+  const [trimming, setTrimming] = useState<number | null>(null);
+  const trimHandlers = (i: number) => ({
+    onPointerDown: (e: React.PointerEvent<HTMLElement>) => {
+      if (e.button !== 0 || !info) return;
+      e.stopPropagation();
+      e.currentTarget.setPointerCapture(e.pointerId);
+      bus.player?.pause();
+      trim.current = { i, x0: e.clientX, d0: info.spec.scenes[i]?.duration ?? 1 };
+      setTrimming(i);
+      selectScene(i);
+    },
+    onPointerMove: (e: React.PointerEvent<HTMLElement>) => {
+      const t = trim.current;
+      if (!t || !e.currentTarget.hasPointerCapture(e.pointerId)) return;
+      const step = 1 / fps;
+      const d = Math.max(0.2, Math.round((t.d0 + (e.clientX - t.x0) / scale) / step) * step);
+      const v = Math.round(d * 1000) / 1000;
+      editSpec((dr) => { const sc = (dr.scenes as Record<string, unknown>[] | undefined)?.[t.i]; if (sc) sc.duration = v; }, `trim:${t.i}`);
+    },
+    onPointerUp: () => { trim.current = null; setTrimming(null); },
+    onPointerCancel: () => { trim.current = null; setTrimming(null); },
+  });
 
   const onWheel = (e: React.WheelEvent) => {
     if (!(e.ctrlKey || e.metaKey)) return;
@@ -181,10 +206,11 @@ export const TimelinePanel = () => {
                       title={`${sc.id ?? `Scene ${i + 1}`} · ${fmtTC(sc.start, fps)} → ${fmtTC(sc.end, fps)}${meta?.notes ? `\n${meta.notes}` : ""}`}
                       onDoubleClick={() => selectScene(i, { scrollEditor: true })}>
                       {info && <ClipThumbs info={info} id={id} start={sc.start} end={sc.end} width={w} />}
+                      {info && <span className={`clip-trim ${trimming === i ? "is-active" : ""}`} title="Drag to change the scene's duration" aria-hidden {...trimHandlers(i)} />}
                       <span className="clip-label">
                         <span className="clip-n mono">{String(i + 1).padStart(2, "0")}</span>
                         <span className="clip-name">{sc.id ?? `Scene ${i + 1}`}</span>
-                        <span className="clip-dur mono">{(sc.end - sc.start).toFixed(2)}s</span>
+                        <span className="clip-dur mono">{(info?.spec.scenes[i]?.duration ?? sc.end - sc.start).toFixed(2)}s</span>
                       </span>
                     </div>
                   );
