@@ -50,6 +50,30 @@ Visual edits rewrite the Spec editor's text, so Save, validation and the directo
 do for typed edits. Nothing is written to disk until you save. The model lives in `web/src/lib/specEdit.ts` and is tested by
 `npm run test:edit`.
 
+## Footage editing and personal edit styles (Phase 6)
+
+Motion Studio also edits **real recordings**: talking heads, vlogs, podcasts and demos. Upload a take (or press the
+scissors on a video asset) and ask the director to edit it:
+
+1. **Transcribe** locally with Whisper (whisper.cpp via `@remotion/install-whisper-cpp`, no API key). The first run builds
+   it and downloads the model into `.cache/whisper` (set `MOTION_STUDIO_WHISPER_MODEL`, default `base`).
+2. **Plan** (`edit_footage`, `apply:false`): dead air, filler words, stutters and retakes are found. Retakes keep the
+   last take. Every cut is listed with its reason and source time, and **you approve the plan before anything changes**.
+3. **Apply**: the edit becomes an ordinary spec. Each kept stretch is a scene with the footage trimmed to it, plus
+   word-timed captions and optional punch-in framing. Trim cuts on the timeline, restyle captions in the Edit tab,
+   restore earlier versions in History, and have the director layer titles, counters, b-roll and callouts onto cuts.
+
+**Your editing style, learned from references.** Share 3–5 videos whose editing you love (`import_reference_url` uses
+yt-dlp if it is installed, or upload them). `analyze_reference_style` measures cuts per minute, shot lengths, the first
+cut, words per minute and pause lengths, and the director studies frames for caption look, framing, transitions and
+b-roll habits. `save_edit_style` stores the result in `library/edit-styles/`, and `edit_footage { style }` applies it.
+Corrections ("tighter", "no zooms") update the style.
+
+Code: `src/core/editPlan.ts` (pure planner), `src/core/footage.ts` (transcription, silences, shot detection, styles,
+spec compiler); director playbook in [docs/DIRECTOR_GUIDE.md](docs/DIRECTOR_GUIDE.md) §12. Tests: `npm run test:footage`
+(fast, no Whisper; includes real rendered frames) and `npm run test:footage:e2e` (slow: builds whisper.cpp and
+transcribes a synthesized take, macOS).
+
 ## Version history (Phase 5)
 
 Every save that changes a film is kept: studio saves, the in-app director, external MCP clients (named, e.g. "Claude Code"),
@@ -71,7 +95,8 @@ against a fake Claude) on every push and pull request.
 
 `get_guide`, `list_styles`, `create_project`, `list_projects`, `get_project`, `add_asset`, `analyze_logo`, `analyze_audio`, `set_spec`,
 `get_spec`, `update_scene`, `preview_frames`, `render_video`, `write_custom_component`, `list_custom_components`,
-`open_studio_hint`, `list_versions`, `restore_version`, `motion_recipes`, `build_motion_scene`, `build_motion_sequence`, `build_design_film`, `inspect_video_reference`, `inspect_sound`, `inspect_render_sound`, `list_fonts`, `import_font`, `register_font`.
+`open_studio_hint`, `list_versions`, `restore_version`, `transcribe_media`, `edit_footage`, `analyze_reference_style`,
+`save_edit_style`, `list_edit_styles`, `import_reference_url`, `motion_recipes`, `build_motion_scene`, `build_motion_sequence`, `build_design_film`, `inspect_video_reference`, `inspect_sound`, `inspect_render_sound`, `list_fonts`, `import_font`, `register_font`.
 
 The AI's craft knowledge lives in [docs/DIRECTOR_GUIDE.md](docs/DIRECTOR_GUIDE.md) and the spec format in
 [docs/KIT_REFERENCE.md](docs/KIT_REFERENCE.md); both are served by `get_guide`.

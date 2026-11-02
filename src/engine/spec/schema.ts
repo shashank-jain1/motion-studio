@@ -846,6 +846,9 @@ export const SpecSchema = z.object({
   beatOffset: z.number().optional(),
   beats: z.array(z.number()).optional().describe("explicit beat times (s) from analyze_audio; preferred over bpm"),
   actors: z.array(ActorSchema).optional(),
+  edit: z.object({
+    source: z.string(), plan: z.string().optional(), sourceSeconds: z.number().optional(), editedSeconds: z.number().optional(),
+  }).optional().describe("set by edit_footage: this film is an edit of a recording (craft rules for invented films are relaxed)"),
   scenes: z.array(SceneSchema).min(1),
 });
 export type Spec = z.infer<typeof SpecSchema>;

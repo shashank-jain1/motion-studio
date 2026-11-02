@@ -149,5 +149,10 @@ export const craftWarnings = (spec: Spec): string[] => {
     out.push(`story: checks skipped (${(e as Error).message})`);
   }
 
+  // A footage edit's story is the speaker's: invented-film rules (concept, morphs/actors, auto sound, Story Engine,
+  // reveals/arcs) don't apply. Legibility, safe zones, pacing and hook rules still do.
+  if (spec.edit) return out.filter((w) => !FOOTAGE_EXEMPT.test(w));
   return out;
 };
+
+const FOOTAGE_EXEMPT = /^(craft\/(concept|continuity|transformation|sound|arcs|reveal)|story[/:])/;

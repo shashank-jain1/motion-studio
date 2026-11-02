@@ -27,3 +27,6 @@ fonts/**/*.woff2
 
 # spec version history (per-project, local)
 projects/*/versions/
+
+# speech transcripts cached next to media (transcribe_media / edit_footage)
+projects/*/assets/*.transcript.json

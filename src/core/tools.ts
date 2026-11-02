@@ -38,6 +38,10 @@ import {
   type ValidationResult,
 } from "./projects";
 import { authorLabel, type SpecAuthor, type VersionMeta } from "./versions";
+import { downloadWithYtDlp, footageSpec, getEditStyle, listEditStyles, measureReference, planFootage, saveEditStyle, suggestFromMeasurements, transcribeFile, type EditStyle } from "./footage";
+
+const pick = <T extends Record<string, unknown>, K extends keyof T>(o: T, keys: K[]) =>
+  Object.fromEntries(keys.filter((k) => o[k] !== undefined).map((k) => [k, o[k]])) as Partial<Pick<T, K>>;
 import { thumbnail, type AssetInfo } from "./probe";
 import { ensureLogoAnalysis, logoJsonPath, logoSummary, renderLogoPreviewPng, LOGO_ORDERS, type LogoBrief } from "./logo";
 import { analyzeAudio } from "./audio";
@@ -1051,6 +1055,137 @@ export const TOOLS: ToolDef[] = [
     },
   }),
 
+  defineTool({
+    name: "transcribe_media", title: "Transcribe speech", scope: "project",
+    description: "Word-level transcript of a video/audio asset with a local Whisper model (whisper.cpp, no API key; the first run builds it and downloads the model, ~1–2 min). Cached next to the asset. Use for talking-head edits (edit_footage does this itself), captions on any spoken footage, or to read what a reference says. model: tiny|base (default)|small|medium|large-v3-turbo, *.en variants are faster for English; language: auto or an ISO code like en, hi, es.",
+    shape: { projectId: projectIdField, asset: z.string().describe("project audio/video asset, e.g. assets/raw-take.mp4"),
+      model: z.enum(["tiny", "tiny.en", "base", "base.en", "small", "small.en", "medium", "medium.en", "large-v3-turbo"]).optional(),
+      language: z.string().max(8).optional(), force: z.boolean().optional().describe("re-transcribe even if cached") },
+    startSummary: (i) => `Transcribing ${String(i.asset).split("/").pop()}`,
+    handler: async ({ projectId, asset, model, language, force }, ctx) => {
+      const info = await getAssetInfo(projectId, stripAssets(asset));
+      if (info.kind !== "video" && info.kind !== "audio") throw new Error("Choose a video or audio asset.");
+      const t = await transcribeFile(info.file, { model, language, force, onProgress: ctx.onProgress, signal: ctx.signal });
+      const body = t.words.map((w) => w.text).join(" ");
+      return {
+        content: [text(`${t.words.length} words · ${t.seconds.toFixed(1)}s · language ${t.language} · model ${t.model}\n\n${body.length > 4000 ? body.slice(0, 4000) + " …" : body}`)],
+        summary: `Transcribed ${plural(t.words.length, "word")} · ${t.seconds.toFixed(1)}s`,
+      };
+    },
+  }),
+  defineTool({
+    name: "edit_footage", title: "Edit raw footage", scope: "project",
+    description: "Edit a raw talking-head / spoken video: transcribes it, then removes dead air, filler words (um, uh), stutters and retakes (keeps the LAST take), with word-timed captions and optional jump-cut punch-ins. Two steps — ALWAYS show the user the plan first: call with apply:false (default) to get the edit plan (every cut with its reason and source time), discuss, adjust (maxPause, removeRetakes:false, cutRanges for extra cuts…), then call again with apply:true to write the spec (one scene per kept stretch; the footage trimmed to it; previous spec stays in History). After applying, layer motion graphics onto specific cuts with update_scene (titles, counters, b-roll media, callouts) — keep the footage layer and its captions. style: a saved edit style (list_edit_styles) supplies defaults; explicit arguments override it.",
+    shape: {
+      projectId: projectIdField,
+      asset: z.string().describe("the raw recording, e.g. assets/take-1.mp4"),
+      apply: z.boolean().optional().describe("false (default) = return the plan only; true = write the edited spec"),
+      style: z.string().optional().describe("name of a saved edit style"),
+      maxPause: z.number().min(0.05).max(3).optional().describe("longest pause kept, seconds (default 0.35; 0.15 = very tight reel pacing)"),
+      removeFillers: z.boolean().optional(), removeStutters: z.boolean().optional(), removeRetakes: z.boolean().optional(),
+      cutRanges: z.array(z.object({ start: z.number().min(0), end: z.number().min(0) })).max(100).optional().describe("extra SOURCE-time ranges to remove"),
+      captions: z.union([z.literal(false), z.object({
+        style: z.enum(["karaoke", "pop", "box", "bounce", "clean"]).optional(), wordsPerPage: z.number().int().min(1).max(8).optional(), uppercase: z.boolean().optional(),
+        fontSize: z.number().optional(), color: z.string().optional(), highlightColor: z.string().optional(), font: z.string().optional(), position: z.enum(["lower", "center", "upper"]).optional(),
+      })]).optional(),
+      punchIn: z.union([z.literal(false), z.object({ every: z.number().int().min(1).max(8), scale: z.number().min(1.02).max(1.5) })]).optional()
+        .describe("zoomed framing every N cuts so jump cuts read as intentional; false = none"),
+      model: z.enum(["tiny", "tiny.en", "base", "base.en", "small", "small.en", "medium", "medium.en", "large-v3-turbo"]).optional(),
+      language: z.string().max(8).optional(),
+    },
+    startSummary: (i) => (i.apply ? "Building the edit" : "Planning the edit"),
+    handler: async (input, ctx) => {
+      const { projectId, asset, apply, style: styleName } = input;
+      const info = await getAssetInfo(projectId, stripAssets(asset));
+      if (info.kind !== "video") throw new Error("Choose a video asset (the raw recording).");
+      const style = styleName ? getEditStyle(styleName) : null;
+      const opts = { ...(style?.edit ?? {}), ...pick(input, ["maxPause", "removeFillers", "removeStutters", "removeRetakes"]), cutRanges: input.cutRanges };
+      const { plan, text: planText } = await planFootage(info.file, { ...opts, model: input.model, language: input.language, onProgress: ctx.onProgress, signal: ctx.signal });
+      if (!apply) {
+        return { content: [text(`${planText}\n\nNothing is written yet. Show this plan to the user; when they approve, call edit_footage again with apply:true (same options).`)], summary: `Edit plan · ${plan.sourceSeconds.toFixed(1)}s → ${plan.editedSeconds.toFixed(1)}s` };
+      }
+      const project = getProject(projectId);
+      const spec = footageSpec(plan, {
+        src: info.path, format: project.format, fps: info.fps ? Math.round(info.fps) : 30, title: `${project.name} — edit`,
+        captions: input.captions ?? style?.captions, punchIn: input.punchIn ?? style?.punchIn,
+      });
+      const res = await writeSpec(projectId, spec, { author: authorOf(ctx), summary: `Footage edit · ${plan.keep.length} cuts · ${plan.sourceSeconds.toFixed(1)}s → ${plan.editedSeconds.toFixed(1)}s` });
+      return {
+        content: [text(`${formatValidation(res)}\n\n${planText}\n\nNext: preview_frames on a few cuts, then add graphics per cut with update_scene (keep each scene's "footage" and "captions" layers).${style?.notes ? `\n\nStyle notes (${style.name}): ${style.notes}` : ""}`)],
+        isError: !res.ok, summary: specResultSummary("Footage edit", res, projectId), events: specEvent(projectId, res),
+      };
+    },
+  }),
+  defineTool({
+    name: "analyze_reference_style", title: "Measure a reference edit", scope: "project",
+    description: "Measure how a reference video is edited: shot count, cuts per minute, median/quartile shot length, time of the first cut (hook), and — when it has speech — words per minute and pause lengths. Returns suggested edit settings. Combine with inspect_video_reference frames (captions look, framing, overlays, transitions) before save_edit_style. Measurements are approximate (gradual transitions may not register as cuts).",
+    shape: { projectId: projectIdField, asset: z.string(), transcribe: z.boolean().optional().describe("measure speech too (default true)") },
+    startSummary: (i) => `Measuring ${String(i.asset).split("/").pop()}`,
+    handler: async ({ projectId, asset, transcribe: tr }, ctx) => {
+      const info = await getAssetInfo(projectId, stripAssets(asset));
+      if (info.kind !== "video") throw new Error("Choose a video asset.");
+      const measured = await measureReference(info.file, { transcribe: tr, onProgress: ctx.onProgress, signal: ctx.signal });
+      return { content: [json({ asset: info.path, measured, suggested: suggestFromMeasurements([measured]) })],
+        summary: `${measured.shots.count} shots · ${measured.shots.cutsPerMinute}/min${measured.speech ? ` · ${measured.speech.wordsPerMinute} wpm` : ""}` };
+    },
+  }),
+  defineTool({
+    name: "save_edit_style", title: "Save an editing style", scope: "global",
+    description: "Save (or update) a reusable editing style — the user's personal \"how my videos are cut\" — from 1–5 reference videos and your own observations. References are measured (pacing, pauses) and turned into defaults; explicit edit/punchIn/captions override them; notes holds what numbers can't (caption look, transitions, b-roll and overlay habits, sound). edit_footage and future films apply it by name. Update it when the user corrects an edit (\"tighter pauses\", \"no punch-ins\").",
+    shape: {
+      name: z.string().min(1).max(60),
+      references: z.array(z.object({ projectId: z.string(), asset: z.string() })).max(5).optional(),
+      edit: z.object({ maxPause: z.number().min(0.05).max(3).optional(), pad: z.number().min(0).max(0.3).optional(), removeFillers: z.boolean().optional(), removeStutters: z.boolean().optional(), removeRetakes: z.boolean().optional() }).optional(),
+      punchIn: z.union([z.literal(false), z.object({ every: z.number().int().min(1).max(8), scale: z.number().min(1.02).max(1.5) })]).optional(),
+      captions: z.union([z.literal(false), z.object({
+        style: z.enum(["karaoke", "pop", "box", "bounce", "clean"]).optional(), wordsPerPage: z.number().int().min(1).max(8).optional(), uppercase: z.boolean().optional(),
+        fontSize: z.number().optional(), color: z.string().optional(), highlightColor: z.string().optional(), font: z.string().optional(), position: z.enum(["lower", "center", "upper"]).optional(),
+      })]).optional(),
+      notes: z.string().max(4000).optional(),
+    },
+    startSummary: (i) => `Saving style “${i.name}”`,
+    handler: async ({ name, references, edit, punchIn, captions, notes }, ctx) => {
+      const refs: NonNullable<EditStyle["references"]> = [];
+      for (const r of references ?? []) {
+        if (ctx.policy?.canAccessProject && !ctx.policy.canAccessProject(r.projectId)) throw new Error(`Project "${r.projectId}" not found`);
+        const info = await getAssetInfo(r.projectId, stripAssets(r.asset));
+        refs.push({ name: info.path, measured: await measureReference(info.file, { signal: ctx.signal }) });
+      }
+      let prev: EditStyle | null = null;
+      try { prev = getEditStyle(name); } catch { /* new */ }
+      const base = refs.length ? suggestFromMeasurements(refs.map((r) => r.measured)) : { edit: prev?.edit ?? {}, punchIn: prev?.punchIn, captions: prev?.captions };
+      const saved = saveEditStyle({
+        name, references: refs.length ? refs : prev?.references,
+        edit: { ...base.edit, ...(edit ?? {}) }, punchIn: punchIn ?? base.punchIn,
+        captions: captions === false ? false : { ...(base.captions || {}), ...(captions ?? {}) }, notes: notes ?? prev?.notes,
+      });
+      return { content: [json(saved)], summary: `Saved style “${saved.name}”` };
+    },
+  }),
+  defineTool({
+    name: "list_edit_styles", title: "Editing styles", scope: "global",
+    description: "List saved editing styles (name, settings, notes) for edit_footage's style argument.",
+    shape: {},
+    handler: async () => {
+      const all = listEditStyles();
+      return { content: [all.length ? json(all.map(({ references, ...s }) => ({ ...s, references: references?.map((r) => r.name) }))) : text("No editing styles yet. Analyze 3–5 reference videos and save_edit_style.")], summary: plural(all.length, "editing style") };
+    },
+  }),
+  defineTool({
+    name: "import_reference_url", title: "Import a reference video link", scope: "project", hosted: "hidden",
+    description: "Download a public video page (YouTube, Instagram, TikTok, X, Vimeo…) into the project's assets with yt-dlp, for study as a REFERENCE (analyze_reference_style, inspect_video_reference). Requires yt-dlp on this machine. Only for videos the user may use this way; never publish downloaded footage in a film. Max 300 MB.",
+    shape: { projectId: projectIdField, url: z.string().url() },
+    startSummary: (i) => `Downloading ${String(i.url).slice(0, 60)}`,
+    handler: async ({ projectId, url }, ctx) => {
+      const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "ms-ref-"));
+      try {
+        ctx.onProgress?.({ progress: 0, message: "Downloading with yt-dlp" });
+        const file = await downloadWithYtDlp(url, tmp, ctx.signal);
+        const asset = await addAsset(projectId, { path: file, name: path.basename(file) });
+        return { content: [json({ asset: asset.path, kind: asset.kind, duration: asset.duration, width: asset.width, height: asset.height })], summary: `Imported ${asset.path}`, events: [{ type: "asset", projectId, asset: (({ file: _f, ...a }) => a)(asset) }] };
+      } finally { fs.rmSync(tmp, { recursive: true, force: true }); }
+    },
+  }),
   defineTool({
     name: "list_versions",
     title: "Version history",

@@ -151,7 +151,10 @@ export const Captions: React.FC<Props> = ({ layer, t, duration }) => {
             const up = spoken ? ease("spring", since / 0.32) : 0;
             const down = t >= w.end ? progress(t, Math.max(w.end, nextStart), 0.18, "out") : 0;
             const s = 1 + 0.15 * up * (1 - down);
-            wordStyle = { ...wordStyle, transform: `scale(${s})`, color: active ? hl : fg, zIndex: active ? 1 : 0 };
+            // Reserve room for the word's own peak growth (static, so the line never reflows), otherwise a scaled word
+            // swallows the column gap and neighbours read as one word ("COFFEETASTES").
+            const room = Math.min(text.length * fs * 0.6 * 0.075, fs * 0.35);
+            wordStyle = { ...wordStyle, transform: `scale(${s})`, color: active ? hl : fg, zIndex: active ? 1 : 0, marginInline: room };
             break;
           }
           case "box": {

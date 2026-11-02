@@ -8,7 +8,7 @@ Research behind every rule: `docs/research/01-motion-craft.md`, `02-logo-svg-con
 
 ---
 
-## 1. The Creative Method: run the Story Engine (mandatory: fill `spec.concept` and `concept.story` before any scene)
+## 1. The Creative Method: run the Story Engine (mandatory: fill `spec.concept` and `concept.story` before any scene — except when editing a user's recording, see §12)
 
 Every film needs a story that hooks in the first second, peaks once, ends high and could only belong to this brand.
 The full procedure is in **STORY_ENGINE.md** (returned with this guide). Never skip a step, even for a 6-second film.
@@ -272,3 +272,45 @@ How the reflow moves things, so you can design for it:
 - Captions under numbers stay with their number.
 
 **Templates.** For a common niche (app launch, fintech, D2C, food, real estate, event, SaaS, creator), start from the matching template and rebrand it. Change the copy, colors and logo, and keep its structure: the motif, the transformation and the lockup.
+
+
+## 12. Real footage: editing recordings (talking heads, vlogs, podcasts, demos)
+
+The Story Engine (§1) is for films you invent. When the user brings a **recording**, the story is already in their words:
+your job is the **cut**, then graphics that serve it. Skip concept scoring; keep §4 craft and §6 platform rules.
+
+**The loop (never skip the plan review):**
+1. `add_asset` the recording (or the user uploads it). Optional: `transcribe_media` to read what was said.
+2. `edit_footage` with `apply:false` → an **edit plan**: every cut with its reason (`PAUSE`, `FILLER`, `STUTTER`, `RETAKE`,
+   head/tail) and source time, plus old → new duration. **Show it to the user** in a few lines and ask before applying.
+   Watch for false positives: a deliberate repetition ("never, never again"), a dramatic pause, a laugh. Adjust with
+   `removeRetakes:false`, a larger `maxPause`, or `cutRanges` for extra removals.
+3. `edit_footage` with `apply:true` (same options + `style` if the user has one) → the spec: one scene per kept stretch
+   (`footage` media layer trimmed to its source range, audio on) and a `captions` layer with real word timings.
+   The previous spec stays in History.
+4. **Then design.** Add to individual cuts with `update_scene`, never removing a scene's `footage` or `captions` layers:
+   - a hook title or bold claim over the first cut (keep it inside the safe zone; captions sit in the lower third);
+   - numbers the speaker says → `counter`; lists → `text` stacks or `card`s; product mentions → `media` b-roll or `device`;
+   - emphasis words → caption `highlightColor`, or a `camera.punch` at that word's time;
+   - b-roll covering a cut: put a full-frame `media` layer above the footage with its own `start`/`duration` — the
+     speaker's audio keeps playing underneath (b-roll media is muted unless it has `volume`).
+   Leave sound off by default on talking heads (no `spec.sound`); add a few `sfx` hits only on graphics.
+5. `preview_frames` on cuts with graphics, then `render_video` draft.
+
+**Pacing defaults.** `maxPause` 0.35s reads natural; 0.15–0.2s is reel-tight; 0.5s+ for calm explainers. Punch-ins
+(alternate framing at 1.08–1.12× on every 1–2 cuts) make jump cuts feel intentional; skip them for single-take interviews.
+Captions: 2–3 words per page for fast talkers (>180 wpm), 3–4 otherwise; `pop` or `karaoke` for social, `clean` for
+corporate. Use `position:"upper"` when the lower third is busy (product on a desk, a lower-third graphic).
+
+**Learning the user's style (their personal editing skill).** When the user shares 3–5 videos whose editing they love:
+1. `import_reference_url` for links (local studio only; needs yt-dlp) or ask them to upload the files.
+2. For each: `analyze_reference_style` (cuts/min, shot lengths, first-cut time, words per minute, pause lengths) and
+   `inspect_video_reference` frames: caption look (size, case, colours, position, animation), framing and zoom habits,
+   transitions, b-roll frequency, overlays, colour grade, sound.
+3. `save_edit_style` with the references (measured automatically) **and** detailed `notes` on everything the numbers
+   miss — written as instructions to your future self ("whip transition + whoosh between topics; yellow keyword
+   highlight; b-roll every ~6s; never hold the face more than 4s without a change").
+4. Use it: `edit_footage { style }`, then follow its `notes` while designing. When the user corrects an edit ("tighter",
+   "no zooms", "captions higher"), apply it and **update the style** so the next video starts right.
+References are for learning a style. Never place downloaded footage in the user's film, and recreate techniques with
+the kit rather than copying a specific video.
