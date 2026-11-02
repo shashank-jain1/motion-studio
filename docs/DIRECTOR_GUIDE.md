@@ -8,7 +8,7 @@ Research behind every rule: `docs/research/01-motion-craft.md`, `02-logo-svg-con
 
 ---
 
-## 1. The Creative Method: run the Story Engine (mandatory: fill `spec.concept` and `concept.story` before any scene)
+## 1. The Creative Method: run the Story Engine (mandatory: fill `spec.concept` and `concept.story` before any scene — except when editing a user's recording, see §12)
 
 Every film needs a story that hooks in the first second, peaks once, ends high and could only belong to this brand.
 The full procedure is in **STORY_ENGINE.md** (returned with this guide). Never skip a step, even for a 6-second film.
@@ -204,7 +204,10 @@ Every film gets a `"sound"` object unless the brief asks for silence. The engine
 2. **Restraint, not intensity.** `restraint` 0.6–0.8 for luxury / calm / explainers, 0.5 default, 0.3 for hype edits. The planner already sounds only arrivals and state changes, collapses cascades into one sound, and clears 0.35–0.8 s of silence (plus a music stopdown) before the hero. Premium = 30–50 % of motions sounded.
 3. **Design the hero.** Exactly one moment should be the biggest: usually the final logo resolve (it gets the sonic signature: mnemonic in key + brand-material body + sub). Give it room: a beat of stillness before it, no other hits in the 0.5 s around it. `signature: "auto"` keeps the same mnemonic across every film of the brand.
 4. **Design the picture for the sound.** Cut on motion (whip, zoom-through, match), land type with a slam preset or `drop`, put `camera.punch` on 2–4 beats, let counters run to the payoff, end on a logo reveal. Bigger objects automatically sound lower and longer; lateral moves pan.
-5. **Music.** Add `audio`, run `analyze_audio`, cut on its beats, start the hero at `dropAt`, and copy its `key` into `sound.brief.key` (renders fill `sound.music` automatically, the Player preview needs the key in the spec). Tonal SFX (chimes, pings, subs, swells, the mnemonic) are then in the track's key; with low key confidence the planner avoids tonal recordings. Events the music already hits are thinned.
+5. **Music.** No track from the user? `compose_music` (free, original) writes a score for THIS timeline: pick the mood
+   from the concept, pass `peak` = the reveal time, and it lands the drop there and the cuts on its beats (it also fills
+   `sound.music`). Lyria (Google's AI music) is paid — offer it only if the user wants it and agrees to the cost.
+   With a user's track: add `audio`, run `analyze_audio`, cut on its beats, start the hero at `dropAt`, and copy its `key` into `sound.brief.key` (renders fill `sound.music` automatically, the Player preview needs the key in the spec). Tonal SFX (chimes, pings, subs, swells, the mnemonic) are then in the track's key; with low key confidence the planner avoids tonal recordings. Events the music already hits are thinned.
 6. **Override sparingly.** `"sound": false` on busy secondary layers; `"sound": "sfx:<name>"` for a signature moment (`coin-clink-2` on a price, `shutter-1` on a photo reveal, `glass-ping-3` on a premium toast). Manual `sfx` cues only for beats the planner can't see: `at = event − peakAt`.
 7. **Listen to the draft** (and read the cue sheet: `node_modules/.bin/tsx scripts/tests/sound-plan.ts` prints how a spec is planned). Cluttered → raise `restraint` or silence secondary layers. Same-y → raise `variation` or change `materials`. Wrong world → fix `realism` / `avoid`. A whoosh early or late → move the cut, never the sound.
 
@@ -272,3 +275,91 @@ How the reflow moves things, so you can design for it:
 - Captions under numbers stay with their number.
 
 **Templates.** For a common niche (app launch, fintech, D2C, food, real estate, event, SaaS, creator), start from the matching template and rebrand it. Change the copy, colors and logo, and keep its structure: the motif, the transformation and the lockup.
+
+
+## 12. Real footage: editing recordings (talking heads, vlogs, podcasts, demos)
+
+The Story Engine (§1) is for films you invent. When the user brings a **recording**, the story is already in their words:
+your job is the **cut**, then graphics that serve it. Skip concept scoring; keep §4 craft and §6 platform rules.
+
+**The loop (never skip the plan review):**
+1. `add_asset` the recording (or the user uploads it). Optional: `transcribe_media` to read what was said.
+2. `edit_footage` with `apply:false` → an **edit plan**: every cut with its reason (`PAUSE`, `FILLER`, `STUTTER`, `RETAKE`,
+   head/tail) and source time, plus old → new duration. **Show it to the user** in a few lines and ask before applying.
+   Watch for false positives: a deliberate repetition ("never, never again"), a dramatic pause, a laugh. Adjust with
+   `removeRetakes:false`, a larger `maxPause`, or `cutRanges` for extra removals.
+3. `edit_footage` with `apply:true` (same options + `style` if the user has one) → the spec: one scene per kept stretch
+   (`footage` media layer trimmed to its source range, audio on) and a `captions` layer with real word timings.
+   The previous spec stays in History.
+4. **Then design.** Add to individual cuts with `update_scene`, never removing a scene's `footage` or `captions` layers:
+   - a hook title or bold claim over the first cut (keep it inside the safe zone; captions sit in the lower third);
+   - numbers the speaker says → `counter`; lists → `text` stacks or `card`s; product mentions → `media` b-roll or `device`;
+   - emphasis words → caption `highlightColor`, or a `camera.punch` at that word's time;
+   - b-roll covering a cut: put a full-frame `media` layer above the footage with its own `start`/`duration` — the
+     speaker's audio keeps playing underneath (b-roll media is muted unless it has `volume`).
+   Leave sound off by default on talking heads (no `spec.sound`); add a few `sfx` hits only on graphics.
+5. `preview_frames` on cuts with graphics, then `render_video` draft.
+
+**Pacing defaults.** `maxPause` 0.35s reads natural; 0.15–0.2s is reel-tight; 0.5s+ for calm explainers. Punch-ins
+(alternate framing at 1.08–1.12× on every 1–2 cuts) make jump cuts feel intentional; skip them for single-take interviews.
+Captions: 2–3 words per page for fast talkers (>180 wpm), 3–4 otherwise; `pop` or `karaoke` for social, `clean` for
+corporate. Use `position:"upper"` when the lower third is busy (product on a desk, a lower-third graphic).
+
+**Learning the user's style (their personal editing skill).** When the user shares 3–5 videos whose editing they love:
+1. `import_reference_url` for links (local studio only; needs yt-dlp) or ask them to upload the files.
+2. For each: `analyze_reference_style` (cuts/min, shot lengths, first-cut time, words per minute, pause lengths) and
+   `inspect_video_reference` frames: caption look (size, case, colours, position, animation), framing and zoom habits,
+   transitions, b-roll frequency, overlays, colour grade, sound.
+3. `save_edit_style` with the references (measured automatically) **and** detailed `notes` on everything the numbers
+   miss — written as instructions to your future self ("whip transition + whoosh between topics; yellow keyword
+   highlight; b-roll every ~6s; never hold the face more than 4s without a change").
+4. Use it: `edit_footage { style }`, then follow its `notes` while designing. When the user corrects an edit ("tighter",
+   "no zooms", "captions higher"), apply it and **update the style** so the next video starts right.
+References are for learning a style. Never place downloaded footage in the user's film, and recreate techniques with
+the kit rather than copying a specific video.
+
+
+## 13. Voice, captions, music and SFX — the finished soundtrack
+
+A premium short has four layers, mixed in this order of importance: **voice → hits → music → texture**.
+
+**Voiceover (when the brief needs words spoken: explainers, launches, ads, tutorials).**
+1. Write the script *for the ear* from the story beats: short sentences, one idea each, concrete verbs, ~2.5 words/s
+   (15 s ≈ 35 words). Read it against the storyboard: a sentence per scene or two.
+2. `list_voices` once, then `generate_voiceover`. Voice by brand: Kore / Alnilam (firm, confident tech), Puck /
+   Laomedeia (upbeat consumer), Sulafat / Achird (warm food, wellness), Gacrux / Charon (mature, informative B2B),
+   Algenib (gravelly trailer), Vindemiatrix / Achernar (gentle, calm). Direct Gemini with `style` ("warm, unhurried,
+   a smile in the voice") and inline `<short pause>` before a reveal. Without a Gemini key the free local voice is used.
+3. **Fit picture to voice, not the reverse:** the tool returns sentence timings — set scene durations so cuts land just
+   after sentence ends (0.1–0.3 s), and the reveal lands ON the key word. Re-run when the script changes.
+4. Captions: `generate_voiceover` turns on film captions (`spec.captions`, pop by default). 2–3 words per page for social,
+   karaoke for energy, clean for corporate; keep them in the lower third and out of the way of on-screen type
+   (`position:"upper"` when the lower third is busy). Don't also put per-scene captions layers on a voiced film.
+
+**Music — free first, always licensed.** Set `spec.usage` before choosing music: `"commercial"` when the film promotes a
+business, brand or product or is client / ad work; `"personal"` for the user's own social posts. Ask if it's unclear.
+Then, after the timeline is final, climb this ladder:
+1. **The user's own track** (their Epidemic / Artlist / purchased music): `add_asset` → `fit_music` (drop on the peak,
+   cuts on beats, ends with the track's ending or on a bar).
+2. **A free library track**: `search_music` with mood + genre + use ("uplifting corporate piano", "dark cinematic
+   tension", "lofi chill"); read `energyShape` to see where it builds; `import_music` the best one (it fits it).
+   Free To Use is high quality but PERSONAL only; Openverse returns CC0 / CC BY that commercial films can use. Results
+   are already filtered by `spec.usage`. When a credit is required, tell the user — renders save it next to the MP4.
+3. **A composed score**: `compose_music` (original, no credit, fitted by construction). `variations: 3` renders
+   alternatives to compare. Moods: cinematic / epic (trailers, launches), tech (SaaS, fintech), hype (sport, drops),
+   playful (consumer apps), minimal / calm (wellness, B2B), luxury (beauty, fashion), warm (food, craft).
+4. **Lyria** (paid) only when the user asks and accepts the cost.
+With a voiceover the music sits at 0.55 and ducks under every phrase by itself. Never use a track whose license the
+studio flags (`license/music` warning) — replace it.
+
+**Cinematic SFX** — `list_sfx` to search, then `spec.sfx` cues (`at = event − peakAt`) or `layer.sound`:
+- transitions: `whoosh-whip` (whip pans), `swoosh-cinematic` (long flights), `whoosh-reverse-in` (suck into a hard cut),
+  `reverse-cymbal` / `riser-tension` (into the drop), `downlifter` (after it), `glitch-transition` (glitch cuts);
+- recap / flashback: `rewind-tape` or `recap-swoosh` into the recap card, `tape-stop` for a freeze / "wait, what?";
+- light & film: `light-leak-swell` with `fx.lightLeak` or a flash, `film-burn` on film-burn transitions,
+  `film-projector` under vintage looks, `camera-flash` on white flash frames;
+- type & UI: `typing-burst` / `typing-fast` under typed text or search bars, `keyboard-enter` on submit;
+- drama: `braam` or `trailer-hit-metal` on the title slam (ONE per film), `tension-drone` under the problem beat,
+  `clock-ticking` for deadlines.
+Restraint still rules: voice first, one hero hit, silence before it. Render a draft and listen before calling it done;
+`inspect_render_sound` checks the exported mix.

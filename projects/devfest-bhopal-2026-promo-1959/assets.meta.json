@@ -1,0 +1,166 @@
+{
+  "gdg-brackets.svg": {
+    "mtimeMs": 1793640143880.086,
+    "size": 882,
+    "info": {
+      "path": "assets/gdg-brackets.svg",
+      "file": "/Users/shashank/motion-studio/projects/devfest-bhopal-2026-promo-1959/assets/gdg-brackets.svg",
+      "kind": "image",
+      "sizeBytes": 882,
+      "width": 512,
+      "height": 512,
+      "hasAlpha": true
+    }
+  },
+  "gdg-cloud-bhopal.png": {
+    "mtimeMs": 1793640144108.6763,
+    "size": 188936,
+    "info": {
+      "path": "assets/gdg-cloud-bhopal.png",
+      "file": "/Users/shashank/motion-studio/projects/devfest-bhopal-2026-promo-1959/assets/gdg-cloud-bhopal.png",
+      "kind": "image",
+      "sizeBytes": 188936,
+      "width": 6596,
+      "height": 943,
+      "hasAlpha": true
+    }
+  },
+  "bhopal-lake-dusk.jpg": {
+    "mtimeMs": 1793640144153.977,
+    "size": 438075,
+    "info": {
+      "path": "assets/bhopal-lake-dusk.jpg",
+      "file": "/Users/shashank/motion-studio/projects/devfest-bhopal-2026-promo-1959/assets/bhopal-lake-dusk.jpg",
+      "kind": "image",
+      "sizeBytes": 438075,
+      "width": 2400,
+      "height": 1340,
+      "hasAlpha": false
+    }
+  },
+  "crowd.jpg": {
+    "mtimeMs": 1793640144187.3828,
+    "size": 661478,
+    "info": {
+      "path": "assets/crowd.jpg",
+      "file": "/Users/shashank/motion-studio/projects/devfest-bhopal-2026-promo-1959/assets/crowd.jpg",
+      "kind": "image",
+      "sizeBytes": 661478,
+      "width": 1920,
+      "height": 1440,
+      "hasAlpha": false
+    }
+  },
+  "stage.jpg": {
+    "mtimeMs": 1793640144218.0989,
+    "size": 665131,
+    "info": {
+      "path": "assets/stage.jpg",
+      "file": "/Users/shashank/motion-studio/projects/devfest-bhopal-2026-promo-1959/assets/stage.jpg",
+      "kind": "image",
+      "sizeBytes": 665131,
+      "width": 1920,
+      "height": 1440,
+      "hasAlpha": false
+    }
+  },
+  "team.jpg": {
+    "mtimeMs": 1793640144246.0344,
+    "size": 354802,
+    "info": {
+      "path": "assets/team.jpg",
+      "file": "/Users/shashank/motion-studio/projects/devfest-bhopal-2026-promo-1959/assets/team.jpg",
+      "kind": "image",
+      "sizeBytes": 354802,
+      "width": 1920,
+      "height": 1440,
+      "hasAlpha": false
+    }
+  },
+  "dhaari.svg": {
+    "mtimeMs": 1793640144268.065,
+    "size": 8534,
+    "info": {
+      "path": "assets/dhaari.svg",
+      "file": "/Users/shashank/motion-studio/projects/devfest-bhopal-2026-promo-1959/assets/dhaari.svg",
+      "kind": "image",
+      "sizeBytes": 8534,
+      "width": 800,
+      "height": 800,
+      "hasAlpha": true
+    }
+  },
+  "bhopal-scene.svg": {
+    "mtimeMs": 1793640144344.3042,
+    "size": 30747,
+    "info": {
+      "path": "assets/bhopal-scene.svg",
+      "file": "/Users/shashank/motion-studio/projects/devfest-bhopal-2026-promo-1959/assets/bhopal-scene.svg",
+      "kind": "image",
+      "sizeBytes": 30747,
+      "width": 600,
+      "height": 520,
+      "hasAlpha": true
+    }
+  },
+  "vo-49a515f4dc.wav": {
+    "mtimeMs": 1793640169707.2856,
+    "size": 5387564,
+    "info": {
+      "path": "assets/vo-49a515f4dc.wav",
+      "file": "/Users/shashank/motion-studio/projects/devfest-bhopal-2026-promo-1959/assets/vo-49a515f4dc.wav",
+      "kind": "audio",
+      "sizeBytes": 5387564,
+      "duration": 28.06,
+      "hasAudio": true
+    }
+  },
+  "music-tech-v0-111.25bpm-29s.wav": {
+    "mtimeMs": 1793640507812.4604,
+    "size": 5561708,
+    "info": {
+      "path": "assets/music-tech-v0-111.25bpm-29s.wav",
+      "file": "/Users/shashank/motion-studio/projects/devfest-bhopal-2026-promo-1959/assets/music-tech-v0-111.25bpm-29s.wav",
+      "kind": "audio",
+      "sizeBytes": 5561708,
+      "duration": 28.967,
+      "hasAudio": true
+    }
+  },
+  "music-tech-v1-111.25bpm-29s.wav": {
+    "mtimeMs": 1793640511569.788,
+    "size": 5561708,
+    "info": {
+      "path": "assets/music-tech-v1-111.25bpm-29s.wav",
+      "file": "/Users/shashank/motion-studio/projects/devfest-bhopal-2026-promo-1959/assets/music-tech-v1-111.25bpm-29s.wav",
+      "kind": "audio",
+      "sizeBytes": 5561708,
+      "duration": 28.967,
+      "hasAudio": true
+    }
+  },
+  "music-tech-v2-111.25bpm-29s.wav": {
+    "mtimeMs": 1793640515100.4304,
+    "size": 5561708,
+    "info": {
+      "path": "assets/music-tech-v2-111.25bpm-29s.wav",
+      "file": "/Users/shashank/motion-studio/projects/devfest-bhopal-2026-promo-1959/assets/music-tech-v2-111.25bpm-29s.wav",
+      "kind": "audio",
+      "sizeBytes": 5561708,
+      "duration": 28.967,
+      "hasAudio": true
+    }
+  },
+  "music-tech-v0-111.25bpm-30s.wav": {
+    "mtimeMs": 1793640639051.8418,
+    "size": 5734508,
+    "info": {
+      "path": "assets/music-tech-v0-111.25bpm-30s.wav",
+      "file": "/Users/shashank/motion-studio/projects/devfest-bhopal-2026-promo-1959/assets/music-tech-v0-111.25bpm-30s.wav",
+      "kind": "audio",
+      "sizeBytes": 5734508,
+      "duration": 29.867,
+      "hasAudio": true
+    }
+  }
+}

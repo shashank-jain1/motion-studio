@@ -50,6 +50,76 @@ Visual edits rewrite the Spec editor's text, so Save, validation and the directo
 do for typed edits. Nothing is written to disk until you save. The model lives in `web/src/lib/specEdit.ts` and is tested by
 `npm run test:edit`.
 
+## Free music, fitted and licensed (Phase 8)
+
+Background music without paying, and without breaking a license:
+
+| Source | Cost | Use | Credit |
+|---|---|---|---|
+| **Composed score** (`compose_music`) | free, local | any film | none; original work |
+| **Openverse** (`search_music`): CC0 / public domain / CC BY from Jamendo, ccMixter, Freesound, Wikimedia | free, no key | any film, commercial included | required for CC BY (auto) |
+| **Free To Use** (`search_music`): curated, non-premium tracks | free, no key | **personal** social posts (monetization OK); **not** brand / client / ad content | required (auto) |
+| **Your own track** (Epidemic, Artlist, purchased…) | your license | per your license | per your license |
+| Lyria | paid | any | none |
+
+- `spec.usage` ("commercial" | "personal") decides what search returns and what import accepts. Premium, NC, ND and
+  share-alike licenses are never accepted, and every import re-checks the license with the provider.
+- `import_music` / `fit_music` analyze the track (bpm, beats, drop, key) and choose where it starts. The drop lands on
+  the film's peak, cuts fall on beats, and the film ends with the track's own ending or on a bar line, with a fade. Beats
+  go into `sound.music` so auto SFX follow the music.
+- Each import writes `assets/<file>.license.json`. Each render writes `renders/<file>.mp4.credits.txt` when a credit is
+  due, and the Renders panel shows it with a Copy button.
+- MusicBrainz isn't used: it's a metadata database with no audio.
+
+Code: `src/core/musicLibrary.ts`, `src/core/musicFit.ts`, `src/core/credits.ts`. Tests: `npm run test:music`.
+
+## Voice, music, captions and cinematic SFX (Phase 7)
+
+Every film can have a full soundtrack, using free options first:
+
+| | Free / local (default) | Free tier (Gemini key in Settings) | Paid (opt-in only) |
+|---|---|---|---|
+| Voiceover | system voice (macOS `say` / espeak-ng); Kokoro-82M if `pnpm add kokoro-js` | Gemini 3.8 Flash TTS: 30 voices, style direction, `<laugh>`/`<short pause>`, 100+ languages | — |
+| Transcription | Whisper (whisper.cpp) | `gemini-3.5-transcribe` with word timestamps (≤ 30 min) | — |
+| Music | **procedural composer**: original, fitted to the timeline (cuts on beats, drop on the peak) | — | Lyria (`lyria-3-clip-preview` / `lyria-3.5`) |
+| SFX | 289 CC0 recordings + 58 original synthesized (22 new cinematic) | — | — |
+
+- `generate_voiceover` writes `spec.voiceover` (word-timed) and film captions (`spec.captions`), and reports sentence
+  timings so scenes can be cut to the narration. The music ducks under speech automatically.
+- `compose_music` writes a score in 9 moods and fills `sound.music` (bpm, beats, key) so auto SFX lock to its grid.
+- `list_sfx` searches the library, including whip, reverse-in, typing, rewind/recap, tape stop, reverse cymbal, light
+  leak, film projector, film burn, braam, downlifter, trailer hits, tension drone, camera flash and clock sounds.
+- The Gemini free tier may use requests to improve Google's products. Keep private scripts on local voices.
+
+Code: `src/core/gemini.ts`, `src/core/voice.ts`, `src/core/music.ts`, `scripts/gen-sfx.ts` (cinematic set),
+`src/engine/render/FilmCaptions.tsx`, `src/engine/audio/SoundTrack.tsx` (voice playback and ducking). Director playbook:
+[DIRECTOR_GUIDE §13](docs/DIRECTOR_GUIDE.md). Tests: `npm run test:sound` (the Gemini wire formats against a mocked API,
+real local voice, the composer, ducking/captions, and a real render with audio).
+
+## Footage editing and personal edit styles (Phase 6)
+
+Motion Studio also edits **real recordings**: talking heads, vlogs, podcasts and demos. Upload a take (or press the
+scissors on a video asset) and ask the director to edit it:
+
+1. **Transcribe** locally with Whisper (whisper.cpp via `@remotion/install-whisper-cpp`, no API key). The first run builds
+   it and downloads the model into `.cache/whisper` (set `MOTION_STUDIO_WHISPER_MODEL`, default `base`).
+2. **Plan** (`edit_footage`, `apply:false`): dead air, filler words, stutters and retakes are found. Retakes keep the
+   last take. Every cut is listed with its reason and source time, and **you approve the plan before anything changes**.
+3. **Apply**: the edit becomes an ordinary spec. Each kept stretch is a scene with the footage trimmed to it, plus
+   word-timed captions and optional punch-in framing. Trim cuts on the timeline, restyle captions in the Edit tab,
+   restore earlier versions in History, and have the director layer titles, counters, b-roll and callouts onto cuts.
+
+**Your editing style, learned from references.** Share 3–5 videos whose editing you love (`import_reference_url` uses
+yt-dlp if it is installed, or upload them). `analyze_reference_style` measures cuts per minute, shot lengths, the first
+cut, words per minute and pause lengths, and the director studies frames for caption look, framing, transitions and
+b-roll habits. `save_edit_style` stores the result in `library/edit-styles/`, and `edit_footage { style }` applies it.
+Corrections ("tighter", "no zooms") update the style.
+
+Code: `src/core/editPlan.ts` (pure planner), `src/core/footage.ts` (transcription, silences, shot detection, styles,
+spec compiler); director playbook in [docs/DIRECTOR_GUIDE.md](docs/DIRECTOR_GUIDE.md) §12. Tests: `npm run test:footage`
+(fast, no Whisper; includes real rendered frames) and `npm run test:footage:e2e` (slow: builds whisper.cpp and
+transcribes a synthesized take, macOS).
+
 ## Version history (Phase 5)
 
 Every save that changes a film is kept: studio saves, the in-app director, external MCP clients (named, e.g. "Claude Code"),
@@ -71,7 +141,8 @@ against a fake Claude) on every push and pull request.
 
 `get_guide`, `list_styles`, `create_project`, `list_projects`, `get_project`, `add_asset`, `analyze_logo`, `analyze_audio`, `set_spec`,
 `get_spec`, `update_scene`, `preview_frames`, `render_video`, `write_custom_component`, `list_custom_components`,
-`open_studio_hint`, `list_versions`, `restore_version`, `motion_recipes`, `build_motion_scene`, `build_motion_sequence`, `build_design_film`, `inspect_video_reference`, `inspect_sound`, `inspect_render_sound`, `list_fonts`, `import_font`, `register_font`.
+`open_studio_hint`, `list_versions`, `restore_version`, `transcribe_media`, `edit_footage`, `analyze_reference_style`,
+`save_edit_style`, `list_edit_styles`, `import_reference_url`, `list_voices`, `generate_voiceover`, `compose_music`, `list_sfx`, `search_music`, `import_music`, `fit_music`, `motion_recipes`, `build_motion_scene`, `build_motion_sequence`, `build_design_film`, `inspect_video_reference`, `inspect_sound`, `inspect_render_sound`, `list_fonts`, `import_font`, `register_font`.
 
 The AI's craft knowledge lives in [docs/DIRECTOR_GUIDE.md](docs/DIRECTOR_GUIDE.md) and the spec format in
 [docs/KIT_REFERENCE.md](docs/KIT_REFERENCE.md); both are served by `get_guide`.

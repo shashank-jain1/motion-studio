@@ -1247,6 +1247,755 @@
       "license": "original",
       "v1category": "foley",
       "description": "Coin clink + small till bell — prices, savings, payments, sales counters (0.9 s)."
+    },
+    {
+      "name": "whoosh-whip",
+      "file": "whoosh-whip.wav",
+      "source": "synth",
+      "category": "whoosh.short",
+      "material": [
+        "air"
+      ],
+      "palette": [
+        "hype",
+        "tech",
+        "playful",
+        "cinematic"
+      ],
+      "palettes": [
+        "hype",
+        "tech",
+        "playful",
+        "cinematic"
+      ],
+      "durationSec": 0.3,
+      "peakAt": 0.15,
+      "weight": 0.05,
+      "speed": 0.52,
+      "brightness": 1,
+      "tonal": false,
+      "loudness": -16.1,
+      "sharpness": 0.54,
+      "flatness": 0.468,
+      "world": "abstract",
+      "emotions": [],
+      "group": "whoosh-whip",
+      "license": "original",
+      "v1category": "whoosh",
+      "description": "Ultra-fast whip pan — whip transitions, snap zooms, quick cuts on the beat (0.3 s)."
+    },
+    {
+      "name": "whoosh-flutter",
+      "file": "whoosh-flutter.wav",
+      "source": "synth",
+      "category": "whoosh.cloth",
+      "material": [
+        "cloth"
+      ],
+      "palette": [
+        "playful",
+        "minimal",
+        "cinematic"
+      ],
+      "palettes": [
+        "playful",
+        "minimal",
+        "cinematic"
+      ],
+      "durationSec": 0.65,
+      "peakAt": 0.36,
+      "weight": 0.61,
+      "speed": 0.33,
+      "brightness": 0.55,
+      "tonal": false,
+      "loudness": -16.6,
+      "sharpness": 0.61,
+      "flatness": 0.133,
+      "world": "abstract",
+      "emotions": [],
+      "group": "whoosh-flutter",
+      "license": "original",
+      "v1category": "whoosh",
+      "description": "Cloth / flag flutter pass-by — banners, fabric, page curls, card flips (0.65 s)."
+    },
+    {
+      "name": "whoosh-reverse-in",
+      "file": "whoosh-reverse-in.wav",
+      "source": "synth",
+      "category": "whoosh.in",
+      "material": [
+        "air"
+      ],
+      "palette": [
+        "cinematic",
+        "luxury",
+        "hype"
+      ],
+      "palettes": [
+        "cinematic",
+        "luxury",
+        "hype"
+      ],
+      "durationSec": 1,
+      "peakAt": 0.98,
+      "weight": 0.75,
+      "speed": 0.38,
+      "brightness": 0.27,
+      "tonal": false,
+      "loudness": -16.6,
+      "sharpness": 0.78,
+      "flatness": 0.089,
+      "world": "abstract",
+      "emotions": [],
+      "group": "whoosh-reverse-in",
+      "license": "original",
+      "v1category": "whoosh",
+      "description": "Reversed whoosh that sucks INTO the cut — reveals, hard cuts to black, title slams (1.0 s, apex at the end)."
+    },
+    {
+      "name": "swoosh-cinematic",
+      "file": "swoosh-cinematic.wav",
+      "source": "synth",
+      "category": "whoosh.long",
+      "material": [
+        "air"
+      ],
+      "palette": [
+        "cinematic",
+        "luxury",
+        "hype"
+      ],
+      "palettes": [
+        "cinematic",
+        "luxury",
+        "hype"
+      ],
+      "durationSec": 1.6,
+      "peakAt": 0.95,
+      "weight": 0.93,
+      "speed": 0.2,
+      "brightness": 0.01,
+      "tonal": false,
+      "loudness": -16,
+      "sharpness": 0.44,
+      "flatness": 0.023,
+      "world": "abstract",
+      "emotions": [],
+      "group": "swoosh-cinematic",
+      "license": "original",
+      "v1category": "whoosh",
+      "description": "Long, layered trailer swoosh with a sub tail and air — big camera moves, scene-to-scene flights (1.6 s)."
+    },
+    {
+      "name": "typing-burst",
+      "file": "typing-burst.wav",
+      "source": "synth",
+      "category": "foley.typing",
+      "material": [
+        "synthetic"
+      ],
+      "palette": [
+        "minimal",
+        "tech",
+        "cinematic"
+      ],
+      "palettes": [
+        "minimal",
+        "tech",
+        "cinematic"
+      ],
+      "durationSec": 1.6,
+      "peakAt": 0.002,
+      "weight": 0.8,
+      "speed": 0.62,
+      "brightness": 0.22,
+      "tonal": true,
+      "pitchHz": 118.4,
+      "loudness": -20,
+      "sharpness": 0.89,
+      "flatness": 0.019,
+      "world": "abstract",
+      "emotions": [],
+      "group": "typing-burst",
+      "license": "original",
+      "v1category": "foley",
+      "description": "A burst of laptop typing (~14 keys, natural rhythm, spacebar thunk) — typed text, search bars, coding (1.6 s)."
+    },
+    {
+      "name": "typing-fast",
+      "file": "typing-fast.wav",
+      "source": "synth",
+      "category": "foley.typing",
+      "material": [
+        "synthetic"
+      ],
+      "palette": [
+        "tech",
+        "hype",
+        "minimal"
+      ],
+      "palettes": [
+        "tech",
+        "hype",
+        "minimal"
+      ],
+      "durationSec": 0.9,
+      "peakAt": 0.002,
+      "weight": 0.7,
+      "speed": 0.62,
+      "brightness": 0.33,
+      "tonal": true,
+      "pitchHz": 118.4,
+      "loudness": -16.5,
+      "sharpness": 0.88,
+      "flatness": 0.043,
+      "world": "abstract",
+      "emotions": [],
+      "group": "typing-fast",
+      "license": "original",
+      "v1category": "foley",
+      "description": "Fast, focused typing (~12 keys) — hacker / productivity moments, quick UI text (0.9 s)."
+    },
+    {
+      "name": "keyboard-enter",
+      "file": "keyboard-enter.wav",
+      "source": "synth",
+      "category": "foley.typing",
+      "material": [
+        "synthetic"
+      ],
+      "palette": [
+        "tech",
+        "minimal",
+        "playful"
+      ],
+      "palettes": [
+        "tech",
+        "minimal",
+        "playful"
+      ],
+      "durationSec": 0.3,
+      "peakAt": 0.002,
+      "weight": 0.72,
+      "speed": 0.56,
+      "brightness": 0.18,
+      "tonal": true,
+      "pitchHz": 133.9,
+      "loudness": -18.5,
+      "sharpness": 0.76,
+      "flatness": 0.018,
+      "world": "abstract",
+      "emotions": [],
+      "group": "keyboard-enter",
+      "license": "original",
+      "v1category": "foley",
+      "description": "Big Enter / return key strike with a plastic rebound — submit, send, search, 'go' moments (0.3 s)."
+    },
+    {
+      "name": "rewind-tape",
+      "file": "rewind-tape.wav",
+      "source": "synth",
+      "category": "transition.rewind",
+      "material": [
+        "air"
+      ],
+      "palette": [
+        "playful",
+        "cinematic",
+        "hype",
+        "tech"
+      ],
+      "palettes": [
+        "playful",
+        "cinematic",
+        "hype",
+        "tech"
+      ],
+      "durationSec": 1.4,
+      "peakAt": 1.32,
+      "weight": 0.5,
+      "speed": 0,
+      "brightness": 0.65,
+      "tonal": false,
+      "loudness": -16,
+      "sharpness": 0.43,
+      "flatness": 0.108,
+      "world": "abstract",
+      "emotions": [],
+      "group": "rewind-tape",
+      "license": "original",
+      "v1category": "transition",
+      "description": "Tape / VHS rewind: warbling high-speed chatter that accelerates into the cut — recaps, 'let's go back', flashbacks (1.4 s)."
+    },
+    {
+      "name": "recap-swoosh",
+      "file": "recap-swoosh.wav",
+      "source": "synth",
+      "category": "transition.rewind",
+      "material": [
+        "air"
+      ],
+      "palette": [
+        "cinematic",
+        "hype",
+        "playful"
+      ],
+      "palettes": [
+        "cinematic",
+        "hype",
+        "playful"
+      ],
+      "durationSec": 1.5,
+      "peakAt": 1.1,
+      "weight": 0.46,
+      "speed": 0.06,
+      "brightness": 0.89,
+      "tonal": false,
+      "loudness": -16,
+      "sharpness": 0.27,
+      "flatness": 0.397,
+      "world": "abstract",
+      "emotions": [],
+      "group": "recap-swoosh",
+      "license": "original",
+      "v1category": "transition",
+      "description": "Recap transition: reverse cymbal + tape chatter + whoosh that lands on the recap card (1.5 s, apex 1.1 s)."
+    },
+    {
+      "name": "tape-stop",
+      "file": "tape-stop.wav",
+      "source": "synth",
+      "category": "transition.tapestop",
+      "material": [
+        "air"
+      ],
+      "palette": [
+        "hype",
+        "playful",
+        "cinematic"
+      ],
+      "palettes": [
+        "hype",
+        "playful",
+        "cinematic"
+      ],
+      "durationSec": 0.9,
+      "peakAt": 0.002,
+      "weight": 0.87,
+      "speed": 0.17,
+      "brightness": 0,
+      "tonal": false,
+      "loudness": -16,
+      "sharpness": 0.5,
+      "flatness": 0,
+      "world": "abstract",
+      "emotions": [],
+      "group": "tape-stop",
+      "license": "original",
+      "v1category": "transition",
+      "description": "Tape stop / power-down: a chord grinds down to silence — record scratch moments, 'wait, what?', freeze frames (0.9 s)."
+    },
+    {
+      "name": "reverse-cymbal",
+      "file": "reverse-cymbal.wav",
+      "source": "synth",
+      "category": "transition.reverse",
+      "material": [
+        "air"
+      ],
+      "palette": [
+        "cinematic",
+        "hype",
+        "luxury"
+      ],
+      "palettes": [
+        "cinematic",
+        "hype",
+        "luxury"
+      ],
+      "durationSec": 2,
+      "peakAt": 1.98,
+      "weight": 0.18,
+      "speed": 0,
+      "brightness": 1,
+      "tonal": false,
+      "loudness": -16,
+      "sharpness": 0.24,
+      "flatness": 0.15,
+      "world": "abstract",
+      "emotions": [],
+      "group": "reverse-cymbal",
+      "license": "original",
+      "v1category": "transition",
+      "description": "Reverse crash cymbal swelling into the hit — drops, logo reveals, big cuts (2.0 s, apex at the end)."
+    },
+    {
+      "name": "light-leak-swell",
+      "file": "light-leak-swell.wav",
+      "source": "synth",
+      "category": "ambience.light",
+      "material": [
+        "air"
+      ],
+      "palette": [
+        "cinematic",
+        "luxury",
+        "minimal"
+      ],
+      "palettes": [
+        "cinematic",
+        "luxury",
+        "minimal"
+      ],
+      "durationSec": 2.4,
+      "peakAt": 1.38,
+      "weight": 0.31,
+      "speed": 0,
+      "brightness": 0.85,
+      "tonal": false,
+      "loudness": -16,
+      "sharpness": 0.06,
+      "flatness": 0.556,
+      "world": "abstract",
+      "emotions": [],
+      "group": "light-leak-swell",
+      "license": "original",
+      "v1category": "texture",
+      "description": "Warm, airy shimmer swell with a soft film crackle — light leaks, lens flares, dreamy dissolves (2.4 s, bloom at 1.3 s)."
+    },
+    {
+      "name": "film-projector",
+      "file": "film-projector.wav",
+      "source": "synth",
+      "category": "ambience.projector",
+      "material": [
+        "mechanical"
+      ],
+      "palette": [
+        "cinematic",
+        "minimal",
+        "luxury"
+      ],
+      "palettes": [
+        "cinematic",
+        "minimal",
+        "luxury"
+      ],
+      "durationSec": 3,
+      "peakAt": 0.002,
+      "weight": 0.75,
+      "speed": 0.01,
+      "brightness": 0.59,
+      "tonal": false,
+      "loudness": -16.7,
+      "sharpness": 0.89,
+      "flatness": 0.123,
+      "world": "abstract",
+      "emotions": [],
+      "group": "film-projector",
+      "license": "original",
+      "v1category": "texture",
+      "description": "Running film projector: sprocket clatter (24 fps), motor hum and hiss — vintage looks, flashbacks, title cards (3.0 s, loopable)."
+    },
+    {
+      "name": "film-burn",
+      "file": "film-burn.wav",
+      "source": "synth",
+      "category": "ambience.filmburn",
+      "material": [
+        "mechanical"
+      ],
+      "palette": [
+        "cinematic",
+        "hype"
+      ],
+      "palettes": [
+        "cinematic",
+        "hype"
+      ],
+      "durationSec": 1.5,
+      "peakAt": 0.7,
+      "weight": 0.69,
+      "speed": 0.07,
+      "brightness": 0.67,
+      "tonal": false,
+      "loudness": -16,
+      "sharpness": 0.38,
+      "flatness": 0.298,
+      "world": "abstract",
+      "emotions": [],
+      "group": "film-burn",
+      "license": "original",
+      "v1category": "texture",
+      "description": "Film burn: crackling flare that whooshes up and fizzles — film-burn transitions, light leaks, analog glitches (1.5 s)."
+    },
+    {
+      "name": "tension-drone",
+      "file": "tension-drone.wav",
+      "source": "synth",
+      "category": "ambience.drone",
+      "material": [
+        "air"
+      ],
+      "palette": [
+        "cinematic",
+        "minimal"
+      ],
+      "palettes": [
+        "cinematic",
+        "minimal"
+      ],
+      "durationSec": 4,
+      "peakAt": 2,
+      "weight": 1,
+      "speed": 0,
+      "brightness": 0,
+      "tonal": false,
+      "loudness": -16,
+      "sharpness": 0.32,
+      "flatness": 0,
+      "world": "abstract",
+      "emotions": [],
+      "group": "tension-drone",
+      "license": "original",
+      "v1category": "texture",
+      "description": "Dark, slowly breathing drone bed — suspense, 'the problem' beats, before a reveal (4.0 s)."
+    },
+    {
+      "name": "braam",
+      "file": "braam.wav",
+      "source": "synth",
+      "category": "impact.braam",
+      "material": [
+        "synthetic"
+      ],
+      "palette": [
+        "cinematic",
+        "hype"
+      ],
+      "palettes": [
+        "cinematic",
+        "hype"
+      ],
+      "durationSec": 2.6,
+      "peakAt": 0.12,
+      "weight": 1,
+      "speed": 0,
+      "brightness": 0,
+      "tonal": false,
+      "loudness": -16,
+      "sharpness": 0.44,
+      "flatness": 0,
+      "world": "abstract",
+      "emotions": [],
+      "group": "braam",
+      "license": "original",
+      "v1category": "cinematic",
+      "description": "Trailer BRAAM: a massive distorted brass-like blast with a sub — title slams, the reveal, the turn (2.6 s)."
+    },
+    {
+      "name": "downlifter",
+      "file": "downlifter.wav",
+      "source": "synth",
+      "category": "sub.downlifter",
+      "material": [
+        "synthetic"
+      ],
+      "palette": [
+        "cinematic",
+        "hype",
+        "tech"
+      ],
+      "palettes": [
+        "cinematic",
+        "hype",
+        "tech"
+      ],
+      "durationSec": 1.6,
+      "peakAt": 0.004,
+      "weight": 0.75,
+      "speed": 0,
+      "brightness": 0.6,
+      "tonal": false,
+      "loudness": -16,
+      "sharpness": 0.46,
+      "flatness": 0.157,
+      "world": "abstract",
+      "emotions": [],
+      "group": "downlifter",
+      "license": "original",
+      "v1category": "cinematic",
+      "description": "Downlifter: a falling noise sweep with a sub drop — after a drop, exits, 'and then…' moments (1.6 s)."
+    },
+    {
+      "name": "trailer-hit-metal",
+      "file": "trailer-hit-metal.wav",
+      "source": "synth",
+      "category": "impact.trailer",
+      "material": [
+        "metal"
+      ],
+      "palette": [
+        "cinematic",
+        "hype"
+      ],
+      "palettes": [
+        "cinematic",
+        "hype"
+      ],
+      "durationSec": 2.4,
+      "peakAt": 0.004,
+      "weight": 1,
+      "speed": 0,
+      "brightness": 0,
+      "tonal": false,
+      "loudness": -16,
+      "sharpness": 0.31,
+      "flatness": 0.001,
+      "world": "abstract",
+      "emotions": [],
+      "group": "trailer-hit-metal",
+      "license": "original",
+      "v1category": "cinematic",
+      "description": "Trailer impact with a metallic ring and sub — logo slams, chapter cards, the big beat (2.4 s)."
+    },
+    {
+      "name": "riser-tension",
+      "file": "riser-tension.wav",
+      "source": "synth",
+      "category": "riser",
+      "material": [
+        "air"
+      ],
+      "palette": [
+        "cinematic",
+        "hype",
+        "tech"
+      ],
+      "palettes": [
+        "cinematic",
+        "hype",
+        "tech"
+      ],
+      "durationSec": 4,
+      "peakAt": 3.95,
+      "weight": 0.71,
+      "speed": 0,
+      "brightness": 0.69,
+      "tonal": false,
+      "loudness": -16,
+      "sharpness": 1,
+      "flatness": 0.309,
+      "world": "abstract",
+      "emotions": [],
+      "group": "riser-tension",
+      "license": "original",
+      "v1category": "riser",
+      "description": "Long tension riser that climbs for 4 s and cuts on the drop — builds into the peak / reveal (4.0 s)."
+    },
+    {
+      "name": "camera-flash",
+      "file": "camera-flash.wav",
+      "source": "synth",
+      "category": "foley.camera",
+      "material": [
+        "synthetic"
+      ],
+      "palette": [
+        "playful",
+        "cinematic",
+        "luxury",
+        "minimal"
+      ],
+      "palettes": [
+        "playful",
+        "cinematic",
+        "luxury",
+        "minimal"
+      ],
+      "durationSec": 0.8,
+      "peakAt": 0.5,
+      "weight": 0.25,
+      "speed": 0.18,
+      "brightness": 0.61,
+      "tonal": false,
+      "loudness": -16,
+      "sharpness": 1,
+      "flatness": 0.137,
+      "world": "abstract",
+      "emotions": [],
+      "group": "camera-flash",
+      "license": "original",
+      "v1category": "foley",
+      "description": "Camera flash: capacitor charge whine then a bright pop — paparazzi flashes, white flash frames (0.8 s, pop at 0.5 s)."
+    },
+    {
+      "name": "clock-ticking",
+      "file": "clock-ticking.wav",
+      "source": "synth",
+      "category": "foley.clock",
+      "material": [
+        "synthetic"
+      ],
+      "palette": [
+        "cinematic",
+        "minimal",
+        "tech"
+      ],
+      "palettes": [
+        "cinematic",
+        "minimal",
+        "tech"
+      ],
+      "durationSec": 2,
+      "peakAt": 0.002,
+      "weight": 0.3,
+      "speed": 0.6,
+      "brightness": 0.73,
+      "tonal": true,
+      "pitchHz": 122,
+      "loudness": -21.6,
+      "sharpness": 1,
+      "flatness": 0.071,
+      "world": "abstract",
+      "emotions": [],
+      "group": "clock-ticking",
+      "license": "original",
+      "v1category": "foley",
+      "description": "Clock tick-tock, 4 ticks at 1/s rhythm compressed to 0.5 s each — deadlines, countdowns, 'time is running out' (2.0 s)."
+    },
+    {
+      "name": "glitch-transition",
+      "file": "glitch-transition.wav",
+      "source": "synth",
+      "category": "digital.glitch",
+      "material": [
+        "digital"
+      ],
+      "palette": [
+        "tech",
+        "hype"
+      ],
+      "palettes": [
+        "tech",
+        "hype"
+      ],
+      "durationSec": 0.6,
+      "peakAt": 0.3,
+      "weight": 0.16,
+      "speed": 0.48,
+      "brightness": 0.77,
+      "tonal": true,
+      "pitchHz": 1501.6,
+      "loudness": -16,
+      "sharpness": 0.85,
+      "flatness": 0.182,
+      "world": "abstract",
+      "emotions": [],
+      "group": "glitch-transition",
+      "license": "original",
+      "v1category": "glitch",
+      "description": "Digital glitch transition: stuttered buzz bursts and bit-crushed chirps around the cut (0.6 s)."
     }
   ]
 }

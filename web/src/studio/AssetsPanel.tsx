@@ -51,6 +51,10 @@ export const AssetsPanel = () => {
   };
 
   const mention = (a: Asset) => { insertIntoChat(`@${a.path} `); };
+  // drafts the footage-edit request; the director plans first and asks before applying (Director's Guide §12)
+  const editFootage = (a: Asset) => {
+    insertIntoChat(`Edit @${a.path}: remove pauses, filler words and retakes, add captions and relevant graphics. Show me the edit plan before applying it.`);
+  };
 
   return (
     <div className="assets-panel"
@@ -87,7 +91,8 @@ export const AssetsPanel = () => {
 
       <div className="asset-grid">
         {assets.map((a) => (
-          <AssetTile key={a.path} a={a} onOpen={() => (isLogo(a) ? setDetail(a) : a.kind === "image" ? setPreview(a) : undefined)} onMention={() => mention(a)} onDelete={() => remove(a)} />
+          <AssetTile key={a.path} a={a} onOpen={() => (isLogo(a) ? setDetail(a) : a.kind === "image" ? setPreview(a) : undefined)} onMention={() => mention(a)} onDelete={() => remove(a)}
+            onEdit={a.kind === "video" && a.hasAudio !== false ? () => editFootage(a) : undefined} />
         ))}
       </div>
 
@@ -97,7 +102,7 @@ export const AssetsPanel = () => {
   );
 };
 
-const AssetTile = ({ a, onOpen, onMention, onDelete }: { a: Asset; onOpen: () => void; onMention: () => void; onDelete: () => void }) => {
+const AssetTile = ({ a, onOpen, onMention, onDelete, onEdit }: { a: Asset; onOpen: () => void; onMention: () => void; onDelete: () => void; onEdit?: () => void }) => {
   const vref = useRef<HTMLVideoElement>(null);
   const name = basename(a.path);
   return (
@@ -118,6 +123,7 @@ const AssetTile = ({ a, onOpen, onMention, onDelete }: { a: Asset; onOpen: () =>
         {!!a.palette?.length && <span className="swatches">{a.palette.slice(0, 6).map((c) => <i key={c} style={{ background: c }} title={c} />)}</span>}
       </div>
       <div className="asset-actions">
+        {onEdit && <button className="icon-btn xs" onClick={onEdit} title="Edit this footage (cut pauses, retakes, add captions)" aria-label="Edit this footage"><IconScissors /></button>}
         <button className="icon-btn xs" onClick={onMention} title="Mention in brief" aria-label="Mention in brief"><IconAt size={14} /></button>
         <button className="icon-btn xs danger-hover" onClick={onDelete} title="Delete" aria-label="Delete"><IconTrash size={14} /></button>
       </div>
@@ -224,3 +230,9 @@ const LogoDrawer = ({ a, onClose, onMention }: { a: Asset; onClose: () => void; 
     </div>
   );
 };
+
+const IconScissors = () => (
+  <svg width={14} height={14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
+    <circle cx="4" cy="4.5" r="2" /><circle cx="4" cy="11.5" r="2" /><path d="M5.6 5.7 13.5 12.5M5.6 10.3 13.5 3.5" />
+  </svg>
+);

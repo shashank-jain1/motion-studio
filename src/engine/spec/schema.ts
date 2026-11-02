@@ -685,6 +685,31 @@ export const SceneSchema = z.object({
 });
 export type Scene = z.infer<typeof SceneSchema>;
 
+/** One narration clip on the film timeline (generate_voiceover writes these). */
+export const VoiceClipSchema = z.object({
+  src: z.string().describe("assets/vo-….wav"),
+  at: z.number().min(0).optional().describe("film time (s) the clip starts, default 0"),
+  volume: z.number().min(0).max(2).optional().describe("default 1"),
+  trimStart: z.number().min(0).optional(),
+  duration: z.number().positive().optional().describe("seconds of the clip that play (default: until the film ends)"),
+  text: z.string().optional().describe("the script, for reference"),
+  words: z.array(z.object({ text: z.string(), start: z.number(), end: z.number() })).optional()
+    .describe("word timings relative to the clip start — drive film captions and music ducking"),
+});
+
+export const FilmCaptionsSchema = z.object({
+  style: z.enum(["karaoke", "pop", "box", "bounce", "clean"]).optional(),
+  wordsPerPage: z.number().int().min(1).max(8).optional(),
+  uppercase: z.boolean().optional(),
+  fontSize: z.number().optional(),
+  font: z.string().optional(),
+  color: z.string().optional(),
+  highlightColor: z.string().optional(),
+  position: z.enum(["lower", "center", "upper"]).optional().describe("default lower (inside the platform safe zone)"),
+  y: z.number().optional().describe("explicit vertical offset from the frame centre, px (overrides position)"),
+  width: z.number().optional().describe("caption box width, px (default 85% of the frame)"),
+});
+
 export const FORMATS = { "16:9": [1920, 1080], "9:16": [1080, 1920], "1:1": [1080, 1080], "4:5": [1080, 1350], "21:9": [2520, 1080] } as const;
 
 export const ThemeSchema = z.object({
@@ -808,7 +833,16 @@ export const SpecSchema = z.object({
     trimStart: z.number().optional(),
     fadeIn: z.number().optional(),
     fadeOut: z.number().optional(),
+    duckUnderVoice: z.number().min(0).max(1).optional().describe("how far the music dips while the voiceover speaks: 0 = never, default 0.6 (≈ −8 dB)"),
+    at: z.number().min(0).optional().describe("film time (s) the music starts (fit_music sets it only when a short delayed start lands the drop)"),
+    credit: z.object({
+      title: z.string().optional(), artist: z.string().optional(), source: z.string().optional(), license: z.string(),
+      commercial: z.boolean(), attribution: z.string().optional(), url: z.string().optional(),
+    }).optional().describe("license of the music (written by import_music / compose_music); renders publish `attribution` in a credits file"),
   }).optional(),
+  usage: z.enum(["personal", "commercial"]).optional().describe("what the film is for: commercial = promotes a business/brand/product or client work (only commercial-safe music); personal = your own social posts"),
+  voiceover: z.array(VoiceClipSchema).max(64).optional().describe("narration clips (generate_voiceover) placed on the film timeline; the music ducks under them"),
+  captions: FilmCaptionsSchema.optional().describe("film-level captions over every scene, timed from the voiceover's words"),
   sfx: z.array(z.object({ src: z.string().describe("\"sfx:<name>\" (built-in) or an assets/ path"), at: z.number(), volume: z.number().optional(), rate: z.number().optional() })).optional(),
   sound: z.object({
     auto: z.boolean().optional().describe("auto sound design: place library SFX on transitions, slams, punches, morphs, counters, pops (default true when sound is set)"),
@@ -846,6 +880,9 @@ export const SpecSchema = z.object({
   beatOffset: z.number().optional(),
   beats: z.array(z.number()).optional().describe("explicit beat times (s) from analyze_audio; preferred over bpm"),
   actors: z.array(ActorSchema).optional(),
+  edit: z.object({
+    source: z.string(), plan: z.string().optional(), sourceSeconds: z.number().optional(), editedSeconds: z.number().optional(),
+  }).optional().describe("set by edit_footage: this film is an edit of a recording (craft rules for invented films are relaxed)"),
   scenes: z.array(SceneSchema).min(1),
 });
 export type Spec = z.infer<typeof SpecSchema>;

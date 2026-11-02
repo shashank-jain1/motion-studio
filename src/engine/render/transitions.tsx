@@ -1,6 +1,6 @@
 /** Maps spec transitions to @remotion/transitions presentations (incl. WebGL ones) plus custom cinematic cuts. */
 import React from "react";
-import { AbsoluteFill, random } from "remotion";
+import { AbsoluteFill, HtmlInCanvas, getRemotionEnvironment, random } from "remotion";
 import type { TransitionPresentation, TransitionPresentationComponentProps } from "@remotion/transitions";
 import { fade } from "@remotion/transitions/fade";
 import { slide } from "@remotion/transitions/slide";
@@ -229,11 +229,39 @@ const custom = <P extends Record<string, unknown>>(component: React.FC<Transitio
 
 // --- Mapping -------------------------------------------------------------------------
 
+/**
+ * These @remotion/transitions presentations draw the scenes through the experimental HTML-in-Canvas API. Only RENDERS
+ * use them: Firefox and Safari lack the API (the presentation throws), and even where Chrome has it, re-mounting on a
+ * Player seek throws "Cannot transfer control from a canvas more than once" — either way the whole Player dies.
+ * Interactive previews (Player, thumbnails, Studio) get a close CSS/custom stand-in; renders keep the real effect.
+ */
+const CANVAS_TRANSITIONS = new Set(["book-flip", "zoom-blur", "dreamy-zoom", "film-burn", "linear-blur", "zoom-in-out", "dissolve", "ripple", "crosswarp", "cross-zoom", "swap", "blur-slide"]);
+let canvasSupport: boolean | null = null;
+export const htmlInCanvasSupported = () => {
+  if (canvasSupport != null) return canvasSupport;
+  try { canvasSupport = typeof document === "undefined" ? true : getRemotionEnvironment().isRendering && HtmlInCanvas.isSupported(); } catch { canvasSupport = false; }
+  return canvasSupport;
+};
+
+/** Stand-in for a canvas transition in a browser without HTML-in-Canvas (same feel, no crash). */
+const canvasFallback = (tr: T, resolveColor: (c: string) => string): TransitionPresentation<any> => {
+  const d = tr.direction;
+  switch (tr.type) {
+    case "film-burn": return custom(Flash, { color: resolveColor(tr.color ?? "#ffb35c") });
+    case "dreamy-zoom": case "zoom-blur": case "zoom-in-out": case "cross-zoom": return custom(ZoomThrough, {});
+    case "crosswarp": case "linear-blur": case "blur-slide": return custom(Whip, { direction: d ?? "left" });
+    case "swap": return slide({ direction: toSlideDir(d) });
+    case "book-flip": return flip({ direction: toSlideDir(d) });
+    default: return fade(); // dissolve, ripple
+  }
+};
+
 export const getPresentation = (
   tr: T, width: number, height: number, resolveColor: (c: string) => string, origin?: TransitionOrigin,
 ): TransitionPresentation<any> | null => {
   const d = tr.direction;
   const o: TransitionOrigin = origin ?? { x: tr.x ?? 0, y: tr.y ?? 0, w: 0, h: 0 };
+  if (CANVAS_TRANSITIONS.has(tr.type) && !htmlInCanvasSupported()) return canvasFallback(tr, resolveColor);
   switch (tr.type) {
     case "none": case "cut": return null;
     case "fade": return fade();

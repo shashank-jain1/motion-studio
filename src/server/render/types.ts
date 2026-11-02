@@ -3,7 +3,7 @@ import type { Spec } from "../../engine/spec/schema";
 import type { RenderRecord } from "../../core/tools";
 import type { Format } from "../../engine/spec/reflow";
 
-export type RenderInfo = { file: string; url: string; quality: "draft" | "final"; createdAt: string; sizeBytes: number; seconds?: number; width?: number; height?: number; format?: Format };
+export type RenderInfo = { file: string; url: string; quality: "draft" | "final"; createdAt: string; sizeBytes: number; seconds?: number; width?: number; height?: number; format?: Format; /** music credit the license requires */ credits?: string };
 
 /** What a backend returns: the RenderInfo plus the extra record fields (fps, render time) the tools report. */
 export type RenderOutput = RenderInfo & { fps?: number; renderSeconds?: number };

@@ -55,9 +55,19 @@ export const craftWarnings = (spec: Spec): string[] => {
   });
 
   // 2c. Build with sound
-  if (spec.scenes.length >= 2 && !spec.sound && !spec.audio && !spec.sfx?.length) {
+  if (spec.scenes.length >= 2 && !spec.sound && !spec.audio && !spec.sfx?.length && !spec.voiceover?.length) {
     out.push("craft/sound: the film is silent. Add `\"sound\": {\"palette\": …}` (auto sound design: whooshes on cuts, hits on slams, ticks on counters) and optionally a music `audio` track — sound sync is a top retention lever.");
   }
+  // 2c''. Music license vs what the film is for
+  const credit = spec.audio?.credit;
+  if (credit && !credit.commercial) {
+    if (spec.usage === "commercial") out.push(`license/music: “${credit.title ?? spec.audio!.src}” is licensed ${credit.license} — NOT allowed in commercial content (spec.usage is commercial). Replace it: search_music (CC0 / CC BY results) or compose_music.`);
+    else if (!spec.usage) out.push(`license/usage: the music (${credit.license}) is for personal social posts only. Set spec.usage to "personal" to confirm, or "commercial" for brand / client / ad work (then pick commercial-safe music).`);
+  }
+  if (spec.usage === "commercial" && spec.audio && !credit) out.push(`license/music: commercial film with uploaded music (${spec.audio.src}) — make sure you hold a license for commercial use.`);
+  // 2c'. Voice + captions: film captions without narration words show nothing; per-scene captions double up
+  if (spec.captions && !spec.voiceover?.some((c) => c.words?.length)) out.push("craft/captions: spec.captions is set but no voiceover clip has word timings, so no film captions will show (generate_voiceover adds them).");
+  if (spec.captions && spec.voiceover?.length && spec.scenes.some((sc) => sc.layers.some((l) => l.type === "captions"))) out.push("craft/captions: this film has both film captions (from the voiceover) and per-scene captions layers — two caption tracks will compete; keep one.");
   // 2d. 3D budget (one WebGL context per 3D layer; Chrome caps ~16)
   spec.scenes.forEach((sc, si) => {
     const n = sc.layers.filter((l) => l.type === "three").length;
@@ -149,5 +159,10 @@ export const craftWarnings = (spec: Spec): string[] => {
     out.push(`story: checks skipped (${(e as Error).message})`);
   }
 
+  // A footage edit's story is the speaker's: invented-film rules (concept, morphs/actors, auto sound, Story Engine,
+  // reveals/arcs) don't apply. Legibility, safe zones, pacing and hook rules still do.
+  if (spec.edit) return out.filter((w) => !FOOTAGE_EXEMPT.test(w));
   return out;
 };
+
+const FOOTAGE_EXEMPT = /^(craft\/(concept|continuity|transformation|sound|arcs|reveal)|story[/:])/;

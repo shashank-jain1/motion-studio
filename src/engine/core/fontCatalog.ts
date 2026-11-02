@@ -3,6 +3,7 @@ export const FONT_NAMES = [
   "Anton", "Archivo Black", "Bebas Neue", "Bodoni Moda", "Bricolage Grotesque", "Bungee", "Caveat", "Cinzel", "Cormorant Garamond", "DM Sans",
   "DM Serif Display", "Fraunces", "Geist", "Instrument Sans", "Instrument Serif", "Inter", "Italiana", "JetBrains Mono", "League Gothic", "Lora", "Manrope", "Monoton", "Montserrat", "Orbitron", "Oswald", "Outfit",
   "Permanent Marker", "Playfair Display", "Poppins", "Press Start 2P", "Righteous", "Sora", "Space Grotesk", "Syne", "Unbounded",
+  "Newsreader", "IBM Plex Mono", "Tiro Devanagari Hindi", "Mukta",
 ] as const;
 
 export const CINEMATIC_PAIRINGS = [

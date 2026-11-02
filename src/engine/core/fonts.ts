@@ -34,6 +34,10 @@ import * as BodoniModa from "@remotion/google-fonts/BodoniModa";
 import * as CormorantGaramond from "@remotion/google-fonts/CormorantGaramond";
 import * as Italiana from "@remotion/google-fonts/Italiana";
 import * as LeagueGothic from "@remotion/google-fonts/LeagueGothic";
+import * as Newsreader from "@remotion/google-fonts/Newsreader";
+import * as IBMPlexMono from "@remotion/google-fonts/IBMPlexMono";
+import * as TiroDevanagariHindi from "@remotion/google-fonts/TiroDevanagariHindi";
+import * as Mukta from "@remotion/google-fonts/Mukta";
 import { cancelRender, continueRender, delayRender } from "remotion";
 import { FONT_NAMES } from "./fontCatalog";
 import { canonicalFontFamily, customFontIdentity, facesForFamily, type FontFaceDefinition } from "./fontIdentity";
@@ -52,6 +56,7 @@ export const FONTS: Record<(typeof FONT_NAMES)[number], FontModule> = {
   "Orbitron": Orbitron, "Oswald": Oswald, "Outfit": Outfit, "Permanent Marker": PermanentMarker,
   "Playfair Display": PlayfairDisplay, "Poppins": Poppins, "Press Start 2P": PressStart2P, "Righteous": Righteous,
   "Sora": Sora, "Space Grotesk": SpaceGrotesk, "Syne": Syne, "Unbounded": Unbounded,
+  "Newsreader": Newsreader, "IBM Plex Mono": IBMPlexMono, "Tiro Devanagari Hindi": TiroDevanagariHindi, "Mukta": Mukta,
 };
 
 const loaded = new Map<string, string>();
@@ -99,7 +104,10 @@ export const ensureFont = (name: string, definitions: readonly FontFaceDefinitio
   for (const style of loadStyles) {
     const available = Object.keys(info.fonts[style] ?? {});
     const weights = available.filter((w) => WANTED_WEIGHTS.includes(w));
-    const r = mod.loadFont(style, { weights: weights.length ? weights : available, subsets: ["latin"], ignoreTooManyRequestsWarning: true });
+    // Latin plus the scripts Indian (and other) audiences write in, when the family has them
+    const offered = ((info as { subsets?: string[] }).subsets ?? ["latin"]);
+    const subsets = offered.filter((s) => ["latin", "latin-ext", "devanagari"].includes(s));
+    const r = mod.loadFont(style, { weights: weights.length ? weights : available, subsets: subsets.length ? subsets : ["latin"], ignoreTooManyRequestsWarning: true });
     waits.push(r.waitUntilDone().catch(() => undefined));
   }
   const family = `"${info.fontFamily}", system-ui, sans-serif`;

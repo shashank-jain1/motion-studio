@@ -380,6 +380,8 @@ export const Studio = () => {
                 <span>{fmt}</span><span>{info.width}×{info.height}</span><span>{info.fps} FPS</span><span>{fmtTC(info.seconds, info.fps)}</span>
               </span>
             )}
+            <button className="btn sm primary export-btn" onClick={() => { setRightTab("renders"); setRightOpen(true); }} disabled={!state?.spec && !liveSpec}
+              title="Render the video and download it (5)">Export{renders.length ? <span className="mono export-count">{renders.length}</span> : null}</button>
             <span className="tool-group" role="group" aria-label="Panels">
               <button className={`icon-btn ghost sm ${leftOpen ? "is-on" : ""}`} onClick={() => setLeftOpen((o) => !o)} aria-pressed={leftOpen} aria-label="Director panel" title="Director panel"><IconPanelLeft size={16} /></button>
               <button className={`icon-btn ghost sm ${tlOpen ? "is-on" : ""}`} onClick={() => setTlOpen((o) => !o)} aria-pressed={tlOpen} aria-label="Timeline" title="Timeline"><IconPanelBottom size={16} /></button>

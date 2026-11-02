@@ -38,9 +38,54 @@ import {
   type ValidationResult,
 } from "./projects";
 import { authorLabel, type SpecAuthor, type VersionMeta } from "./versions";
+import { listVoices, spokenText, synthesizeVoice, timeWords, voiceFileName } from "./voice";
+import { composeScore, scoreWav } from "./music";
+import { lyriaMusic } from "./gemini";
+import { SFX as SFX_LIB } from "../engine/audio/library";
+import { filmCredits, writeRenderCredits } from "./credits";
+import { allowedFor, lookupTrack, readTrackLicense, searchMusic, writeTrackLicense, type Usage } from "./musicLibrary";
+import { fitTrack } from "./musicFit";
+import { analyzeAudio } from "./audio";
+
+/** 8-point loudness sketch of a track ("▁▃▅█…") so the director can see where it builds. */
+const shape = (e: number[]) => { const bars = "▁▂▃▄▅▆▇█"; const n = 16; return Array.from({ length: n }, (_, i) => { const seg = e.slice(Math.floor((i * e.length) / n), Math.floor(((i + 1) * e.length) / n)); const v = seg.reduce((a, b) => a + b, 0) / Math.max(1, seg.length); return bars[Math.min(7, Math.round(v * 7))]; }).join(""); };
+
+type AudioCreditIn = { title?: string; artist?: string; source?: string; license: string; commercial: boolean; attribution?: string; url?: string };
+
+/** Analyze a track, fit it to the film and write spec.audio + sound.music (one version). */
+const fitAndApply = async (projectId: string, assetPath: string, abs: string, o: { peak?: number; volume?: number; credit?: AudioCreditIn; author: SpecAuthor }): Promise<ToolResult> => {
+  const raw = readSpec(projectId) as (SpecInput & Record<string, unknown>) | null;
+  if (!raw) throw new Error("Write the spec first: fitting needs the film's timeline.");
+  const tl = computeTimeline(raw);
+  const a = await analyzeAudio(abs);
+  const peak = o.peak ?? Math.round(tl.total * 0.7 * 100) / 100;
+  const f = fitTrack(a, { total: tl.total, peak, cuts: tl.scenes.map((s) => s.start) });
+  const hasVoice = Array.isArray(raw.voiceover) && raw.voiceover.length > 0;
+  const audio: Record<string, unknown> = {
+    src: assetPath, volume: o.volume ?? (hasVoice ? 0.55 : 0.8),
+    ...(f.trimStart ? { trimStart: f.trimStart } : {}), ...(f.at ? { at: f.at } : {}), ...(f.fadeIn ? { fadeIn: f.fadeIn } : {}), fadeOut: f.fadeOut,
+    ...((raw.audio as { duckUnderVoice?: number } | undefined)?.duckUnderVoice != null ? { duckUnderVoice: (raw.audio as { duckUnderVoice?: number }).duckUnderVoice } : {}),
+    ...(o.credit ? { credit: o.credit } : {}),
+  };
+  const next = { ...raw, audio, sound: { ...((raw.sound as object | undefined) ?? {}), music: { bpm: a.bpm, beats: f.beats, key: a.key, keyConfidence: a.keyConfidence, onsets: a.onsets.map((x) => Math.round((x - f.trimStart + f.at) * 1000) / 1000).filter((x) => x >= 0 && x < tl.total) } } };
+  const res = await writeSpec(projectId, next, { author: o.author, summary: `Music fitted · ${path.basename(assetPath)}` });
+  const lines = [
+    `Fitted ${assetPath}: starts ${f.trimStart.toFixed(2)}s into the track${f.at ? `, enters at ${f.at.toFixed(2)}s` : ""} · ${a.bpm.toFixed(1)} bpm · ${a.key}`,
+    f.dropFilmTime != null ? `Drop/lift lands at ${f.dropFilmTime.toFixed(2)}s (peak ${peak.toFixed(2)}s, off by ${f.dropErr.toFixed(2)}s)` : "No clear drop in this track",
+    `Cuts within ${f.cutErrMs} ms of a beat on average · ${f.endsWithTrack ? "the film ends with the track's own ending" : `fades out over ${f.fadeOut}s`}`,
+    ...f.notes,
+  ];
+  return { content: [text_(`${formatValidation(res)}\n\n${lines.join("\n")}`)], isError: !res.ok, summary: `Music fitted · drop ${f.dropFilmTime != null ? `@${f.dropFilmTime.toFixed(1)}s` : "none"}`, events: specEvent(projectId, res) };
+};
+
+/** Tell the user (and the director) which credit the music license requires with this video. */
+const creditNote = (c: string | null | undefined) => (c ? `\n\nCREDIT REQUIRED — publish with the video (saved next to it as .credits.txt):\n${c}` : "");
+import { downloadWithYtDlp, whisperReady, footageSpec, getEditStyle, listEditStyles, measureReference, planFootage, saveEditStyle, suggestFromMeasurements, transcribeFile, type EditStyle } from "./footage";
+
+const pick = <T extends Record<string, unknown>, K extends keyof T>(o: T, keys: K[]) =>
+  Object.fromEntries(keys.filter((k) => o[k] !== undefined).map((k) => [k, o[k]])) as Partial<Pick<T, K>>;
 import { thumbnail, type AssetInfo } from "./probe";
 import { ensureLogoAnalysis, logoJsonPath, logoSummary, renderLogoPreviewPng, LOGO_ORDERS, type LogoBrief } from "./logo";
-import { analyzeAudio } from "./audio";
 import { renderFrames, renderVideo, type PreviewResult, type RenderQuality, type RenderVideoResult } from "./render";
 import { listCustomComponents, readCustomComponent, writeCustomComponent } from "./custom";
 import { resolvePublic, safeDownload } from "./safe-download";
@@ -80,6 +125,8 @@ export type RenderRecord = {
   renderSeconds?: number;
   /** Output format ("9:16"…): the master format, or the format the spec was reflowed to (spec/reflow.ts). */
   format?: Format;
+  /** credits the music license requires — publish them with the video (also in <file>.mp4.credits.txt) */
+  credits?: string;
 };
 
 export type PreviewFrameInfo = { time: number; frame: number; path: string; label: string };
@@ -211,6 +258,14 @@ const defineTool = <S extends Shape>(def: {
 // ---------------------------------------------------------------- content helpers
 
 const text = (t: string): ToolContent => ({ type: "text", text: t });
+/** alias for handlers that have a local `text` (a script) in scope */
+const text_ = text;
+/** zod v4 mirror of the engine's FilmCaptionsSchema (the engine schema is zod v3) */
+const filmCaptionsField = z.object({
+  style: z.enum(["karaoke", "pop", "box", "bounce", "clean"]).optional(), wordsPerPage: z.number().int().min(1).max(8).optional(), uppercase: z.boolean().optional(),
+  fontSize: z.number().optional(), font: z.string().optional(), color: z.string().optional(), highlightColor: z.string().optional(),
+  position: z.enum(["lower", "center", "upper"]).optional(), y: z.number().optional(), width: z.number().optional(),
+});
 const json = (v: unknown): ToolContent => text(JSON.stringify(v, null, 2));
 const image = (buf: Buffer, mimeType = "image/jpeg"): ToolContent => ({ type: "image", data: buf.toString("base64"), mimeType });
 
@@ -576,6 +631,8 @@ export const runRender = async (
     renderSeconds: result.renderSeconds,
     format: result.format,
   };
+  const credits = writeRenderCredits(projectId, result.path);
+  if (credits) record.credits = credits;
   try {
     fs.writeFileSync(`${result.path}.json`, JSON.stringify(record, null, 2) + "\n");
   } catch {
@@ -612,6 +669,7 @@ export const listRenders = (projectId: string): RenderRecord[] => {
       ...(!meta.format && RENDER_RE.exec(f)?.[2] ? { format: `${RENDER_RE.exec(f)![2]}:${RENDER_RE.exec(f)![3]}` as Format } : {}),
       createdAt: meta.createdAt ?? st.mtime.toISOString(),
       sizeBytes: st.size,
+      ...(fs.existsSync(`${abs}.credits.txt`) ? { credits: fs.readFileSync(`${abs}.credits.txt`, "utf8").trim() } : {}),
     });
   }
   return out.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
@@ -1052,6 +1110,368 @@ export const TOOLS: ToolDef[] = [
   }),
 
   defineTool({
+    name: "transcribe_media", title: "Transcribe speech", scope: "project",
+    description: "Word-level transcript of a video/audio asset. provider whisper = local whisper.cpp (free, offline, no key; the first run builds it and downloads the model, ~1–2 min); gemini = gemini-3.5-transcribe (free tier with rate limits, needs a Gemini key; up to 30 min, strong on accents and code-switching); auto (default) = Whisper when already set up, else Gemini when a key exists, else build Whisper. Cached next to the asset. Use for talking-head edits (edit_footage does this itself), captions on any spoken footage, or to read what a reference says. model: tiny|base (default)|small|medium|large-v3-turbo, *.en variants are faster for English; language: auto or an ISO code like en, hi, es.",
+    shape: { projectId: projectIdField, asset: z.string().describe("project audio/video asset, e.g. assets/raw-take.mp4"),
+      model: z.enum(["tiny", "tiny.en", "base", "base.en", "small", "small.en", "medium", "medium.en", "large-v3-turbo"]).optional(),
+      language: z.string().max(8).optional(), force: z.boolean().optional().describe("re-transcribe even if cached"),
+      provider: z.enum(["auto", "whisper", "gemini"]).optional() },
+    startSummary: (i) => `Transcribing ${String(i.asset).split("/").pop()}`,
+    handler: async ({ projectId, asset, model, language, force, provider }, ctx) => {
+      const info = await getAssetInfo(projectId, stripAssets(asset));
+      if (info.kind !== "video" && info.kind !== "audio") throw new Error("Choose a video or audio asset.");
+      const t = await transcribeFile(info.file, { model, language, force, provider, onProgress: ctx.onProgress, signal: ctx.signal });
+      const body = t.words.map((w) => w.text).join(" ");
+      return {
+        content: [text(`${t.words.length} words · ${t.seconds.toFixed(1)}s · language ${t.language} · model ${t.model}\n\n${body.length > 4000 ? body.slice(0, 4000) + " …" : body}`)],
+        summary: `Transcribed ${plural(t.words.length, "word")} · ${t.seconds.toFixed(1)}s`,
+      };
+    },
+  }),
+  defineTool({
+    name: "edit_footage", title: "Edit raw footage", scope: "project",
+    description: "Edit a raw talking-head / spoken video: transcribes it, then removes dead air, filler words (um, uh), stutters and retakes (keeps the LAST take), with word-timed captions and optional jump-cut punch-ins. Two steps — ALWAYS show the user the plan first: call with apply:false (default) to get the edit plan (every cut with its reason and source time), discuss, adjust (maxPause, removeRetakes:false, cutRanges for extra cuts…), then call again with apply:true to write the spec (one scene per kept stretch; the footage trimmed to it; previous spec stays in History). After applying, layer motion graphics onto specific cuts with update_scene (titles, counters, b-roll media, callouts) — keep the footage layer and its captions. style: a saved edit style (list_edit_styles) supplies defaults; explicit arguments override it.",
+    shape: {
+      projectId: projectIdField,
+      asset: z.string().describe("the raw recording, e.g. assets/take-1.mp4"),
+      apply: z.boolean().optional().describe("false (default) = return the plan only; true = write the edited spec"),
+      style: z.string().optional().describe("name of a saved edit style"),
+      maxPause: z.number().min(0.05).max(3).optional().describe("longest pause kept, seconds (default 0.35; 0.15 = very tight reel pacing)"),
+      removeFillers: z.boolean().optional(), removeStutters: z.boolean().optional(), removeRetakes: z.boolean().optional(),
+      cutRanges: z.array(z.object({ start: z.number().min(0), end: z.number().min(0) })).max(100).optional().describe("extra SOURCE-time ranges to remove"),
+      captions: z.union([z.literal(false), z.object({
+        style: z.enum(["karaoke", "pop", "box", "bounce", "clean"]).optional(), wordsPerPage: z.number().int().min(1).max(8).optional(), uppercase: z.boolean().optional(),
+        fontSize: z.number().optional(), color: z.string().optional(), highlightColor: z.string().optional(), font: z.string().optional(), position: z.enum(["lower", "center", "upper"]).optional(),
+      })]).optional(),
+      punchIn: z.union([z.literal(false), z.object({ every: z.number().int().min(1).max(8), scale: z.number().min(1.02).max(1.5) })]).optional()
+        .describe("zoomed framing every N cuts so jump cuts read as intentional; false = none"),
+      model: z.enum(["tiny", "tiny.en", "base", "base.en", "small", "small.en", "medium", "medium.en", "large-v3-turbo"]).optional(),
+      language: z.string().max(8).optional(),
+      provider: z.enum(["auto", "whisper", "gemini"]).optional().describe("transcription provider (see transcribe_media)"),
+    },
+    startSummary: (i) => (i.apply ? "Building the edit" : "Planning the edit"),
+    handler: async (input, ctx) => {
+      const { projectId, asset, apply, style: styleName } = input;
+      const info = await getAssetInfo(projectId, stripAssets(asset));
+      if (info.kind !== "video") throw new Error("Choose a video asset (the raw recording).");
+      const style = styleName ? getEditStyle(styleName) : null;
+      const opts = { ...(style?.edit ?? {}), ...pick(input, ["maxPause", "removeFillers", "removeStutters", "removeRetakes"]), cutRanges: input.cutRanges };
+      const { plan, text: planText } = await planFootage(info.file, { ...opts, model: input.model, language: input.language, provider: input.provider, onProgress: ctx.onProgress, signal: ctx.signal });
+      if (!apply) {
+        return { content: [text(`${planText}\n\nNothing is written yet. Show this plan to the user; when they approve, call edit_footage again with apply:true (same options).`)], summary: `Edit plan · ${plan.sourceSeconds.toFixed(1)}s → ${plan.editedSeconds.toFixed(1)}s` };
+      }
+      const project = getProject(projectId);
+      const spec = footageSpec(plan, {
+        src: info.path, format: project.format, fps: info.fps ? Math.round(info.fps) : 30, title: `${project.name} — edit`,
+        captions: input.captions ?? style?.captions, punchIn: input.punchIn ?? style?.punchIn,
+      });
+      const res = await writeSpec(projectId, spec, { author: authorOf(ctx), summary: `Footage edit · ${plan.keep.length} cuts · ${plan.sourceSeconds.toFixed(1)}s → ${plan.editedSeconds.toFixed(1)}s` });
+      return {
+        content: [text(`${formatValidation(res)}\n\n${planText}\n\nNext: preview_frames on a few cuts, then add graphics per cut with update_scene (keep each scene's "footage" and "captions" layers).${style?.notes ? `\n\nStyle notes (${style.name}): ${style.notes}` : ""}`)],
+        isError: !res.ok, summary: specResultSummary("Footage edit", res, projectId), events: specEvent(projectId, res),
+      };
+    },
+  }),
+  defineTool({
+    name: "analyze_reference_style", title: "Measure a reference edit", scope: "project",
+    description: "Measure how a reference video is edited: shot count, cuts per minute, median/quartile shot length, time of the first cut (hook), and — when it has speech — words per minute and pause lengths. Returns suggested edit settings. Combine with inspect_video_reference frames (captions look, framing, overlays, transitions) before save_edit_style. Measurements are approximate (gradual transitions may not register as cuts).",
+    shape: { projectId: projectIdField, asset: z.string(), transcribe: z.boolean().optional().describe("measure speech too (default true)") },
+    startSummary: (i) => `Measuring ${String(i.asset).split("/").pop()}`,
+    handler: async ({ projectId, asset, transcribe: tr }, ctx) => {
+      const info = await getAssetInfo(projectId, stripAssets(asset));
+      if (info.kind !== "video") throw new Error("Choose a video asset.");
+      const measured = await measureReference(info.file, { transcribe: tr, onProgress: ctx.onProgress, signal: ctx.signal });
+      return { content: [json({ asset: info.path, measured, suggested: suggestFromMeasurements([measured]) })],
+        summary: `${measured.shots.count} shots · ${measured.shots.cutsPerMinute}/min${measured.speech ? ` · ${measured.speech.wordsPerMinute} wpm` : ""}` };
+    },
+  }),
+  defineTool({
+    name: "save_edit_style", title: "Save an editing style", scope: "global",
+    description: "Save (or update) a reusable editing style — the user's personal \"how my videos are cut\" — from 1–5 reference videos and your own observations. References are measured (pacing, pauses) and turned into defaults; explicit edit/punchIn/captions override them; notes holds what numbers can't (caption look, transitions, b-roll and overlay habits, sound). edit_footage and future films apply it by name. Update it when the user corrects an edit (\"tighter pauses\", \"no punch-ins\").",
+    shape: {
+      name: z.string().min(1).max(60),
+      references: z.array(z.object({ projectId: z.string(), asset: z.string() })).max(5).optional(),
+      edit: z.object({ maxPause: z.number().min(0.05).max(3).optional(), pad: z.number().min(0).max(0.3).optional(), removeFillers: z.boolean().optional(), removeStutters: z.boolean().optional(), removeRetakes: z.boolean().optional() }).optional(),
+      punchIn: z.union([z.literal(false), z.object({ every: z.number().int().min(1).max(8), scale: z.number().min(1.02).max(1.5) })]).optional(),
+      captions: z.union([z.literal(false), z.object({
+        style: z.enum(["karaoke", "pop", "box", "bounce", "clean"]).optional(), wordsPerPage: z.number().int().min(1).max(8).optional(), uppercase: z.boolean().optional(),
+        fontSize: z.number().optional(), color: z.string().optional(), highlightColor: z.string().optional(), font: z.string().optional(), position: z.enum(["lower", "center", "upper"]).optional(),
+      })]).optional(),
+      notes: z.string().max(4000).optional(),
+    },
+    startSummary: (i) => `Saving style “${i.name}”`,
+    handler: async ({ name, references, edit, punchIn, captions, notes }, ctx) => {
+      const refs: NonNullable<EditStyle["references"]> = [];
+      for (const r of references ?? []) {
+        if (ctx.policy?.canAccessProject && !ctx.policy.canAccessProject(r.projectId)) throw new Error(`Project "${r.projectId}" not found`);
+        const info = await getAssetInfo(r.projectId, stripAssets(r.asset));
+        refs.push({ name: info.path, measured: await measureReference(info.file, { signal: ctx.signal }) });
+      }
+      let prev: EditStyle | null = null;
+      try { prev = getEditStyle(name); } catch { /* new */ }
+      const base = refs.length ? suggestFromMeasurements(refs.map((r) => r.measured)) : { edit: prev?.edit ?? {}, punchIn: prev?.punchIn, captions: prev?.captions };
+      const saved = saveEditStyle({
+        name, references: refs.length ? refs : prev?.references,
+        edit: { ...base.edit, ...(edit ?? {}) }, punchIn: punchIn ?? base.punchIn,
+        captions: captions === false ? false : { ...(base.captions || {}), ...(captions ?? {}) }, notes: notes ?? prev?.notes,
+      });
+      return { content: [json(saved)], summary: `Saved style “${saved.name}”` };
+    },
+  }),
+  defineTool({
+    name: "list_edit_styles", title: "Editing styles", scope: "global",
+    description: "List saved editing styles (name, settings, notes) for edit_footage's style argument.",
+    shape: {},
+    handler: async () => {
+      const all = listEditStyles();
+      return { content: [all.length ? json(all.map(({ references, ...s }) => ({ ...s, references: references?.map((r) => r.name) }))) : text("No editing styles yet. Analyze 3–5 reference videos and save_edit_style.")], summary: plural(all.length, "editing style") };
+    },
+  }),
+  defineTool({
+    name: "import_reference_url", title: "Import a reference video link", scope: "project", hosted: "hidden",
+    description: "Download a public video page (YouTube, Instagram, TikTok, X, Vimeo…) into the project's assets with yt-dlp, for study as a REFERENCE (analyze_reference_style, inspect_video_reference). Requires yt-dlp on this machine. Only for videos the user may use this way; never publish downloaded footage in a film. Max 300 MB.",
+    shape: { projectId: projectIdField, url: z.string().url() },
+    startSummary: (i) => `Downloading ${String(i.url).slice(0, 60)}`,
+    handler: async ({ projectId, url }, ctx) => {
+      const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "ms-ref-"));
+      try {
+        ctx.onProgress?.({ progress: 0, message: "Downloading with yt-dlp" });
+        const file = await downloadWithYtDlp(url, tmp, ctx.signal);
+        const asset = await addAsset(projectId, { path: file, name: path.basename(file) });
+        return { content: [json({ asset: asset.path, kind: asset.kind, duration: asset.duration, width: asset.width, height: asset.height })], summary: `Imported ${asset.path}`, events: [{ type: "asset", projectId, asset: (({ file: _f, ...a }) => a)(asset) }] };
+      } finally { fs.rmSync(tmp, { recursive: true, force: true }); }
+    },
+  }),
+  defineTool({
+    name: "list_voices", title: "Voices", scope: "global",
+    description: "Voiceover voices by provider, with availability: gemini (free tier with rate limits; 30 expressive voices, style direction, 100+ languages — needs a Gemini key in Settings), kokoro (free, offline, natural English — needs `pnpm add kokoro-js`), system (free, offline OS voices — always available). Pick a voice that fits the brand before generate_voiceover.",
+    shape: {},
+    handler: async () => {
+      const v = await listVoices();
+      return { content: [json(v)], summary: `Voices · gemini ${v.gemini.available ? "on" : "off"} · kokoro ${v.kokoro.available ? "on" : "off"} · ${v.system.voices.length} system` };
+    },
+  }),
+  defineTool({
+    name: "generate_voiceover", title: "Record a voiceover", scope: "project",
+    description: "Narration from a script: synthesizes speech, times every word (local Whisper if set up → Gemini transcription → estimate), saves assets/vo-….wav and (apply, default true) adds it to spec.voiceover at `at` seconds, with film captions (spec.captions) unless captions:false. The music ducks under the voice automatically. Write for the ear: short sentences, one idea each, ~2.5 words/s; for Gemini, steer delivery with `style` (\"warm, unhurried, a smile in the voice\") and inline tags like <short pause>, <laugh>, <sigh> (never spoken or captioned). Returns sentence timings — fit scene durations to them (a scene per sentence or two) so picture and voice change together. provider auto = gemini when a key exists, else kokoro if installed, else the system voice.",
+    shape: {
+      projectId: projectIdField,
+      text: z.string().max(6000).describe("the script"),
+      provider: z.enum(["auto", "gemini", "kokoro", "system"]).optional(),
+      voice: z.string().max(60).optional().describe("see list_voices (gemini default Kore; system default Samantha)"),
+      style: z.string().max(300).optional().describe("Gemini delivery direction"),
+      model: z.enum(["gemini-3.8-flash-tts", "gemini-3.8-flash-lite-tts", "gemini-3.1-flash-tts-preview"]).optional(),
+      speed: z.number().min(0.6).max(1.6).optional().describe("local voices: speaking rate"),
+      dialogue: z.array(z.object({ speaker: z.string().max(40), text: z.string().max(2000), style: z.string().max(200).optional() })).max(60).optional()
+        .describe("two-voice dialogue (Gemini only); text is then ignored"),
+      speakers: z.record(z.string(), z.string()).optional().describe("speaker name → Gemini voice, e.g. {\"Host\":\"Puck\",\"Guest\":\"Kore\"}"),
+      at: z.number().min(0).optional().describe("film time the clip starts (default 0)"),
+      volume: z.number().min(0).max(2).optional(),
+      replace: z.number().int().min(0).optional().describe("replace spec.voiceover[replace] instead of adding a clip"),
+      captions: z.union([z.literal(false), filmCaptionsField]).optional().describe("film captions look; false = none (keeps an existing spec.captions untouched when omitted)"),
+      timing: z.enum(["auto", "whisper", "gemini", "estimate"]).optional(),
+      apply: z.boolean().optional().describe("add to the spec (default true); false = only create the asset and return timings"),
+    },
+    startSummary: (i) => `Recording voiceover${i.provider && i.provider !== "auto" ? ` · ${i.provider}` : ""}`,
+    handler: async (input, ctx) => {
+      const { projectId } = input;
+      const text = input.dialogue?.length ? input.dialogue.map((d) => d.text).join(" ") : input.text;
+      const p = getProject(projectId);
+      const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "ms-vo-"));
+      try {
+        ctx.onProgress?.({ progress: 0.05, message: "Synthesizing speech" });
+        const req = { text, provider: input.provider, voice: input.voice, style: input.style, model: input.model, speed: input.speed, dialogue: input.dialogue, speakers: input.speakers };
+        const out = path.join(tmp, "vo.wav");
+        const vr = await synthesizeVoice(req, out, ctx.signal);
+        const asset = await addAsset(projectId, { path: out, name: voiceFileName(req, vr.provider) });
+        ctx.onProgress?.({ progress: 0.6, message: "Timing words" });
+        const timed = await timeWords(path.join(p.dir, asset.path), text, {
+          prefer: input.timing, signal: ctx.signal, whisperReady: () => whisperReady(),
+          whisper: async (f) => (await transcribeFile(f, { provider: "whisper", signal: ctx.signal })).words,
+        });
+        const at = input.at ?? 0;
+        const clip = { src: asset.path, ...(at ? { at } : {}), ...(input.volume != null ? { volume: input.volume } : {}), text: spokenText(text), words: timed.words };
+        // sentences for fitting scenes to the narration
+        const sentences: { from: number; to: number; text: string }[] = [];
+        let cur: typeof timed.words = [];
+        timed.words.forEach((w, i) => { cur.push(w); if (/[.!?…]["')\]]*$/.test(w.text) || i === timed.words.length - 1) { sentences.push({ from: at + cur[0].start, to: at + cur[cur.length - 1].end, text: cur.map((x) => x.text).join(" ") }); cur = []; } });
+        const lines = sentences.map((s, i) => `  ${String(i + 1).padStart(2)}. ${s.from.toFixed(2)}–${s.to.toFixed(2)}s  ${s.text}`);
+        const head = `Voiceover ${asset.path} · ${vr.provider}/${vr.voice} · ${vr.seconds.toFixed(2)}s · ${timed.words.length} words timed by ${timed.method}${timed.note ? ` (${timed.note.trim()})` : ""}`;
+        const raw = readSpec(projectId) as Record<string, unknown> | null;
+        if (input.apply === false || !raw) {
+          return { content: [text_(`${head}\nSentences (film time):\n${lines.join("\n")}\n\n${raw ? "Not added (apply:false)." : "No spec yet: include it in set_spec as"} spec.voiceover: [${JSON.stringify({ ...clip, words: `…${timed.words.length} words` })}]`)], summary: `Voiceover · ${vr.seconds.toFixed(1)}s` };
+        }
+        const vo = Array.isArray(raw.voiceover) ? [...(raw.voiceover as Record<string, unknown>[])] : [];
+        if (input.replace != null && input.replace < vo.length) vo[input.replace] = clip; else vo.push(clip);
+        const next: Record<string, unknown> = { ...raw, voiceover: vo };
+        if (input.captions === false) delete next.captions;
+        else if (input.captions) next.captions = input.captions;
+        else if (!next.captions) next.captions = { style: "pop", wordsPerPage: 3 };
+        const res = await writeSpec(projectId, next, { author: authorOf(ctx), summary: `Voiceover · ${vr.provider}/${vr.voice} · ${vr.seconds.toFixed(1)}s` });
+        const film = computeTimeline(next as Pick<SpecInput, "scenes">).total;
+        const end = at + vr.seconds;
+        const fit = end > film + 0.05 ? `\n⚠ The voice runs to ${end.toFixed(2)}s but the film is ${film.toFixed(2)}s — lengthen scenes or tighten the script.` : end < film - 1.5 ? `\nThe film runs ${(film - end).toFixed(1)}s past the last word — fine for a logo hold, otherwise tighten scenes.` : "";
+        return {
+          content: [text_(`${formatValidation(res)}\n\n${head}\nSentences (film time):\n${lines.join("\n")}${fit}\n\nNext: align scene cuts to sentence boundaries, then compose_music (it ducks under the voice) and preview_frames.`)],
+          isError: !res.ok, summary: `Voiceover · ${vr.seconds.toFixed(1)}s · ${timed.method} timing`, events: specEvent(projectId, res),
+        };
+      } finally {
+        fs.rmSync(tmp, { recursive: true, force: true });
+      }
+    },
+  }),
+  defineTool({
+    name: "compose_music", title: "Compose music", scope: "project",
+    description: "Score for this film. provider procedural (default, free, offline, original — no licensing): composed to the timeline — tempo chosen so scene cuts land on beats, intro → build with a riser → the drop exactly on `peak` → a resolving chord on the last scene; moods: cinematic, epic, tech, hype, playful, minimal, luxury, calm, warm. Sets spec.audio and spec.sound.music (bpm/beats/key) so auto SFX lock to the grid. provider lyria = Google Lyria via the Gemini API: PAID (no free tier, about $0.04 per 30 s clip) — only when the user explicitly agrees to the cost; pass paid:true and a prompt (instrumental, mood, instruments, tempo; no artist names).",
+    shape: {
+      projectId: projectIdField,
+      provider: z.enum(["procedural", "lyria"]).optional(),
+      mood: z.enum(["cinematic", "epic", "tech", "hype", "playful", "minimal", "luxury", "calm", "warm"]).optional(),
+      peak: z.number().min(0).optional().describe("film time of the peak / reveal (default 70% of the film)"),
+      bpm: z.number().min(50).max(180).optional(), key: z.string().max(12).optional().describe("e.g. \"F# minor\" (default: the sound brief's key, else per mood)"),
+      intensity: z.number().min(0).max(1).optional(),
+      volume: z.number().min(0).max(1.5).optional().describe("music level in the mix (default 0.8, 0.55 under a voiceover)"),
+      variation: z.number().int().min(0).max(9).optional().describe("which arrangement to apply (0 default; others change key, progression and figure)"),
+      variations: z.number().int().min(1).max(3).optional().describe("also render this many alternatives (as assets) to compare; the `variation` one is applied"),
+      prompt: z.string().max(600).optional().describe("lyria only"),
+      paid: z.boolean().optional().describe("lyria only: the user agreed to the cost"),
+      apply: z.boolean().optional().describe("set spec.audio (default true)"),
+    },
+    startSummary: (i) => `Composing ${i.mood ?? "cinematic"} music`,
+    handler: async (input, ctx) => {
+      const { projectId } = input;
+      const raw = readSpec(projectId) as (SpecInput & Record<string, unknown>) | null;
+      if (!raw) throw new Error("Write the spec first (compose_music fits the music to its timeline).");
+      const tl = computeTimeline(raw);
+      const p = getProject(projectId);
+      const hasVoice = Array.isArray(raw.voiceover) && raw.voiceover.length > 0;
+      let assetPath: string, meta: Record<string, unknown>;
+      if (input.provider === "lyria") {
+        if (!input.paid) throw new Error("Lyria is paid on the Gemini API (no free tier, about $0.04 per 30 s clip). Ask the user first; then call again with paid:true. The free procedural composer is the default.");
+        const prompt = input.prompt ?? `Instrumental ${input.mood ?? "cinematic"} score, ${Math.round(tl.total)} seconds, builds to a peak, no vocals.`;
+        const mp3 = await lyriaMusic(prompt, { full: tl.total > 30, signal: ctx.signal });
+        const tmp = path.join(os.tmpdir(), `ms-lyria-${process.pid}-${Date.now()}.mp3`);
+        fs.writeFileSync(tmp, mp3);
+        try { assetPath = (await addAsset(projectId, { path: tmp, name: `music-lyria-${Date.now().toString(36)}.mp3` })).path; } finally { fs.rmSync(tmp, { force: true }); }
+        meta = { provider: "lyria", prompt };
+      } else {
+        const briefKey = (raw.sound as { brief?: { key?: string } } | undefined)?.brief?.key;
+        const chosen = input.variation ?? 0;
+        const ids = [...new Set([chosen, ...Array.from({ length: (input.variations ?? 1) - 1 }, (_, i) => (chosen + i + 1) % 10)])];
+        const made: { v: number; path: string; meta: ReturnType<typeof composeScore>["meta"] }[] = [];
+        for (const v of ids) {
+          const { buf, meta: m } = composeScore({ seconds: tl.total, mood: input.mood, peak: input.peak, bpm: input.bpm, key: input.key ?? briefKey, intensity: input.intensity, cuts: tl.scenes.map((s) => s.start), variation: v });
+          const tmp = path.join(os.tmpdir(), `ms-score-${process.pid}-${Date.now()}-${v}.wav`);
+          fs.writeFileSync(tmp, scoreWav(buf));
+          try { made.push({ v, path: (await addAsset(projectId, { path: tmp, name: `music-${m.mood}-v${v}-${m.bpm}bpm-${Math.round(m.seconds)}s.wav` })).path, meta: m }); } finally { fs.rmSync(tmp, { force: true }); }
+        }
+        assetPath = made[0].path;
+        meta = { ...made[0].meta, alternatives: made.slice(1).map((x) => `${x.path} (variation ${x.v}, ${x.meta.key})`) };
+      }
+      const alts = (meta.alternatives as string[] | undefined) ?? [];
+      const summaryLine = meta.provider === "lyria" ? `Lyria music ${assetPath}` : `Score ${assetPath} · ${meta.mood} · ${meta.bpm} bpm · ${meta.key} · cuts within ${meta.cutAlignmentMs} ms of a beat · ${(meta.sections as { name: string; from: number; to: number }[]).map((s) => `${s.name} ${s.from}–${s.to}s`).join(", ")}${alts.length ? `\nAlternatives (not applied — set audio.src to compare, or call again with variation): ${alts.join("; ")}` : ""}`;
+      if (input.apply === false) return { content: [text_(`${summaryLine}\nNot applied.`)], summary: "Music composed" };
+      const next: Record<string, unknown> = {
+        ...raw,
+        audio: {
+          ...(raw.audio ?? {}), src: assetPath, volume: input.volume ?? (hasVoice ? 0.55 : 0.8), fadeOut: 0.4, trimStart: undefined, at: undefined, fadeIn: undefined,
+          credit: meta.provider === "lyria"
+            ? { source: "Google Lyria", license: "AI-generated with Google Lyria (SynthID-watermarked); see Google's Gemini API terms", commercial: true }
+            : { source: "Motion Studio", license: "Original score composed for this film (procedural; no third-party rights)", commercial: true },
+        },
+        ...(meta.bpm ? { sound: { ...(raw.sound ?? {}), music: { ...((raw.sound as { music?: object } | undefined)?.music ?? {}), bpm: meta.bpm, beats: meta.beats, key: meta.key, keyConfidence: 1 } } } : {}),
+      };
+      const res = await writeSpec(projectId, JSON.parse(JSON.stringify(next)), { author: authorOf(ctx), summary: `Music · ${meta.provider === "lyria" ? "Lyria" : `${meta.mood} ${meta.bpm} bpm`}` });
+      void p;
+      return { content: [text_(`${formatValidation(res)}\n\n${summaryLine}${hasVoice ? "\nThe music ducks under the voiceover (audio.duckUnderVoice, default 0.6)." : ""}\nNext: preview, then render a draft and listen; inspect_render_sound checks the mix.`)], isError: !res.ok, summary: `Music · ${meta.provider === "lyria" ? "Lyria" : `${meta.mood} ${meta.bpm} bpm`}`, events: specEvent(projectId, res) };
+    },
+  }),
+  defineTool({
+    name: "search_music", title: "Find music", scope: "project",
+    description: "Search FREE music libraries for a track that fits the film, filtered by what this film may legally use (spec.usage). freetouse = Free To Use (curated, high quality; its free license covers PERSONAL social posts only — monetization OK — with a credit in the description; never for content promoting a business/brand/product); openverse = CC0 / public domain / CC BY music from Jamendo, ccMixter, Freesound, Wikimedia (commercial-safe; CC BY needs a credit). When usage is commercial only commercial-safe results are returned. Describe mood + genre + use (\"uplifting corporate piano\", \"dark cinematic tension\", \"lofi chill\"). Then import_music the best candidate (it fits it to the timeline). If both libraries are down or nothing fits, compose_music.",
+    shape: {
+      projectId: projectIdField,
+      query: z.string().min(2).max(120),
+      provider: z.enum(["all", "freetouse", "openverse"]).optional(),
+      limit: z.number().int().min(1).max(25).optional(),
+    },
+    startSummary: (i) => `Searching music · ${String(i.query).slice(0, 40)}`,
+    handler: async ({ projectId, query, provider, limit }, ctx) => {
+      const raw = readSpec(projectId) as { usage?: Usage } | null;
+      const usage = raw?.usage;
+      const film = raw ? computeTimeline(raw as Pick<SpecInput, "scenes">).total : 0;
+      const { hits, notes } = await searchMusic(query, { providers: !provider || provider === "all" ? undefined : [provider], usage, minSeconds: film ? film + 1 : 0, limit, signal: ctx.signal });
+      const rows = hits.map((h) => ({
+        provider: h.provider, id: h.id, title: h.title, artist: h.artist, seconds: h.seconds, genre: h.genre, tags: h.tags.slice(0, 6),
+        license: h.license.name, commercialUse: h.license.commercial, creditRequired: h.license.attribution,
+        ...(h.energy ? { energyShape: shape(h.energy) } : {}), page: h.pageUrl,
+      }));
+      const head = `${rows.length} track(s) for “${query}”${film ? ` at least ${(film + 1).toFixed(0)}s long` : ""} · film usage: ${usage ?? "not set (set spec.usage: \"commercial\" for brand/client work, \"personal\" for your own posts)"}`;
+      return { content: [text_(`${head}${notes.length ? `\n${notes.join("\n")}` : ""}`), json(rows)], summary: `${plural(rows.length, "track")} · ${query}` };
+    },
+  }),
+  defineTool({
+    name: "import_music", title: "Use a library track", scope: "project",
+    description: "Download a track found with search_music into the project (license re-checked from the provider; premium / NC / ND / share-alike never accepted), record its license and required credit, analyze it (bpm, beats, drop, key) and — unless fit:false — fit it to the timeline like fit_music (the drop on the peak, cuts on beats, ending on the track's own ending or a bar). Renders then write the credit next to the MP4.",
+    shape: {
+      projectId: projectIdField,
+      provider: z.enum(["freetouse", "openverse"]), id: z.string().min(6).max(64),
+      peak: z.number().min(0).optional().describe("film time of the peak (default 70% of the film)"),
+      volume: z.number().min(0).max(1.5).optional(),
+      fit: z.boolean().optional().describe("fit + set spec.audio (default true)"),
+    },
+    startSummary: () => "Importing music",
+    handler: async ({ projectId, provider, id, peak, volume, fit }, ctx) => {
+      const raw = readSpec(projectId) as { usage?: Usage } | null;
+      const hit = await lookupTrack(provider, id, ctx.signal);
+      if (!allowedFor(hit.license, raw?.usage)) throw new Error(`“${hit.title}” is licensed ${hit.license.name}, which does not allow ${raw?.usage === "commercial" ? "commercial content (this film's usage is commercial)" : "this use"}. Pick a CC0 / CC BY track (openverse) or compose_music.`);
+      ctx.onProgress?.({ progress: 0.1, message: "Downloading" });
+      const slug = `${hit.title}-${hit.artist}`.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40) || "track";
+      const asset = await addAsset(projectId, { url: hit.audioUrl, name: `music-${provider}-${slug}${path.extname(new URL(hit.audioUrl).pathname) || ".mp3"}` });
+      if (asset.kind !== "audio") throw new Error(`The downloaded file is not audio (${asset.kind}).`);
+      const abs = path.join(getProject(projectId).dir, asset.path);
+      writeTrackLicense(abs, { provider, id: hit.id, title: hit.title, artist: hit.artist, pageUrl: hit.pageUrl, audioUrl: hit.audioUrl, license: hit.license, importedAt: new Date().toISOString() });
+      const credit = { title: hit.title, artist: hit.artist, source: provider === "freetouse" ? "Free To Use" : "Openverse", license: hit.license.name, commercial: hit.license.commercial, ...(hit.license.credit ? { attribution: hit.license.credit } : {}), url: hit.pageUrl };
+      const intro = `Imported ${asset.path} · “${hit.title}” by ${hit.artist} · ${hit.license.name}${hit.license.attribution ? " · credit required" : ""}${hit.license.commercial ? "" : " · personal use only (not for brand / client / ads)"}`;
+      if (fit === false) return { content: [text_(intro)], summary: `Imported ${hit.title}`, events: [{ type: "asset", projectId, asset: (({ file: _f, ...a }) => a)(asset) }] };
+      ctx.onProgress?.({ progress: 0.5, message: "Analyzing and fitting" });
+      const r = await fitAndApply(projectId, asset.path, abs, { peak, volume, credit, author: authorOf(ctx) });
+      return { ...r, content: [text_(`${intro}\n`), ...r.content] };
+    },
+  }),
+  defineTool({
+    name: "fit_music", title: "Fit music to the cut", scope: "project",
+    description: "Fit an audio asset (default: the current spec.audio) to this film: analyzes the track and picks where it starts so its drop/lift lands on the film's peak, scene cuts fall on beats, and the film ends with the track's own ending (or on a bar line, with a fade). Sets spec.audio (trimStart, fades, volume; a short delayed start only if that lands the drop) and spec.sound.music (beats in film time) so auto SFX follow the music. Use for library tracks and the user's own uploads; composed scores are already fitted.",
+    shape: { projectId: projectIdField, asset: z.string().optional(), peak: z.number().min(0).optional(), volume: z.number().min(0).max(1.5).optional() },
+    startSummary: () => "Fitting music to the cut",
+    handler: async ({ projectId, asset, peak, volume }, ctx) => {
+      const raw = readSpec(projectId) as { audio?: { src?: string; credit?: Record<string, unknown> } } | null;
+      const src = asset ?? raw?.audio?.src;
+      if (!src) throw new Error("No music yet: pass asset (an uploaded track) or use search_music / compose_music.");
+      const info = await getAssetInfo(projectId, stripAssets(src));
+      if (info.kind !== "audio" && info.kind !== "video") throw new Error("Choose an audio asset.");
+      const lic = readTrackLicense(info.file);
+      const credit = lic ? { title: lic.title, artist: lic.artist, source: lic.provider, license: lic.license.name, commercial: lic.license.commercial, ...(lic.license.credit ? { attribution: lic.license.credit } : {}), url: lic.pageUrl } : raw?.audio?.src === info.path ? raw?.audio?.credit : undefined;
+      return fitAndApply(projectId, info.path, info.file, { peak, volume, credit: credit as never, author: authorOf(ctx) });
+    },
+  }),
+  defineTool({
+    name: "list_sfx", title: "Sound effects", scope: "global",
+    description: "Search the built-in SFX library (sfx:<name> for spec.sfx / layer.sound): 289 recorded CC0 sounds + original synthesized cinematic sounds — whooshes (whip, flutter, reverse-in, cinematic), typing (typing-burst, typing-fast, keyboard-enter), recap/rewind (rewind-tape, recap-swoosh, tape-stop, reverse-cymbal), film textures (light-leak-swell, film-projector, film-burn, tension-drone), trailer (braam, downlifter, trailer-hit-metal, riser-tension), camera-flash, clock-ticking, glitch-transition, impacts, risers, UI, foley. peakAt = seconds from the file start to the apex: place `at = event − peakAt`.",
+    shape: { q: z.string().max(60).optional().describe("words to match in name / category / description, e.g. \"rewind\", \"light leak\", \"typing\""), category: z.string().max(40).optional(), limit: z.number().int().min(1).max(80).optional() },
+    handler: async ({ q, category, limit }) => {
+      const terms = (q ?? "").toLowerCase().split(/\s+/).filter(Boolean);
+      const rows = Object.values(SFX_LIB)
+        .filter((e) => !category || e.category.startsWith(category))
+        .map((e) => ({ e, score: terms.reduce((s, t) => s + (e.name.includes(t) ? 3 : 0) + (e.category.includes(t) ? 2 : 0) + (e.description.toLowerCase().includes(t) ? 1 : 0), 0) }))
+        .filter((r) => !terms.length || r.score > 0)
+        .sort((a, b) => b.score - a.score || (a.e.source === "synth" ? -1 : 1))
+        .slice(0, limit ?? 30)
+        .map(({ e }) => ({ src: `sfx:${e.name}`, category: e.category, durationSec: e.durationSec, peakAt: e.peakAt, source: e.source, description: e.description || undefined }));
+      return { content: [rows.length ? json(rows) : text_("No match. Try a broader word (whoosh, impact, typing, rewind, riser, glitch, ui, paper).")], summary: plural(rows.length, "sound") };
+    },
+  }),
+  defineTool({
     name: "list_versions",
     title: "Version history",
     scope: "project",
@@ -1224,7 +1644,7 @@ export const TOOLS: ToolDef[] = [
         return {
           content: [
             text(
-              `Rendered ${r.quality} video: ${where}\n${[dims, r.fps ? `${r.fps}fps` : "", r.seconds !== undefined ? `${r.seconds.toFixed(2)}s` : "", `${(r.sizeBytes / 1e6).toFixed(2)} MB`, r.renderSeconds !== undefined ? `took ${r.renderSeconds}s` : ""].filter(Boolean).join(", ")}.`,
+              `Rendered ${r.quality} video: ${where}\n${[dims, r.fps ? `${r.fps}fps` : "", r.seconds !== undefined ? `${r.seconds.toFixed(2)}s` : "", `${(r.sizeBytes / 1e6).toFixed(2)} MB`, r.renderSeconds !== undefined ? `took ${r.renderSeconds}s` : ""].filter(Boolean).join(", ")}.${creditNote(filmCredits(projectId))}`,
             ),
             json(r),
           ],
@@ -1248,7 +1668,7 @@ export const TOOLS: ToolDef[] = [
       });
       return {
         content: [
-          text(`Rendered ${res.quality} ${res.format} video: ${res.path}\n${res.width}x${res.height} @ ${res.fps}fps, ${res.seconds.toFixed(2)}s, ${(res.sizeBytes / 1e6).toFixed(2)} MB, took ${res.renderSeconds}s.`),
+          text(`Rendered ${res.quality} ${res.format} video: ${res.path}\n${res.width}x${res.height} @ ${res.fps}fps, ${res.seconds.toFixed(2)}s, ${(res.sizeBytes / 1e6).toFixed(2)} MB, took ${res.renderSeconds}s.${creditNote(record.credits)}`),
           json(res),
         ],
         summary: `Rendered ${res.quality} · ${fmtSecs(res.seconds)} · ${(res.sizeBytes / 1e6).toFixed(1)} MB`,
