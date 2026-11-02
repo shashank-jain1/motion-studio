@@ -436,6 +436,9 @@ export const mockApi = (repoRoot: string): Plugin => {
         if (sub === "/spec" && v.ok) mem.specs.set(id, b.spec);
         return send(res, 200, v);
       }
+      // the mock keeps no history; the real server records versions (src/core/versions.ts)
+      if (sub === "/versions") return send(res, 200, { versions: [] });
+      if (sub.startsWith("/versions/")) return send(res, 404, { error: "The mock API keeps no version history" });
       if (sub === "/assets" && m === "POST") {
         const buf = await body(req);
         const boundary = /boundary=(.+)$/.exec(req.headers["content-type"] ?? "")?.[1];

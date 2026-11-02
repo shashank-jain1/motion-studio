@@ -24,3 +24,6 @@ fonts/**/*.ttf
 fonts/**/*.otf
 fonts/**/*.woff
 fonts/**/*.woff2
+
+# spec version history (per-project, local)
+projects/*/versions/

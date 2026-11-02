@@ -132,7 +132,7 @@ const projectIdFromCreate = (res: ToolResult): string | null => {
   return null;
 };
 
-type RunCtx = { signal: AbortSignal; onProgress?: (p: { progress: number; message?: string }) => void };
+type RunCtx = { signal: AbortSignal; onProgress?: (p: { progress: number; message?: string }) => void; client?: string };
 
 /** Run one registry tool on behalf of `user` with ownership checks and remote-specific behaviour. */
 const runScoped = async (def: ToolDef, args: Record<string, unknown>, user: User, ctx: RunCtx): Promise<ToolResult> => {
@@ -161,7 +161,10 @@ const runScoped = async (def: ToolDef, args: Record<string, unknown>, user: User
 
   // Shared scoping policy (src/server/scope.ts): hosted-mode safety, ownership, render_video through the job queue with a
   // 45s cap ("Still rendering, job <id>" → render_status), so a long render never hits the client's tool timeout.
-  const res = await callTool(def.name, args, { signal: ctx.signal, onProgress: ctx.onProgress, policy: toolPolicyFor(user, { maxRenderWaitMs: REMOTE_RENDER_WAIT_MS }) });
+  const res = await callTool(def.name, args, {
+    signal: ctx.signal, onProgress: ctx.onProgress, policy: toolPolicyFor(user, { maxRenderWaitMs: REMOTE_RENDER_WAIT_MS }),
+    author: { kind: "mcp", name: ctx.client },
+  });
 
   let linkId = def.scope === "project" ? projectId : undefined;
   if (def.name === "create_project" && !res.isError) {
@@ -210,6 +213,7 @@ const buildServer = (user: User, onActivity: (busy: 1 | -1) => void): McpServer 
       onActivity(1);
       try {
         const res = await runScoped(def, args, user, {
+          client: server.server.getClientVersion()?.name,
           signal: extra.signal,
           onProgress:
             token === undefined

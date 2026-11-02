@@ -3,9 +3,10 @@ import path from "node:path";
 import { FontFaceSchema } from "../engine/spec/schema";
 import { firstFontFamily } from "../engine/core/fontIdentity";
 import { addAsset, getAssetInfo, getProject, readSpec, writeSpec } from "./projects";
+import type { SpecAuthor } from "./versions";
 import { inspectFontAsset, localFontPath } from "./fontAssets";
 
-type FontOptions = { family?: string; weight?: number | string; style?: "normal" | "italic" | "oblique"; role?: "display" | "body" | "mono" };
+type FontOptions = { family?: string; weight?: number | string; style?: "normal" | "italic" | "oblique"; role?: "display" | "body" | "mono"; author?: SpecAuthor };
 
 export const registerProjectFont = async (projectId: string, asset: string, opts: FontOptions = {}) => {
   const info = await getAssetInfo(projectId, asset.replace(/^assets\//, ""));
@@ -15,7 +16,7 @@ export const registerProjectFont = async (projectId: string, asset: string, opts
   if (!current) return { face, saved: false, outlineSupport: metadata.outlineSupport, warnings: metadata.note ? [metadata.note] : [], instruction: "Add this face to spec.fontFaces and use its family in theme.fonts/layer.font when creating the spec." };
   const faces = (current.fontFaces ?? []).filter((f) => !(firstFontFamily(f.family).toLowerCase() === face.family.toLowerCase() && String(f.weight ?? 400) === String(face.weight) && (f.style ?? "normal") === face.style));
   const next = { ...current, fontFaces: [...faces, face], ...(opts.role ? { theme: { ...current.theme, fonts: { ...current.theme?.fonts, [opts.role]: face.family } } } : {}) };
-  const result = await writeSpec(projectId, next);
+  const result = await writeSpec(projectId, next, { author: opts.author, summary: `Font ${face.family}${opts.role ? ` as ${opts.role}` : ""}` });
   if (!result.ok) throw new Error(result.errors.join("\n"));
   return { face, saved: true, outlineSupport: metadata.outlineSupport, warnings: [...(metadata.note ? [metadata.note] : []), ...result.warnings] };
 };

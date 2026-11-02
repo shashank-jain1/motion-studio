@@ -20,7 +20,10 @@ The browser Player uses `assetBase = ${origin}/files/${projectId}`.
 | `POST /api/projects` | `{ name, format? }` | `ProjectCard` |
 | `GET /api/projects/:id` | — | `ProjectState` (below) |
 | `DELETE /api/projects/:id` | — | `{ ok: true }` |
-| `PUT /api/projects/:id/spec` | `{ spec }` | `ValidationResult & { timeline? }` — saved only when `ok` |
+| `PUT /api/projects/:id/spec` | `{ spec }` | `ValidationResult & { timeline?, spec?, version? }` — saved only when `ok`; `version` is the new history entry (null if identical) |
+| `GET /api/projects/:id/versions` | — | `{ versions: SpecVersion[] }` newest first |
+| `GET /api/projects/:id/versions/:n` | — | `{ meta: SpecVersion, spec }` |
+| `POST /api/projects/:id/versions/:n/restore` | — | same as `PUT …/spec`; the restore is saved as a new version |
 | `POST /api/projects/:id/validate` | `{ spec }` | `ValidationResult & { timeline? }` — never saves (live editor lint) |
 | `POST /api/projects/:id/assets` | multipart: `file`, optional `name` | `AssetInfo & { logo?: LogoSummary }` |
 | `DELETE /api/projects/:id/assets/:file` | — | `{ ok: true }` |

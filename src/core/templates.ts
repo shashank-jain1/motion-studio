@@ -122,7 +122,7 @@ export const createProjectFromTemplate = async (opts: { name: string; template: 
       out.formats = t.meta.formats.filter((f) => f !== format);
       spec = out;
     }
-    const res = await writeSpec(project.id, spec);
+    const res = await writeSpec(project.id, spec, { author: { kind: "template", name: t.meta.title }, summary: `From template “${t.meta.title}”` });
     if (!res.ok) throw new Error(`Template spec is invalid: ${res.errors.join("; ")}`);
     return project;
   } catch (e) {

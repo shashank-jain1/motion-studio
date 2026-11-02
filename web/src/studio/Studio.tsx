@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { api, ApiError, type Asset, type ProjectState, type RenderInfo, type Settings, type Timeline, type ValidationResult } from "../api";
-import { StudioContext, useStudio, type RightTab, type StudioApi } from "./context";
+import { StudioContext, useStudio, type RightTab, type StudioApi, type VersionPreview } from "./context";
 import { PlayerBus } from "./bus";
 import { analyzeSpec, type ParsedInfo } from "../lib/specInfo";
 import { useToast } from "../components/Toast";
@@ -16,6 +16,7 @@ import { SpecPanel } from "./SpecPanel";
 import { RendersPanel } from "./RendersPanel";
 import { SettingsDialog } from "../pages/Settings";
 import { EditPanel } from "./EditPanel";
+import { HistoryPanel } from "./HistoryPanel";
 import { getLayer, parentList, type LayerSel } from "../lib/specEdit";
 import { fmtTC } from "../lib/format";
 
@@ -50,6 +51,9 @@ export const Studio = () => {
   const [sceneFocus, setSceneFocus] = useState<{ index: number; nonce: number } | null>(null);
   const [rightTab, setRightTab] = useState<RightTab>("edit");
   const [selectedLayer, setSelectedLayer] = useState<LayerSel | null>(null);
+  const [specNonce, setSpecNonce] = useState(0);
+  const [versionPreview, setVersionPreviewState] = useState<VersionPreview | null>(null);
+  const previewRef = useRef<VersionPreview | null>(null);
   const [uploaderNonce, setUploaderNonce] = useState(0);
   const [chatRunning, setChatRunning] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -114,17 +118,27 @@ export const Studio = () => {
     if (v !== undefined) setValidation(v);
   }, []);
 
-  const applyServerSpec = useCallback((spec: Record<string, unknown>, timeline?: Timeline | null) => {
+  const applyServerSpec = useCallback((spec: Record<string, unknown>, timeline?: Timeline | null, opts?: { force?: boolean }) => {
     const txt = pretty(spec);
     const wasDirty = editorRef.current !== savedRef.current;
     setSavedText(txt);
     // The director replaced the film: visual undo steps no longer apply to this text.
-    if (!wasDirty || editorRef.current === txt) { setEditorTextState(txt); editorRef.current = txt; clearHistory(); }
+    if (opts?.force || !wasDirty || editorRef.current === txt) { setEditorTextState(txt); editorRef.current = txt; clearHistory(); setConflict(false); }
     else setConflict(true);
     const key = JSON.stringify(spec);
-    if (key !== liveRef.current) { liveRef.current = key; setLiveSpec(spec); }
+    // while a past version is on screen, keep showing it; leaving the preview shows the new spec
+    if (!previewRef.current && key !== liveRef.current) { liveRef.current = key; setLiveSpec(spec); }
     if (timeline) setServerTimeline(timeline);
+    setSpecNonce((v) => v + 1);
   }, []);
+
+  /** Show a past version in the viewer (read-only); null returns to the editor's spec. */
+  const setVersionPreview = useCallback((v: VersionPreview | null) => {
+    previewRef.current = v;
+    setVersionPreviewState(v);
+    if (v) { setSelectedLayer(null); setDraftSpec(v.spec); return; }
+    try { const spec = JSON.parse(editorRef.current); if (spec && typeof spec === "object") setDraftSpec(spec); } catch { /* broken JSON: keep last */ }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const resolveConflict = useCallback((keepMine: boolean) => {
     setConflict(false);
@@ -143,7 +157,8 @@ export const Studio = () => {
         setValidation(r);
         if (r.timeline) setServerTimeline(r.timeline);
         setDraftSpec(spec);
-        toast.success("Spec saved", `${+r.durationSeconds.toFixed(2)}s${r.warnings.length ? ` · ${r.warnings.length} note${r.warnings.length === 1 ? "" : "s"}` : ""}`);
+        setSpecNonce((v) => v + 1);
+        toast.success(r.version ? `Saved as v${r.version.n}` : "Spec saved", `${+r.durationSeconds.toFixed(2)}s${r.warnings.length ? ` · ${r.warnings.length} note${r.warnings.length === 1 ? "" : "s"}` : ""}`);
         return true;
       }
       setValidation(r);
@@ -163,6 +178,7 @@ export const Studio = () => {
       return false;
     }
     if (!draft || typeof draft !== "object") return false;
+    if (previewRef.current) { previewRef.current = null; setVersionPreviewState(null); }
     fn(draft);
     const next = pretty(draft);
     if (next === before) return true;
@@ -235,6 +251,7 @@ export const Studio = () => {
     id, project: state.project, bus,
     liveSpec, info, parseError, serverTimeline, validation,
     editorText, setEditorText: setEditorTextState, dirty, conflict, resolveConflict, saveEditor, setDraftSpec, applyServerSpec,
+    specNonce, versionPreview, setVersionPreview,
     assets, setAssets: (fn) => setAssetsState(fn), renders,
     addRender: (r) => setRenders((rs) => [r, ...rs.filter((x) => x.file !== r.file)]),
     refreshSide,
@@ -253,7 +270,7 @@ export const Studio = () => {
   // layer keyboard actions read the latest selection through a ref (the key handler is bound once)
   const layerKeys = useRef<{ del: () => void; nudge: (dx: number, dy: number) => void; clear: () => void }>({ del: () => {}, nudge: () => {}, clear: () => {} });
   layerKeys.current = {
-    clear: () => setSelectedLayer(null),
+    clear: () => { if (previewRef.current) setVersionPreview(null); else setSelectedLayer(null); },
     del: () => {
       const sel = selectedLayer;
       if (!sel) return;
@@ -309,7 +326,7 @@ export const Studio = () => {
       else if (e.key === "End") { e.preventDefault(); bus.seek(bus.durationInFrames - 1); }
       else if (k === "s" && !e.shiftKey) { e.preventDefault(); bus.safe = bus.safe === "off" ? "title" : "off"; bus.emit(); }
       else if (k === "f") { e.preventDefault(); bus.player?.requestFullscreen(); }
-      else if (k === "1" || k === "2" || k === "3" || k === "4") { e.preventDefault(); setRightTab(TAB_ORDER[Number(k) - 1]); setRightOpen(true); }
+      else if (k >= "1" && k <= String(TAB_ORDER.length) && k.length === 1) { e.preventDefault(); setRightTab(TAB_ORDER[Number(k) - 1]); setRightOpen(true); }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -414,7 +431,8 @@ const TABS: { id: RightTab; label: string; key: string }[] = [
   { id: "edit", label: "Edit", key: "1" },
   { id: "assets", label: "Assets", key: "2" },
   { id: "spec", label: "Spec", key: "3" },
-  { id: "renders", label: "Renders", key: "4" },
+  { id: "history", label: "History", key: "4" },
+  { id: "renders", label: "Renders", key: "5" },
 ];
 const TAB_ORDER = TABS.map((t) => t.id);
 
@@ -446,6 +464,7 @@ const Inspector = () => {
         <div className="tab-panel no-pad" hidden={rightTab !== "edit"}><ErrorBoundary label="Edit"><EditPanel active={rightTab === "edit"} /></ErrorBoundary></div>
         <div className="tab-panel" hidden={rightTab !== "assets"}><ErrorBoundary label="Assets"><AssetsPanel /></ErrorBoundary></div>
         <div className="tab-panel no-pad" hidden={rightTab !== "spec"}><ErrorBoundary label="Spec editor"><SpecPanel active={rightTab === "spec"} /></ErrorBoundary></div>
+        <div className="tab-panel no-pad" hidden={rightTab !== "history"}><ErrorBoundary label="History"><HistoryPanel active={rightTab === "history"} /></ErrorBoundary></div>
         <div className="tab-panel" hidden={rightTab !== "renders"}><ErrorBoundary label="Renders"><RendersPanel /></ErrorBoundary></div>
       </div>
     </div>

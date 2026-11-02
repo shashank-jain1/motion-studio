@@ -16,7 +16,8 @@ import { ROOT, PROJECTS_DIR, LIBRARY_DIR } from "../core/paths";
 import { ensureSfxLibrary } from "../../scripts/gen-sfx";
 import { ensureBaked } from "../../scripts/sfx-bake";
 import { FORMATS, type SpecInput } from "../engine/spec/schema";
-import { addAsset, createProject, deleteProject, getAssetInfo, getProject, listAssets, listProjects, readSpec, validateSpec, writeSpec, type ValidationResult } from "../core/projects";
+import { addAsset, createProject, deleteProject, getAssetInfo, getProject, listAssets, listProjects, readSpec, validateSpec, writeSpec, listSpecVersions, getSpecVersion, restoreSpecVersion, type ValidationResult } from "../core/projects";
+import type { SpecAuthor } from "../core/versions";
 import { ensureLogoAnalysis, isLogoJson, logoJsonPath, logoSummary, renderLogoPreviewPng } from "../core/logo";
 import { assertSpecSafe, listRenders, runPreview, specTimeline, type RenderRecord, type Timeline } from "../core/tools";
 import { clearChat, fileUrl, getChat, isRunning, runChat, stopChat, type ChatEvent, type RenderInfo } from "./agent";
@@ -370,13 +371,54 @@ app.put("/api/projects/:id/spec", async (c) => {
   const spec = await specBody(c);
   const unsafe = await specSafetyErrors(spec);
   if (unsafe.length) return c.json({ ok: false, errors: unsafe, warnings: [] });
-  const res = await writeSpec(p.id, spec);
+  const res = await writeSpec(p.id, spec, { author: studioAuthor(c) });
+  return c.json(savedResponse(p.id, res));
+});
+
+/** The person saving from the studio (named in hosted mode, where several people may share a deployment). */
+const studioAuthor = (c: Context): SpecAuthor => ({ kind: "you", ...(IS_HOSTED ? { name: userOf(c).name || userOf(c).email } : {}) });
+
+const savedResponse = (id: string, res: ValidationResult) => {
   const out: Record<string, unknown> = cleanValidation(res);
   if (res.ok) {
-    const tl = safeTimeline(readSpec(p.id));
+    const tl = safeTimeline(readSpec(id));
     if (tl) out.timeline = tl;
+    if (res.version !== undefined) out.version = res.version;
+    out.spec = readSpec(id);
   }
-  return c.json(out);
+  return out;
+};
+
+// ---------------------------------------------------------------- version history
+
+app.get("/api/projects/:id/versions", (c) => {
+  const p = requireProject(c);
+  return c.json({ versions: listSpecVersions(p.id) });
+});
+
+const versionParam = (c: Context) => {
+  const n = Number(c.req.param("n"));
+  if (!Number.isInteger(n) || n < 1) throw new HttpError(400, "version must be a positive integer");
+  return n;
+};
+
+app.get("/api/projects/:id/versions/:n", (c) => {
+  const p = requireProject(c);
+  try { return c.json(getSpecVersion(p.id, versionParam(c))); } catch (e) {
+    if (e instanceof HttpError) throw e;
+    throw new HttpError(404, (e as Error).message);
+  }
+});
+
+app.post("/api/projects/:id/versions/:n/restore", async (c) => {
+  const p = requireProject(c);
+  const n = versionParam(c);
+  let v;
+  try { v = getSpecVersion(p.id, n); } catch (e) { throw new HttpError(404, (e as Error).message); }
+  const unsafe = await specSafetyErrors(v.spec);
+  if (unsafe.length) return c.json({ ok: false, errors: unsafe, warnings: [] });
+  const res = await restoreSpecVersion(p.id, n, studioAuthor(c));
+  return c.json(savedResponse(p.id, res));
 });
 
 app.post("/api/projects/:id/validate", async (c) => {

@@ -4,7 +4,8 @@ import type { ParsedInfo } from "../lib/specInfo";
 import type { PlayerBus } from "./bus";
 import type { LayerSel } from "../lib/specEdit";
 
-export type RightTab = "edit" | "assets" | "spec" | "renders";
+export type RightTab = "edit" | "assets" | "spec" | "history" | "renders";
+export type VersionPreview = { n: number; spec: Record<string, unknown>; summary: string };
 
 export type StudioApi = {
   id: string;
@@ -29,8 +30,13 @@ export type StudioApi = {
   resolveConflict: (keepMine: boolean) => void;
   saveEditor: () => Promise<boolean>;
   setDraftSpec: (spec: Record<string, unknown> | null, validation?: ValidationResult | null) => void;
-  /** A spec arrived from the server (chat `spec` event). */
-  applyServerSpec: (spec: Record<string, unknown>, timeline?: Timeline | null) => void;
+  /** A spec arrived from the server (chat `spec` event). `force` replaces unsaved edits instead of raising a conflict. */
+  applyServerSpec: (spec: Record<string, unknown>, timeline?: Timeline | null, opts?: { force?: boolean }) => void;
+  /** Bumped whenever the saved spec changes (save, director, restore) — history views refetch on it. */
+  specNonce: number;
+  /** Viewer is showing a past version instead of the editor's spec (read-only). */
+  versionPreview: VersionPreview | null;
+  setVersionPreview: (v: VersionPreview | null) => void;
 
   assets: Asset[];
   setAssets: (fn: (a: Asset[]) => Asset[]) => void;

@@ -10,6 +10,7 @@ import { useBus, type SafeMode } from "./bus";
 import { ASPECT, fmtDate, fmtTC } from "../lib/format";
 import { splitErrors } from "../lib/specInfo";
 import { getLayer, layerLabel, num, parentOffset, selKey } from "../lib/specEdit";
+import { useRestoreVersion } from "./HistoryPanel";
 import { CropMarks, SlateStripe, TallyDot } from "../components/ui";
 import {
   IconAlert, IconChevronDown, IconFullscreen, IconLoop, IconMute, IconPause, IconPlay, IconStepBack, IconStepFwd, IconToEnd, IconToStart, IconVolume, Spinner,
@@ -128,6 +129,7 @@ export const PlayerPane = () => {
             {fmt !== master && <span className="reflow-tag mono" aria-hidden>REFLOW {master} → {fmt}</span>}
           </div>
         )}
+        {s.versionPreview && <VersionBanner />}
         {!liveSpec && <EmptyStage format={s.project.format} name={s.project.name} running={s.chatRunning} />}
         {parseError && <ErrorOverlay message={parseError} hasFallback={!!playerSpec} />}
       </div>
@@ -226,6 +228,26 @@ const PLATFORM: Record<"tiktok" | "reels" | "shorts", { name: string; clear: [nu
   tiktok: { name: "TIKTOK", clear: [160, 150, 480, 60], rail: 1080 - 130, caption: 1920 - 440 },
   reels: { name: "REELS", clear: [220, 140, 420, 60], rail: 1080 - 120, caption: 1920 - 380 },
   shorts: { name: "SHORTS", clear: [190, 130, 380, 60], rail: 1080 - 115, caption: 1920 - 350 },
+};
+
+/** Shown while the viewer plays a past version instead of the editor's spec. */
+const VersionBanner = () => {
+  const { versionPreview, setVersionPreview } = useStudio();
+  const { restore, busy, armed } = useRestoreVersion();
+  if (!versionPreview) return null;
+  const n = versionPreview.n;
+  return (
+    <div className="version-banner" role="status">
+      <span className="tally-dot" aria-hidden />
+      <span className="mono">VIEWING v{n}</span>
+      <span className="version-banner-sum ellipsis">{versionPreview.summary}</span>
+      <span className="spacer" />
+      <button className={`btn xs ${armed === n ? "danger" : "primary"}`} disabled={busy != null} onClick={() => void restore(n)}>
+        {busy === n ? <Spinner size={12} /> : null}{armed === n ? "Discard edits & restore" : "Restore"}
+      </button>
+      <button className="btn xs ghost" onClick={() => setVersionPreview(null)} title="Back to the current spec (Esc)">Exit <kbd className="kbd">Esc</kbd></button>
+    </div>
+  );
 };
 
 /**

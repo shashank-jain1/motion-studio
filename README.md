@@ -50,11 +50,28 @@ Visual edits rewrite the Spec editor's text, so Save, validation and the directo
 do for typed edits. Nothing is written to disk until you save. The model lives in `web/src/lib/specEdit.ts` and is tested by
 `npm run test:edit`.
 
+## Version history (Phase 5)
+
+Every save that changes a film is kept: studio saves, the in-app director, external MCP clients (named, e.g. "Claude Code"),
+templates and font registration. Each version records who made it and what changed, scene by scene and layer by layer. The
+studio's **History** tab (key `4`) lists the versions. You can **preview** one in the viewer (Esc exits), **compare** it with
+what is in the editor, and **restore** it. Restoring saves a new version, so a restore can be undone too. When the AI made the
+last change, a one-click **Undo it** appears at the top. AI clients get the same abilities through `list_versions` and
+`restore_version` ("undo that" → restore the previous version).
+
+History lives in `projects/<id>/versions/` (gitignored): one JSON file per version plus an append-only `index.jsonl`. It is
+safe when the web server and a stdio MCP server write the same project, and the newest 200 versions are kept. A project
+that already had a spec gets it saved as a "Before version history" baseline on its first tracked change. Code:
+`src/core/versions.ts`, `src/engine/spec/diff.ts`; tests: `npm run test:versions`.
+
+CI (`.github/workflows/ci.yml`) runs `verify:motion` and `test:server` (the remote-MCP OAuth flow and the director loop
+against a fake Claude) on every push and pull request.
+
 ## MCP tools
 
 `get_guide`, `list_styles`, `create_project`, `list_projects`, `get_project`, `add_asset`, `analyze_logo`, `analyze_audio`, `set_spec`,
 `get_spec`, `update_scene`, `preview_frames`, `render_video`, `write_custom_component`, `list_custom_components`,
-`open_studio_hint`, `motion_recipes`, `build_motion_scene`, `build_motion_sequence`, `build_design_film`, `inspect_video_reference`, `inspect_sound`, `inspect_render_sound`, `list_fonts`, `import_font`, `register_font`.
+`open_studio_hint`, `list_versions`, `restore_version`, `motion_recipes`, `build_motion_scene`, `build_motion_sequence`, `build_design_film`, `inspect_video_reference`, `inspect_sound`, `inspect_render_sound`, `list_fonts`, `import_font`, `register_font`.
 
 The AI's craft knowledge lives in [docs/DIRECTOR_GUIDE.md](docs/DIRECTOR_GUIDE.md) and the spec format in
 [docs/KIT_REFERENCE.md](docs/KIT_REFERENCE.md); both are served by `get_guide`.
