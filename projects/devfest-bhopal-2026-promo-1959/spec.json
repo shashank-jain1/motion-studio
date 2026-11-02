@@ -1,0 +1,1358 @@
+{
+  "title": "DevFest Bhopal 2026 — Bhopal Builds",
+  "format": "9:16",
+  "fps": 30,
+  "usage": "commercial",
+  "theme": {
+    "fonts": {
+      "display": "Inter",
+      "body": "Inter",
+      "mono": "IBM Plex Mono"
+    },
+    "colors": {
+      "bg": "#12151A",
+      "fg": "#FFFAF0",
+      "accent": "#FBBC05",
+      "accent2": "#4285F4",
+      "accent3": "#34A853",
+      "muted": "#5F6368",
+      "card": "#FFFFFF"
+    }
+  },
+  "fx": {
+    "grain": 0.05,
+    "vignette": 0.22
+  },
+  "concept": {
+    "truth": "DevFest Bhopal helps Central India's developers build together, feeling proud of their city.",
+    "metaphor": "fusion — Bhopal's builders become the four-colour < > brackets that assemble into DevFest",
+    "motif": "the four GDG capsules < >: scattered pieces that assemble, then extrude into 3D at the reveal",
+    "verb": "build",
+    "hook": "भोपाल BUILDS. — the city of lakes at dusk, its name in Devanagari",
+    "niche": "events",
+    "arc": [
+      "hook: Bhopal builds",
+      "gather: 1,000 builders converge, the brackets assemble",
+      "tracks: AI / Cloud / Android / Web / DevOps",
+      "peak: DevFest Bhopal 2026 in 3D",
+      "payoff: 22 Nov, the venue, Dhaari, get tickets"
+    ],
+    "colorScript": [
+      "dusk photo + saffron",
+      "night ink",
+      "Google blue / green / yellow / red / purple",
+      "cream",
+      "night + rays",
+      "lake teal",
+      "cream + yellow"
+    ],
+    "story": {
+      "insight": "Bhopal's developers usually travel to Bengaluru or Pune for a conference like this.",
+      "audienceTension": "Central India's builders want the big-city tech energy without leaving their city.",
+      "structure": "reveal",
+      "clicheControl": {
+        "obvious": "speaker headshots and a countdown to the date",
+        "banned": [
+          "countdown timer",
+          "stock coding hands"
+        ]
+      },
+      "beats": [
+        {
+          "t": 0,
+          "beat": "hook",
+          "intensity": 6,
+          "to": 6
+        },
+        {
+          "t": 3.4,
+          "beat": "build",
+          "intensity": 5,
+          "to": 7
+        },
+        {
+          "t": 7.65,
+          "beat": "build",
+          "intensity": 7,
+          "to": 8
+        },
+        {
+          "t": 11.95,
+          "beat": "dip",
+          "intensity": 5,
+          "to": 6
+        },
+        {
+          "t": 15.85,
+          "beat": "tension",
+          "intensity": 7,
+          "to": 9
+        },
+        {
+          "t": 17.35,
+          "beat": "breath",
+          "intensity": 6,
+          "to": 6
+        },
+        {
+          "t": 17.8,
+          "beat": "peak",
+          "intensity": 10,
+          "wow": "the brackets assemble in 3D as the drop hits on '2026' (flash, four-colour burst, braam)"
+        },
+        {
+          "t": 19.15,
+          "beat": "payoff",
+          "intensity": 7,
+          "to": 8
+        },
+        {
+          "t": 23.65,
+          "beat": "payoff",
+          "intensity": 8,
+          "to": 9
+        },
+        {
+          "t": 28.3,
+          "beat": "lock",
+          "intensity": 9,
+          "to": 9
+        }
+      ],
+      "peakAt": 17.8,
+      "mnemonic": {
+        "visual": "the four capsules < > that assembled at the gather and in 3D resolve into the GDG Cloud Bhopal lockup",
+        "sonic": "the brand's auto signature (2–4 notes in key) on the lockup",
+        "loop": false
+      }
+    }
+  },
+  "sound": {
+    "brief": {
+      "voice": "precise",
+      "realism": "abstract",
+      "materials": [
+        "digital",
+        "plastic"
+      ],
+      "space": "room"
+    },
+    "restraint": 0.55,
+    "signature": "auto",
+    "music": {
+      "bpm": 111.25,
+      "beats": [
+        0.002,
+        0.542,
+        1.081,
+        1.62,
+        2.16,
+        2.699,
+        3.238,
+        3.778,
+        4.317,
+        4.856,
+        5.396,
+        5.935,
+        6.474,
+        7.013,
+        7.553,
+        8.092,
+        8.631,
+        9.171,
+        9.71,
+        10.249,
+        10.789,
+        11.328,
+        11.867,
+        12.407,
+        12.946,
+        13.485,
+        14.025,
+        14.564,
+        15.103,
+        15.643,
+        16.182,
+        16.721,
+        17.261,
+        17.8,
+        18.339,
+        18.879,
+        19.418,
+        19.957,
+        20.497,
+        21.036,
+        21.575,
+        22.115,
+        22.654,
+        23.193,
+        23.733,
+        24.272,
+        24.811,
+        25.351,
+        25.89,
+        26.429,
+        26.969,
+        27.508,
+        28.047,
+        28.587,
+        29.126,
+        29.665
+      ],
+      "key": "D minor",
+      "keyConfidence": 1
+    }
+  },
+  "sfx": [
+    {
+      "src": "sfx:whoosh-whip",
+      "at": 8.25,
+      "volume": 0.7
+    },
+    {
+      "src": "sfx:whoosh-whip",
+      "at": 9.05,
+      "volume": 0.7
+    },
+    {
+      "src": "sfx:whoosh-whip",
+      "at": 9.9,
+      "volume": 0.7
+    },
+    {
+      "src": "sfx:glitch-transition",
+      "at": 10.5,
+      "volume": 0.6
+    },
+    {
+      "src": "sfx:typing-fast",
+      "at": 7.72,
+      "volume": 0.55
+    },
+    {
+      "src": "sfx:riser-tension",
+      "at": 13.85,
+      "volume": 0.6
+    },
+    {
+      "src": "sfx:braam",
+      "at": 16.58,
+      "volume": 0.9
+    },
+    {
+      "src": "sfx:light-leak-swell",
+      "at": 16.42,
+      "volume": 0.7
+    },
+    {
+      "src": "sfx:trailer-hit-metal",
+      "at": 17.796,
+      "volume": 0.85
+    },
+    {
+      "src": "sfx:film-burn",
+      "at": 18.45,
+      "volume": 0.6
+    },
+    {
+      "src": "sfx:keyboard-enter",
+      "at": 26,
+      "volume": 0.8
+    },
+    {
+      "src": "sfx:typing-burst",
+      "at": 26.15,
+      "volume": 0.5
+    }
+  ],
+  "voiceover": [
+    {
+      "src": "assets/vo-49a515f4dc.wav",
+      "text": "Bhopal has always been a city of builders. This November, a thousand of them meet in one place. AI. Cloud. Android. Web. DevOps. One talk track. One workshop track. One day. This is DevFest Bhopal 2026. November twenty-second, at the Kushabhau Thakre International Convention Centre. Earn your stripes. Get your tickets at devfest dot bhopal dot dev.",
+      "words": [
+        {
+          "text": "Bhopal",
+          "start": 0.1,
+          "end": 0.6
+        },
+        {
+          "text": "has",
+          "start": 0.6,
+          "end": 0.9
+        },
+        {
+          "text": "always",
+          "start": 0.9,
+          "end": 1.4
+        },
+        {
+          "text": "been",
+          "start": 1.4,
+          "end": 1.6
+        },
+        {
+          "text": "a",
+          "start": 1.6,
+          "end": 1.6
+        },
+        {
+          "text": "city",
+          "start": 1.6,
+          "end": 2.1
+        },
+        {
+          "text": "of",
+          "start": 2.1,
+          "end": 2.3
+        },
+        {
+          "text": "builders.",
+          "start": 2.3,
+          "end": 3
+        },
+        {
+          "text": "This",
+          "start": 3.6,
+          "end": 3.9
+        },
+        {
+          "text": "November,",
+          "start": 3.9,
+          "end": 4.4
+        },
+        {
+          "text": "a",
+          "start": 4.6,
+          "end": 4.8
+        },
+        {
+          "text": "thousand",
+          "start": 4.8,
+          "end": 5.3
+        },
+        {
+          "text": "of",
+          "start": 5.3,
+          "end": 5.4
+        },
+        {
+          "text": "them",
+          "start": 5.4,
+          "end": 5.6
+        },
+        {
+          "text": "meet",
+          "start": 5.6,
+          "end": 6
+        },
+        {
+          "text": "in",
+          "start": 6,
+          "end": 6.2
+        },
+        {
+          "text": "one",
+          "start": 6.2,
+          "end": 6.6
+        },
+        {
+          "text": "place.",
+          "start": 6.6,
+          "end": 7
+        },
+        {
+          "text": "AI.",
+          "start": 7.8,
+          "end": 8.4
+        },
+        {
+          "text": "Cloud.",
+          "start": 8.5,
+          "end": 9.2
+        },
+        {
+          "text": "Android.",
+          "start": 9.3,
+          "end": 10
+        },
+        {
+          "text": "Web.",
+          "start": 10.2,
+          "end": 10.7
+        },
+        {
+          "text": "DevOps.",
+          "start": 10.9,
+          "end": 11.6
+        },
+        {
+          "text": "One",
+          "start": 12.1,
+          "end": 12.4
+        },
+        {
+          "text": "talk",
+          "start": 12.4,
+          "end": 12.6
+        },
+        {
+          "text": "track.",
+          "start": 12.6,
+          "end": 13.1
+        },
+        {
+          "text": "One",
+          "start": 13.1,
+          "end": 13.4
+        },
+        {
+          "text": "workshop",
+          "start": 13.4,
+          "end": 13.9
+        },
+        {
+          "text": "track.",
+          "start": 13.9,
+          "end": 14.4
+        },
+        {
+          "text": "One",
+          "start": 14.5,
+          "end": 14.9
+        },
+        {
+          "text": "day.",
+          "start": 14.9,
+          "end": 15.2
+        },
+        {
+          "text": "This",
+          "start": 16.1,
+          "end": 16.4
+        },
+        {
+          "text": "is",
+          "start": 16.4,
+          "end": 16.7
+        },
+        {
+          "text": "DevFest",
+          "start": 16.7,
+          "end": 17.2
+        },
+        {
+          "text": "Bhopal",
+          "start": 17.2,
+          "end": 17.8
+        },
+        {
+          "text": "2026.",
+          "start": 17.8,
+          "end": 18.9
+        },
+        {
+          "text": "November",
+          "start": 19.3,
+          "end": 19.7
+        },
+        {
+          "text": "twenty-second,",
+          "start": 19.7,
+          "end": 20.4
+        },
+        {
+          "text": "at",
+          "start": 20.4,
+          "end": 20.5
+        },
+        {
+          "text": "the",
+          "start": 20.5,
+          "end": 20.6
+        },
+        {
+          "text": "Kushabhau",
+          "start": 20.6,
+          "end": 21.2
+        },
+        {
+          "text": "Thakre",
+          "start": 21.2,
+          "end": 21.6
+        },
+        {
+          "text": "International",
+          "start": 21.6,
+          "end": 22.3
+        },
+        {
+          "text": "Convention",
+          "start": 22.3,
+          "end": 22.8
+        },
+        {
+          "text": "Centre.",
+          "start": 22.8,
+          "end": 23.2
+        },
+        {
+          "text": "Earn",
+          "start": 23.9,
+          "end": 24.1
+        },
+        {
+          "text": "your",
+          "start": 24.1,
+          "end": 24.3
+        },
+        {
+          "text": "stripes.",
+          "start": 24.3,
+          "end": 25
+        },
+        {
+          "text": "Get",
+          "start": 25.2,
+          "end": 25.4
+        },
+        {
+          "text": "your",
+          "start": 25.4,
+          "end": 25.6
+        },
+        {
+          "text": "tickets",
+          "start": 25.6,
+          "end": 26
+        },
+        {
+          "text": "at",
+          "start": 26,
+          "end": 26.2
+        },
+        {
+          "text": "devfest",
+          "start": 26.2,
+          "end": 26.773
+        },
+        {
+          "text": "dot",
+          "start": 26.773,
+          "end": 27.018
+        },
+        {
+          "text": "bhopal",
+          "start": 27.018,
+          "end": 27.509
+        },
+        {
+          "text": "dot",
+          "start": 27.509,
+          "end": 27.755
+        },
+        {
+          "text": "dev.",
+          "start": 27.755,
+          "end": 28
+        }
+      ]
+    }
+  ],
+  "scenes": [
+    {
+      "id": "hook",
+      "duration": 3.6,
+      "background": {
+        "type": "media",
+        "src": "assets/bhopal-lake-dusk.jpg",
+        "dim": 0.3,
+        "kenBurns": true
+      },
+      "camera": {
+        "keyframes": [
+          {
+            "t": 0,
+            "zoom": 1
+          },
+          {
+            "t": 3.6,
+            "zoom": 1.08,
+            "ease": "inOut"
+          }
+        ]
+      },
+      "fx": {
+        "lightLeak": 0.18
+      },
+      "layers": [
+        {
+          "type": "particles",
+          "preset": "dust",
+          "count": 50,
+          "colors": [
+            "#FBBC05",
+            "#FFFAF0"
+          ],
+          "opacity": 0.6
+        },
+        {
+          "id": "bhopal-deva",
+          "type": "text",
+          "text": "भोपाल",
+          "font": "Tiro Devanagari Hindi",
+          "fontSize": 250,
+          "color": "#FFFAF0",
+          "preset": "mask-up",
+          "y": -260,
+          "glow": "rgba(251,188,5,0.35)",
+          "shadow": true
+        },
+        {
+          "type": "text",
+          "text": "THE CITY OF LAKES",
+          "font": "IBM Plex Mono",
+          "weight": 500,
+          "fontSize": 34,
+          "letterSpacing": 0.32,
+          "color": "#FFFAF0",
+          "opacity": 0.85,
+          "preset": "tracking",
+          "start": 0.5,
+          "y": -70
+        },
+        {
+          "id": "builds",
+          "type": "text",
+          "text": "BUILDS.",
+          "font": "Inter",
+          "weight": 900,
+          "fontSize": 220,
+          "color": "#FBBC05",
+          "preset": "stretch",
+          "start": 1.95,
+          "y": 160,
+          "letterSpacing": -0.02,
+          "shadow": true
+        }
+      ]
+    },
+    {
+      "id": "gather",
+      "duration": 4.6,
+      "background": {
+        "type": "mesh",
+        "colors": [
+          "#1F2440",
+          "#0D4B57",
+          "#1A2A5E"
+        ],
+        "base": "#12151A",
+        "speed": 0.6
+      },
+      "layers": [
+        {
+          "type": "media",
+          "src": "assets/crowd.jpg",
+          "width": 600,
+          "height": 450,
+          "radius": 22,
+          "fit": "cover",
+          "x": -230,
+          "y": 120,
+          "rotate": -8,
+          "start": 0.35,
+          "enter": {
+            "type": "whip-left",
+            "duration": 0.5
+          },
+          "animate": [
+            {
+              "t": 2.1,
+              "x": 0,
+              "y": 0,
+              "scale": 1
+            },
+            {
+              "t": 2.8,
+              "x": 150,
+              "y": 300,
+              "scale": 0.6,
+              "rotate": -6,
+              "ease": "inOutQuint"
+            }
+          ],
+          "shadow": "premium"
+        },
+        {
+          "type": "media",
+          "src": "assets/stage.jpg",
+          "width": 600,
+          "height": 450,
+          "radius": 22,
+          "fit": "cover",
+          "x": 250,
+          "y": 330,
+          "rotate": 6,
+          "start": 0.55,
+          "enter": {
+            "type": "whip-right",
+            "duration": 0.5
+          },
+          "animate": [
+            {
+              "t": 1.9,
+              "x": 0,
+              "y": 0,
+              "scale": 1
+            },
+            {
+              "t": 2.6,
+              "x": -170,
+              "y": 100,
+              "scale": 0.6,
+              "rotate": 4,
+              "ease": "inOutQuint"
+            }
+          ],
+          "shadow": "premium"
+        },
+        {
+          "type": "media",
+          "src": "assets/team.jpg",
+          "width": 600,
+          "height": 450,
+          "radius": 22,
+          "fit": "cover",
+          "x": -120,
+          "y": 560,
+          "rotate": -3,
+          "start": 0.75,
+          "enter": {
+            "type": "whip-up",
+            "duration": 0.5
+          },
+          "animate": [
+            {
+              "t": 1.7,
+              "x": 0,
+              "y": 0,
+              "scale": 1
+            },
+            {
+              "t": 2.4,
+              "x": 120,
+              "y": -120,
+              "scale": 0.6,
+              "rotate": 3,
+              "ease": "inOutQuint"
+            }
+          ],
+          "shadow": "premium"
+        },
+        {
+          "id": "count",
+          "type": "counter",
+          "from": 0,
+          "to": 1000,
+          "suffix": "+",
+          "locale": "en-IN",
+          "font": "Inter",
+          "weight": 900,
+          "fontSize": 250,
+          "color": "#FFFAF0",
+          "start": 0.55,
+          "countDuration": 1.4,
+          "y": -560,
+          "enter": {
+            "type": "reveal-up",
+            "duration": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "BUILDERS",
+          "font": "IBM Plex Mono",
+          "weight": 600,
+          "fontSize": 52,
+          "letterSpacing": 0.3,
+          "color": "#FBBC05",
+          "preset": "tracking",
+          "start": 1.2,
+          "y": -380
+        },
+        {
+          "id": "brackets",
+          "type": "logo",
+          "src": "assets/gdg-brackets.svg",
+          "mode": "assemble",
+          "order": "radialOut",
+          "revealDuration": 0.9,
+          "height": 300,
+          "y": -110,
+          "start": 2.5
+        },
+        {
+          "type": "text",
+          "text": "ONE PLACE",
+          "font": "IBM Plex Mono",
+          "weight": 600,
+          "fontSize": 44,
+          "letterSpacing": 0.3,
+          "color": "#FFFAF0",
+          "preset": "tracking",
+          "start": 2.95,
+          "y": 70
+        }
+      ],
+      "transition": {
+        "type": "whip",
+        "direction": "up",
+        "duration": 0.4,
+        "ease": "inOutQuint"
+      }
+    },
+    {
+      "id": "ai",
+      "duration": 0.9,
+      "background": {
+        "type": "solid",
+        "color": "#4285F4"
+      },
+      "camera": {
+        "punch": [
+          0.05
+        ]
+      },
+      "layers": [
+        {
+          "type": "text",
+          "text": "<AI />",
+          "font": "IBM Plex Mono",
+          "weight": 700,
+          "fontSize": 230,
+          "color": "#FFFFFF",
+          "preset": "typewriter",
+          "start": 0.02,
+          "maxWidth": 980,
+          "exitPreset": "none"
+        }
+      ],
+      "transition": {
+        "type": "zoom-through",
+        "duration": 0.3
+      }
+    },
+    {
+      "id": "cloud",
+      "duration": 0.8,
+      "background": {
+        "type": "solid",
+        "color": "#34A853"
+      },
+      "camera": {
+        "punch": [
+          0.05
+        ]
+      },
+      "layers": [
+        {
+          "type": "text",
+          "text": "{ Cloud }",
+          "font": "IBM Plex Mono",
+          "weight": 700,
+          "fontSize": 165,
+          "color": "#FFFFFF",
+          "preset": "pop",
+          "start": 0.02,
+          "maxWidth": 980,
+          "exitPreset": "none"
+        }
+      ],
+      "transition": {
+        "type": "cut"
+      }
+    },
+    {
+      "id": "android",
+      "duration": 0.85,
+      "background": {
+        "type": "solid",
+        "color": "#FBBC05"
+      },
+      "camera": {
+        "punch": [
+          0.05
+        ]
+      },
+      "layers": [
+        {
+          "type": "text",
+          "text": "Android",
+          "font": "Inter",
+          "weight": 900,
+          "fontSize": 240,
+          "color": "#1F2440",
+          "preset": "stretch",
+          "start": 0.02,
+          "maxWidth": 980,
+          "exitPreset": "none"
+        }
+      ],
+      "transition": {
+        "type": "cut"
+      }
+    },
+    {
+      "id": "web",
+      "duration": 0.75,
+      "background": {
+        "type": "solid",
+        "color": "#EA4335"
+      },
+      "camera": {
+        "punch": [
+          0.05
+        ]
+      },
+      "layers": [
+        {
+          "type": "text",
+          "text": "Web",
+          "font": "Inter",
+          "weight": 900,
+          "fontSize": 330,
+          "color": "#FFFFFF",
+          "preset": "stretch",
+          "start": 0.02,
+          "maxWidth": 980,
+          "exitPreset": "none"
+        }
+      ],
+      "transition": {
+        "type": "cut"
+      }
+    },
+    {
+      "id": "devops",
+      "duration": 1.3,
+      "background": {
+        "type": "solid",
+        "color": "#A142F4"
+      },
+      "camera": {
+        "punch": [
+          0.05
+        ]
+      },
+      "layers": [
+        {
+          "type": "text",
+          "text": "DevOps",
+          "font": "Inter",
+          "weight": 900,
+          "fontSize": 250,
+          "color": "#FFFFFF",
+          "preset": "glitch",
+          "start": 0.02,
+          "maxWidth": 980,
+          "exitPreset": "none"
+        }
+      ],
+      "transition": {
+        "type": "cut"
+      }
+    },
+    {
+      "id": "tracks",
+      "duration": 4.35,
+      "background": {
+        "type": "grid",
+        "color": "#ECE3D0",
+        "base": "#FFFAF0",
+        "size": 90
+      },
+      "layers": [
+        {
+          "type": "card",
+          "variant": "solid",
+          "meta": "TRACK 01",
+          "title": "Talk Track",
+          "body": "AI · Cloud · Android · Web · DevOps",
+          "background": "#4285F4",
+          "color": "#FFFFFF",
+          "fontSize": 54,
+          "width": 880,
+          "y": -500,
+          "start": 0.25,
+          "enter": {
+            "type": "reveal-up",
+            "duration": 0.45
+          },
+          "shadow": "premium"
+        },
+        {
+          "type": "card",
+          "variant": "solid",
+          "meta": "TRACK 02",
+          "title": "Workshop Track",
+          "body": "Hands-on. Bring a laptop.",
+          "background": "#34A853",
+          "color": "#FFFFFF",
+          "fontSize": 54,
+          "width": 880,
+          "y": -60,
+          "start": 1.25,
+          "enter": {
+            "type": "reveal-up",
+            "duration": 0.45
+          },
+          "shadow": "premium"
+        },
+        {
+          "id": "oneday",
+          "type": "text",
+          "text": "ONE DAY.",
+          "font": "Inter",
+          "weight": 900,
+          "fontSize": 200,
+          "color": "#EA4335",
+          "preset": "drop-in",
+          "start": 2.5,
+          "y": 250,
+          "rotate": -4
+        }
+      ],
+      "transition": {
+        "type": "glitch",
+        "duration": 0.3
+      }
+    },
+    {
+      "id": "reveal",
+      "duration": 3.9,
+      "background": [
+        {
+          "type": "solid",
+          "color": "#12151A"
+        },
+        {
+          "type": "shader",
+          "shader": "rays",
+          "colors": [
+            "#1A2A5E",
+            "#4285F4"
+          ],
+          "speed": 0.4,
+          "intensity": 0.32
+        }
+      ],
+      "camera": {
+        "punch": [
+          1.15,
+          2.25
+        ]
+      },
+      "fx": {
+        "lightLeak": 0.3,
+        "flashes": [
+          {
+            "at": 2.25,
+            "color": "#FFFFFF",
+            "intensity": 0.7,
+            "duration": 0.25
+          }
+        ]
+      },
+      "layers": [
+        {
+          "id": "brackets3d",
+          "type": "three",
+          "source": "svg:assets/gdg-brackets.svg",
+          "material": "plastic",
+          "lighting": "studio",
+          "animation": "assemble",
+          "depth": 0.22,
+          "bevel": 0.03,
+          "width": 940,
+          "height": 720,
+          "y": -420,
+          "start": 0.05,
+          "loop": {
+            "type": "float",
+            "amplitude": 10,
+            "speed": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "This is",
+          "font": "Inter",
+          "weight": 600,
+          "fontSize": 70,
+          "color": "#FFFAF0",
+          "preset": "blur-rise",
+          "start": 0.55,
+          "y": -40
+        },
+        {
+          "type": "text",
+          "text": "DevFest",
+          "font": "Inter",
+          "weight": 900,
+          "fontSize": 250,
+          "color": "#FFFFFF",
+          "preset": "zoom-from-camera",
+          "start": 1.1,
+          "y": 100,
+          "letterSpacing": -0.03,
+          "glow": "rgba(66,133,244,0.45)"
+        },
+        {
+          "type": "text",
+          "text": "BHOPAL 2026",
+          "font": "IBM Plex Mono",
+          "weight": 700,
+          "fontSize": 96,
+          "letterSpacing": 0.18,
+          "color": "#FBBC05",
+          "preset": "tracking",
+          "start": 2.05,
+          "y": 265
+        },
+        {
+          "type": "particles",
+          "preset": "burst",
+          "count": 90,
+          "colors": [
+            "#4285F4",
+            "#EA4335",
+            "#FBBC05",
+            "#34A853"
+          ],
+          "start": 2.25,
+          "originY": -0.2
+        }
+      ],
+      "transition": {
+        "type": "expand",
+        "from": "oneday",
+        "shape": "circle",
+        "color": "#12151A",
+        "duration": 0.6
+      }
+    },
+    {
+      "id": "when",
+      "duration": 5.05,
+      "background": {
+        "type": "gradient",
+        "colors": [
+          "#0D4B57",
+          "#1A7F8E"
+        ],
+        "angle": 160
+      },
+      "camera": {
+        "keyframes": [
+          {
+            "t": 0,
+            "zoom": 1
+          },
+          {
+            "t": 5.05,
+            "zoom": 1.05,
+            "ease": "inOut"
+          }
+        ]
+      },
+      "layers": [
+        {
+          "type": "text",
+          "text": "22",
+          "font": "Newsreader",
+          "weight": 600,
+          "fontSize": 560,
+          "color": "#FFFAF0",
+          "preset": "mask-up",
+          "start": 0.45,
+          "y": -500,
+          "lineHeight": 0.9
+        },
+        {
+          "type": "text",
+          "text": "NOVEMBER 2026",
+          "font": "IBM Plex Mono",
+          "weight": 600,
+          "fontSize": 66,
+          "letterSpacing": 0.2,
+          "color": "#FBBC05",
+          "preset": "tracking",
+          "start": 0.8,
+          "y": -180
+        },
+        {
+          "type": "text",
+          "text": "Kushabhau Thakre\nInternational Convention Centre\nBhopal",
+          "font": "Inter",
+          "weight": 600,
+          "fontSize": 56,
+          "lineHeight": 1.18,
+          "color": "#FFFAF0",
+          "preset": "slide-words",
+          "by": "word",
+          "start": 1.7,
+          "y": 20,
+          "align": "center"
+        },
+        {
+          "type": "media",
+          "src": "assets/bhopal-scene.svg",
+          "width": 980,
+          "height": 849,
+          "fit": "contain",
+          "y": 640,
+          "start": 0.55,
+          "enter": {
+            "type": "reveal-up",
+            "duration": 0.9
+          }
+        }
+      ],
+      "transition": {
+        "type": "film-burn",
+        "duration": 0.6
+      }
+    },
+    {
+      "id": "cta",
+      "duration": 6.4,
+      "background": {
+        "type": "grid",
+        "color": "#ECE3D0",
+        "base": "#FFFAF0",
+        "size": 90
+      },
+      "layers": [
+        {
+          "type": "path",
+          "preset": "wave",
+          "color": "#1A7F8E",
+          "strokeWidth": 16,
+          "width": 1300,
+          "height": 220,
+          "y": 690,
+          "start": 0.2,
+          "drawDuration": 1.2
+        },
+        {
+          "type": "path",
+          "preset": "wave",
+          "color": "#4285F4",
+          "strokeWidth": 16,
+          "width": 1300,
+          "height": 220,
+          "y": 780,
+          "start": 0.4,
+          "drawDuration": 1.2
+        },
+        {
+          "id": "lockup",
+          "type": "logo",
+          "src": "assets/gdg-cloud-bhopal.png",
+          "mode": "mask",
+          "height": 96,
+          "y": -675,
+          "start": 4.45,
+          "revealDuration": 0.6
+        },
+        {
+          "type": "media",
+          "src": "assets/dhaari.svg",
+          "width": 470,
+          "height": 470,
+          "fit": "contain",
+          "y": -380,
+          "start": 0.35,
+          "enter": {
+            "type": "pop",
+            "duration": 0.5
+          },
+          "loop": {
+            "type": "bob",
+            "amplitude": 10,
+            "speed": 0.6
+          }
+        },
+        {
+          "type": "text",
+          "text": "Earn your stripes.",
+          "font": "Newsreader",
+          "weight": 600,
+          "italic": true,
+          "fontSize": 104,
+          "color": "#1F2440",
+          "preset": "blur-rise",
+          "start": 0.5,
+          "y": -90
+        },
+        {
+          "id": "tickets",
+          "type": "card",
+          "variant": "button",
+          "title": "Get tickets →",
+          "background": "#FBBC05",
+          "color": "#1F2440",
+          "fontSize": 66,
+          "width": 600,
+          "y": 60,
+          "start": 1.8,
+          "enter": {
+            "type": "pop",
+            "duration": 0.4
+          },
+          "press": 0.8
+        },
+        {
+          "type": "text",
+          "text": "devfest.bhopal.dev",
+          "font": "IBM Plex Mono",
+          "weight": 600,
+          "fontSize": 58,
+          "color": "#4285F4",
+          "preset": "typewriter",
+          "start": 2.75,
+          "y": 195
+        },
+        {
+          "type": "text",
+          "text": "22 NOV 2026 · BHOPAL",
+          "font": "IBM Plex Mono",
+          "weight": 500,
+          "fontSize": 38,
+          "letterSpacing": 0.2,
+          "color": "#1F2440",
+          "opacity": 0.75,
+          "preset": "tracking",
+          "start": 3.2,
+          "y": 280
+        }
+      ],
+      "transition": {
+        "type": "slide",
+        "direction": "up",
+        "duration": 0.5,
+        "ease": "inOutQuint"
+      }
+    }
+  ],
+  "audio": {
+    "src": "assets/music-tech-v0-111.25bpm-30s.wav",
+    "volume": 0.55,
+    "fadeOut": 0.4,
+    "credit": {
+      "source": "Motion Studio",
+      "license": "Original score composed for this film (procedural; no third-party rights)",
+      "commercial": true
+    }
+  }
+}
