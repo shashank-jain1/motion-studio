@@ -671,7 +671,7 @@ app.get("/api/settings", async (c) => c.json(await getSettings()));
 
 app.put("/api/settings", async (c) => {
   if (IS_HOSTED && !isAdmin(userOf(c))) throw new HttpError(403, "Only the server owner can change settings");
-  const body = await readJson<{ model?: unknown; effort?: unknown; apiKey?: unknown }>(c);
+  const body = await readJson<{ model?: unknown; effort?: unknown; apiKey?: unknown; geminiApiKey?: unknown }>(c);
   try {
     return c.json(await putSettings(body));
   } catch (e) {

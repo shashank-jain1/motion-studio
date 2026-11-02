@@ -47,7 +47,7 @@ export type SfxManifest = { version: number; sampleRate: number; channels: 2; ta
 
 /** v1 category → manifest v2 taxonomy + material. */
 const TAXO: Record<string, (name: string) => { category: string; material: string[] }> = {
-  whoosh: (n) => ({ category: /long|deep/.test(n) ? "whoosh.long" : /air/.test(n) ? "whoosh.medium" : "whoosh.short", material: ["air"] }),
+  whoosh: (n) => ({ category: /long|deep|cinematic/.test(n) ? "whoosh.long" : /reverse/.test(n) ? "whoosh.in" : /flutter/.test(n) ? "whoosh.cloth" : /air/.test(n) ? "whoosh.medium" : "whoosh.short", material: /flutter/.test(n) ? ["cloth"] : ["air"] }),
   impact: (n) => ({ category: /deep|slam/.test(n) ? "impact.heavy" : /soft|thud/.test(n) ? "impact.light" : "impact.medium", material: ["synthetic"] }),
   riser: () => ({ category: "riser", material: ["air"] }),
   ui: (n) => ({ category: /click|tap/.test(n) ? "ui.click" : "ui.pop", material: ["digital"] }),
@@ -55,8 +55,11 @@ const TAXO: Record<string, (name: string) => { category: string; material: strin
   chime: () => ({ category: "magic.chime", material: ["glass"] }),
   glitch: () => ({ category: "digital.glitch", material: ["digital"] }),
   magic: (n) => ({ category: /morph/.test(n) ? "liquid.morph" : "magic.shimmer", material: ["glass"] }),
-  foley: (n) => ({ category: /paper/.test(n) ? "foley.paper" : /typewriter/.test(n) ? "foley.typing" : /camera/.test(n) ? "foley.camera" : /cash/.test(n) ? "foley.coins" : "foley.misc", material: ["synthetic"] }),
+  foley: (n) => ({ category: /paper/.test(n) ? "foley.paper" : /typewriter|typing|keyboard/.test(n) ? "foley.typing" : /clock/.test(n) ? "foley.clock" : /flash/.test(n) ? "foley.camera" : /camera/.test(n) ? "foley.camera" : /cash/.test(n) ? "foley.coins" : "foley.misc", material: ["synthetic"] }),
   bass: () => ({ category: "sub.boom", material: ["air"] }),
+  transition: (n) => ({ category: /rewind|recap/.test(n) ? "transition.rewind" : /tape-stop/.test(n) ? "transition.tapestop" : /reverse/.test(n) ? "transition.reverse" : "transition.swoosh", material: ["air"] }),
+  texture: (n) => ({ category: /leak|flare/.test(n) ? "ambience.light" : /projector/.test(n) ? "ambience.projector" : /burn/.test(n) ? "ambience.filmburn" : /drone|tension/.test(n) ? "ambience.drone" : "ambience.misc", material: /projector|burn/.test(n) ? ["mechanical"] : ["air"] }),
+  cinematic: (n) => ({ category: /braam/.test(n) ? "impact.braam" : /downlifter/.test(n) ? "sub.downlifter" : "impact.trailer", material: /metal/.test(n) ? ["metal"] : ["synthetic"] }),
 };
 
 // ------------------------------------------------------------------------------------------------- DSP primitives
@@ -895,7 +898,310 @@ const R: Record<string, Recipe> = {
       return b;
     },
   },
+
+  // ================= v4.1 cinematic set (original; same seeds scheme, so earlier sounds are unchanged)
+
+  // ---------------- whooshes
+  "whoosh-whip": {
+    category: "whoosh", palette: ["hype", "tech", "playful", "cinematic"], peak: 0.15, measure: "apex",
+    description: "Ultra-fast whip pan — whip transitions, snap zooms, quick cuts on the beat (0.3 s).",
+    make: (r) => whoosh({ dur: 0.3, peak: 0.15, wB: 0.035, wA: 0.03, f0: 900, f1: 6500, f2: 1400, q: 1.3, air: 0.5, width: 0.8, panFrom: -0.9, panTo: 0.9 }, r),
+  },
+  "whoosh-flutter": {
+    category: "whoosh", palette: ["playful", "minimal", "cinematic"], peak: 0.36, measure: "apex",
+    description: "Cloth / flag flutter pass-by — banners, fabric, page curls, card flips (0.65 s).",
+    make: (r) => {
+      const b = whoosh({ dur: 0.65, peak: 0.36, wB: 0.12, wA: 0.09, f0: 600, f1: 2600, f2: 900, q: 0.8, air: 0.25, pink: true, panFrom: -0.4, panTo: 0.5 }, r);
+      for (let i = 0; i < b.n; i++) { const t = i / SR, g = 0.6 + 0.4 * Math.sin(TAU * (24 + 10 * t) * t); b.L[i] *= g; b.R[i] *= 0.6 + 0.4 * Math.sin(TAU * (24 + 10 * t) * t + 0.9); }
+      return b;
+    },
+  },
+  "whoosh-reverse-in": {
+    category: "whoosh", palette: ["cinematic", "luxury", "hype"], peak: 0.98, measure: "apex",
+    description: "Reversed whoosh that sucks INTO the cut — reveals, hard cuts to black, title slams (1.0 s, apex at the end).",
+    // no reverb before reversing: a reversed tail would swell louder than the landing
+    make: (r) => { const b = whoosh({ dur: 1.0, peak: 0.02, wB: 0.01, wA: 0.32, f0: 300, f1: 3800, f2: 260, q: 0.9, air: 0.3, rumble: 0.35, pink: true, panFrom: 0.6, panTo: -0.6 }, r); reverse(b); return b; },
+  },
+  "swoosh-cinematic": {
+    category: "whoosh", palette: ["cinematic", "luxury", "hype"], peak: 0.95, measure: "apex",
+    description: "Long, layered trailer swoosh with a sub tail and air — big camera moves, scene-to-scene flights (1.6 s).",
+    make: (r) => whoosh({ dur: 1.6, peak: 1.0, wB: 0.36, wA: 0.2, f0: 180, f1: 2600, f2: 240, q: 0.85, air: 0.35, rumble: 0.55, whistle: 0.05, pink: true, width: 0.8, panFrom: -0.85, panTo: 0.85, verb: { room: 0.75, damp: 0.45, wet: 0.24 } }, r),
+  },
+
+  // ---------------- typing
+  "typing-burst": {
+    category: "foley", palette: ["minimal", "tech", "cinematic"], peak: 0.002, measure: "onset",
+    description: "A burst of laptop typing (~14 keys, natural rhythm, spacebar thunk) — typed text, search bars, coding (1.6 s).",
+    make: (r) => typingRun(r, 1.6, 14, 1),
+  },
+  "typing-fast": {
+    category: "foley", palette: ["tech", "hype", "minimal"], peak: 0.002, measure: "onset",
+    description: "Fast, focused typing (~12 keys) — hacker / productivity moments, quick UI text (0.9 s).",
+    make: (r) => typingRun(r, 0.9, 12, 1.5),
+  },
+  "keyboard-enter": {
+    category: "foley", palette: ["tech", "minimal", "playful"], peak: 0.002, measure: "onset",
+    description: "Big Enter / return key strike with a plastic rebound — submit, send, search, 'go' moments (0.3 s).",
+    make: (r) => {
+      const b = makeBuf(0.3);
+      burst(b, r, 0, { hz: 2200, q: 1.6, decay: 0.006, amp: 1.0 });
+      blip(b, 0, { f0: 180, f1: 120, sweep: 0.012, decay: 0.03, amp: 0.7 });
+      burst(b, r, 0.045, { hz: 3400, q: 2, decay: 0.004, amp: 0.45, pan: 0.1 });
+      reverb(b, { room: 0.2, damp: 0.6, wet: 0.08 });
+      return b;
+    },
+  },
+
+  // ---------------- recap / rewind / tape
+  "rewind-tape": {
+    category: "transition", palette: ["playful", "cinematic", "hype", "tech"], peak: 1.32, measure: "apex",
+    description: "Tape / VHS rewind: warbling high-speed chatter that accelerates into the cut — recaps, 'let's go back', flashbacks (1.4 s).",
+    make: (r) => {
+      const b = makeBuf(1.4);
+      const f = [new SVF(), new SVF()];
+      let ph = 0, ph2 = 0;
+      for (let i = 0; i < b.n; i++) {
+        const t = i / SR, x = t / 1.32;
+        const a = smooth(t / 0.08) * (t < 1.32 ? 0.35 + 0.65 * Math.pow(Math.min(1, x), 1.6) : Math.max(0, 1 - (t - 1.32) / 0.06));
+        const speed = expMix(500, 2400, Math.min(1, x));
+        ph += (TAU * (speed * (1 + 0.35 * Math.sin(TAU * 13 * t) + 0.2 * Math.sin(TAU * 37 * t)))) / SR; // garbled voice-like chirp
+        ph2 += (TAU * 55 * (1 + x)) / SR; // motor
+        const chirp = Math.tanh(Math.sin(ph) * 2) * (0.6 + 0.4 * Math.sin(TAU * 7.3 * t));
+        const motor = Math.sin(ph2) * 0.25 + Math.sin(ph2 * 2) * 0.1;
+        const hiss = (r() * 2 - 1);
+        for (let c = 0; c < 2; c++) {
+          const v = f[c].run(chirp * 0.7 + hiss * 0.25, mix(1400, 4200, Math.min(1, x)), 1.4).bp * 1.3 + motor;
+          (c ? b.R : b.L)[i] = v * a * (c ? 0.92 : 1);
+        }
+      }
+      reverb(b, { room: 0.3, damp: 0.5, wet: 0.1 });
+      return b;
+    },
+  },
+  "recap-swoosh": {
+    category: "transition", palette: ["cinematic", "hype", "playful"], peak: 1.1, measure: "apex",
+    description: "Recap transition: reverse cymbal + tape chatter + whoosh that lands on the recap card (1.5 s, apex 1.1 s).",
+    make: (r) => {
+      const b = reverseCymbal(r, 1.1, 1.5);
+      const w = whoosh({ dur: 1.5, peak: 1.1, wB: 0.22, wA: 0.12, f0: 300, f1: 3200, f2: 500, q: 1.0, air: 0.3, pink: true, panFrom: 0.7, panTo: -0.7 }, r);
+      for (let i = 0; i < b.n; i++) { b.L[i] += w.L[i] * 0.8; b.R[i] += w.R[i] * 0.8; }
+      // a few tape chirps riding the swell
+      for (let k = 0; k < 6; k++) blip(b, 0.5 + k * 0.1, { f0: 900 + k * 300, f1: 2600 + k * 400, sweep: 0.03, decay: 0.03, amp: 0.12, pan: k % 2 ? 0.4 : -0.4, square: 0.3 });
+      return b;
+    },
+  },
+  "tape-stop": {
+    category: "transition", palette: ["hype", "playful", "cinematic"], peak: 0.002, measure: "onset",
+    description: "Tape stop / power-down: a chord grinds down to silence — record scratch moments, 'wait, what?', freeze frames (0.9 s).",
+    make: (r) => {
+      const b = makeBuf(0.9);
+      const ph = [0, 0, 0], base = [110, 165, 220];
+      const f = new SVF();
+      for (let i = 0; i < b.n; i++) {
+        const t = i / SR, sp = Math.max(0, 1 - Math.pow(t / 0.85, 0.7));
+        let v = 0;
+        base.forEach((fr, k) => { ph[k] += (TAU * fr * sp) / SR; v += ((ph[k] / TAU) % 1) * 2 - 1; });
+        const out = f.run(v / 3 + (r() * 2 - 1) * 0.08 * sp, 300 + 3500 * sp, 0.9).lp * Math.min(1, t / 0.005) * Math.min(1, sp * 6);
+        b.L[i] = out; b.R[i] = out * 0.97;
+      }
+      saturate(b, 0.7);
+      return b;
+    },
+  },
+  "reverse-cymbal": {
+    category: "transition", palette: ["cinematic", "hype", "luxury"], peak: 1.98, measure: "apex",
+    description: "Reverse crash cymbal swelling into the hit — drops, logo reveals, big cuts (2.0 s, apex at the end).",
+    make: (r) => reverseCymbal(r, 1.98, 2.0),
+  },
+
+  // ---------------- film textures
+  "light-leak-swell": {
+    category: "texture", palette: ["cinematic", "luxury", "minimal"], peak: 1.38, measure: "apex",
+    description: "Warm, airy shimmer swell with a soft film crackle — light leaks, lens flares, dreamy dissolves (2.4 s, bloom at 1.3 s).",
+    make: (r) => {
+      const b = makeBuf(2.4);
+      const f = [new SVF(), new SVF()], pk = [pinkGen(r), pinkGen(r)];
+      for (let i = 0; i < b.n; i++) {
+        const t = i / SR, a = passBy(t, 1.3, 0.6, 0.55, 1.3) * smooth(t / 0.2);
+        for (let c = 0; c < 2; c++) (c ? b.R : b.L)[i] = f[c].run(pk[c]() * 2.5, mix(1800, 5200, a), 1.2).bp * a * 0.7;
+      }
+      [76, 83, 88, 95].forEach((m, k) => note(b, 0.9 + k * 0.09, hz(m), 0.09, GLASS, k % 2 ? 0.5 : -0.5, 2.2, 0.25));
+      for (let k = 0; k < 40; k++) burst(b, r, r() * 2.3, { hz: 3000 + r() * 4000, q: 1, decay: 0.002, amp: 0.05 + r() * 0.05, pan: r() * 2 - 1 });
+      reverb(b, { room: 0.82, damp: 0.3, wet: 0.35, width: 1 });
+      return b;
+    },
+  },
+  "film-projector": {
+    category: "texture", palette: ["cinematic", "minimal", "luxury"], peak: 0.002, measure: "onset",
+    description: "Running film projector: sprocket clatter (24 fps), motor hum and hiss — vintage looks, flashbacks, title cards (3.0 s, loopable).",
+    make: (r) => {
+      const b = makeBuf(3.0);
+      const hum = new SVF();
+      let ph = 0;
+      for (let i = 0; i < b.n; i++) { const t = i / SR; ph += (TAU * 96) / SR; const v = Math.sin(ph) * 0.06 + hum.run(r() * 2 - 1, 5000, 0.5).hp * 0.02; b.L[i] += v; b.R[i] += v; }
+      for (let k = 0; k < 72; k++) { const at = k / 24 + (r() - 0.5) * 0.003; burst(b, r, at, { hz: 2600 + (k % 2) * 900, q: 2.5, decay: 0.004, amp: k % 2 ? 0.35 : 0.5, pan: 0.15 }); }
+      reverb(b, { room: 0.25, damp: 0.6, wet: 0.08 });
+      return b;
+    },
+  },
+  "film-burn": {
+    category: "texture", palette: ["cinematic", "hype"], peak: 0.7, measure: "apex",
+    description: "Film burn: crackling flare that whooshes up and fizzles — film-burn transitions, light leaks, analog glitches (1.5 s).",
+    make: (r) => {
+      const b = whoosh({ dur: 1.5, peak: 0.7, wB: 0.25, wA: 0.3, f0: 400, f1: 4200, f2: 800, q: 0.7, air: 0.5, pink: true, width: 0.9, panFrom: -0.3, panTo: 0.3 }, r);
+      for (let k = 0; k < 90; k++) { const at = 0.2 + r() * 1.2; burst(b, r, at, { hz: 1500 + r() * 6000, q: 0.8, decay: 0.0015 + r() * 0.003, amp: (0.1 + r() * 0.3) * passBy(at, 0.7, 0.3, 0.4), pan: r() * 2 - 1 }); }
+      reverb(b, { room: 0.5, damp: 0.4, wet: 0.14 });
+      return b;
+    },
+  },
+  "tension-drone": {
+    category: "texture", palette: ["cinematic", "minimal"], peak: 2.0, measure: "apex",
+    description: "Dark, slowly breathing drone bed — suspense, 'the problem' beats, before a reveal (4.0 s).",
+    make: (r) => {
+      const b = makeBuf(4.0);
+      const ph = [0, 0, 0, 0], fr = [41.2, 41.5, 61.7, 82.4], f = [new SVF(), new SVF()];
+      for (let i = 0; i < b.n; i++) {
+        const t = i / SR, a = smooth(t / 1.4) * smooth((4 - t) / 0.8) * (0.8 + 0.2 * Math.sin(TAU * 0.5 * t));
+        let v = 0;
+        fr.forEach((x, k) => { ph[k] += (TAU * x) / SR; v += ((ph[k] / TAU) % 1) * 2 - 1; });
+        const n = r() * 2 - 1;
+        for (let c = 0; c < 2; c++) (c ? b.R : b.L)[i] = (f[c].run(v * 0.3 + n * 0.15, 220 + 140 * Math.sin(TAU * 0.13 * t + c), 1.6).lp) * a;
+      }
+      reverb(b, { room: 0.85, damp: 0.5, wet: 0.3, width: 1 });
+      return b;
+    },
+  },
+
+  // ---------------- trailer
+  "braam": {
+    category: "cinematic", palette: ["cinematic", "hype"], peak: 0.12, measure: "apex",
+    description: "Trailer BRAAM: a massive distorted brass-like blast with a sub — title slams, the reveal, the turn (2.6 s).",
+    make: (r) => {
+      const b = makeBuf(2.6);
+      const voices = [[55, 0], [55.3, -0.3], [82.4, 0.3], [110, -0.15], [110.6, 0.15], [164.8, 0]];
+      const ph = voices.map(() => 0), f = [new SVF(), new SVF()];
+      let sub = 0;
+      for (let i = 0; i < b.n; i++) {
+        const t = i / SR, a = (1 - Math.exp(-t / 0.025)) * Math.exp(-t / 1.1);
+        const cut = 180 + 1700 * Math.exp(-t / 0.35);
+        const s = [0, 0];
+        voices.forEach(([fq, pan], k) => { ph[k] += (TAU * fq * (1 - 0.01 * Math.exp(-t / 0.1))) / SR; const v = ((ph[k] / TAU) % 1) * 2 - 1; const [gl, gr] = panGains(pan); s[0] += v * gl; s[1] += v * gr; });
+        sub += (TAU * 41) / SR;
+        for (let c = 0; c < 2; c++) (c ? b.R : b.L)[i] = Math.tanh(f[c].run(s[c] * 0.3, cut, 1.3).lp * 2.4) * a * 0.7 + Math.sin(sub) * a * 0.45;
+      }
+      reverb(b, { room: 0.9, damp: 0.5, wet: 0.32, predelay: 0.02 });
+      return b;
+    },
+  },
+  "downlifter": {
+    category: "cinematic", palette: ["cinematic", "hype", "tech"], peak: 0.004, measure: "onset",
+    description: "Downlifter: a falling noise sweep with a sub drop — after a drop, exits, 'and then…' moments (1.6 s).",
+    make: (r) => {
+      const b = makeBuf(1.6);
+      const f = [new SVF(), new SVF()];
+      let ph = 0;
+      for (let i = 0; i < b.n; i++) {
+        const t = i / SR, x = t / 1.6, a = (1 - Math.exp(-t / 0.004)) * Math.pow(1 - x, 1.6);
+        ph += (TAU * mix(90, 30, Math.pow(x, 0.5))) / SR;
+        for (let c = 0; c < 2; c++) (c ? b.R : b.L)[i] = f[c].run(r() * 2 - 1, expMix(9000, 250, Math.pow(x, 0.6)), 1.6).bp * a * 0.8 + Math.sin(ph) * a * 0.5;
+      }
+      reverb(b, { room: 0.6, damp: 0.5, wet: 0.18 });
+      return b;
+    },
+  },
+  "trailer-hit-metal": {
+    category: "cinematic", palette: ["cinematic", "hype"], peak: 0.004, measure: "onset",
+    description: "Trailer impact with a metallic ring and sub — logo slams, chapter cards, the big beat (2.4 s).",
+    make: (r) => {
+      const b = makeBuf(2.4);
+      impactInto(b, { dur: 2.4, body: { f0: 110, f1: 34, glide: 0.08, decay: 0.5, amp: 1.0 }, click: { hz: 3000, decay: 0.005, amp: 0.6 }, noise: { lp: 4000, decay: 0.12, amp: 0.5 } }, r);
+      note(b, 0.002, 196, 0.28, METAL, -0.25, 2.2, 0.0008);
+      note(b, 0.004, 293, 0.18, METAL, 0.25, 1.8, 0.0008);
+      saturate(b, 1.0);
+      reverb(b, { room: 0.88, damp: 0.4, wet: 0.4, predelay: 0.015 });
+      return b;
+    },
+  },
+  "riser-tension": {
+    category: "riser", palette: ["cinematic", "hype", "tech"], peak: 3.95, measure: "apex",
+    description: "Long tension riser that climbs for 4 s and cuts on the drop — builds into the peak / reveal (4.0 s).",
+    make: (r) => riser(4.0, 3.95, r),
+  },
+
+  // ---------------- misc
+  "camera-flash": {
+    category: "foley", palette: ["playful", "cinematic", "luxury", "minimal"], peak: 0.5, measure: "apex",
+    description: "Camera flash: capacitor charge whine then a bright pop — paparazzi flashes, white flash frames (0.8 s, pop at 0.5 s).",
+    make: (r) => {
+      const b = makeBuf(0.8);
+      let ph = 0;
+      for (let i = 0; i < Math.round(0.5 * SR); i++) { const t = i / SR; ph += (TAU * expMix(1800, 9000, t / 0.5)) / SR; const v = Math.sin(ph) * 0.12 * smooth(t / 0.4); b.L[i] += v; b.R[i] += v; }
+      burst(b, r, 0.5, { hz: 4500, q: 0.7, decay: 0.012, amp: 1.0 });
+      blip(b, 0.5, { f0: 1500, f1: 400, sweep: 0.01, decay: 0.02, amp: 0.4 });
+      reverb(b, { room: 0.45, damp: 0.3, wet: 0.16 });
+      return b;
+    },
+  },
+  "clock-ticking": {
+    category: "foley", palette: ["cinematic", "minimal", "tech"], peak: 0.002, measure: "onset",
+    description: "Clock tick-tock, 4 ticks at 1/s rhythm compressed to 0.5 s each — deadlines, countdowns, 'time is running out' (2.0 s).",
+    make: (r) => {
+      const b = makeBuf(2.0);
+      for (let k = 0; k < 4; k++) {
+        burst(b, r, k * 0.5, { hz: k % 2 ? 2600 : 3300, q: 4, decay: 0.006, amp: 0.8, pan: k % 2 ? 0.15 : -0.15 });
+        note(b, k * 0.5, k % 2 ? 1250 : 1580, 0.12, METAL, 0, 0.12, 0.0005);
+      }
+      reverb(b, { room: 0.35, damp: 0.5, wet: 0.12 });
+      return b;
+    },
+  },
+  "glitch-transition": {
+    category: "glitch", palette: ["tech", "hype"], peak: 0.3, measure: "apex",
+    description: "Digital glitch transition: stuttered buzz bursts and bit-crushed chirps around the cut (0.6 s).",
+    make: (r) => {
+      const b = makeBuf(0.6);
+      for (let k = 0; k < 9; k++) {
+        const at = 0.08 + k * 0.05 + (r() - 0.5) * 0.015, f0 = 200 + r() * 2500;
+        blip(b, at, { f0, f1: f0 * (0.5 + r()), sweep: 0.01, decay: 0.012 + r() * 0.015, amp: 0.4 * passBy(at, 0.3, 0.12, 0.12), pan: r() * 1.6 - 0.8, square: 1 });
+        burst(b, r, at, { hz: 3000 + r() * 4000, q: 1, decay: 0.006, amp: 0.25, mode: "hp" });
+      }
+      for (let i = 0; i < b.n; i++) { if ((i >> 5) % 3 === 0) { b.L[i] = Math.round(b.L[i] * 8) / 8; b.R[i] = Math.round(b.R[i] * 8) / 8; } }
+      return b;
+    },
+  },
 };
+
+/** Natural laptop typing: irregular inter-key gaps, key-to-key timbre variation, a spacebar every few keys. */
+function typingRun(r: () => number, dur: number, keys: number, speed: number): Buf {
+  const b = makeBuf(dur);
+  let t = 0.002;
+  for (let k = 0; k < keys && t < dur - 0.08; k++) {
+    const space = k > 0 && k % 5 === 4;
+    const hzK = space ? 1400 : 2400 + r() * 1600;
+    burst(b, r, t, { hz: hzK, q: 1.8 + r(), decay: space ? 0.008 : 0.004, amp: space ? 0.9 : 0.6 + r() * 0.35, pan: (r() - 0.5) * 0.5 });
+    blip(b, t, { f0: space ? 160 : 240 + r() * 80, f1: space ? 110 : 180, sweep: 0.008, decay: space ? 0.025 : 0.01, amp: space ? 0.5 : 0.25 });
+    burst(b, r, t + 0.035 + r() * 0.02, { hz: 3200 + r() * 1500, q: 2, decay: 0.003, amp: 0.2, pan: (r() - 0.5) * 0.5 }); // key release
+    t += (0.07 + r() * 0.08 + (r() < 0.12 ? 0.12 : 0)) / speed;
+  }
+  reverb(b, { room: 0.18, damp: 0.6, wet: 0.06 });
+  return b;
+}
+
+/** Reverse crash: bright noise with a cymbal-like partial cluster, swelling exponentially into `apex`. */
+function reverseCymbal(r: () => number, apex: number, dur: number): Buf {
+  const b = makeBuf(dur);
+  const f = [new SVF(), new SVF()];
+  const parts = [3150, 4400, 5900, 7300, 8800].map((x) => ({ x, ph: r() * TAU }));
+  for (let i = 0; i < b.n; i++) {
+    const t = i / SR;
+    const a = t <= apex ? Math.pow(t / apex, 3.2) : Math.max(0, 1 - (t - apex) / 0.02);
+    let metal = 0;
+    for (const p of parts) { p.ph += (TAU * p.x * (1 + 0.003 * Math.sin(TAU * 6 * t))) / SR; metal += Math.sin(p.ph); }
+    for (let c = 0; c < 2; c++) (c ? b.R : b.L)[i] = (f[c].run(r() * 2 - 1, 5500, 0.6).hp * 0.8 + metal * 0.05) * a;
+  }
+  reverb(b, { room: 0.7, damp: 0.25, wet: 0.2, width: 1 });
+  return b;
+}
 
 function riser(dur: number, peak: number, rnd: () => number): Buf {
   const b = makeBuf(dur);

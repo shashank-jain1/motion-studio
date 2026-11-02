@@ -204,7 +204,10 @@ Every film gets a `"sound"` object unless the brief asks for silence. The engine
 2. **Restraint, not intensity.** `restraint` 0.6–0.8 for luxury / calm / explainers, 0.5 default, 0.3 for hype edits. The planner already sounds only arrivals and state changes, collapses cascades into one sound, and clears 0.35–0.8 s of silence (plus a music stopdown) before the hero. Premium = 30–50 % of motions sounded.
 3. **Design the hero.** Exactly one moment should be the biggest: usually the final logo resolve (it gets the sonic signature: mnemonic in key + brand-material body + sub). Give it room: a beat of stillness before it, no other hits in the 0.5 s around it. `signature: "auto"` keeps the same mnemonic across every film of the brand.
 4. **Design the picture for the sound.** Cut on motion (whip, zoom-through, match), land type with a slam preset or `drop`, put `camera.punch` on 2–4 beats, let counters run to the payoff, end on a logo reveal. Bigger objects automatically sound lower and longer; lateral moves pan.
-5. **Music.** Add `audio`, run `analyze_audio`, cut on its beats, start the hero at `dropAt`, and copy its `key` into `sound.brief.key` (renders fill `sound.music` automatically, the Player preview needs the key in the spec). Tonal SFX (chimes, pings, subs, swells, the mnemonic) are then in the track's key; with low key confidence the planner avoids tonal recordings. Events the music already hits are thinned.
+5. **Music.** No track from the user? `compose_music` (free, original) writes a score for THIS timeline: pick the mood
+   from the concept, pass `peak` = the reveal time, and it lands the drop there and the cuts on its beats (it also fills
+   `sound.music`). Lyria (Google's AI music) is paid — offer it only if the user wants it and agrees to the cost.
+   With a user's track: add `audio`, run `analyze_audio`, cut on its beats, start the hero at `dropAt`, and copy its `key` into `sound.brief.key` (renders fill `sound.music` automatically, the Player preview needs the key in the spec). Tonal SFX (chimes, pings, subs, swells, the mnemonic) are then in the track's key; with low key confidence the planner avoids tonal recordings. Events the music already hits are thinned.
 6. **Override sparingly.** `"sound": false` on busy secondary layers; `"sound": "sfx:<name>"` for a signature moment (`coin-clink-2` on a price, `shutter-1` on a photo reveal, `glass-ping-3` on a premium toast). Manual `sfx` cues only for beats the planner can't see: `at = event − peakAt`.
 7. **Listen to the draft** (and read the cue sheet: `node_modules/.bin/tsx scripts/tests/sound-plan.ts` prints how a spec is planned). Cluttered → raise `restraint` or silence secondary layers. Same-y → raise `variation` or change `materials`. Wrong world → fix `realism` / `avoid`. A whoosh early or late → move the cut, never the sound.
 
@@ -314,3 +317,37 @@ corporate. Use `position:"upper"` when the lower third is busy (product on a des
    "no zooms", "captions higher"), apply it and **update the style** so the next video starts right.
 References are for learning a style. Never place downloaded footage in the user's film, and recreate techniques with
 the kit rather than copying a specific video.
+
+
+## 13. Voice, captions, music and SFX — the finished soundtrack
+
+A premium short has four layers, mixed in this order of importance: **voice → hits → music → texture**.
+
+**Voiceover (when the brief needs words spoken: explainers, launches, ads, tutorials).**
+1. Write the script *for the ear* from the story beats: short sentences, one idea each, concrete verbs, ~2.5 words/s
+   (15 s ≈ 35 words). Read it against the storyboard: a sentence per scene or two.
+2. `list_voices` once, then `generate_voiceover`. Voice by brand: Kore / Alnilam (firm, confident tech), Puck /
+   Laomedeia (upbeat consumer), Sulafat / Achird (warm food, wellness), Gacrux / Charon (mature, informative B2B),
+   Algenib (gravelly trailer), Vindemiatrix / Achernar (gentle, calm). Direct Gemini with `style` ("warm, unhurried,
+   a smile in the voice") and inline `<short pause>` before a reveal. Without a Gemini key the free local voice is used.
+3. **Fit picture to voice, not the reverse:** the tool returns sentence timings — set scene durations so cuts land just
+   after sentence ends (0.1–0.3 s), and the reveal lands ON the key word. Re-run when the script changes.
+4. Captions: `generate_voiceover` turns on film captions (`spec.captions`, pop by default). 2–3 words per page for social,
+   karaoke for energy, clean for corporate; keep them in the lower third and out of the way of on-screen type
+   (`position:"upper"` when the lower third is busy). Don't also put per-scene captions layers on a voiced film.
+
+**Music.** `compose_music` after the timeline is final (it reads cut times and the peak). With a voice it sits at 0.55
+and ducks under every phrase by itself. Moods: cinematic / epic (trailers, launches), tech (SaaS, fintech), hype
+(sport, drops), playful (consumer apps), minimal / calm (wellness, B2B), luxury (beauty, fashion), warm (food, craft).
+
+**Cinematic SFX** — `list_sfx` to search, then `spec.sfx` cues (`at = event − peakAt`) or `layer.sound`:
+- transitions: `whoosh-whip` (whip pans), `swoosh-cinematic` (long flights), `whoosh-reverse-in` (suck into a hard cut),
+  `reverse-cymbal` / `riser-tension` (into the drop), `downlifter` (after it), `glitch-transition` (glitch cuts);
+- recap / flashback: `rewind-tape` or `recap-swoosh` into the recap card, `tape-stop` for a freeze / "wait, what?";
+- light & film: `light-leak-swell` with `fx.lightLeak` or a flash, `film-burn` on film-burn transitions,
+  `film-projector` under vintage looks, `camera-flash` on white flash frames;
+- type & UI: `typing-burst` / `typing-fast` under typed text or search bars, `keyboard-enter` on submit;
+- drama: `braam` or `trailer-hit-metal` on the title slam (ONE per film), `tension-drone` under the problem beat,
+  `clock-ticking` for deadlines.
+Restraint still rules: voice first, one hero hit, silence before it. Render a draft and listen before calling it done;
+`inspect_render_sound` checks the exported mix.

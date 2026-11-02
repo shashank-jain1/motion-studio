@@ -55,9 +55,12 @@ export const craftWarnings = (spec: Spec): string[] => {
   });
 
   // 2c. Build with sound
-  if (spec.scenes.length >= 2 && !spec.sound && !spec.audio && !spec.sfx?.length) {
+  if (spec.scenes.length >= 2 && !spec.sound && !spec.audio && !spec.sfx?.length && !spec.voiceover?.length) {
     out.push("craft/sound: the film is silent. Add `\"sound\": {\"palette\": …}` (auto sound design: whooshes on cuts, hits on slams, ticks on counters) and optionally a music `audio` track — sound sync is a top retention lever.");
   }
+  // 2c'. Voice + captions: film captions without narration words show nothing; per-scene captions double up
+  if (spec.captions && !spec.voiceover?.some((c) => c.words?.length)) out.push("craft/captions: spec.captions is set but no voiceover clip has word timings, so no film captions will show (generate_voiceover adds them).");
+  if (spec.captions && spec.voiceover?.length && spec.scenes.some((sc) => sc.layers.some((l) => l.type === "captions"))) out.push("craft/captions: this film has both film captions (from the voiceover) and per-scene captions layers — two caption tracks will compete; keep one.");
   // 2d. 3D budget (one WebGL context per 3D layer; Chrome caps ~16)
   spec.scenes.forEach((sc, si) => {
     const n = sc.layers.filter((l) => l.type === "three").length;

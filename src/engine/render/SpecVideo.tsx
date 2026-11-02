@@ -12,6 +12,7 @@ import { getPresentation, transitionEase, transitionSeconds, type TransitionOrig
 import { ActorsLayer, actorPoseAt, findSnapLayer, resolveActor, type ResolvedActor, type SnapCtx } from "./Actors";
 import { type LogoAnalysis, logoJsonPath, useJsonAssets } from "../shapes/resolve";
 import { SoundTrack } from "../audio/SoundTrack";
+import { FilmCaptions } from "./FilmCaptions";
 
 export type SpecVideoProps = {
   spec: SpecInput;
@@ -185,6 +186,7 @@ const SpecBody: React.FC<{ spec: Spec; rt: RuntimeContext; fx: Record<string, an
           <ActorsLayer actors={actors} width={width} height={height} />
         </ChromaticWrap>
         <GlobalFx fx={{ ...fx, chromatic: undefined }} duration={total} />
+        <FilmCaptions spec={spec} width={width} height={height} total={total} />
         <SoundTrack spec={spec} slots={slots} total={total} asset={asset} assetBase={rt.assetBase} libraryBase={rt.libraryBase} />
       </AbsoluteFill>
   );

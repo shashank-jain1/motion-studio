@@ -17,6 +17,9 @@ import { CACHE_DIR, LIBRARY_DIR } from "./paths";
 import { runMediaTool } from "./mediaTool";
 import { describePlan, planEdit, type EditOptions, type EditPlan, type Span, type Word } from "./editPlan";
 import { FORMATS } from "../engine/spec/schema";
+import { TRANSCRIBE_MODEL, geminiTranscribe, hasGeminiKey } from "./gemini";
+
+export type TranscribeProvider = "whisper" | "gemini" | "auto";
 
 export const WHISPER_VERSION = "1.7.5";
 export const DEFAULT_WHISPER_MODEL: WhisperModel = (process.env.MOTION_STUDIO_WHISPER_MODEL as WhisperModel) || "base";
@@ -62,11 +65,17 @@ const ensureModel = async (model: WhisperModel, onProgress?: Progress, signal?: 
 };
 
 /** 16 kHz mono PCM WAV, as whisper.cpp requires. */
-const toWav16k = async (input: string, out: string) => {
+export const toWav16k = async (input: string, out: string) => {
   await runMediaTool("ffmpeg", ["-y", "-v", "error", "-i", input, "-vn", "-ac", "1", "-ar", "16000", "-c:a", "pcm_s16le", out]);
 };
 
 const transcriptPath = (file: string) => `${file}.transcript.json`;
+
+/** Whisper is built and `model` downloaded — transcription can run now without a first-run setup. */
+export const whisperReady = (model: WhisperModel = DEFAULT_WHISPER_MODEL) => {
+  const exe = path.join(WHISPER_DIR, `whisper.cpp-${WHISPER_VERSION}`, "build", "bin", "whisper-cli");
+  return fs.existsSync(exe) && fs.existsSync(path.join(WHISPER_DIR, "models", `ggml-${model}.bin`));
+};
 
 export const readTranscript = (file: string): Transcript | null => {
   const p = transcriptPath(file);
@@ -82,13 +91,17 @@ export const readTranscript = (file: string): Transcript | null => {
  * Word-level transcript of an audio/video file, cached next to it as <file>.transcript.json.
  * `language` "auto" (default) lets Whisper detect it; English-only models (*.en) are faster for English.
  */
-export const transcribeFile = async (file: string, opts: { model?: WhisperModel; language?: string; force?: boolean; onProgress?: Progress; signal?: AbortSignal } = {}): Promise<Transcript> => {
+export const transcribeFile = async (file: string, opts: { model?: WhisperModel; language?: string; force?: boolean; provider?: TranscribeProvider; onProgress?: Progress; signal?: AbortSignal } = {}): Promise<Transcript> => {
   const model = opts.model ?? DEFAULT_WHISPER_MODEL;
   if (!MODELS.includes(model as (typeof MODELS)[number])) throw new Error(`Unknown speech model "${model}". Use one of: ${MODELS.join(", ")}`);
+  // auto: a Whisper that is already set up (fast, offline) → Gemini when a key exists (no build) → build Whisper
+  const provider = opts.provider && opts.provider !== "auto" ? opts.provider : whisperReady(model) ? "whisper" : hasGeminiKey() ? "gemini" : "whisper";
+  const cacheModel = provider === "gemini" ? TRANSCRIBE_MODEL : model;
   if (!opts.force) {
     const cached = readTranscript(file);
-    if (cached && cached.model === model) return cached;
+    if (cached && (cached.model === cacheModel || (!opts.provider && !opts.model))) return cached;
   }
+  if (provider === "gemini") return transcribeGemini(file, opts);
   const whisperPath = await ensureWhisper(opts.onProgress, opts.signal);
   const modelFolder = await ensureModel(model, opts.onProgress, opts.signal);
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "ms-whisper-"));
@@ -109,6 +122,30 @@ export const transcribeFile = async (file: string, opts: { model?: WhisperModel;
     const st = fs.statSync(file);
     const t: Transcript = {
       model, language: out.result?.language ?? opts.language ?? "auto", seconds: await mediaSeconds(file), words,
+      source: { file: path.basename(file), bytes: st.size, mtimeMs: st.mtimeMs },
+    };
+    fs.writeFileSync(transcriptPath(file), JSON.stringify(t, null, 1));
+    return t;
+  } finally {
+    fs.rmSync(tmp, { recursive: true, force: true });
+  }
+};
+
+/** gemini-3.5-transcribe (free tier): 16 kHz mono WAV up to 30 min with word timestamps. */
+const transcribeGemini = async (file: string, opts: { language?: string; onProgress?: Progress; signal?: AbortSignal }): Promise<Transcript> => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "ms-gtx-"));
+  try {
+    const wav = path.join(tmp, "audio.wav");
+    opts.onProgress?.({ progress: 0.05, message: "Extracting audio" });
+    await toWav16k(file, wav);
+    const seconds = await mediaSeconds(file);
+    if (seconds > 30 * 60) throw new Error("Gemini word timestamps are limited to 30 minutes of audio; use provider \"whisper\" for longer recordings.");
+    opts.onProgress?.({ progress: 0.2, message: "Transcribing with Gemini" });
+    const lang = opts.language && opts.language !== "auto" ? [opts.language.includes("-") ? opts.language : opts.language] : undefined;
+    const { words } = await geminiTranscribe(fs.readFileSync(wav), "audio/wav", { languages: lang, signal: opts.signal });
+    const st = fs.statSync(file);
+    const t: Transcript = {
+      model: TRANSCRIBE_MODEL, language: opts.language ?? "auto", seconds, words: words.map((w) => ({ text: w.text, start: w.start, end: w.end })),
       source: { file: path.basename(file), bytes: st.size, mtimeMs: st.mtimeMs },
     };
     fs.writeFileSync(transcriptPath(file), JSON.stringify(t, null, 1));
@@ -293,8 +330,8 @@ export const suggestFromMeasurements = (ms: StyleMeasurement[]): Pick<EditStyle,
 
 // ---------------------------------------------------------------- plan + compile
 
-export const planFootage = async (file: string, opts: EditOptions & { model?: WhisperModel; language?: string; onProgress?: Progress; signal?: AbortSignal } = {}): Promise<{ plan: EditPlan; transcript: Transcript; text: string }> => {
-  const transcript = await transcribeFile(file, { model: opts.model, language: opts.language, onProgress: opts.onProgress, signal: opts.signal });
+export const planFootage = async (file: string, opts: EditOptions & { model?: WhisperModel; language?: string; provider?: TranscribeProvider; onProgress?: Progress; signal?: AbortSignal } = {}): Promise<{ plan: EditPlan; transcript: Transcript; text: string }> => {
+  const transcript = await transcribeFile(file, { model: opts.model, language: opts.language, provider: opts.provider, onProgress: opts.onProgress, signal: opts.signal });
   if (!transcript.words.length) throw new Error("No speech found in this file (the transcript is empty), so there is nothing to cut by speech. Use trimStart/duration on a media layer instead.");
   opts.onProgress?.({ progress: 0.97, message: "Finding pauses" });
   const silences = await detectSilences(file).catch(() => []);

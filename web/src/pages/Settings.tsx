@@ -19,6 +19,7 @@ export const SettingsForm = ({ onSaved, onCancel, compact }: { onSaved?: (s: Set
   const [model, setModel] = useState("");
   const [effort, setEffort] = useState("");
   const [key, setKey] = useState("");
+  const [gkey, setGkey] = useState("");
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
@@ -30,9 +31,10 @@ export const SettingsForm = ({ onSaved, onCancel, compact }: { onSaved?: (s: Set
     e?.preventDefault();
     setSaving(true);
     try {
-      const r = await api.saveSettings({ model, effort, ...(key.trim() ? { apiKey: key.trim() } : {}) });
+      const r = await api.saveSettings({ model, effort, ...(key.trim() ? { apiKey: key.trim() } : {}), ...(gkey.trim() ? { geminiApiKey: gkey.trim() } : {}) });
       setS(r);
       setKey("");
+      setGkey("");
       onSaved?.(r);
       toast.success("Director settings saved", r.hasApiKey ? `${r.model} · ${r.effort}` : "No API key yet — the director stays offline.");
     } catch (e2) {
@@ -43,7 +45,7 @@ export const SettingsForm = ({ onSaved, onCancel, compact }: { onSaved?: (s: Set
   if (err) return <div className="callout error"><span className="mono">{err}</span></div>;
   if (!s) return <div className="form-loading"><Spinner size={16} /><span className="label">Reading settings</span></div>;
   const models = Array.from(new Set([...(s.models ?? []), s.model]));
-  const dirty = model !== s.model || effort !== s.effort || !!key.trim();
+  const dirty = model !== s.model || effort !== s.effort || !!key.trim() || !!gkey.trim();
   return (
     <form className={`form settings-form ${compact ? "compact" : ""}`} onSubmit={save}>
       <div className="form-row two">
@@ -66,6 +68,16 @@ export const SettingsForm = ({ onSaved, onCancel, compact }: { onSaved?: (s: Set
         <span className={`key-status ${s.hasApiKey ? "ok" : "none"}`}><i />{KEY_SOURCE[s.keySource] ?? s.keySource}</span>
         {s.keySource === "env" && <span className="callout warn">A key saved here is ignored while ANTHROPIC_API_KEY is set on the server.</span>}
         <span className="field-hint">Stored only on the server (~/.config/motion-studio, mode 600) and sent straight to Anthropic — never back to the browser.</span>
+      </label>
+      <label className="field">
+        <span className="label">Gemini API key · voice & transcription (optional)</span>
+        <div className="input-icon">
+          <IconKey size={14} />
+          <input className="input mono" type="password" autoComplete="off" spellCheck={false} placeholder={s.hasGeminiKey ? "•••••••••••••••• leave blank to keep" : "AIza…"}
+            value={gkey} onChange={(e) => setGkey(e.target.value)} />
+        </div>
+        <span className={`key-status ${s.hasGeminiKey ? "ok" : "none"}`}><i />{s.geminiKeySource === "env" ? "From GEMINI_API_KEY on the server" : s.hasGeminiKey ? "Saved on the server" : "Not set — local voices and Whisper are used"}</span>
+        <span className="field-hint">Free key at aistudio.google.com/apikey. Enables expressive Gemini voiceovers (30 voices, 100+ languages) and cloud transcription within the free tier's rate limits. On the free tier Google may use requests to improve its products — keep private scripts on local voices.</span>
       </label>
       <div className="form-actions">
         {onCancel && <button type="button" className="btn ghost" onClick={onCancel}>Cancel</button>}

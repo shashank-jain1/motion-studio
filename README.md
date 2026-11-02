@@ -50,6 +50,29 @@ Visual edits rewrite the Spec editor's text, so Save, validation and the directo
 do for typed edits. Nothing is written to disk until you save. The model lives in `web/src/lib/specEdit.ts` and is tested by
 `npm run test:edit`.
 
+## Voice, music, captions and cinematic SFX (Phase 7)
+
+Every film can have a full soundtrack, using free options first:
+
+| | Free / local (default) | Free tier (Gemini key in Settings) | Paid (opt-in only) |
+|---|---|---|---|
+| Voiceover | system voice (macOS `say` / espeak-ng); Kokoro-82M if `pnpm add kokoro-js` | Gemini 3.8 Flash TTS: 30 voices, style direction, `<laugh>`/`<short pause>`, 100+ languages | — |
+| Transcription | Whisper (whisper.cpp) | `gemini-3.5-transcribe` with word timestamps (≤ 30 min) | — |
+| Music | **procedural composer**: original, fitted to the timeline (cuts on beats, drop on the peak) | — | Lyria (`lyria-3-clip-preview` / `lyria-3.5`) |
+| SFX | 289 CC0 recordings + 58 original synthesized (22 new cinematic) | — | — |
+
+- `generate_voiceover` writes `spec.voiceover` (word-timed) and film captions (`spec.captions`), and reports sentence
+  timings so scenes can be cut to the narration. The music ducks under speech automatically.
+- `compose_music` writes a score in 9 moods and fills `sound.music` (bpm, beats, key) so auto SFX lock to its grid.
+- `list_sfx` searches the library, including whip, reverse-in, typing, rewind/recap, tape stop, reverse cymbal, light
+  leak, film projector, film burn, braam, downlifter, trailer hits, tension drone, camera flash and clock sounds.
+- The Gemini free tier may use requests to improve Google's products. Keep private scripts on local voices.
+
+Code: `src/core/gemini.ts`, `src/core/voice.ts`, `src/core/music.ts`, `scripts/gen-sfx.ts` (cinematic set),
+`src/engine/render/FilmCaptions.tsx`, `src/engine/audio/SoundTrack.tsx` (voice playback and ducking). Director playbook:
+[DIRECTOR_GUIDE §13](docs/DIRECTOR_GUIDE.md). Tests: `npm run test:sound` (the Gemini wire formats against a mocked API,
+real local voice, the composer, ducking/captions, and a real render with audio).
+
 ## Footage editing and personal edit styles (Phase 6)
 
 Motion Studio also edits **real recordings**: talking heads, vlogs, podcasts and demos. Upload a take (or press the
@@ -96,7 +119,7 @@ against a fake Claude) on every push and pull request.
 `get_guide`, `list_styles`, `create_project`, `list_projects`, `get_project`, `add_asset`, `analyze_logo`, `analyze_audio`, `set_spec`,
 `get_spec`, `update_scene`, `preview_frames`, `render_video`, `write_custom_component`, `list_custom_components`,
 `open_studio_hint`, `list_versions`, `restore_version`, `transcribe_media`, `edit_footage`, `analyze_reference_style`,
-`save_edit_style`, `list_edit_styles`, `import_reference_url`, `motion_recipes`, `build_motion_scene`, `build_motion_sequence`, `build_design_film`, `inspect_video_reference`, `inspect_sound`, `inspect_render_sound`, `list_fonts`, `import_font`, `register_font`.
+`save_edit_style`, `list_edit_styles`, `import_reference_url`, `list_voices`, `generate_voiceover`, `compose_music`, `list_sfx`, `motion_recipes`, `build_motion_scene`, `build_motion_sequence`, `build_design_film`, `inspect_video_reference`, `inspect_sound`, `inspect_render_sound`, `list_fonts`, `import_font`, `register_font`.
 
 The AI's craft knowledge lives in [docs/DIRECTOR_GUIDE.md](docs/DIRECTOR_GUIDE.md) and the spec format in
 [docs/KIT_REFERENCE.md](docs/KIT_REFERENCE.md); both are served by `get_guide`.

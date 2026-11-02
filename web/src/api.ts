@@ -66,6 +66,7 @@ export type UiMessage = { id: string; role: "user" | "assistant"; createdAt: str
 export type Settings = {
   model: string; effort: string; hasApiKey: boolean;
   keySource: "env" | "profile" | "settings" | "none"; models: string[];
+  hasGeminiKey?: boolean; geminiKeySource?: "env" | "settings" | "none";
 };
 
 export type User = { id: string; email: string; name: string };
@@ -150,7 +151,7 @@ export const api = {
     if (!res.ok || !data?.redirect) throw new ApiError(data?.error_description ?? data?.error ?? `HTTP ${res.status}`, res.status);
     return { redirect: data.redirect };
   },
-  saveSettings: (s: { model?: string; effort?: string; apiKey?: string }) => req<Settings>("PUT", "/api/settings", s),
+  saveSettings: (s: { model?: string; effort?: string; apiKey?: string; geminiApiKey?: string }) => req<Settings>("PUT", "/api/settings", s),
 };
 
 /** Multipart upload with progress (XHR — fetch has no upload progress). */

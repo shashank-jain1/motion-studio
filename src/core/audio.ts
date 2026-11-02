@@ -4,7 +4,9 @@
  */
 import fs from "node:fs";
 import path from "node:path";
+import os from "node:os";
 import { runBinary } from "./probe";
+import { runMediaTool } from "./mediaTool";
 
 export type AudioAnalysis = {
   /** seconds */
@@ -63,13 +65,32 @@ const fft = (re: Float64Array, im: Float64Array) => {
 };
 
 const decode = async (file: string): Promise<Float32Array> => {
-  const buf = await runBinary(
-    "ffmpeg",
-    ["-v", "error", "-i", file, "-vn", "-ac", "1", "-ar", String(SR), "-f", "f32le", "-acodec", "pcm_f32le", "-"],
-    1024 * 1024 * 1024,
-  );
-  const ab = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
-  return new Float32Array(ab, 0, Math.floor(buf.byteLength / 4));
+  try {
+    const buf = await runBinary(
+      "ffmpeg",
+      ["-v", "error", "-i", file, "-vn", "-ac", "1", "-ar", String(SR), "-f", "f32le", "-acodec", "pcm_f32le", "-"],
+      1024 * 1024 * 1024,
+    );
+    const ab = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
+    return new Float32Array(ab, 0, Math.floor(buf.byteLength / 4));
+  } catch (e) {
+    if ((e as NodeJS.ErrnoException).code !== "ENOENT" && !/ENOENT/.test(String((e as Error).message))) throw e;
+    // No system FFmpeg: Remotion's bundled build can't write raw f32le, but it can write a 16-bit WAV.
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ms-decode-"));
+    try {
+      const wav = path.join(dir, "a.wav");
+      await runMediaTool("ffmpeg", ["-y", "-v", "error", "-i", file, "-vn", "-ac", "1", "-ar", String(SR), "-c:a", "pcm_s16le", wav]);
+      const bytes = fs.readFileSync(wav);
+      let off = 12, data = -1, len = 0;
+      while (off + 8 <= bytes.length) { const id = bytes.toString("latin1", off, off + 4), l = bytes.readUInt32LE(off + 4); if (id === "data") { data = off + 8; len = Math.min(l, bytes.length - data); break; } off += 8 + l + (l & 1); }
+      if (data < 0) throw new Error("decoded WAV has no data");
+      const out = new Float32Array(Math.floor(len / 2));
+      for (let i = 0; i < out.length; i++) out[i] = bytes.readInt16LE(data + i * 2) / 32768;
+      return out;
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
+  }
 };
 
 const r3 = (x: number) => Math.round(x * 1000) / 1000;

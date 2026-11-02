@@ -18,7 +18,7 @@ export const DEFAULT_EFFORT: Effort = "high";
 export const FALLBACK_MODELS = new Set<string>(["claude-opus-5-5", "claude-opus-5", "claude-sonnet-5-5"]);
 
 export type KeySource = "env" | "profile" | "settings" | "none";
-type Stored = { model?: string; effort?: Effort; apiKey?: string };
+type Stored = { model?: string; effort?: Effort; apiKey?: string; geminiApiKey?: string };
 
 export const CONFIG_DIR = process.env.MOTION_STUDIO_CONFIG_DIR || path.join(os.homedir(), ".config", "motion-studio");
 export const CONFIG_FILE = path.join(CONFIG_DIR, "config.json");
@@ -66,7 +66,11 @@ export const keySource = async (): Promise<KeySource> => {
   return "none";
 };
 
-export type PublicSettings = { model: string; effort: Effort; hasApiKey: boolean; keySource: KeySource; models: string[] };
+export type PublicSettings = {
+  model: string; effort: Effort; hasApiKey: boolean; keySource: KeySource; models: string[];
+  /** Gemini (voiceover / transcription): env GEMINI_API_KEY | GOOGLE_API_KEY, else the stored key (read by src/core/gemini.ts) */
+  hasGeminiKey: boolean; geminiKeySource: "env" | "settings" | "none";
+};
 
 export const getSettings = async (): Promise<PublicSettings> => {
   const s = read();
@@ -77,11 +81,13 @@ export const getSettings = async (): Promise<PublicSettings> => {
     hasApiKey: src !== "none",
     keySource: src,
     models: [...MODELS],
+    hasGeminiKey: !!(process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || s.geminiApiKey),
+    geminiKeySource: process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY ? "env" : s.geminiApiKey ? "settings" : "none",
   };
 };
 
 /** Update settings. `apiKey: ""` (or null) removes the stored key. Unknown models are accepted (free-form ids). */
-export const putSettings = async (patch: { model?: unknown; effort?: unknown; apiKey?: unknown }): Promise<PublicSettings> => {
+export const putSettings = async (patch: { model?: unknown; effort?: unknown; apiKey?: unknown; geminiApiKey?: unknown }): Promise<PublicSettings> => {
   const s = read();
   if (patch.model !== undefined) {
     if (typeof patch.model !== "string" || !/^[a-z0-9][a-z0-9.\-]{2,80}$/.test(patch.model)) throw new Error("model must be a model id like claude-opus-5-5");
@@ -95,6 +101,11 @@ export const putSettings = async (patch: { model?: unknown; effort?: unknown; ap
     if (patch.apiKey === null || patch.apiKey === "") delete s.apiKey;
     else if (typeof patch.apiKey !== "string" || patch.apiKey.trim().length < 10 || /\s/.test(patch.apiKey.trim())) throw new Error("apiKey looks invalid");
     else s.apiKey = patch.apiKey.trim();
+  }
+  if (patch.geminiApiKey !== undefined) {
+    if (patch.geminiApiKey === null || patch.geminiApiKey === "") delete s.geminiApiKey;
+    else if (typeof patch.geminiApiKey !== "string" || patch.geminiApiKey.trim().length < 20 || /\s/.test(patch.geminiApiKey.trim())) throw new Error("geminiApiKey looks invalid");
+    else s.geminiApiKey = patch.geminiApiKey.trim();
   }
   write(s);
   return getSettings();

@@ -260,7 +260,14 @@ window (`windowSrc`) | split | trace | pop · `order`: leftToRight topToBottom r
 ### spec.audio — music
 `{ "src": "assets/music.mp3", "volume": 0.8, "trimStart": 0, "fadeIn": 0.5, "fadeOut": 1 }`. Music ducks under hits and stops down before heroes; renders are mastered to −14 LUFS (true peak ≤ −1 dBTP). analyze_audio returns bpm, beats, onsets, energyCurve, dropAt and **key / keyConfidence**.
 
-### Library (`sfx:<name>`): 289 recorded CC0 sounds + 36 synthesized
+### spec.voiceover — narration · spec.captions — film captions
+`"voiceover": [{ "src": "assets/vo-1a2b3c4d5e.wav", "at": 0, "volume": 1, "text": "…", "words": [{ "text": "Mornings", "start": 0, "end": 0.42 }, …] }]`
+(written by `generate_voiceover`; `at` = film time, words are relative to the clip). The music ducks while words are
+spoken: `audio.duckUnderVoice` 0–1 (default 0.6 ≈ −8 dB, 150 ms lead-in, 400 ms release, phrases merged across < 0.45 s gaps).
+`"captions": { "style": "pop|karaoke|box|bounce|clean", "wordsPerPage": 3, "position": "lower|center|upper", "y": 420, "uppercase": true, "highlightColor": "$accent", "fontSize": 64, "font": "$display", "width": 900 }`
+renders one caption track over every scene from the voiceover's words.
+
+### Library (`sfx:<name>`): 289 recorded CC0 sounds + 58 synthesized
 Recorded (library/sfx/recorded, 48 kHz, −16 LUFS, provenance in library/LICENSES.json), by category — 3–6 round-robin variants per family (`<family>-1…n`):
 - `impact.light` — glass-tap, glass-clink, glass-ting, metal-tick, wood-tap, wood-block, wood-snap, ceramic-tap, soft-thud, tap-generic, card-place, book-place, chip-lay, stone-tick, soft-thump, hand-drum, leather
 - `impact.medium` — glass-knock, metal-knock, metal-clang, clank, wood-knock, wood-hit, ceramic-knock, punch, thud, glass-shatter
@@ -269,6 +276,7 @@ Recorded (library/sfx/recorded, 48 kHz, −16 LUFS, provenance in library/LICENS
 - `ui.*` — click, ui-click, ui-tap, ui-snap, ui-knock, ui-tick, ui-select, chip-click, toggle, finger-snap, glass-ping, bell-small, confirm, error, bloop, pluck · `mech.*` — switch-snap, ui-switch, wall-switch, latch, lock-click, key-turn, lock-open, toaster-click
 - `foley.*` — paper: card-slide, card-fan, paper-rustle, crumple · desk-tick · plastic-crinkle · keys-jingle · shutter · key (typing) · coins: coin, coin-clink, coin-drop
 - `liquid.*` — bubble, bubble-pop, goo, plop, slime, splash · `magic.chime` — chime, ding-bell · `digital.*` — glitch, blip, power-up, zap (gamey: kept out of luxury / calm / epic / warm films)
+Synthesized cinematic set (wholly ours): whoosh-whip, whoosh-flutter, whoosh-reverse-in, swoosh-cinematic · typing-burst, typing-fast, keyboard-enter · rewind-tape, recap-swoosh, tape-stop, reverse-cymbal · light-leak-swell, film-projector, film-burn, tension-drone · braam, downlifter, trailer-hit-metal, riser-tension · camera-flash, clock-ticking, glitch-transition. (`list_sfx` searches everything with apex times.)
 Synthesized (wholly ours, always available): whoosh-short/long/air/deep, swoosh-up/down, impact-deep/punch/soft, thud-soft, hit-slam, boom-sub, drop-bass, riser-short/long, reverse-swell, click-ui, tap-soft, pop-bubble, pop-snap, notification-ping, tick-mech, tick-digital, ding-success, chime-bright, glitch-crackle/stutter, data-burst, shimmer, sparkle-up, morph-wobble, slide-paper, typewriter-key, camera-shutter, heartbeat-low, cash-register.
 Plus tunable synth LAYERS the planner generates in key on demand: sub, boom, air (fitted to the move), riser, reverse swell, shimmer, ping (glass / bell / soft / marimba / metal), blip.
 
