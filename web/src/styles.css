@@ -1074,3 +1074,90 @@ body.is-resizing-v { cursor: row-resize; user-select: none; }
 .export-all-btn { align-self: stretch; justify-content: center; }
 .export-all-btn .mono { margin-left: auto; font-size: 10.5px; }
 .tpl-card .reel-media, .tpl-card .reel-media.is-tall { padding: 30px 22px; }
+
+/* ---------- Edit inspector (visual editing) ---------- */
+.edit-panel { height: 100%; display: flex; flex-direction: column; }
+.edit-scroll { flex: 1; min-height: 0; overflow: auto; padding-bottom: var(--s6); }
+.edit-empty { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s2); padding: var(--s6) var(--s4); color: var(--ash); }
+.edit-empty p { max-width: 280px; }
+.edit-callout { margin: var(--s3) var(--s3) 0; font-size: 12px; }
+.edit-callout code { font: 11px/1.4 var(--mono); color: var(--bone); word-break: break-word; }
+.edit-sec { border-bottom: 1px solid var(--line); padding: 0 0 var(--s3); }
+.edit-sec-head { display: flex; align-items: center; gap: var(--s2); height: 36px; padding: 0 var(--s2) 0 var(--s3); }
+.edit-sec-head.as-btn { width: 100%; text-align: left; color: var(--ash); }
+.edit-sec-head.as-btn:hover .label { color: var(--bone); }
+.edit-sec-head .tag { height: 18px; font-size: 10px; }
+.edit-scene-n { font-size: 12px; }
+.edit-rows { display: flex; flex-direction: column; gap: 6px; padding: 0 var(--s3); }
+.edit-row { display: grid; grid-template-columns: 84px minmax(0, 1fr); align-items: center; gap: var(--s2); min-height: 28px; }
+.edit-label { font-size: 12px; color: var(--ash); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.edit-label.mono { font-size: 11px; }
+.edit-ctl { min-width: 0; }
+.edit-ctl .input, .edit-ctl .select-btn { height: 28px; font-size: 12px; }
+.edit-ctl .segmented { width: max-content; }
+.edit-pair { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.edit-pair > .select { flex: 1; min-width: 0; }
+.edit-pair > .num-input { width: 84px; flex: none; }
+.edit-textarea { height: auto; min-height: 56px; padding: 6px 10px; resize: vertical; line-height: 1.45; }
+.edit-subhead { margin: var(--s2) 0 0; padding-top: var(--s2); border-top: 1px solid var(--line); }
+.edit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.edit-note { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); padding: var(--s1) 0; }
+.edit-more { display: flex; align-items: center; gap: 6px; height: 24px; margin-top: var(--s1); color: var(--ash); font-size: 12px; }
+.edit-more:hover { color: var(--bone); }
+.edit-more svg, .edit-sec-head.as-btn svg { transition: transform var(--t-mid) var(--snap); }
+
+/* number field: Figma-style — the label scrubs */
+.num-input { position: relative; display: flex; align-items: center; min-width: 0; }
+.num-input .input { height: 28px; font-size: 12px; padding-right: 22px; }
+.num-input.has-label .input { padding-left: 34px; }
+.num-label {
+  position: absolute; left: 1px; top: 1px; bottom: 1px; width: 30px; display: grid; place-items: center; z-index: 1;
+  font-size: 9.5px; letter-spacing: 0.04em; color: var(--ash); cursor: ew-resize; user-select: none; touch-action: none;
+  border-right: 1px solid var(--line);
+}
+.num-label:hover, .num-label:active { color: var(--tally); }
+.num-unit { position: absolute; right: 8px; font-size: 10.5px; color: var(--smoke); pointer-events: none; }
+.num-scrub { position: absolute; right: 0; top: 0; bottom: 0; width: 8px; cursor: ew-resize; touch-action: none; }
+.num-input:has(.num-unit) .num-scrub { width: 6px; }
+
+/* color field */
+.color-input { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.color-input .input { flex: 1; min-width: 0; }
+.swatch { position: relative; width: 28px; height: 28px; flex: none; border-radius: var(--r1); border: 1px solid var(--line-2); cursor: pointer; overflow: hidden; }
+.swatch:hover { border-color: var(--bone); }
+.swatch input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.swatch-none { position: absolute; inset: 0; background: linear-gradient(135deg, transparent 46%, var(--tally) 46% 54%, transparent 54%); pointer-events: none; }
+.theme-chips { display: flex; gap: 3px; }
+.theme-chips i { width: 10px; height: 10px; border-radius: 1px; outline: 1px solid var(--line-2); }
+
+/* layer list */
+.layer-list { display: flex; flex-direction: column; max-height: 260px; overflow: auto; margin: 0 var(--s3); border: 1px solid var(--line); border-radius: var(--r1); }
+.layer-empty { padding: var(--s3); }
+.layer-row {
+  display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; align-items: center; gap: var(--s2); width: 100%; height: 28px;
+  padding-right: var(--s2); text-align: left; border-bottom: 1px solid var(--line); color: var(--bone); font-size: 12px;
+}
+.layer-list > [role="treeitem"]:last-child > .layer-row:last-child { border-bottom: 0; }
+.layer-row:hover { background: var(--raised); }
+.layer-row.is-selected { background: var(--raised-2); box-shadow: inset 2px 0 0 var(--tally); }
+.layer-type { font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ash); }
+.layer-time { font-size: 10px; color: var(--smoke); }
+
+/* menus */
+.edit-menu-wrap { position: relative; }
+.edit-menu { width: 220px; max-height: 320px; overflow: auto; list-style: none; margin: 0; }
+.edit-menu button { display: flex; align-items: center; width: 100%; height: 28px; padding: 0 10px; border-radius: var(--r1); color: var(--bone); font-size: 12.5px; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.edit-menu button:hover:not(:disabled) { background: var(--raised-2); }
+.edit-menu button:disabled { color: var(--smoke); }
+.edit-menu button.is-danger { color: var(--tally); }
+.dots { font: 600 12px/1 var(--mono); letter-spacing: 1px; }
+
+/* viewer: selected layer */
+.layer-overlay { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 4; overflow: visible; }
+.layer-handle { pointer-events: all; cursor: move; touch-action: none; }
+
+/* timeline: trim a scene */
+.clip-trim { position: absolute; top: 0; right: -3px; bottom: 0; width: 8px; z-index: 2; cursor: ew-resize; touch-action: none; }
+.clip-trim::after { content: ""; position: absolute; top: 6px; bottom: 20px; right: 3px; width: 2px; border-radius: 1px; background: var(--bone); opacity: 0; transition: opacity var(--t-fast) var(--snap); }
+.clip:hover .clip-trim::after, .clip.is-selected .clip-trim::after { opacity: 0.6; }
+.clip-trim.is-active::after, .clip-trim:hover::after { opacity: 1; background: var(--tally); }

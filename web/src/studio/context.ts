@@ -2,8 +2,9 @@ import { createContext, useContext } from "react";
 import type { Asset, ProjectState, RenderInfo, Settings, Timeline, ValidationResult } from "../api";
 import type { ParsedInfo } from "../lib/specInfo";
 import type { PlayerBus } from "./bus";
+import type { LayerSel } from "../lib/specEdit";
 
-export type RightTab = "assets" | "spec" | "renders";
+export type RightTab = "edit" | "assets" | "spec" | "renders";
 
 export type StudioApi = {
   id: string;
@@ -36,6 +37,19 @@ export type StudioApi = {
   renders: RenderInfo[];
   addRender: (r: RenderInfo) => void;
   refreshSide: () => void;
+
+  /**
+   * Visual edit: clone the current editor spec, let `fn` mutate the draft, write it back to the editor text and preview it
+   * immediately. Edits sharing a `coalesce` key within a short window (a drag, typing in one field) are one undo step.
+   * Returns false when the editor text is not valid JSON (visual edits pause until it is fixed).
+   */
+  editSpec: (fn: (draft: Record<string, unknown>) => void, coalesce?: string) => boolean;
+  undo: () => void;
+  redo: () => void;
+  canUndo: boolean;
+  canRedo: boolean;
+  selectedLayer: LayerSel | null;
+  selectLayer: (sel: LayerSel | null, opts?: { seek?: boolean }) => void;
 
   selectedScene: number | null;
   selectScene: (i: number | null, opts?: { scrollEditor?: boolean }) => void;

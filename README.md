@@ -25,7 +25,7 @@ pnpm install
 for a video, e.g. *"Make a 15s Instagram reel launching our cold brew; logo is ~/Downloads/logo.png"*.
 
 **Use from Claude Desktop / Codex / Cursor:** add a stdio MCP server with command
-`/home/shashank/motion-studio/node_modules/.bin/tsx` and arg `/home/shashank/motion-studio/src/mcp/server.ts`.
+`/Users/shashank/motion-studio/node_modules/.bin/tsx` and arg `/Users/shashank/motion-studio/src/mcp/server.ts`.
 
 **CLI:**
 
@@ -36,6 +36,19 @@ pnpm cli render <projectId> --final
 ```
 
 **Studio (scrub the timeline live):** `pnpm studio`, then set the `Spec` composition's props to `{ "projectId": "<id>" }`.
+
+## Visual editing (Phase 4)
+
+The studio's **Edit** tab (key `1`) edits the film directly, without the chat or the raw JSON. Pick a scene, then a layer. Its
+fields come from the engine schema, so every layer type is covered: content, transform, timing, enter/exit motion and
+type-specific style. Drag a field's label to scrub its value. In the viewer, drag the selected layer's handle to move it
+(⇧ locks the axis; it snaps to the frame's center lines). On the timeline, drag a clip's right edge to change the scene's
+duration. ⌘Z / ⇧⌘Z undo and redo, ⌥+arrows nudge the layer, ⌫ deletes it and Esc deselects. Scenes can be duplicated,
+added, reordered and deleted, and the film palette (`$tokens`) can be recolored.
+
+Visual edits rewrite the Spec editor's text, so Save, validation and the director-conflict prompt behave exactly as they
+do for typed edits. Nothing is written to disk until you save. The model lives in `web/src/lib/specEdit.ts` and is tested by
+`npm run test:edit`.
 
 ## MCP tools
 
