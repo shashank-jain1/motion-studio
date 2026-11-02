@@ -336,9 +336,21 @@ A premium short has four layers, mixed in this order of importance: **voice → 
    karaoke for energy, clean for corporate; keep them in the lower third and out of the way of on-screen type
    (`position:"upper"` when the lower third is busy). Don't also put per-scene captions layers on a voiced film.
 
-**Music.** `compose_music` after the timeline is final (it reads cut times and the peak). With a voice it sits at 0.55
-and ducks under every phrase by itself. Moods: cinematic / epic (trailers, launches), tech (SaaS, fintech), hype
-(sport, drops), playful (consumer apps), minimal / calm (wellness, B2B), luxury (beauty, fashion), warm (food, craft).
+**Music — free first, always licensed.** Set `spec.usage` before choosing music: `"commercial"` when the film promotes a
+business, brand or product or is client / ad work; `"personal"` for the user's own social posts. Ask if it's unclear.
+Then, after the timeline is final, climb this ladder:
+1. **The user's own track** (their Epidemic / Artlist / purchased music): `add_asset` → `fit_music` (drop on the peak,
+   cuts on beats, ends with the track's ending or on a bar).
+2. **A free library track**: `search_music` with mood + genre + use ("uplifting corporate piano", "dark cinematic
+   tension", "lofi chill"); read `energyShape` to see where it builds; `import_music` the best one (it fits it).
+   Free To Use is high quality but PERSONAL only; Openverse returns CC0 / CC BY that commercial films can use. Results
+   are already filtered by `spec.usage`. When a credit is required, tell the user — renders save it next to the MP4.
+3. **A composed score**: `compose_music` (original, no credit, fitted by construction). `variations: 3` renders
+   alternatives to compare. Moods: cinematic / epic (trailers, launches), tech (SaaS, fintech), hype (sport, drops),
+   playful (consumer apps), minimal / calm (wellness, B2B), luxury (beauty, fashion), warm (food, craft).
+4. **Lyria** (paid) only when the user asks and accepts the cost.
+With a voiceover the music sits at 0.55 and ducks under every phrase by itself. Never use a track whose license the
+studio flags (`license/music` warning) — replace it.
 
 **Cinematic SFX** — `list_sfx` to search, then `spec.sfx` cues (`at = event − peakAt`) or `layer.sound`:
 - transitions: `whoosh-whip` (whip pans), `swoosh-cinematic` (long flights), `whoosh-reverse-in` (suck into a hard cut),

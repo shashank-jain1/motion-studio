@@ -171,7 +171,9 @@ export const SoundTrack: React.FC<{
           return a.priority < p.priority || (a.priority === p.priority && a.from + a.frames < p.from + p.frames) ? v : best;
         }, 0);
         const victim = out[busy[slot]!];
-        victim.frames = Math.max(1, from - victim.from);
+        // a victim that started on this very frame is dropped outright (keeping 1 frame would overlap the newcomer
+        // and exceed the Player's shared audio tags)
+        victim.frames = Math.max(0, from - victim.from);
         victim.fadeOut = true;
       }
       busy[slot] = out.length;
@@ -182,7 +184,7 @@ export const SoundTrack: React.FC<{
         priority: c.priority,
       });
     });
-    return { voices: out, duckCues: spec.sound?.duck === false ? [] : [...manual, ...autoCues].map((c) => ({ ...c, volume: c.volume * master })) };
+    return { voices: out.filter((v) => v.frames > 0), duckCues: spec.sound?.duck === false ? [] : [...manual, ...autoCues].map((c) => ({ ...c, volume: c.volume * master })) };
   }, [spec, autoCues, plan, libBase, assetBase, fps, total, master, maxVoices]); // eslint-disable-line react-hooks/exhaustive-deps -- `asset` is rebuilt every render; it only depends on assetBase
 
   // Player: fetch the SFX ahead of time so short hits are not late on first play
@@ -197,13 +199,16 @@ export const SoundTrack: React.FC<{
   return (
     <>
       {a && (
+        <Sequence from={Math.round((a.at ?? 0) * fps)} layout="none" name="music">
         <Html5Audio src={asset(a.src)} name="music" trimBefore={a.trimStart ? Math.round(a.trimStart * fps) : undefined}
           volume={(f) => {
-            const s = f / fps;
-            const fin = a.fadeIn ? interpolate(s, [0, a.fadeIn], [0, 1], { extrapolateRight: "clamp" }) : 1;
+            // f counts from the music's own start; fades / ducking work in film time
+            const s = f / fps + (a.at ?? 0);
+            const fin = a.fadeIn ? interpolate(s - (a.at ?? 0), [0, a.fadeIn], [0, 1], { extrapolateRight: "clamp" }) : 1;
             const fout = a.fadeOut ? interpolate(s, [total - a.fadeOut, total], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }) : 1;
             return Math.max(0, (a.volume ?? 1) * fin * fout * duckGain(duckCues, s) * stopdownGain(mix, s) * voiceDuckGain(spans, s, voDuck));
           }} />
+        </Sequence>
       )}
       {vo.map((c, i) => {
         const from = Math.max(0, Math.round((c.at ?? 0) * fps));

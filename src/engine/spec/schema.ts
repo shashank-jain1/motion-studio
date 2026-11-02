@@ -834,7 +834,13 @@ export const SpecSchema = z.object({
     fadeIn: z.number().optional(),
     fadeOut: z.number().optional(),
     duckUnderVoice: z.number().min(0).max(1).optional().describe("how far the music dips while the voiceover speaks: 0 = never, default 0.6 (≈ −8 dB)"),
+    at: z.number().min(0).optional().describe("film time (s) the music starts (fit_music sets it only when a short delayed start lands the drop)"),
+    credit: z.object({
+      title: z.string().optional(), artist: z.string().optional(), source: z.string().optional(), license: z.string(),
+      commercial: z.boolean(), attribution: z.string().optional(), url: z.string().optional(),
+    }).optional().describe("license of the music (written by import_music / compose_music); renders publish `attribution` in a credits file"),
   }).optional(),
+  usage: z.enum(["personal", "commercial"]).optional().describe("what the film is for: commercial = promotes a business/brand/product or client work (only commercial-safe music); personal = your own social posts"),
   voiceover: z.array(VoiceClipSchema).max(64).optional().describe("narration clips (generate_voiceover) placed on the film timeline; the music ducks under them"),
   captions: FilmCaptionsSchema.optional().describe("film-level captions over every scene, timed from the voiceover's words"),
   sfx: z.array(z.object({ src: z.string().describe("\"sfx:<name>\" (built-in) or an assets/ path"), at: z.number(), volume: z.number().optional(), rate: z.number().optional() })).optional(),

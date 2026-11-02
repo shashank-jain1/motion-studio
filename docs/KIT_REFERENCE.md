@@ -260,6 +260,14 @@ window (`windowSrc`) | split | trace | pop · `order`: leftToRight topToBottom r
 ### spec.audio — music
 `{ "src": "assets/music.mp3", "volume": 0.8, "trimStart": 0, "fadeIn": 0.5, "fadeOut": 1 }`. Music ducks under hits and stops down before heroes; renders are mastered to −14 LUFS (true peak ≤ −1 dBTP). analyze_audio returns bpm, beats, onsets, energyCurve, dropAt and **key / keyConfidence**.
 
+### spec.usage · music licensing
+`"usage": "commercial" | "personal"` — what the film is for. Commercial = promotes a business / brand / product or client
+work: only commercial-safe music (CC0, public domain, CC BY, composed, Lyria, the user's licensed tracks). Personal = the
+user's own social posts: Free To Use's free tracks are allowed too (credit in the description). `spec.audio.credit`
+(written by import_music / compose_music) records the license; the linter flags a mismatch (`license/music`), and renders
+write the required credit to `renders/<file>.mp4.credits.txt`. `spec.audio.at` (s) delays the music's entry (fit_music
+uses it only for short offsets that land the drop).
+
 ### spec.voiceover — narration · spec.captions — film captions
 `"voiceover": [{ "src": "assets/vo-1a2b3c4d5e.wav", "at": 0, "volume": 1, "text": "…", "words": [{ "text": "Mornings", "start": 0, "end": 0.42 }, …] }]`
 (written by `generate_voiceover`; `at` = film time, words are relative to the clip). The music ducks while words are

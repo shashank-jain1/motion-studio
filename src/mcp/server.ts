@@ -7,6 +7,7 @@ console.log = console.error;
 console.info = console.error;
 console.debug = console.error;
 
+import "../core/env"; // .env first: config below reads process.env at load
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { PROJECTS_DIR } from "../core/paths";

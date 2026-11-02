@@ -5,6 +5,7 @@
  *   pnpm server   →   http://127.0.0.1:${MOTION_STUDIO_PORT ?? 4310}
  *   MOTION_STUDIO_MODE=hosted → accounts required (see docs/DEPLOY.md)
  */
+import "../core/env"; // .env first: config below reads process.env at load
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -270,6 +271,7 @@ const renderInfo = (projectId: string, r: RenderRecord): RenderInfo => ({
   ...(r.width !== undefined ? { width: r.width } : {}),
   ...(r.height !== undefined ? { height: r.height } : {}),
   ...(r.format ? { format: r.format } : {}),
+  ...(r.credits ? { credits: r.credits } : {}),
 });
 
 const assetOut = (projectId: string, a: { file?: string; path: string } & Record<string, unknown>) => {

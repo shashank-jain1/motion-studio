@@ -42,13 +42,50 @@ import { listVoices, spokenText, synthesizeVoice, timeWords, voiceFileName } fro
 import { composeScore, scoreWav } from "./music";
 import { lyriaMusic } from "./gemini";
 import { SFX as SFX_LIB } from "../engine/audio/library";
+import { filmCredits, writeRenderCredits } from "./credits";
+import { allowedFor, lookupTrack, readTrackLicense, searchMusic, writeTrackLicense, type Usage } from "./musicLibrary";
+import { fitTrack } from "./musicFit";
+import { analyzeAudio } from "./audio";
+
+/** 8-point loudness sketch of a track ("▁▃▅█…") so the director can see where it builds. */
+const shape = (e: number[]) => { const bars = "▁▂▃▄▅▆▇█"; const n = 16; return Array.from({ length: n }, (_, i) => { const seg = e.slice(Math.floor((i * e.length) / n), Math.floor(((i + 1) * e.length) / n)); const v = seg.reduce((a, b) => a + b, 0) / Math.max(1, seg.length); return bars[Math.min(7, Math.round(v * 7))]; }).join(""); };
+
+type AudioCreditIn = { title?: string; artist?: string; source?: string; license: string; commercial: boolean; attribution?: string; url?: string };
+
+/** Analyze a track, fit it to the film and write spec.audio + sound.music (one version). */
+const fitAndApply = async (projectId: string, assetPath: string, abs: string, o: { peak?: number; volume?: number; credit?: AudioCreditIn; author: SpecAuthor }): Promise<ToolResult> => {
+  const raw = readSpec(projectId) as (SpecInput & Record<string, unknown>) | null;
+  if (!raw) throw new Error("Write the spec first: fitting needs the film's timeline.");
+  const tl = computeTimeline(raw);
+  const a = await analyzeAudio(abs);
+  const peak = o.peak ?? Math.round(tl.total * 0.7 * 100) / 100;
+  const f = fitTrack(a, { total: tl.total, peak, cuts: tl.scenes.map((s) => s.start) });
+  const hasVoice = Array.isArray(raw.voiceover) && raw.voiceover.length > 0;
+  const audio: Record<string, unknown> = {
+    src: assetPath, volume: o.volume ?? (hasVoice ? 0.55 : 0.8),
+    ...(f.trimStart ? { trimStart: f.trimStart } : {}), ...(f.at ? { at: f.at } : {}), ...(f.fadeIn ? { fadeIn: f.fadeIn } : {}), fadeOut: f.fadeOut,
+    ...((raw.audio as { duckUnderVoice?: number } | undefined)?.duckUnderVoice != null ? { duckUnderVoice: (raw.audio as { duckUnderVoice?: number }).duckUnderVoice } : {}),
+    ...(o.credit ? { credit: o.credit } : {}),
+  };
+  const next = { ...raw, audio, sound: { ...((raw.sound as object | undefined) ?? {}), music: { bpm: a.bpm, beats: f.beats, key: a.key, keyConfidence: a.keyConfidence, onsets: a.onsets.map((x) => Math.round((x - f.trimStart + f.at) * 1000) / 1000).filter((x) => x >= 0 && x < tl.total) } } };
+  const res = await writeSpec(projectId, next, { author: o.author, summary: `Music fitted · ${path.basename(assetPath)}` });
+  const lines = [
+    `Fitted ${assetPath}: starts ${f.trimStart.toFixed(2)}s into the track${f.at ? `, enters at ${f.at.toFixed(2)}s` : ""} · ${a.bpm.toFixed(1)} bpm · ${a.key}`,
+    f.dropFilmTime != null ? `Drop/lift lands at ${f.dropFilmTime.toFixed(2)}s (peak ${peak.toFixed(2)}s, off by ${f.dropErr.toFixed(2)}s)` : "No clear drop in this track",
+    `Cuts within ${f.cutErrMs} ms of a beat on average · ${f.endsWithTrack ? "the film ends with the track's own ending" : `fades out over ${f.fadeOut}s`}`,
+    ...f.notes,
+  ];
+  return { content: [text_(`${formatValidation(res)}\n\n${lines.join("\n")}`)], isError: !res.ok, summary: `Music fitted · drop ${f.dropFilmTime != null ? `@${f.dropFilmTime.toFixed(1)}s` : "none"}`, events: specEvent(projectId, res) };
+};
+
+/** Tell the user (and the director) which credit the music license requires with this video. */
+const creditNote = (c: string | null | undefined) => (c ? `\n\nCREDIT REQUIRED — publish with the video (saved next to it as .credits.txt):\n${c}` : "");
 import { downloadWithYtDlp, whisperReady, footageSpec, getEditStyle, listEditStyles, measureReference, planFootage, saveEditStyle, suggestFromMeasurements, transcribeFile, type EditStyle } from "./footage";
 
 const pick = <T extends Record<string, unknown>, K extends keyof T>(o: T, keys: K[]) =>
   Object.fromEntries(keys.filter((k) => o[k] !== undefined).map((k) => [k, o[k]])) as Partial<Pick<T, K>>;
 import { thumbnail, type AssetInfo } from "./probe";
 import { ensureLogoAnalysis, logoJsonPath, logoSummary, renderLogoPreviewPng, LOGO_ORDERS, type LogoBrief } from "./logo";
-import { analyzeAudio } from "./audio";
 import { renderFrames, renderVideo, type PreviewResult, type RenderQuality, type RenderVideoResult } from "./render";
 import { listCustomComponents, readCustomComponent, writeCustomComponent } from "./custom";
 import { resolvePublic, safeDownload } from "./safe-download";
@@ -88,6 +125,8 @@ export type RenderRecord = {
   renderSeconds?: number;
   /** Output format ("9:16"…): the master format, or the format the spec was reflowed to (spec/reflow.ts). */
   format?: Format;
+  /** credits the music license requires — publish them with the video (also in <file>.mp4.credits.txt) */
+  credits?: string;
 };
 
 export type PreviewFrameInfo = { time: number; frame: number; path: string; label: string };
@@ -592,6 +631,8 @@ export const runRender = async (
     renderSeconds: result.renderSeconds,
     format: result.format,
   };
+  const credits = writeRenderCredits(projectId, result.path);
+  if (credits) record.credits = credits;
   try {
     fs.writeFileSync(`${result.path}.json`, JSON.stringify(record, null, 2) + "\n");
   } catch {
@@ -628,6 +669,7 @@ export const listRenders = (projectId: string): RenderRecord[] => {
       ...(!meta.format && RENDER_RE.exec(f)?.[2] ? { format: `${RENDER_RE.exec(f)![2]}:${RENDER_RE.exec(f)![3]}` as Format } : {}),
       createdAt: meta.createdAt ?? st.mtime.toISOString(),
       sizeBytes: st.size,
+      ...(fs.existsSync(`${abs}.credits.txt`) ? { credits: fs.readFileSync(`${abs}.credits.txt`, "utf8").trim() } : {}),
     });
   }
   return out.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
@@ -1289,6 +1331,8 @@ export const TOOLS: ToolDef[] = [
       bpm: z.number().min(50).max(180).optional(), key: z.string().max(12).optional().describe("e.g. \"F# minor\" (default: the sound brief's key, else per mood)"),
       intensity: z.number().min(0).max(1).optional(),
       volume: z.number().min(0).max(1.5).optional().describe("music level in the mix (default 0.8, 0.55 under a voiceover)"),
+      variation: z.number().int().min(0).max(9).optional().describe("which arrangement to apply (0 default; others change key, progression and figure)"),
+      variations: z.number().int().min(1).max(3).optional().describe("also render this many alternatives (as assets) to compare; the `variation` one is applied"),
       prompt: z.string().max(600).optional().describe("lyria only"),
       paid: z.boolean().optional().describe("lyria only: the user agreed to the cost"),
       apply: z.boolean().optional().describe("set spec.audio (default true)"),
@@ -1312,22 +1356,103 @@ export const TOOLS: ToolDef[] = [
         meta = { provider: "lyria", prompt };
       } else {
         const briefKey = (raw.sound as { brief?: { key?: string } } | undefined)?.brief?.key;
-        const { buf, meta: m } = composeScore({ seconds: tl.total, mood: input.mood, peak: input.peak, bpm: input.bpm, key: input.key ?? briefKey, intensity: input.intensity, cuts: tl.scenes.map((s) => s.start) });
-        const tmp = path.join(os.tmpdir(), `ms-score-${process.pid}-${Date.now()}.wav`);
-        fs.writeFileSync(tmp, scoreWav(buf));
-        try { assetPath = (await addAsset(projectId, { path: tmp, name: `music-${m.mood}-${m.bpm}bpm-${Math.round(m.seconds)}s.wav` })).path; } finally { fs.rmSync(tmp, { force: true }); }
-        meta = m;
+        const chosen = input.variation ?? 0;
+        const ids = [...new Set([chosen, ...Array.from({ length: (input.variations ?? 1) - 1 }, (_, i) => (chosen + i + 1) % 10)])];
+        const made: { v: number; path: string; meta: ReturnType<typeof composeScore>["meta"] }[] = [];
+        for (const v of ids) {
+          const { buf, meta: m } = composeScore({ seconds: tl.total, mood: input.mood, peak: input.peak, bpm: input.bpm, key: input.key ?? briefKey, intensity: input.intensity, cuts: tl.scenes.map((s) => s.start), variation: v });
+          const tmp = path.join(os.tmpdir(), `ms-score-${process.pid}-${Date.now()}-${v}.wav`);
+          fs.writeFileSync(tmp, scoreWav(buf));
+          try { made.push({ v, path: (await addAsset(projectId, { path: tmp, name: `music-${m.mood}-v${v}-${m.bpm}bpm-${Math.round(m.seconds)}s.wav` })).path, meta: m }); } finally { fs.rmSync(tmp, { force: true }); }
+        }
+        assetPath = made[0].path;
+        meta = { ...made[0].meta, alternatives: made.slice(1).map((x) => `${x.path} (variation ${x.v}, ${x.meta.key})`) };
       }
-      const summaryLine = meta.provider === "lyria" ? `Lyria music ${assetPath}` : `Score ${assetPath} · ${meta.mood} · ${meta.bpm} bpm · ${meta.key} · cuts within ${meta.cutAlignmentMs} ms of a beat · ${(meta.sections as { name: string; from: number; to: number }[]).map((s) => `${s.name} ${s.from}–${s.to}s`).join(", ")}`;
+      const alts = (meta.alternatives as string[] | undefined) ?? [];
+      const summaryLine = meta.provider === "lyria" ? `Lyria music ${assetPath}` : `Score ${assetPath} · ${meta.mood} · ${meta.bpm} bpm · ${meta.key} · cuts within ${meta.cutAlignmentMs} ms of a beat · ${(meta.sections as { name: string; from: number; to: number }[]).map((s) => `${s.name} ${s.from}–${s.to}s`).join(", ")}${alts.length ? `\nAlternatives (not applied — set audio.src to compare, or call again with variation): ${alts.join("; ")}` : ""}`;
       if (input.apply === false) return { content: [text_(`${summaryLine}\nNot applied.`)], summary: "Music composed" };
       const next: Record<string, unknown> = {
         ...raw,
-        audio: { ...(raw.audio ?? {}), src: assetPath, volume: input.volume ?? (hasVoice ? 0.55 : 0.8), fadeOut: 0.4, trimStart: undefined },
+        audio: {
+          ...(raw.audio ?? {}), src: assetPath, volume: input.volume ?? (hasVoice ? 0.55 : 0.8), fadeOut: 0.4, trimStart: undefined, at: undefined, fadeIn: undefined,
+          credit: meta.provider === "lyria"
+            ? { source: "Google Lyria", license: "AI-generated with Google Lyria (SynthID-watermarked); see Google's Gemini API terms", commercial: true }
+            : { source: "Motion Studio", license: "Original score composed for this film (procedural; no third-party rights)", commercial: true },
+        },
         ...(meta.bpm ? { sound: { ...(raw.sound ?? {}), music: { ...((raw.sound as { music?: object } | undefined)?.music ?? {}), bpm: meta.bpm, beats: meta.beats, key: meta.key, keyConfidence: 1 } } } : {}),
       };
       const res = await writeSpec(projectId, JSON.parse(JSON.stringify(next)), { author: authorOf(ctx), summary: `Music · ${meta.provider === "lyria" ? "Lyria" : `${meta.mood} ${meta.bpm} bpm`}` });
       void p;
       return { content: [text_(`${formatValidation(res)}\n\n${summaryLine}${hasVoice ? "\nThe music ducks under the voiceover (audio.duckUnderVoice, default 0.6)." : ""}\nNext: preview, then render a draft and listen; inspect_render_sound checks the mix.`)], isError: !res.ok, summary: `Music · ${meta.provider === "lyria" ? "Lyria" : `${meta.mood} ${meta.bpm} bpm`}`, events: specEvent(projectId, res) };
+    },
+  }),
+  defineTool({
+    name: "search_music", title: "Find music", scope: "project",
+    description: "Search FREE music libraries for a track that fits the film, filtered by what this film may legally use (spec.usage). freetouse = Free To Use (curated, high quality; its free license covers PERSONAL social posts only — monetization OK — with a credit in the description; never for content promoting a business/brand/product); openverse = CC0 / public domain / CC BY music from Jamendo, ccMixter, Freesound, Wikimedia (commercial-safe; CC BY needs a credit). When usage is commercial only commercial-safe results are returned. Describe mood + genre + use (\"uplifting corporate piano\", \"dark cinematic tension\", \"lofi chill\"). Then import_music the best candidate (it fits it to the timeline). If both libraries are down or nothing fits, compose_music.",
+    shape: {
+      projectId: projectIdField,
+      query: z.string().min(2).max(120),
+      provider: z.enum(["all", "freetouse", "openverse"]).optional(),
+      limit: z.number().int().min(1).max(25).optional(),
+    },
+    startSummary: (i) => `Searching music · ${String(i.query).slice(0, 40)}`,
+    handler: async ({ projectId, query, provider, limit }, ctx) => {
+      const raw = readSpec(projectId) as { usage?: Usage } | null;
+      const usage = raw?.usage;
+      const film = raw ? computeTimeline(raw as Pick<SpecInput, "scenes">).total : 0;
+      const { hits, notes } = await searchMusic(query, { providers: !provider || provider === "all" ? undefined : [provider], usage, minSeconds: film ? film + 1 : 0, limit, signal: ctx.signal });
+      const rows = hits.map((h) => ({
+        provider: h.provider, id: h.id, title: h.title, artist: h.artist, seconds: h.seconds, genre: h.genre, tags: h.tags.slice(0, 6),
+        license: h.license.name, commercialUse: h.license.commercial, creditRequired: h.license.attribution,
+        ...(h.energy ? { energyShape: shape(h.energy) } : {}), page: h.pageUrl,
+      }));
+      const head = `${rows.length} track(s) for “${query}”${film ? ` at least ${(film + 1).toFixed(0)}s long` : ""} · film usage: ${usage ?? "not set (set spec.usage: \"commercial\" for brand/client work, \"personal\" for your own posts)"}`;
+      return { content: [text_(`${head}${notes.length ? `\n${notes.join("\n")}` : ""}`), json(rows)], summary: `${plural(rows.length, "track")} · ${query}` };
+    },
+  }),
+  defineTool({
+    name: "import_music", title: "Use a library track", scope: "project",
+    description: "Download a track found with search_music into the project (license re-checked from the provider; premium / NC / ND / share-alike never accepted), record its license and required credit, analyze it (bpm, beats, drop, key) and — unless fit:false — fit it to the timeline like fit_music (the drop on the peak, cuts on beats, ending on the track's own ending or a bar). Renders then write the credit next to the MP4.",
+    shape: {
+      projectId: projectIdField,
+      provider: z.enum(["freetouse", "openverse"]), id: z.string().min(6).max(64),
+      peak: z.number().min(0).optional().describe("film time of the peak (default 70% of the film)"),
+      volume: z.number().min(0).max(1.5).optional(),
+      fit: z.boolean().optional().describe("fit + set spec.audio (default true)"),
+    },
+    startSummary: () => "Importing music",
+    handler: async ({ projectId, provider, id, peak, volume, fit }, ctx) => {
+      const raw = readSpec(projectId) as { usage?: Usage } | null;
+      const hit = await lookupTrack(provider, id, ctx.signal);
+      if (!allowedFor(hit.license, raw?.usage)) throw new Error(`“${hit.title}” is licensed ${hit.license.name}, which does not allow ${raw?.usage === "commercial" ? "commercial content (this film's usage is commercial)" : "this use"}. Pick a CC0 / CC BY track (openverse) or compose_music.`);
+      ctx.onProgress?.({ progress: 0.1, message: "Downloading" });
+      const slug = `${hit.title}-${hit.artist}`.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40) || "track";
+      const asset = await addAsset(projectId, { url: hit.audioUrl, name: `music-${provider}-${slug}${path.extname(new URL(hit.audioUrl).pathname) || ".mp3"}` });
+      if (asset.kind !== "audio") throw new Error(`The downloaded file is not audio (${asset.kind}).`);
+      const abs = path.join(getProject(projectId).dir, asset.path);
+      writeTrackLicense(abs, { provider, id: hit.id, title: hit.title, artist: hit.artist, pageUrl: hit.pageUrl, audioUrl: hit.audioUrl, license: hit.license, importedAt: new Date().toISOString() });
+      const credit = { title: hit.title, artist: hit.artist, source: provider === "freetouse" ? "Free To Use" : "Openverse", license: hit.license.name, commercial: hit.license.commercial, ...(hit.license.credit ? { attribution: hit.license.credit } : {}), url: hit.pageUrl };
+      const intro = `Imported ${asset.path} · “${hit.title}” by ${hit.artist} · ${hit.license.name}${hit.license.attribution ? " · credit required" : ""}${hit.license.commercial ? "" : " · personal use only (not for brand / client / ads)"}`;
+      if (fit === false) return { content: [text_(intro)], summary: `Imported ${hit.title}`, events: [{ type: "asset", projectId, asset: (({ file: _f, ...a }) => a)(asset) }] };
+      ctx.onProgress?.({ progress: 0.5, message: "Analyzing and fitting" });
+      const r = await fitAndApply(projectId, asset.path, abs, { peak, volume, credit, author: authorOf(ctx) });
+      return { ...r, content: [text_(`${intro}\n`), ...r.content] };
+    },
+  }),
+  defineTool({
+    name: "fit_music", title: "Fit music to the cut", scope: "project",
+    description: "Fit an audio asset (default: the current spec.audio) to this film: analyzes the track and picks where it starts so its drop/lift lands on the film's peak, scene cuts fall on beats, and the film ends with the track's own ending (or on a bar line, with a fade). Sets spec.audio (trimStart, fades, volume; a short delayed start only if that lands the drop) and spec.sound.music (beats in film time) so auto SFX follow the music. Use for library tracks and the user's own uploads; composed scores are already fitted.",
+    shape: { projectId: projectIdField, asset: z.string().optional(), peak: z.number().min(0).optional(), volume: z.number().min(0).max(1.5).optional() },
+    startSummary: () => "Fitting music to the cut",
+    handler: async ({ projectId, asset, peak, volume }, ctx) => {
+      const raw = readSpec(projectId) as { audio?: { src?: string; credit?: Record<string, unknown> } } | null;
+      const src = asset ?? raw?.audio?.src;
+      if (!src) throw new Error("No music yet: pass asset (an uploaded track) or use search_music / compose_music.");
+      const info = await getAssetInfo(projectId, stripAssets(src));
+      if (info.kind !== "audio" && info.kind !== "video") throw new Error("Choose an audio asset.");
+      const lic = readTrackLicense(info.file);
+      const credit = lic ? { title: lic.title, artist: lic.artist, source: lic.provider, license: lic.license.name, commercial: lic.license.commercial, ...(lic.license.credit ? { attribution: lic.license.credit } : {}), url: lic.pageUrl } : raw?.audio?.src === info.path ? raw?.audio?.credit : undefined;
+      return fitAndApply(projectId, info.path, info.file, { peak, volume, credit: credit as never, author: authorOf(ctx) });
     },
   }),
   defineTool({
@@ -1519,7 +1644,7 @@ export const TOOLS: ToolDef[] = [
         return {
           content: [
             text(
-              `Rendered ${r.quality} video: ${where}\n${[dims, r.fps ? `${r.fps}fps` : "", r.seconds !== undefined ? `${r.seconds.toFixed(2)}s` : "", `${(r.sizeBytes / 1e6).toFixed(2)} MB`, r.renderSeconds !== undefined ? `took ${r.renderSeconds}s` : ""].filter(Boolean).join(", ")}.`,
+              `Rendered ${r.quality} video: ${where}\n${[dims, r.fps ? `${r.fps}fps` : "", r.seconds !== undefined ? `${r.seconds.toFixed(2)}s` : "", `${(r.sizeBytes / 1e6).toFixed(2)} MB`, r.renderSeconds !== undefined ? `took ${r.renderSeconds}s` : ""].filter(Boolean).join(", ")}.${creditNote(filmCredits(projectId))}`,
             ),
             json(r),
           ],
@@ -1543,7 +1668,7 @@ export const TOOLS: ToolDef[] = [
       });
       return {
         content: [
-          text(`Rendered ${res.quality} ${res.format} video: ${res.path}\n${res.width}x${res.height} @ ${res.fps}fps, ${res.seconds.toFixed(2)}s, ${(res.sizeBytes / 1e6).toFixed(2)} MB, took ${res.renderSeconds}s.`),
+          text(`Rendered ${res.quality} ${res.format} video: ${res.path}\n${res.width}x${res.height} @ ${res.fps}fps, ${res.seconds.toFixed(2)}s, ${(res.sizeBytes / 1e6).toFixed(2)} MB, took ${res.renderSeconds}s.${creditNote(record.credits)}`),
           json(res),
         ],
         summary: `Rendered ${res.quality} · ${fmtSecs(res.seconds)} · ${(res.sizeBytes / 1e6).toFixed(1)} MB`,

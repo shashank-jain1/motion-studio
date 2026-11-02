@@ -5,7 +5,9 @@
  * Cancel: queued → canceled at once; running → AbortSignal into the backend (renderVideo's cancelSignal / Lambda cancel).
  */
 import { HTTPException } from "hono/http-exception";
-import { loadSpec, readSpec } from "../core/projects";
+import path from "node:path";
+import { getProject, loadSpec, readSpec } from "../core/projects";
+import { writeRenderCredits } from "../core/credits";
 import { assertSpecSafe } from "../core/tools";
 import type { Spec } from "../engine/spec/schema";
 import type { Format } from "../engine/spec/reflow";
@@ -256,7 +258,11 @@ function start(r: Row): void {
     if (IS_HOSTED) await assertSpecSafe(readSpec(r.project_id));
     return backend.render({ id: r.id, projectId: r.project_id, quality: r.quality as "draft" | "final", ...(r.format ? { format: r.format as Format } : {}) }, spec, onProgress, ac.signal);
   })()
-    .then((output) => finish(r.id, { status: "done", output }))
+    .then((output) => {
+      // credits the music license requires, next to the MP4 (all backends download into projects/<id>/renders)
+      try { writeRenderCredits(r.project_id, path.join(getProject(r.project_id).dir, output.file)); } catch { /* best effort */ }
+      finish(r.id, { status: "done", output });
+    })
     .catch((e: unknown) => {
       const aborted = ac.signal.aborted || (e as Error)?.name === "AbortError";
       if (!aborted) console.error(`[motion-studio] job ${r.id} (${r.project_id}) failed: ${e instanceof Error ? e.stack : String(e)}`);

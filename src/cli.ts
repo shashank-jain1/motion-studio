@@ -5,6 +5,7 @@
  *   pnpm cli validate <projectId>
  *   pnpm cli list
  */
+import "./core/env"; // .env first: config below reads process.env at load
 import { getProject, listProjects, readSpec, validateSpec } from "./core/projects";
 import { renderFrames, renderVideo } from "./core/render";
 import { computeTimeline } from "./core/projects";

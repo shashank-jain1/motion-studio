@@ -63,6 +63,8 @@ export type ScoreRequest = {
   /** 0..1 overall density (default 0.7) */
   intensity?: number;
   seed?: number;
+  /** 0, 1, 2…: alternative arrangements (key, progression rotation, arp figure) fitted to the same timeline */
+  variation?: number;
 };
 export type ScoreMeta = {
   bpm: number; key: string; mood: Mood; seconds: number; beats: number[]; bars: number[];
@@ -194,7 +196,11 @@ export const composeScore = (req: ScoreRequest): { buf: Buf; meta: ScoreMeta } =
   const P = PRESETS[mood];
   const total = Math.max(2, req.seconds);
   const keyIn = parseKey(req.key);
-  const key = keyIn ?? { root: [9, 2, 4, 7, 0][hashStr(mood) % 5], minor: P.minor };
+  // variation v (0 = the default arrangement): another key, progression rotation and arp figure — same timeline fit
+  const v = Math.max(0, Math.floor(req.variation ?? 0));
+  const key = keyIn ?? { root: ([9, 2, 4, 7, 0][hashStr(mood) % 5] + [0, 5, 7][v % 3]) % 12, minor: P.minor };
+  const prog: Chord[] = P.prog.map((_, i) => P.prog[(i + (v % P.prog.length)) % P.prog.length]);
+  const tonic = P.prog[0];
   const peakIn = Math.max(0.5, Math.min(total - 0.5, req.peak ?? total * 0.7));
   const fit = req.bpm ? { bpm: req.bpm, errMs: 0 } : fitTempo(P.bpm, req.cuts ?? [], peakIn);
   const bpm = fit.bpm, beat = 60 / bpm, bar = beat * 4;
@@ -221,23 +227,23 @@ export const composeScore = (req: ScoreRequest): { buf: Buf; meta: ScoreMeta } =
   const energy = (barIdx: number) => barIdx < buildBar ? 0.42 : barIdx < peakBar ? 0.5 + 0.38 * ((barIdx - buildBar) / Math.max(1, peakBar - buildBar)) : barIdx < resolveBar ? 1 : 0.35;
 
   const bed = makeBuf(total + 2.5), drums = makeBuf(total + 2.5), send = makeBuf(total + 2.5);
-  const chordAt = (barIdx: number): number[] => {
-    const [off, q] = P.prog[Math.floor(barIdx / P.barsPerChord) % P.prog.length];
+  const chordAt = (barIdx: number, final = false): number[] => {
+    const [off, q] = final ? tonic : prog[Math.floor(barIdx / P.barsPerChord) % prog.length];
     return Q[q].map((iv) => key.root + off + iv);
   };
-  const rootAt = (barIdx: number) => key.root + P.prog[Math.floor(barIdx / P.barsPerChord) % P.prog.length][0];
+  const rootAt = (barIdx: number, final = false) => key.root + (final ? tonic : prog[Math.floor(barIdx / P.barsPerChord) % prog.length])[0];
   const kicks: number[] = [];
 
   for (let bi = 0; bi < nBars; bi++) {
     const t = barT(bi), e = energy(bi) * (0.6 + 0.4 * intensity);
     const final = bi === resolveBar;
     if (bi > resolveBar) break; // the final chord rings out
-    const ch = chordAt(final ? 0 : bi); // resolve on the tonic
+    const ch = chordAt(bi, final); // resolve on the tonic
     const voiced = ch.map((n, j) => 48 + ((n % 12) + 12) % 12 + (j > 2 ? 12 : 0) + (j === 0 ? 0 : 12));
     const dur = final ? total - t + 1.5 : bar * (bi % P.barsPerChord === 0 ? P.barsPerChord : 0);
     if (P.pad && dur > 0) voiced.forEach((m) => padNote(bed, t, Math.min(dur, total - t + 1.2), m, 0.055 * P.pad * (0.5 + e * 0.6), P.bright * (0.6 + e * 0.5), rnd));
     // sub bass
-    const root = 36 + (((rootAt(final ? 0 : bi) % 12) + 12) % 12);
+    const root = 36 + (((rootAt(bi, final) % 12) + 12) % 12);
     if (final) subNote(bed, t, Math.min(total - t, bar * 2), root, 0.32);
     else if (e > 0.3 || P.bass === "whole") {
       if (P.bass === "whole") subNote(bed, t, bar * 0.98, root, 0.26 * e + 0.08);
@@ -250,7 +256,7 @@ export const composeScore = (req: ScoreRequest): { buf: Buf; meta: ScoreMeta } =
     // arp / plucks
     if (P.arp && e > 0.35 && !final) {
       const steps = P.arp === 16 ? 16 : 8, step = bar / steps;
-      const pattern = [0, 1, 2, 1, 2, 3 % ch.length, 2, 1];
+      const pattern = [[0, 1, 2, 1, 2, 3 % ch.length, 2, 1], [0, 2, 1, 2, 3 % ch.length, 2, 1, 2], [2, 1, 0, 1, 2, 3 % ch.length, 1, 0]][v % 3];
       for (let k = 0; k < steps; k++) {
         if (e < 0.55 && k % 2 === 1) continue;
         const n = ch[pattern[k % pattern.length] % ch.length];

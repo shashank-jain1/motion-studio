@@ -123,6 +123,7 @@ export const PlayerPane = () => {
               allowFullscreen
               renderLoading={() => <div className="player-loading"><Spinner size={16} /></div>}
               errorFallback={({ error }) => <div className="player-crash"><IconAlert size={16} /><span className="mono">{error.message}</span></div>}
+              numberOfSharedAudioTags={8}
             />
             {safe !== "off" && <SafeOverlay mode={safe} w={view!.width} h={view!.height} format={fmt} />}
             {fmt === master && <LayerOverlay w={view!.width} h={view!.height} screenW={fit.w} />}

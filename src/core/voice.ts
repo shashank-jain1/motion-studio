@@ -205,14 +205,24 @@ export const alignScript = (script: string, heard: Word[]): Word[] => {
     else if (D[i][j] === D[i - 1][j] + 1) i--;
     else j--;
   }
-  const out: Word[] = S.map((t, i) => (match[i] >= 0 ? { text: t, start: heard[match[i]].start, end: heard[match[i]].end } : { text: t, start: NaN, end: NaN }));
-  // interpolate gaps between matched neighbours
+  // Only EXACT matches anchor timing. A substitution (e.g. the script's "devfest dot bhopal dot dev" heard as one token
+  // "devfest.bhopal.dev") must not pin a word to the wrong place: unmatched runs are spread, by word length, over the time
+  // between the surrounding anchors — so order is always preserved.
+  const exact = S.map((_, i) => match[i] >= 0 && a[i] === b[match[i]]);
+  const out: Word[] = S.map((t, i) => (exact[i] ? { text: t, start: heard[match[i]].start, end: heard[match[i]].end } : { text: t, start: NaN, end: NaN }));
   for (let i = 0; i < n; i++) {
-    if (!Number.isNaN(out[i].start)) continue;
-    let k = i; while (k < n && Number.isNaN(out[k].start)) k++;
-    const from = i > 0 ? out[i - 1].end : heard[0].start, to = k < n ? out[k].start : heard[m - 1].end;
-    const step = Math.max(0.05, (to - from) / (k - i));
-    for (let q = i; q < k; q++) out[q] = { text: out[q].text, start: r3(from + (q - i) * step), end: r3(from + (q - i + 1) * step) };
+    if (exact[i]) continue;
+    let k = i; while (k < n && !exact[k]) k++;
+    const from = i > 0 ? out[i - 1].end : heard[0].start;
+    const to = Math.max(from + 0.05 * (k - i), k < n ? out[k].start : heard[m - 1].end);
+    const weights = S.slice(i, k).map((w) => Math.max(1, normWord(w).length));
+    const total = weights.reduce((x, y) => x + y, 0);
+    let t = from;
+    for (let q = i; q < k; q++) {
+      const d = ((to - from) * weights[q - i]) / total;
+      out[q] = { text: out[q].text, start: r3(t), end: r3(t + d) };
+      t += d;
+    }
   }
   return out;
 };

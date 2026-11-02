@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { api, type Job, type RenderInfo } from "../api";
 import { useStudio } from "./context";
 import { useToast } from "../components/Toast";
-import { Lightbox, TallyDot } from "../components/ui";
+import { CopyButton, Lightbox, TallyDot } from "../components/ui";
 import { IconClose, IconDownload, IconGrid, IconRecord, Spinner } from "../components/Icons";
 import { basename, fmtBytes, fmtClock, fmtDuration, fmtRelative } from "../lib/format";
 import { isActive, useJobs } from "../lib/jobs";
@@ -173,5 +173,11 @@ const RenderItem = ({ r, n }: { r: RenderInfo; n: number }) => (
       <span className="dim small nowrap" title={r.createdAt}>{fmtRelative(r.createdAt)}</span>
       <a className="icon-btn ghost xs" href={r.url} download={basename(r.file)} title="Download MP4" aria-label="Download MP4"><IconDownload size={14} /></a>
     </div>
+    {r.credits && (
+      <div className="render-credits">
+        <div className="row gap"><span className="label">Credit required</span><span className="spacer" /><CopyButton text={r.credits.replace(/\n\(Required by[^)]*\)\s*$/, "")} label="Copy credit" className="xs" /></div>
+        <pre className="mono small">{r.credits}</pre>
+      </div>
+    )}
   </div>
 );

@@ -30,3 +30,8 @@ projects/*/versions/
 
 # speech transcripts cached next to media (transcribe_media / edit_footage)
 projects/*/assets/*.transcript.json
+
+# local secrets (see .env.example)
+.env
+.env.*
+!.env.example

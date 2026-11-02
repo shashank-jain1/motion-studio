@@ -50,6 +50,29 @@ Visual edits rewrite the Spec editor's text, so Save, validation and the directo
 do for typed edits. Nothing is written to disk until you save. The model lives in `web/src/lib/specEdit.ts` and is tested by
 `npm run test:edit`.
 
+## Free music, fitted and licensed (Phase 8)
+
+Background music without paying, and without breaking a license:
+
+| Source | Cost | Use | Credit |
+|---|---|---|---|
+| **Composed score** (`compose_music`) | free, local | any film | none; original work |
+| **Openverse** (`search_music`): CC0 / public domain / CC BY from Jamendo, ccMixter, Freesound, Wikimedia | free, no key | any film, commercial included | required for CC BY (auto) |
+| **Free To Use** (`search_music`): curated, non-premium tracks | free, no key | **personal** social posts (monetization OK); **not** brand / client / ad content | required (auto) |
+| **Your own track** (Epidemic, Artlist, purchased…) | your license | per your license | per your license |
+| Lyria | paid | any | none |
+
+- `spec.usage` ("commercial" | "personal") decides what search returns and what import accepts. Premium, NC, ND and
+  share-alike licenses are never accepted, and every import re-checks the license with the provider.
+- `import_music` / `fit_music` analyze the track (bpm, beats, drop, key) and choose where it starts. The drop lands on
+  the film's peak, cuts fall on beats, and the film ends with the track's own ending or on a bar line, with a fade. Beats
+  go into `sound.music` so auto SFX follow the music.
+- Each import writes `assets/<file>.license.json`. Each render writes `renders/<file>.mp4.credits.txt` when a credit is
+  due, and the Renders panel shows it with a Copy button.
+- MusicBrainz isn't used: it's a metadata database with no audio.
+
+Code: `src/core/musicLibrary.ts`, `src/core/musicFit.ts`, `src/core/credits.ts`. Tests: `npm run test:music`.
+
 ## Voice, music, captions and cinematic SFX (Phase 7)
 
 Every film can have a full soundtrack, using free options first:
@@ -119,7 +142,7 @@ against a fake Claude) on every push and pull request.
 `get_guide`, `list_styles`, `create_project`, `list_projects`, `get_project`, `add_asset`, `analyze_logo`, `analyze_audio`, `set_spec`,
 `get_spec`, `update_scene`, `preview_frames`, `render_video`, `write_custom_component`, `list_custom_components`,
 `open_studio_hint`, `list_versions`, `restore_version`, `transcribe_media`, `edit_footage`, `analyze_reference_style`,
-`save_edit_style`, `list_edit_styles`, `import_reference_url`, `list_voices`, `generate_voiceover`, `compose_music`, `list_sfx`, `motion_recipes`, `build_motion_scene`, `build_motion_sequence`, `build_design_film`, `inspect_video_reference`, `inspect_sound`, `inspect_render_sound`, `list_fonts`, `import_font`, `register_font`.
+`save_edit_style`, `list_edit_styles`, `import_reference_url`, `list_voices`, `generate_voiceover`, `compose_music`, `list_sfx`, `search_music`, `import_music`, `fit_music`, `motion_recipes`, `build_motion_scene`, `build_motion_sequence`, `build_design_film`, `inspect_video_reference`, `inspect_sound`, `inspect_render_sound`, `list_fonts`, `import_font`, `register_font`.
 
 The AI's craft knowledge lives in [docs/DIRECTOR_GUIDE.md](docs/DIRECTOR_GUIDE.md) and the spec format in
 [docs/KIT_REFERENCE.md](docs/KIT_REFERENCE.md); both are served by `get_guide`.

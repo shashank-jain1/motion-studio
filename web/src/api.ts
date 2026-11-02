@@ -16,6 +16,8 @@ export type RenderInfo = {
   seconds?: number; width?: number; height?: number;
   /** output format (absent on renders made before formats existed) */
   format?: Format;
+  /** music credit the license requires — publish it with the video */
+  credits?: string;
 };
 /** A starter film from the template gallery (GET /api/templates). */
 export type TemplateMeta = {
