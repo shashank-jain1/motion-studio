@@ -1,0 +1,804 @@
+{
+  "fps": 30,
+  "format": "16:9",
+  "theme": {
+    "colors": {
+      "bg": "#07070a",
+      "fg": "#f5f5f7",
+      "muted": "#7c7c8a",
+      "accent": "#8b5cf6",
+      "accent2": "#22d3ee",
+      "accent3": "#f472b6",
+      "card": "#121218"
+    },
+    "fonts": {
+      "display": "Geist",
+      "body": "Inter",
+      "mono": "JetBrains Mono"
+    }
+  },
+  "usage": "personal",
+  "fx": {
+    "grain": 0.035
+  },
+  "concept": {
+    "truth": "Motion Studio turns one line into a finished, scored film",
+    "metaphor": "transformation — a single typed line becomes a pipeline, proof, sound and a film",
+    "motif": "the caret: it types the brief, runs the render, and the lockup ends on a typed command",
+    "verb": "transform",
+    "hook": "a line of code being typed: make(\"a launch film for Orbit\")",
+    "arc": [
+      "one line in",
+      "a film out",
+      "how it works",
+      "proof",
+      "sound",
+      "lockup"
+    ],
+    "colorScript": [
+      "violet spotlight",
+      "teal spotlight",
+      "violet blueprint grid",
+      "violet glass",
+      "mesh + orb",
+      "violet spotlight"
+    ]
+  },
+  "sound": {
+    "palette": "tech",
+    "intensity": 0.55,
+    "music": {
+      "bpm": 114,
+      "beats": [
+        0.389,
+        0.916,
+        1.442,
+        1.968,
+        2.495,
+        3.021,
+        3.547,
+        4.074,
+        4.6,
+        5.126,
+        5.653,
+        6.179,
+        6.705,
+        7.232,
+        7.758,
+        8.284,
+        8.811,
+        9.337,
+        9.863,
+        10.389,
+        10.916,
+        11.442,
+        11.968,
+        12.495,
+        13.021,
+        13.547,
+        14.074,
+        14.6,
+        15.126,
+        15.653,
+        16.179,
+        16.705,
+        17.232,
+        17.758,
+        18.284,
+        18.811,
+        19.337,
+        19.863,
+        20.389,
+        20.916,
+        21.442,
+        21.968,
+        22.495,
+        23.021,
+        23.547,
+        24.074,
+        24.6,
+        25.126,
+        25.653,
+        26.179,
+        26.705,
+        27.232,
+        27.758,
+        28.284,
+        28.811
+      ],
+      "key": "D minor",
+      "keyConfidence": 1
+    }
+  },
+  "scenes": [
+    {
+      "id": "line",
+      "duration": 4.55,
+      "background": {
+        "type": "spotlight",
+        "color": "#1a1233",
+        "base": "#07070a",
+        "x": 480,
+        "y": -216,
+        "size": 1250
+      },
+      "camera": {
+        "keyframes": [
+          {
+            "t": 0,
+            "zoom": 1.02
+          },
+          {
+            "t": 4.55,
+            "zoom": 1.07,
+            "ease": "inOut"
+          }
+        ]
+      },
+      "layers": [
+        {
+          "type": "text",
+          "text": "01 — THE BRIEF",
+          "font": "JetBrains Mono",
+          "weight": 500,
+          "fontSize": 22,
+          "color": "#7c7c8a",
+          "preset": "tracking",
+          "start": 0,
+          "x": -500,
+          "y": -250,
+          "letterSpacing": 0.22,
+          "align": "left",
+          "width": 760
+        },
+        {
+          "type": "text",
+          "text": "One line in.",
+          "font": "Geist",
+          "weight": 700,
+          "fontSize": 104,
+          "color": "#f5f5f7",
+          "preset": "blur-rise",
+          "start": 0.05,
+          "x": -500,
+          "y": -150,
+          "letterSpacing": -0.035,
+          "lineHeight": 1,
+          "align": "left",
+          "width": 760
+        },
+        {
+          "type": "text",
+          "text": "That is the whole prompt.",
+          "font": "Instrument Serif",
+          "weight": 400,
+          "italic": true,
+          "fontSize": 64,
+          "color": "#7c7c8a",
+          "preset": "blur-rise",
+          "start": 1.6,
+          "x": -500,
+          "y": -40,
+          "align": "left",
+          "width": 760,
+          "letterSpacing": -0.01
+        },
+        {
+          "type": "code",
+          "id": "brief",
+          "code": "import { make } from \"motion-studio\";\n\nawait make(\"a launch film for Orbit\");",
+          "language": "ts",
+          "title": "brief.ts",
+          "theme": "midnight",
+          "fontSize": 34,
+          "x": 400,
+          "y": -95,
+          "typingStart": 0.15,
+          "speed": 52,
+          "focus": [
+            {
+              "lines": [
+                3
+              ],
+              "at": 2.4
+            }
+          ],
+          "enter": {
+            "type": "rise",
+            "duration": 0.5
+          }
+        }
+      ]
+    },
+    {
+      "id": "render",
+      "duration": 4.55,
+      "background": {
+        "type": "spotlight",
+        "color": "#0b2230",
+        "base": "#07070a",
+        "x": -480,
+        "y": -216,
+        "size": 1250
+      },
+      "camera": {
+        "keyframes": [
+          {
+            "t": 0,
+            "zoom": 1
+          },
+          {
+            "t": 4.55,
+            "zoom": 1.05,
+            "ease": "inOut"
+          }
+        ]
+      },
+      "layers": [
+        {
+          "type": "text",
+          "text": "02 — RENDER",
+          "font": "JetBrains Mono",
+          "weight": 500,
+          "fontSize": 22,
+          "color": "#7c7c8a",
+          "preset": "tracking",
+          "start": 0.15,
+          "x": 500,
+          "y": -250,
+          "letterSpacing": 0.22,
+          "align": "left",
+          "width": 760
+        },
+        {
+          "type": "text",
+          "text": "A film out.",
+          "font": "Geist",
+          "weight": 700,
+          "fontSize": 104,
+          "color": "#f5f5f7",
+          "preset": "blur-rise",
+          "start": 0.2,
+          "x": 500,
+          "y": -150,
+          "letterSpacing": -0.035,
+          "lineHeight": 1,
+          "align": "left",
+          "width": 760
+        },
+        {
+          "type": "text",
+          "text": "Story, score, sound, captions.",
+          "font": "Instrument Serif",
+          "weight": 400,
+          "italic": true,
+          "fontSize": 64,
+          "color": "#7c7c8a",
+          "preset": "blur-rise",
+          "start": 2.25,
+          "x": 500,
+          "y": -40,
+          "align": "left",
+          "width": 760,
+          "letterSpacing": -0.01
+        },
+        {
+          "type": "code",
+          "id": "term",
+          "variant": "terminal",
+          "title": "zsh — orbit",
+          "fontSize": 30,
+          "x": -400,
+          "y": -95,
+          "typingStart": 0.3,
+          "speed": 44,
+          "code": "$ motion render --final\n→ story  · 6 beats, peak at 0:21\n→ score  · 128 bpm, drop on the reveal\n→ frames · 840 @ 1920×1080\n✓ sound design + captions\n✓ orbit-launch.mp4 · 28 s"
+        }
+      ],
+      "transition": {
+        "type": "blur-slide",
+        "direction": "left",
+        "duration": 0.5
+      }
+    },
+    {
+      "id": "how",
+      "duration": 6.7,
+      "background": [
+        {
+          "type": "solid",
+          "color": "#07070a"
+        },
+        {
+          "type": "grid",
+          "color": "rgba(139,92,246,0.10)",
+          "base": "#07070a",
+          "size": 64
+        }
+      ],
+      "camera": {
+        "keyframes": [
+          {
+            "t": 0,
+            "zoom": 1
+          },
+          {
+            "t": 6.7,
+            "zoom": 1.04,
+            "ease": "inOut"
+          }
+        ]
+      },
+      "fx": {
+        "vignette": 0.5
+      },
+      "layers": [
+        {
+          "type": "text",
+          "text": "03 — HOW IT WORKS",
+          "font": "JetBrains Mono",
+          "weight": 500,
+          "fontSize": 22,
+          "color": "#7c7c8a",
+          "preset": "tracking",
+          "letterSpacing": 0.22,
+          "y": -330,
+          "start": 0.1
+        },
+        {
+          "type": "text",
+          "text": "A director, an engine, a score.",
+          "font": "Instrument Serif",
+          "italic": true,
+          "fontSize": 66,
+          "color": "#f5f5f7",
+          "preset": "blur-rise",
+          "y": -260,
+          "start": 0.2
+        },
+        {
+          "type": "diagram",
+          "id": "flow",
+          "width": 1720,
+          "height": 520,
+          "y": 60,
+          "start": 0.35,
+          "fontSize": 25,
+          "color": "#8b5cf6",
+          "stagger": 0.3,
+          "nodes": [
+            {
+              "id": "brief",
+              "label": "Brief",
+              "sub": "one line",
+              "icon": "✍️"
+            },
+            {
+              "id": "director",
+              "label": "Director",
+              "sub": "Claude · story engine",
+              "icon": "🎬",
+              "color": "#f472b6"
+            },
+            {
+              "id": "spec",
+              "label": "Scene spec",
+              "sub": "JSON, versioned",
+              "icon": "{}"
+            },
+            {
+              "id": "engine",
+              "label": "Engine",
+              "sub": "Remotion · 3D",
+              "icon": "⚙️",
+              "color": "#22d3ee"
+            },
+            {
+              "id": "sound",
+              "label": "Score + SFX",
+              "sub": "on the beat",
+              "icon": "🎧",
+              "color": "#22d3ee"
+            },
+            {
+              "id": "film",
+              "label": "Film",
+              "sub": "every format",
+              "icon": "▶",
+              "color": "#a3e635"
+            }
+          ],
+          "edges": [
+            {
+              "from": "brief",
+              "to": "director"
+            },
+            {
+              "from": "director",
+              "to": "spec",
+              "label": "writes"
+            },
+            {
+              "from": "spec",
+              "to": "engine"
+            },
+            {
+              "from": "spec",
+              "to": "sound"
+            },
+            {
+              "from": "engine",
+              "to": "film"
+            },
+            {
+              "from": "sound",
+              "to": "film"
+            }
+          ],
+          "focus": [
+            {
+              "at": 2.9,
+              "nodes": [
+                "director",
+                "spec"
+              ]
+            },
+            {
+              "at": 4.6,
+              "nodes": [
+                "film"
+              ]
+            }
+          ]
+        }
+      ],
+      "transition": {
+        "type": "zoom-through",
+        "duration": 0.4
+      }
+    },
+    {
+      "id": "proof",
+      "duration": 5.9,
+      "background": {
+        "type": "spotlight",
+        "color": "#1d1030",
+        "base": "#07070a",
+        "x": 0,
+        "y": -378,
+        "size": 1250
+      },
+      "camera": {
+        "keyframes": [
+          {
+            "t": 0,
+            "zoom": 1
+          },
+          {
+            "t": 5.9,
+            "zoom": 1.04,
+            "ease": "inOut"
+          }
+        ]
+      },
+      "layers": [
+        {
+          "type": "text",
+          "text": "04 — PROOF",
+          "font": "JetBrains Mono",
+          "weight": 500,
+          "fontSize": 22,
+          "color": "#7c7c8a",
+          "preset": "tracking",
+          "letterSpacing": 0.22,
+          "y": -400,
+          "start": 0.15
+        },
+        {
+          "type": "chart",
+          "id": "speed",
+          "kind": "area",
+          "title": "Render time",
+          "subtitle": "seconds per 30 s film",
+          "delta": "−77%",
+          "deltaGood": "down",
+          "surface": "glass",
+          "width": 980,
+          "height": 600,
+          "x": -380,
+          "y": 40,
+          "start": 0.3,
+          "suffix": "s",
+          "color": "#8b5cf6",
+          "labels": [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct"
+          ],
+          "series": [
+            {
+              "name": "Render",
+              "values": [
+                180,
+                166,
+                151,
+                128,
+                117,
+                98,
+                81,
+                66,
+                52,
+                41
+              ]
+            }
+          ],
+          "annotate": [
+            {
+              "at": "Oct",
+              "text": "4× faster"
+            }
+          ]
+        },
+        {
+          "type": "chart",
+          "id": "checks",
+          "kind": "rings",
+          "title": "Craft checks",
+          "surface": "glass",
+          "width": 660,
+          "height": 600,
+          "x": 530,
+          "y": 40,
+          "start": 0.6,
+          "colors": [
+            "#f472b6",
+            "#22d3ee",
+            "#a3e635"
+          ],
+          "center": "story",
+          "data": [
+            {
+              "label": "Story",
+              "value": 94
+            },
+            {
+              "label": "Sound",
+              "value": 88
+            },
+            {
+              "label": "Safe zones",
+              "value": 100
+            }
+          ]
+        }
+      ],
+      "transition": {
+        "type": "slice",
+        "direction": "right",
+        "slices": 6,
+        "duration": 0.6
+      }
+    },
+    {
+      "id": "hear",
+      "duration": 4.95,
+      "background": [
+        {
+          "type": "solid",
+          "color": "#06060a"
+        },
+        {
+          "type": "mesh",
+          "colors": [
+            "#1b0f33",
+            "#071a24",
+            "#2a0f22"
+          ],
+          "base": "#06060a",
+          "speed": 0.5
+        }
+      ],
+      "camera": {
+        "punch": [
+          1.25,
+          2.6,
+          3.9
+        ]
+      },
+      "layers": [
+        {
+          "type": "visualizer",
+          "id": "orb",
+          "style": "orb",
+          "width": 760,
+          "height": 760,
+          "y": -10,
+          "colors": [
+            "#8b5cf6",
+            "#22d3ee"
+          ],
+          "sensitivity": 1.2
+        },
+        {
+          "type": "visualizer",
+          "id": "eq",
+          "style": "mirror",
+          "width": 1500,
+          "height": 120,
+          "y": 430,
+          "bars": 72,
+          "colors": [
+            "#22d3ee",
+            "#8b5cf6",
+            "#f472b6"
+          ],
+          "opacity": 0.8,
+          "sensitivity": 1.7
+        },
+        {
+          "type": "text",
+          "text": "05 — SOUND",
+          "font": "JetBrains Mono",
+          "weight": 500,
+          "fontSize": 22,
+          "color": "#7c7c8a",
+          "preset": "tracking",
+          "letterSpacing": 0.22,
+          "y": -420,
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "Score.",
+          "font": "Geist",
+          "weight": 700,
+          "fontSize": 150,
+          "color": "#ffffff",
+          "preset": "pop",
+          "letterSpacing": -0.04,
+          "shadow": "drop-shadow(0 6px 30px rgba(10,6,30,0.55))",
+          "start": 0.5,
+          "duration": 1.25,
+          "exitPreset": "blur-out",
+          "exitAt": 1.05
+        },
+        {
+          "type": "text",
+          "text": "Sound.",
+          "font": "Geist",
+          "weight": 700,
+          "fontSize": 150,
+          "color": "#ffffff",
+          "preset": "pop",
+          "letterSpacing": -0.04,
+          "shadow": "drop-shadow(0 6px 30px rgba(10,6,30,0.55))",
+          "start": 1.8,
+          "duration": 1.25,
+          "exitPreset": "blur-out",
+          "exitAt": 1.05
+        },
+        {
+          "type": "text",
+          "text": "Voice.",
+          "font": "Geist",
+          "weight": 700,
+          "fontSize": 150,
+          "color": "#ffffff",
+          "preset": "pop",
+          "letterSpacing": -0.04,
+          "shadow": "drop-shadow(0 6px 30px rgba(10,6,30,0.55))",
+          "start": 3.1,
+          "duration": 1.6
+        }
+      ],
+      "transition": {
+        "type": "zoom-through",
+        "duration": 0.4
+      }
+    },
+    {
+      "id": "end",
+      "duration": 4.75,
+      "background": {
+        "type": "spotlight",
+        "color": "#1a1233",
+        "base": "#07070a",
+        "x": 0,
+        "y": -108,
+        "size": 1250
+      },
+      "camera": {
+        "keyframes": [
+          {
+            "t": 0,
+            "zoom": 1
+          },
+          {
+            "t": 4.75,
+            "zoom": 1.06,
+            "ease": "inOut"
+          }
+        ]
+      },
+      "fx": {
+        "grain": 0.04,
+        "vignette": 0.35
+      },
+      "layers": [
+        {
+          "type": "particles",
+          "preset": "dust",
+          "count": 60,
+          "colors": [
+            "#8b5cf6",
+            "#22d3ee",
+            "#ffffff"
+          ],
+          "opacity": 0.55
+        },
+        {
+          "type": "text",
+          "id": "wordmark",
+          "text": "Motion Studio",
+          "font": "Geist",
+          "weight": 700,
+          "fontSize": 176,
+          "color": "#f5f5f7",
+          "preset": "mask-up",
+          "letterSpacing": -0.05,
+          "y": -50,
+          "start": 0.15,
+          "gradient": [
+            "#ffffff",
+            "#c4b5fd",
+            "#67e8f9"
+          ]
+        },
+        {
+          "type": "text",
+          "text": "From one line to a film.",
+          "font": "Instrument Serif",
+          "italic": true,
+          "fontSize": 70,
+          "color": "#7c7c8a",
+          "preset": "blur-rise",
+          "y": 90,
+          "start": 0.85
+        },
+        {
+          "type": "code",
+          "variant": "plain",
+          "code": "$ npx motion-studio",
+          "language": "bash",
+          "fontSize": 26,
+          "y": 230,
+          "start": 1.6,
+          "typingStart": 0.1,
+          "speed": 30
+        }
+      ],
+      "transition": {
+        "type": "flash",
+        "color": "#ffffff",
+        "duration": 0.3
+      }
+    }
+  ],
+  "audio": {
+    "src": "assets/music-tech-v0-114bpm-29s.wav",
+    "volume": 0.8,
+    "fadeOut": 0.4,
+    "credit": {
+      "source": "Motion Studio",
+      "license": "Original score composed for this film (procedural; no third-party rights)",
+      "commercial": true
+    }
+  }
+}
