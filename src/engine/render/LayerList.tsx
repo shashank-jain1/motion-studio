@@ -9,7 +9,7 @@ import {
   repeatCopy, resolveVelocityFx, velocityLook,
 } from "../core/physics";
 import { SHADOW_PREMIUM, useColor } from "../core/context";
-import { useCamera, useContainer } from "../core/container";
+import { SiblingsProvider, type Siblings, useCamera, useContainer } from "../core/container";
 import { renderLayerContent } from "./registry";
 
 type Index = ReturnType<typeof buildLayerIndex>;
@@ -177,8 +177,20 @@ export const LayerList: React.FC<{ layers: Layer[]; sceneDuration?: number }> = 
   };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const layerIndex = useMemo(() => buildLayerIndex(layers, durationOf), [layers, sceneDuration]);
+  const siblings = useMemo<Siblings>(() => ({
+    transformAt: (id, listT) => {
+      const r = layerIndex.resolve(id);
+      if (!r) return null;
+      const tr = computeLayerTransform(r.layer, listT - r.start, r.duration, { fps, start: r.start, resolve: layerIndex.hasCycle(id) ? undefined : layerIndex.resolve });
+      return { x: tr.x, y: tr.y, scale: tr.scale };
+    },
+    layerOf: (id) => {
+      const r = layerIndex.resolve(id);
+      return r ? { layer: r.layer, start: r.start } : null;
+    },
+  }), [layerIndex, fps]);
   return (
-    <>
+    <SiblingsProvider value={siblings}>
       {layers.map((layer, i) => {
         const start = layer.start ?? 0;
         const dur = durationOf(layer);
@@ -188,6 +200,6 @@ export const LayerList: React.FC<{ layers: Layer[]; sceneDuration?: number }> = 
           </Sequence>
         );
       })}
-    </>
+    </SiblingsProvider>
   );
 };

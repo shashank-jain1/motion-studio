@@ -160,6 +160,7 @@ export const estimateBox = (l: Any, W: number, H: number): Box => {
     case "code": { const b = codeBox(l as never); return { w: b.w, h: b.h }; }
     case "visualizer": { const b = visualizerBox(l as never); return { w: b.w, h: b.h }; }
     case "toggle": return { w: l.width ?? 280, h: l.height ?? 132 };
+    case "slider": return { w: l.width ?? 640, h: Math.max(l.knob ?? 36, l.thickness ?? 12) + (l.bubble ? 70 : 0) };
     case "group": {
       const kids: Any[] = Array.isArray(l.layers) ? l.layers : [];
       if (!kids.length) return { w: 1, h: 1 };

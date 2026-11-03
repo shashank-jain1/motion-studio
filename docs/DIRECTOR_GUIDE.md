@@ -418,8 +418,10 @@ cheapest quality lever there is: it removes the moves that make a film look like
 - **Springs, not curves.** Use `ease: "physical"` (≈1.5% overshoot, UI-grade) for anything that lands, `physicalLoose` only when
   the brief allows bounce. Give a key a `settle` longer than the gap to the next key and the next key retargets the spring
   mid-flight — it keeps its velocity instead of stopping dead. That's the difference between "keyframed" and "alive".
-- **Direct manipulation.** A cursor (`type: "cursor"` with `clicks`) causes every UI change; values follow the cursor while
-  it's held and spring back on release.
+- **Direct manipulation.** A cursor (`type: "cursor"` with `clicks`) causes every UI change. For drags give the cursor
+  `drags` and bind a `slider` to it (`cursor: "<id>"`): the value follows the pointer while held, rubber-bands past the end
+  and springs back on release. Tab indicators use `glide` so they stretch toward the next tab (KIT_REFERENCE "Direct manipulation").
+- **Hold keys.** Every key — eased or `physical` — starts moving at the previous key. To hold a position, repeat it on a key.
 - **Text that swaps inside a morphing container** gets its own exit and enter (exit first, enter ~0.1 s later) or the two words
   overlap mid-morph.
 - **Sound by measured peak** on the grid, quiet under the music (`spec.sound` does this; keep `restraint` high).

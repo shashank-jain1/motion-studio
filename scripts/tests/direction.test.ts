@@ -108,3 +108,38 @@ const dense = spec({
 assert.deepEqual(directionWarnings(dense), [], "a change on every beat passes");
 
 console.log("direction: ok");
+
+// --- direct manipulation: glide, slider drags ------------------------------------------------------------------------------
+{
+  const { glideBox, sliderAt, rubber } = await import("../../src/engine/core/interaction");
+  const stops = [{ at: 0, x: 0, width: 100 }, { at: 1, x: 400 }];
+  const rest = glideBox(stops, 0.5, { w: 100, h: 40 });
+  assert.deepEqual([rest.left, rest.right], [-50, 50], "rests on its first stop");
+  const mid = glideBox(stops, 1.15, { w: 100, h: 40 });
+  assert.ok(mid.right - mid.left > 160, `stretches while travelling (${(mid.right - mid.left).toFixed(0)}px)`);
+  assert.ok(mid.right > mid.left + 100 && mid.right > 300, "the leading (right) edge pulls ahead");
+  const end = glideBox(stops, 4, { w: 100, h: 40 });
+  assert.ok(Math.abs(end.left - 350) < 0.5 && Math.abs(end.right - 450) < 0.5, "settles at the stop with its own width");
+  const back = glideBox([...stops, { at: 2, x: 0 }], 2.15, { w: 100, h: 40 });
+  assert.ok(back.left < 350 - 40 && back.right - back.left > 150, "moving left: the left edge leads");
+  assert.equal(glideBox(stops, 1.15, { w: 100, h: 40 }).top, -20, "no vertical stretch for a horizontal move");
+
+  assert.equal(rubber(0.5), 0.5);
+  assert.ok(rubber(2) > 1 && rubber(2) < 1.3 && rubber(100) < 1.3, "rubber band is bounded");
+  assert.ok(rubber(-1) < 0 && rubber(-1) > -0.3);
+
+  // pointer moves from 0.2 → 1.6 of the track while held 1..2, released at 2
+  const raw = (t: number) => 0.2 + Math.max(0, Math.min(1, t - 1)) * 1.4;
+  const at = (t: number) => sliderAt({ t, initial: 0.1, drags: [{ at: 1, until: 2 }], raw });
+  assert.equal(at(0.5).value, 0.1, "untouched before the grab");
+  assert.ok(at(1.5).held && Math.abs(at(1.5).value - 0.9) < 1e-9, "follows the pointer while held");
+  assert.ok(at(2).value > 1.05, `stretched past max at release (${at(2).value.toFixed(3)})`);
+  const v = at(2.05).value;
+  assert.ok(!at(2.05).held && v < at(2).value && v > 1, "springs back after release, continuously");
+  assert.ok(Math.abs(at(4).value - 1) < 1e-3, "rests at max");
+  // values retarget with a spring; a later value takes over mid-flight with no jump
+  const sv = (t: number) => sliderAt({ t, values: [{ at: 0, value: 1 }, { at: 0.2, value: 0.4 }] }).value;
+  assert.ok(Math.abs(sv(0.2) - sv(0.2001)) < 0.01, "no jump at a retarget");
+  assert.ok(Math.abs(sv(3) - 0.4) < 1e-3);
+}
+console.log("direct manipulation: ok");

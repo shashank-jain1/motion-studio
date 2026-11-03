@@ -73,10 +73,10 @@ they are different registers, and the restrained one is what reads as cinematic.
 | Banned list, never-cut, hero element, loop, every beat | `concept.direction` + the direction linter (`src/core/direction.ts`), reported by `set_spec` as `direction/*` warnings |
 | Inputs → storyboard on the grid → probe per beat | DIRECTOR_GUIDE §15 |
 | Already present | beat-time strings (`"beat:N"`), cursor/selection/toggle layers, morph + actors (continuity), motion blur, sound placed by peak with restraint, `story.mnemonic.loop` |
+| Two-edge stretch (indicators, toggle knobs) | shape `glide` (`glideBox`), toggle thumb |
+| Direct-manipulation drags | cursor `drags` + `slider` bound to the cursor (`sliderAt`: follow, rubber band, spring back) |
 
 ## Open next steps
 
-- Two-edge stretch for indicators and pills (leading/trailing edges on different springs) as a shape option.
-- Direct-manipulation drags: a cursor `drag` whose path drives a bound value (slider, scrub) and springs back on release.
 - An evaluation harness: run the director on paraphrased briefs per tag and score the result with the linter + frame probes
   (local only; uses the export as a reference, never as product content).

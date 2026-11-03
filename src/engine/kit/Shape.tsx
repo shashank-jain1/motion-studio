@@ -2,6 +2,7 @@ import React from "react";
 import type { z } from "zod";
 import type { ShapeLayer } from "../spec/schema";
 import { progress } from "../core/animate";
+import { glideBox } from "../core/interaction";
 import { useColor } from "../core/context";
 
 type Props = { layer: z.infer<typeof ShapeLayer>; t: number; duration: number };
@@ -32,6 +33,15 @@ export const Shape: React.FC<Props> = ({ layer, t }) => {
   if (layer.shape === "rect" || layer.shape === "circle" || layer.shape === "blob") {
     const bg = layer.gradient ? `linear-gradient(135deg, ${layer.gradient.map((c) => color(c)).join(", ")})` : color(layer.color, "$accent");
     const r = layer.shape === "circle" ? "50%" : layer.shape === "blob" ? `${42 + 8 * Math.sin(t * 2)}% ${58 - 8 * Math.sin(t * 1.6)}% ${52 + 6 * Math.cos(t * 1.3)}% ${48 - 6 * Math.sin(t)}% / ${55 + 7 * Math.sin(t * 1.1)}% ${45 - 5 * Math.cos(t * 1.7)}% ${55 + 5 * Math.sin(t * 1.4)}% ${45 - 7 * Math.cos(t)}%` : (layer.radius ?? 0);
+    if (layer.glide) {
+      // liquid indicator: edges on different springs (src/engine/core/interaction.ts glideBox)
+      const g = layer.glide, box = glideBox(g.stops, t, { w: W, h: H }, g.lead, g.trail);
+      const bw = box.right - box.left, bh = box.bottom - box.top;
+      return <div style={{ position: "relative", width: W, height: H }}>
+        <div style={{ position: "absolute", left: W / 2 + box.left, top: H / 2 + box.top, width: bw, height: bh, background: bg,
+          borderRadius: layer.shape === "rect" ? (layer.radius ?? 0) : Math.min(bw, bh) / 2, border: layer.stroke ? `${sw || 2}px solid ${color(layer.stroke)}` : undefined }} />
+      </div>;
+    }
     return <div style={{ width: W, height: H, background: bg, borderRadius: r, border: layer.stroke ? `${sw || 2}px solid ${color(layer.stroke)}` : undefined, boxShadow: glow ? `0 0 ${W * 0.15}px ${glow}` : undefined }} />;
   }
 

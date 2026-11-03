@@ -142,7 +142,10 @@ const eventTimes = (spec: Spec, layers: Visit[]): number[] => {
   for (const { layer: l, start } of layers) {
     ts.push(start + (l.enter?.delay ?? 0));
     for (const k of l.animate ?? []) ts.push(start + k.t);
-    if (l.type === "cursor") for (const c of l.clicks ?? []) ts.push(start + c);
+    if (l.type === "cursor") for (const c of [...(l.clicks ?? []), ...(l.drags ?? []).flatMap((d) => [d.at, d.until])]) ts.push(start + c);
+    if (l.type === "toggle") for (const st of l.states) ts.push(start + st.at);
+    if (l.type === "slider") for (const v of l.values ?? []) ts.push(start + v.at);
+    if (l.type === "shape") for (const g of l.glide?.stops ?? []) ts.push(start + g.at);
     if (l.type === "counter" || l.type === "chart" || l.type === "code") ts.push(start + 0.5);
   }
   spec.scenes.forEach((s, i) => {
