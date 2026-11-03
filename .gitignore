@@ -38,3 +38,4 @@ projects/*/assets/*.transcript.json
 
 # macOS Finder metadata
 .DS_Store
+evals/results/

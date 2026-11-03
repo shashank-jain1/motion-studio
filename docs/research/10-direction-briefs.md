@@ -76,7 +76,22 @@ they are different registers, and the restrained one is what reads as cinematic.
 | Two-edge stretch (indicators, toggle knobs) | shape `glide` (`glideBox`), toggle thumb |
 | Direct-manipulation drags | cursor `drags` + `slider` bound to the cursor (`sliderAt`: follow, rubber band, spring back) |
 
-## Open next steps
+| Measuring the director | `scripts/eval-director.ts` + `src/core/evalScore.ts` + `evals/briefs.json` (below) |
 
-- An evaluation harness: run the director on paraphrased briefs per tag and score the result with the linter + frame probes
-  (local only; uses the export as a reference, never as product content).
+## Evaluating the director
+
+`evals/briefs.json` holds ten original briefs (written for Motion Studio, one per category: UI, kinetic type, charts,
+diagrams, code, music, shapes, phone, 3D, photos), each with its hard rules for `concept.direction`.
+
+```bash
+pnpm eval run                      # director on every brief (needs an Anthropic API key) → score + contact sheet each
+pnpm eval run --only chart-proof   # one brief
+pnpm eval score <projectId> ...    # score existing projects offline
+```
+
+Reports land in `evals/results/<stamp>/` (gitignored): `report.md` (table + sheets + score breakdown) and `report.json`.
+The score starts at 100 and subtracts: 8 per direction-rule break, 5 per story error, 2 per craft warning, 1 per story
+warning (each capped), up to 10 for a dead stretch over 2 s, 6 for no continuity, 4 for under one change per second. It
+also reports the share of keys on physical springs. Compare averages before/after a guide or engine change.
+
+Baseline (offline, existing showcase films, 2026-11-03): average 82.2 over six films; none used physical springs yet.

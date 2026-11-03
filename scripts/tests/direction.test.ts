@@ -143,3 +143,15 @@ console.log("direction: ok");
   assert.ok(Math.abs(sv(3) - 0.4) < 1e-3);
 }
 console.log("direct manipulation: ok");
+
+// --- eval score ----------------------------------------------------------------------------------------------------------
+{
+  const { scoreSpec } = await import("../../src/core/evalScore");
+  assert.equal(scoreSpec({ scenes: [] }).score, 0, "invalid spec scores 0");
+  const good = scoreSpec(dense);
+  const bad = scoreSpec(busy);
+  assert.ok(good.valid && good.score > bad.score, `clean beat-dense film beats a banned-technique film (${good.score} vs ${bad.score})`);
+  assert.ok(bad.warnings.direction >= 6 && bad.breakdown.some((b) => /direction/.test(b)));
+  assert.equal(scoreSpec(sparse).motion.longestGap, 4.5);
+}
+console.log("eval score: ok");

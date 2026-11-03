@@ -6,6 +6,8 @@
  */
 import { BANNABLE, type Layer, type Scene, type Spec } from "../engine/spec/schema";
 import { sceneTimeline } from "../engine/spec/preprocess";
+import { chartTiming } from "../engine/kit/chart/model";
+import { typingSchedule } from "../engine/kit/code/typing";
 
 type Ban = (typeof BANNABLE)[number];
 type Hit = { where: string; what: string };
@@ -17,21 +19,22 @@ const BOUNCY_ENTERS = new Set(["drop-bounce", "pop", "swing"]);
 const BURSTS = new Set(["burst", "confetti", "sparkles"]);
 const FLIPS = new Set(["flip-up", "flip-side", "flip", "book-flip"]);
 
-type Visit = { layer: Layer; where: string; start: number };
+type Visit = { layer: Layer; where: string; start: number; end: number };
 /** Every layer (groups and device screens flattened) with a readable location and its film start time. */
-const allLayers = (spec: Spec): Visit[] => {
+export const allLayers = (spec: Spec): Visit[] => {
   const out: Visit[] = [];
   const slots = sceneTimeline(spec.scenes, spec.fps).scenes;
-  const walk = (layers: Layer[], where: string, start: number) => {
+  const walk = (layers: Layer[], where: string, start: number, end: number) => {
     layers.forEach((l, i) => {
-      const at = `${where}/${l.id ?? `${l.type}#${i}`}`, s = start + (l.start ?? 0);
-      out.push({ layer: l, where: at, start: s });
-      if (l.type === "group") walk(l.layers, at, s);
-      if (l.type === "device") for (const sc of l.screens ?? []) if (sc.layers) walk(sc.layers as Layer[], at, s + (sc.at ?? 0));
+      const at = `${where}/${l.id ?? `${l.type}#${i}`}`, s = start + (l.start ?? 0), e = l.duration ? Math.min(end, s + l.duration) : end;
+      out.push({ layer: l, where: at, start: s, end: e });
+      if (l.type === "group") walk(l.layers, at, s, e);
+      if (l.type === "device") for (const sc of l.screens ?? []) if (sc.layers) walk(sc.layers as Layer[], at, s + (sc.at ?? 0), e);
     });
   };
-  spec.scenes.forEach((sc, i) => walk(sc.layers, sc.id ?? `scene ${i + 1}`, slots[i]?.start ?? 0));
-  for (const a of spec.actors ?? []) out.push({ layer: a.layer as Layer, where: `actor ${a.id}`, start: 0 });
+  spec.scenes.forEach((sc, i) => walk(sc.layers, sc.id ?? `scene ${i + 1}`, slots[i]?.start ?? 0, slots[i]?.end ?? 0));
+  const total = slots.length ? slots[slots.length - 1].end : 0;
+  for (const a of spec.actors ?? []) out.push({ layer: a.layer as Layer, where: `actor ${a.id}`, start: 0, end: total });
   return out;
 };
 
@@ -136,17 +139,28 @@ const FIX: Record<Ban, string> = {
 };
 
 /** Seconds at which something visibly starts changing (layer starts, keyframes, camera keys, clicks, transitions, actor moves). */
-const eventTimes = (spec: Spec, layers: Visit[]): number[] => {
+export const eventTimes = (spec: Spec, layers: Visit[] = allLayers(spec)): number[] => {
   const slots = sceneTimeline(spec.scenes, spec.fps).scenes;
   const ts: number[] = [];
-  for (const { layer: l, start } of layers) {
+  const grid = beatGrid(spec, sceneTimeline(spec.scenes, spec.fps).totalFrames / spec.fps);
+  for (const { layer: l, start, end } of layers) {
     ts.push(start + (l.enter?.delay ?? 0));
     for (const k of l.animate ?? []) ts.push(start + k.t);
     if (l.type === "cursor") for (const c of [...(l.clicks ?? []), ...(l.drags ?? []).flatMap((d) => [d.at, d.until])]) ts.push(start + c);
     if (l.type === "toggle") for (const st of l.states) ts.push(start + st.at);
     if (l.type === "slider") for (const v of l.values ?? []) ts.push(start + v.at);
     if (l.type === "shape") for (const g of l.glide?.stops ?? []) ts.push(start + g.at);
-    if (l.type === "counter" || l.type === "chart" || l.type === "code") ts.push(start + 0.5);
+    // layers that keep changing on their own: every line typed, every bar landing, the count, each morph shape
+    if (l.type === "code") for (const at of typingSchedule(l).lineAt) ts.push(start + at);
+    if (l.type === "chart") for (const sp of chartTiming(l).items) ts.push(start + sp.start, start + sp.end);
+    if (l.type === "counter") ts.push(start + 0.5, start + ((l as { duration?: number }).duration ?? 1.5));
+    if (l.type === "morph") for (const sh of l.shapes) ts.push(start + sh.at);
+    if (l.type === "diagram") for (const f of l.focus ?? []) ts.push(start + f.at);
+    // a music visualizer moves with the track: it changes on every beat it is on screen (every 0.5 s without a grid)
+    if (l.type === "visualizer") {
+      const beats = grid.length ? grid : Array.from({ length: Math.ceil((end - start) * 2) }, (_, i) => start + i * 0.5);
+      for (const b of beats) if (b >= start && b <= end) ts.push(b);
+    }
   }
   spec.scenes.forEach((s, i) => {
     const s0 = slots[i]?.start ?? 0;
