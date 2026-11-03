@@ -668,6 +668,9 @@ export const FxSchema = z.object({
   chromatic: z.number().optional().describe("px of RGB split"),
   lightLeak: z.number().optional().describe("0..1"),
   letterbox: z.number().optional().describe("bar height as fraction of height, e.g. 0.1"),
+  grade: z.enum(["teal-orange", "warm-film", "golden-hour", "night-lake", "bleach", "noir"]).optional()
+    .describe("film color grade over the whole scene (blend layers): teal-orange blockbuster · warm-film 35mm · golden-hour · night-lake (cool blue dusk) · bleach (bleach-bypass, desaturated contrast) · noir (b&w)"),
+  gradeAmount: z.number().min(0).max(1).optional().describe("grade strength, default 0.7"),
   scanlines: z.number().optional(),
   flashes: z.array(z.object({ at: z.number(), color: z.string().optional(), duration: z.number().optional(), intensity: z.number().optional() })).optional(),
 });

@@ -43,7 +43,13 @@ export const KineticText: React.FC<Props> = ({ layer, t, duration }) => {
   const family = font(layer.font, "display");
   const baseFontSize = layer.fontSize ?? 120;
   const weight = layer.weight ?? 700;
-  const lineHeight = layer.lineHeight ?? 1.08;
+  // Indic scripts (Devanagari etc.) carry vowel marks above the headline bar and below the baseline: they need a taller
+  // line and wider mask windows than Latin, or the marks are clipped / lines collide.
+  const indic = /[\u0900-\u0DFF]/.test(String(layer.text ?? ""));
+  const lineHeight = layer.lineHeight ?? (indic ? 1.42 : 1.08);
+  const MASK: React.CSSProperties = indic
+    ? { overflow: "hidden", display: "inline-block", verticalAlign: "top", paddingTop: "0.34em", marginTop: "-0.34em", paddingBottom: "0.26em", marginBottom: "-0.26em" }
+    : { overflow: "hidden", display: "inline-block", verticalAlign: "top", paddingTop: "0.1em", marginTop: "-0.1em", paddingBottom: "0.08em", marginBottom: "-0.08em" };
   const autoFit = layer.fit ?? (layer.maxWidth === undefined && layer.width === undefined);
 
   // Slot preset: the last word rolls through alternatives -----------------------------------
@@ -137,7 +143,10 @@ export const KineticText: React.FC<Props> = ({ layer, t, duration }) => {
     words.forEach((w) => {
       if (w.length === 0) return;
       const isSpace = /^\s+$/.test(w);
-      if (by === "char" && !isSpace) {
+      if (by === "char" && !isSpace && /[\u0900-\u0DFF]/.test(w)) {
+        // Indic words never split: separate spans break conjuncts and detach vowel signs (dotted circles)
+        units.push({ text: w, line: li, word: wordCounter, idx: idx++, isSpace: false });
+      } else if (by === "char" && !isSpace) {
         for (const ch of Array.from(w)) units.push({ text: ch, line: li, word: wordCounter, idx: idx++, isSpace: false });
       } else if (by === "line") {
         units.push({ text: w, line: li, word: wordCounter, idx: li, isSpace });
@@ -174,7 +183,7 @@ export const KineticText: React.FC<Props> = ({ layer, t, duration }) => {
         break;
       case "mask-up": case "slot": {
         const pe = progress(t, start, unitDur, "outExpo");
-        outer = { overflow: "hidden", display: "inline-block", verticalAlign: "top", paddingBottom: "0.08em", marginBottom: "-0.08em" };
+        outer = MASK;
         s = { transform: `translateY(${(1 - pe) * 110}%) rotate(${(1 - pe) * 4}deg)`, transformOrigin: "left bottom" };
         break;
       }
@@ -303,7 +312,7 @@ export const KineticText: React.FC<Props> = ({ layer, t, duration }) => {
         s = { ...s, opacity: 1 - ex, transform: `${prev} translate(${Math.cos(a) * ex * 3}em, ${Math.sin(a) * ex * 3}em) rotate(${(random(`r${charIndex}`) - 0.5) * 360 * ex}deg)` };
       }
       if (ep === "mask-down") {
-        outer = { overflow: "hidden", display: "inline-block", verticalAlign: "top", paddingBottom: "0.08em", marginBottom: "-0.08em" };
+        outer = MASK;
         s = { ...s, transform: `${prev} translateY(${ex * 110}%)` };
       }
     }
@@ -348,10 +357,12 @@ export const KineticText: React.FC<Props> = ({ layer, t, duration }) => {
     maxWidth: layer.maxWidth ?? layer.width,
     whiteSpace: "pre-wrap",
     WebkitTextStroke: layer.stroke ? `${layer.stroke.width}px ${color(layer.stroke.color)}` : undefined,
-    textShadow: layer.glow
-      ? (() => { const g = color(typeof layer.glow === "string" ? layer.glow : "$accent"); return `0 0 ${fontSize * 0.15}px ${g}, 0 0 ${fontSize * 0.45}px ${g}`; })()
-      : undefined,
   };
+  // Glow is a filter on the whole block, not a per-glyph text-shadow: mask presets clip each word to a window, which
+  // would cut a per-glyph glow into a visible rectangle around the text.
+  const glowFilter = layer.glow
+    ? (() => { const g = color(typeof layer.glow === "string" ? layer.glow : "$accent"); return `drop-shadow(0 0 ${fontSize * 0.08}px ${g}) drop-shadow(0 0 ${fontSize * 0.25}px ${g})`; })()
+    : undefined;
   if (preset === "tracking") {
     const p = progress(t, 0, unitDur * 1.6, "outExpo");
     container.letterSpacing = `${lerp(0.6, layer.letterSpacing ?? -0.02, p)}em`;
@@ -608,7 +619,7 @@ export const KineticText: React.FC<Props> = ({ layer, t, duration }) => {
   }
 
   return (
-    <div ref={containerRef} style={{ ...container, position: "relative" }}>
+    <div ref={containerRef} style={{ ...container, filter: [container.filter, glowFilter].filter(Boolean).join(" ") || undefined, position: "relative" }}>
       {measure}
       {body}
       {glitchLayers}
