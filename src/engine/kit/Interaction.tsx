@@ -105,7 +105,7 @@ export const Slider: React.FC<{ layer: z.infer<typeof SliderLayer>; t: number }>
     {b && shown > 0.001 && <div style={{ position: "absolute", left: kx, bottom: H / 2 + knob / 2 + 14, opacity: shown,
       transform: `translateX(-50%) translateY(${(1 - shown) * 8}px)`, padding: "6px 12px", borderRadius: 999, background: fill, color: "white",
       font: `600 ${Math.max(14, knob * 0.5)}px ${font(undefined, "body")}`, fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap" }}>
-      {(b.prefix ?? "") + num.toFixed(b.decimals ?? 0) + (b.suffix ?? "")}
+      {(b.prefix ?? "") + num.toLocaleString("en-US", { useGrouping: b.group !== false, minimumFractionDigits: b.decimals ?? 0, maximumFractionDigits: b.decimals ?? 0 }) + (b.suffix ?? "")}
     </div>}
   </div>;
 };

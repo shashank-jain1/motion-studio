@@ -292,6 +292,7 @@ export const SliderLayer = z.object({
   bubble: z.object({
     min: z.number().optional(), max: z.number().optional(), decimals: z.number().int().min(0).max(4).optional(),
     prefix: z.string().optional(), suffix: z.string().optional(), show: z.enum(["always", "drag"]).optional(),
+    group: z.boolean().optional().describe("thousands separators (8,720), default true"),
   }).optional().describe("value bubble above the knob: min + value·(max−min), default 0–100"),
   settle: z.number().positive().optional().describe("spring settle seconds after a release or value change, default 0.45"),
 });

@@ -1,0 +1,34 @@
+{
+  "gdg-cloud-bhopal.png": {
+    "mtimeMs": 1793702586349.462,
+    "size": 188936,
+    "info": {
+      "path": "assets/gdg-cloud-bhopal.png",
+      "file": "/home/shashank/motion-studio/projects/devfest-bhopal-2026-the-full-stop-632b/assets/gdg-cloud-bhopal.png",
+      "kind": "image",
+      "sizeBytes": 188936,
+      "width": 6596,
+      "height": 943,
+      "hasAlpha": true,
+      "palette": [
+        "#171817",
+        "#308f5a",
+        "#3f7ee5",
+        "#e8741b",
+        "#4c3e2d"
+      ]
+    }
+  },
+  "music-minimal-v0-120bpm-22s.wav": {
+    "mtimeMs": 1793702877329.4531,
+    "size": 4224044,
+    "info": {
+      "path": "assets/music-minimal-v0-120bpm-22s.wav",
+      "file": "/home/shashank/motion-studio/projects/devfest-bhopal-2026-the-full-stop-632b/assets/music-minimal-v0-120bpm-22s.wav",
+      "kind": "audio",
+      "sizeBytes": 4224044,
+      "duration": 22,
+      "hasAudio": true
+    }
+  }
+}

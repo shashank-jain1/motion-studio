@@ -30,7 +30,8 @@ const execFileP = promisify(execFile);
 /** OpenGL backend for headless Chrome. "angle" is fastest where supported; try "swangle" if WebGL fails. */
 export const RENDER_GL: NonNullable<ChromiumOptions["gl"]> = (process.env.MOTION_STUDIO_GL as ChromiumOptions["gl"]) || "angle";
 export const RENDER_LOG_LEVEL: LogLevel = "warn";
-export const RENDER_CONCURRENCY = Math.max(1, Math.floor(os.cpus().length / 3));
+/** Parallel Chrome tabs per render; MOTION_STUDIO_RENDER_CONCURRENCY lowers it on memory-tight machines. */
+export const RENDER_CONCURRENCY = Math.max(1, Number(process.env.MOTION_STUDIO_RENDER_CONCURRENCY) || Math.floor(os.cpus().length / 3));
 export const COMPOSITION_ID = "Spec";
 
 const chromiumOptions: ChromiumOptions = { gl: RENDER_GL };
