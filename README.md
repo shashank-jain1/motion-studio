@@ -50,6 +50,26 @@ Visual edits rewrite the Spec editor's text, so Save, validation and the directo
 do for typed edits. Nothing is written to disk until you save. The model lives in `web/src/lib/specEdit.ts` and is tested by
 `npm run test:edit`.
 
+## Data, diagrams, code and music visuals (Phase 9)
+
+Four layer types for the kinds of motion pieces people make most (product UI, charts, diagrams, code, music), with one
+shared modern finish: frosted glass panels, accent glows, tabular numbers that count, motion that settles.
+
+- **`chart`** — bar, ranked hbar, line, area, donut, pie and Activity-style rings. Bars grow with a small settle, lines draw with a
+  glowing head and a live value tag, donuts sweep; `highlight` makes one item carry the story, `annotate` lands a callout,
+  `delta` adds a ▲/▼ badge (`deltaGood` says which way is good news).
+- **`diagram`** — flow / architecture diagrams with automatic layout (ranked left→right, top→down, radial hub, or manual),
+  curved / orthogonal connectors that draw into each node as it arrives, flowing data packets, and `focus` beats that light
+  the nodes the voiceover is talking about.
+- **`code`** — an editor window (file tab, line numbers, 20-language syntax colors), a terminal (typed commands, tinted ✓ / ✗
+  output) or a frosted card. Human-rhythm typing with auto-indent, a caret that scrolls the view, line focus and diff rows.
+- **`visualizer`** — reacts to the film's real soundtrack (FFT per frame, locked to the film clock in the Player and in renders):
+  spectrum bars with a reflection, mirrored EQ, layered waves, a radial ring, a liquid orb, or an LED matrix.
+
+Auto sound follows them (bars tick as they land, keys click with the real typing schedule, Enter on terminal commands), the
+linter keeps them readable (items per chart, nodes per diagram, line length, hold after the data lands, panel edges in the
+safe zone), and four new shot recipes start from them: `data-proof`, `how-it-works`, `terminal-ship`, `beat-visualizer`.
+
 ## Free music, fitted and licensed (Phase 8)
 
 Background music without paying, and without breaking a license:

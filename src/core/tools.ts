@@ -766,9 +766,9 @@ export const TOOLS: ToolDef[] = [
   }),
   defineTool({
     name: "motion_recipes", title: "Motion recipes", scope: "global",
-    description: "Browse eight editable, choreographed shot recipes with sound anchors, energy and rendering cost. Use before designing premium motion; each recipe is a starting point to art-direct, not a whole film.",
+    description: "Browse twelve editable, choreographed shot recipes with sound anchors, energy and rendering cost (incl. data proof, how-it-works diagram, terminal ship, beat visualizer). Use before designing premium motion; each recipe is a starting point to art-direct, not a whole film.",
     shape: {},
-    handler: async () => ({ content: [json(MOTION_RECIPES)], summary: "8 motion recipes · 2D, 2.5D and WebGL" }),
+    handler: async () => ({ content: [json(MOTION_RECIPES)], summary: `${MOTION_RECIPES.length} motion recipes · 2D, 2.5D and WebGL` }),
   }),
   defineTool({
     name: "build_motion_scene", title: "Compose a motion shot", scope: "global",

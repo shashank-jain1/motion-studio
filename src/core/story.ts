@@ -342,6 +342,9 @@ export const specTokens = (spec: Spec): Token[] => {
       case "morph": l.shapes.forEach((s, i) => push("shape", s.shape, `${where}.shapes[${i}]`, at + Math.max(0, s.at - (s.morph ?? 0.7)))); break;
       case "logo": push("shape", l.from, where, at); break;
       case "three": push("shape", l.source, where, at); break;
+      case "chart": push("text", l.title, where, at); push("text", l.subtitle, where, at); (l.annotate ?? []).forEach((a) => push("text", a.text, where, at)); break;
+      case "diagram": push("text", l.title, where, at); l.nodes.forEach((n, i) => { push("text", n.label, `${where}.nodes[${i}]`, at); push("text", n.sub, `${where}.nodes[${i}]`, at); push("text", n.icon, `${where}.nodes[${i}]`, at); }); break;
+      case "code": push("text", l.title, where, at); break;
       default: break;
     }
   });

@@ -71,6 +71,10 @@ export const layerLabel = (l: RawLayer): string => {
   }
   if (typeof l.src === "string") return l.src.split("/").pop() ?? l.src;
   if (l.type === "counter") return `${l.prefix ?? ""}${l.to ?? ""}${l.suffix ?? ""}`;
+  if (l.type === "code" && typeof l.code === "string") return (l.code.split("\n").find((x: string) => x.trim()) ?? "code").trim().slice(0, 40);
+  if (l.type === "chart") return `${l.kind ?? ""} chart`.trim();
+  if (l.type === "diagram" && Array.isArray(l.nodes)) return l.nodes.map((n: { label?: string }) => n.label).filter(Boolean).slice(0, 3).join(" → ") || "diagram";
+  if (l.type === "visualizer") return `${l.style ?? ""} visualizer`.trim();
   if (l.type === "shape" && typeof l.shape === "string") return l.shape;
   return String(l.type ?? "layer");
 };

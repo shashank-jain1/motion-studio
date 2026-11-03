@@ -16,6 +16,8 @@ export type RuntimeContext = {
   width: number;
   height: number;
   fps: number;
+  /** the film's music (spec.audio): audio-reactive layers sample it at film time */
+  music?: { src: string; at: number; trimStart: number };
 };
 
 const Ctx = createContext<RuntimeContext | null>(null);

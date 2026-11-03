@@ -1,3 +1,4 @@
+import { FilmOffset } from "../core/filmClock";
 import React, { useId, useMemo } from "react";
 import { Sequence, useCurrentFrame, useVideoConfig } from "remotion";
 import { CameraMotionBlur } from "@remotion/motion-blur";
@@ -183,7 +184,7 @@ export const LayerList: React.FC<{ layers: Layer[]; sceneDuration?: number }> = 
         const dur = durationOf(layer);
         return (
           <Sequence key={layer.id ?? i} from={Math.round(start * fps)} durationInFrames={Math.max(1, Math.round(dur * fps))} layout="none" name={layer.id ?? `${layer.type}-${i}`}>
-            <LayerHost layer={layer} duration={dur} index={i} start={start} layerIndex={layerIndex} />
+            <FilmOffset add={Math.round(start * fps)}><LayerHost layer={layer} duration={dur} index={i} start={start} layerIndex={layerIndex} /></FilmOffset>
           </Sequence>
         );
       })}

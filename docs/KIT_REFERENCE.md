@@ -208,6 +208,32 @@ window (`windowSrc`) | split | trace | pop · `order`: leftToRight topToBottom r
 `revealDuration` (default 1.4) · `stagger` · `parts`: all|icon|wordmark · `color` (override fill) · `strokeColor` · `exitMode`: explode|collapse|draw-out|fade ·
 `height` (default 300), `frame: "full"|"parts"` (lay out as the whole logo even when showing a subset, for actor snapTo). The final frame is pixel-exact brand art. Run `analyze_logo` to get suggested modes for a given logo.
 
+**chart** (v9): `kind` bar | hbar | line | area | donut | pie | rings · `data: [{label, value, color?}]` (bar/hbar/donut/pie/rings) or
+`series: [{name?, values: [..], color?}]` + `labels: [..]` (line/area) · `title`, `subtitle`, `delta` ("+32%" badge) · `highlight` (index or label: accent
+it, the rest stays neutral, it glows once the data lands) · `annotate: [{at, text, delay?}]` (callouts after the data lands) · number format
+`prefix`, `suffix`, `decimals`, `locale`, `format` standard|compact|percent · `min`/`max` · `values` auto|end|inside|none · `grid` · `legend` ·
+`center` (donut/rings caption) · `curve` smooth|linear|step · `dots` · `thickness` · `radius` · `colors` / `color` · `surface` glass|solid|outline|none ·
+`stagger`, `growDuration` (0.9), `drawDuration` (1.6), `ease` · `fontSize`, `font` · box `width`×`height` (880×560; round 860×520).
+Bars grow with a small settle and count their values; lines draw with a glowing head and a live value tag; donuts sweep segment by segment.
+
+**diagram** (v9): `nodes: [{id, label, sub?, icon? (emoji / assets / glyph), shape? card|pill|circle|diamond|chip, color?, x?, y?, at?, width?}]`,
+`edges: [{from, to, label?, style? solid|dashed, flow? (packets, default on), color?, at?}]`, `layout` right (default) | down | radial | manual,
+`connector` curved | orthogonal | straight, `gap`, `focus: [{at, nodes: [ids], until?}]` (story beats: those nodes light up, the rest dims),
+`packets` (per edge, default 2), `speed` (px/s), `stagger` (0.22 s between nodes), `surface`, `title`, `fontSize` (26), `font`, `color`.
+Nodes arrive in flow order with a spring + ping ring; each connector draws toward its target and lands as the target appears; packets then loop.
+Auto layout ranks the graph (cycles allowed) and orders each rank to avoid crossings; the drawing fits (and grows up to 1.5× into) `width`×`height`.
+
+**code** (v9): `code` (≤ 6000 chars), `language` ts tsx js jsx python bash json html css go rust sql yaml swift kotlin java c cpp diff text,
+`variant` editor (window + file tab + line numbers, default) | terminal | card (frosted, no chrome) | plain, `title` (tab filename / shell title),
+`theme` auto | midnight | carbon | dawn | neon, `reveal` type (human typing: jitter, auto-indent, pauses at punctuation) | lines | none,
+`speed` (chars/s, 60; terminal 40), `typingStart` (0.35 s), `lineNumbers`, `caret`, `focus: [{lines: [a, b] (range) or [n,…], at, until?, color?}]`,
+`diff` (+/- rows), `maxLines` (scrolls to follow the caret), `prompt` ("$"), `fontSize` (26), `font` ($mono), `surface`.
+Terminal: lines starting with the prompt are typed commands; other lines print as output (✓ green, ✗ / error red, ⚠ amber, → / URLs accent).
+
+**visualizer** (v9): `style` bars (spectrum + reflection) | mirror | wave (layered oscilloscope) | circle (radial ring, bass pulse) | orb (liquid blob) |
+dots (LED matrix, peak hold) · `src` (default: the film's music — sampled at film time, honouring `audio.at` / `trimStart`) · `bars` (bands) ·
+`colors` (gradient low → high) · `sensitivity` · `smoothing` · `glow` · `thickness` · `radius`. Idles gently before the music starts.
+
 **group**: `layers: [...]`, `perspective`: transform several layers together (e.g. a 3D-tilted cluster).
 
 **custom**: `component` (name from write_custom_component), `props`.
@@ -424,3 +450,21 @@ SwiftShader (Lambda) is about 15–40× slower and runs draft automatically.
 ## Choreographed motion and sound accents
 
 See [MOTION_PLAYBOOK.md](MOTION_PLAYBOOK.md) for `gesture`, `accents`, the eight shot recipes and contact-frame review. These are supported Scene Spec fields on every layer, including groups and actor content. Use `motion_recipes`, `build_motion_scene`, and `inspect_sound` through MCP or the in-app director.
+
+## Data, diagrams, code and music visuals (v9)
+
+These four layers share one surface language (frosted glass on dark scenes, quiet cards on light ones, theme accents, tabular
+figures, mono micro-labels), so a chart, a flow and a code window in the same film read as one product. Rules that keep them cinematic:
+
+- **One point per chart.** Set `highlight` on the item the story is about (everything else stays neutral) and say the point with
+  `annotate` or the title ("Launch week", "4× faster"). Hold ≥ 1.2 s after the data lands (`chart` linter checks it).
+- **Few items.** Bars ≤ 8 on a phone (≤ 12 wide), donut ≤ 6, rings ≤ 4. Group the tail into "Other".
+- **Diagrams tell a flow, not an org chart.** ≤ 7 nodes on a phone. Use `focus` beats to walk the viewer through it
+  (input → the clever part → output), timed to the voiceover. Keep `packets` on: moving data says "this is live".
+- **Code is a prop, not a document.** Show the 6–12 lines that matter, focus the 1–3 that carry the idea, keep lines ≤ 42 chars on
+  a phone. Type it (60 chars/s reads as a confident human); for longer files use `reveal: "lines"` or `maxLines`.
+  Terminals sell speed: a command, a few ✓ lines, the result.
+- **Visualizers react to the real track** (compose_music / import_music first). Put one behind the hook word or the logo
+  (circle / orb), or under a title (bars / wave). One per scene.
+- **Composition:** a panel is a hero — give it 60–80 % of the frame width, a spotlight or mesh background behind it, a slow camera
+  push (zoom 1 → 1.05), and kinetic type around it for the line the viewer must remember.

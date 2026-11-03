@@ -363,3 +363,23 @@ studio flags (`license/music` warning) — replace it.
   `clock-ticking` for deadlines.
 Restraint still rules: voice first, one hero hit, silence before it. Render a draft and listen before calling it done;
 `inspect_render_sound` checks the exported mix.
+
+## 14. From a one-line brief to a finished film (and the current product look)
+
+Most great motion pieces start as one sentence ("a 15-second showreel for a motion designer", "launch film for our API"). Expand it:
+
+1. **Find the one idea** (Story Engine): what changes from the first frame to the last? Name the verb (connect, speed up, grow…).
+2. **Pick the vocabulary the idea needs** — kinetic type for promises; `chart` for proof; `diagram` for how it works; `code` /
+   terminal for developer products; `visualizer` + beat-cut type for music; `device` + cursor/selection/toggle for product UI;
+   `three` / `logo` for the payoff. Two or three vocabularies per film, not seven.
+3. **Six beats:** hook (0–2 s: motion + promise) → problem → turn → proof (a chart / a diagram / a result in the terminal) → payoff →
+   lockup. Cut on the music's beats (compose_music sets the grid).
+4. **Design system first:** one dark (or one light) canvas, one accent + one supporting color, one display face + one mono
+   (micro-labels, numbers, code). Generous negative space; nothing touches the safe-zone edges.
+
+**The current product look (2025–26):** deep near-black canvas with a soft colored spotlight or mesh; frosted panels with a
+hairline border and a top highlight; accent glows instead of drop shadows; numbers in tabular figures that count; mono
+uppercase micro-labels with wide tracking; motion that settles (spring with a small overshoot, 0.4–0.9 s) and arrives with blur
+→ sharp; light sweeps across surfaces after they land; slow camera pushes; data that moves (packets, live tags, typing) so the
+frame is never dead. Use `surface: "glass"` on charts / diagrams, `variant: "editor"` with `theme: "midnight"` or `"carbon"` for
+code, and a `spotlight` / `mesh` background behind them.

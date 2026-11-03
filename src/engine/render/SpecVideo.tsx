@@ -1,3 +1,4 @@
+import { FilmOffset } from "../core/filmClock";
 import React, { useMemo } from "react";
 import { AbsoluteFill, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { TransitionSeries, linearTiming } from "@remotion/transitions";
@@ -110,6 +111,7 @@ export const SpecVideo: React.FC<SpecVideoProps> = ({ spec: input, assetBase, pr
     fonts: { ...style.fonts, ...(spec.theme?.fonts ?? {}) } as RuntimeContext["fonts"],
     fontFaces: spec.fontFaces,
     assetBase, projectId, libraryBase, width, height, fps,
+    music: spec.audio?.src ? { src: spec.audio.src, at: spec.audio.at ?? 0, trimStart: spec.audio.trimStart ?? 0 } : undefined,
   };
   const fx = { ...(style.fx ?? {}), ...(spec.fx ?? {}) };
   const asset = (src: string) => {
@@ -174,7 +176,7 @@ const SpecBody: React.FC<{ spec: Spec; rt: RuntimeContext; fx: Record<string, an
     }
     series.push(
       <TransitionSeries.Sequence key={`s${i}`} durationInFrames={Math.max(1, Math.round(scene.duration * fps))} name={scene.id ?? `scene-${i + 1}`}>
-        <SceneView scene={scene} />
+        <FilmOffset add={slots[i]?.startFrame ?? 0}><SceneView scene={scene} /></FilmOffset>
       </TransitionSeries.Sequence>,
     );
   });
