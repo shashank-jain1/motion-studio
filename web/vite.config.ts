@@ -42,6 +42,8 @@ export default defineConfig({
   resolve: { dedupe: ["react", "react-dom", "remotion", "@remotion/player", "zod"] },
   server: {
     port: 5173,
+    host: true,
+    allowedHosts: true,
     fs: { allow: [repoRoot] },
     proxy: useMock ? undefined : proxy,
   },
