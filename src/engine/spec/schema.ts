@@ -13,6 +13,7 @@ export const EASES = [
   "outElastic", "outBounce",
   "spring", "snappy", "bouncy", "smooth",
   "expoOut", "quintOut", "snap", "m3Enter", "m3Exit", "carbonExpressive",
+  "physical", "physicalLoose",
 ] as const;
 export const Ease = z.enum(EASES);
 
@@ -32,6 +33,7 @@ export const Keyframe = z.object({
   opacity: z.number().optional(),
   blur: z.number().optional(),
   ease: Ease.optional().describe("Easing used to arrive at this keyframe from the previous one"),
+  settle: z.number().positive().optional().describe("physical eases only: seconds the spring takes to settle (default: the gap to this keyframe). Longer than the gap = the next keyframe retargets it mid-flight and it keeps its velocity"),
 });
 export type Keyframe = z.infer<typeof Keyframe>;
 
@@ -758,6 +760,7 @@ export const CameraSchema = z.object({
     rotateX: z.number().optional(),
     rotateY: z.number().optional(),
     ease: Ease.optional(),
+    settle: z.number().positive().optional().describe("physical eases: spring settle seconds (default: gap to this key)"),
   })).optional(),
   shake: z.object({ amount: z.number().optional(), speed: z.number().optional(), start: z.number().optional(), duration: z.number().optional() }).optional(),
   punch: z.array(z.number()).optional().describe("seconds at which to do a quick zoom punch (great on beats)"),
@@ -933,6 +936,22 @@ export const StorySchema = z.object({
   }).optional(),
 }).describe("Story Engine record (docs/STORY_ENGINE.md): checked by the craft linter and check_story");
 
+/** Techniques a direction brief can ban (each one has a detector in src/core/direction.ts). */
+export const BANNABLE = [
+  "glow", "particles", "particle-bursts", "gradients", "bouncy-easing", "camera-shake", "zoom-punch", "rgb-split",
+  "light-leaks", "flashes", "glitch", "scanlines", "hard-cuts", "crossfades", "generic-transitions", "dead-time",
+  "blur-ins", "3d-flips",
+] as const;
+
+/** A direction brief's hard rules (docs/DIRECTOR_GUIDE.md "Direction brief"): checked by the craft linter. */
+export const DirectionSchema = z.object({
+  oneTake: z.boolean().optional().describe("one continuous take: never cut — one scene with a camera moving through one world, or only content-aware transitions (expand / zoom-into / match)"),
+  hero: z.string().optional().describe("id of the ONE element (actor or layer) that travels through every scene and drives each change"),
+  loop: z.boolean().optional().describe("seamless loop: the last frame equals the first (camera, hero, background)"),
+  everyBeat: z.boolean().optional().describe("something visibly changes on every beat (needs bpm or beats)"),
+  banned: z.array(z.enum(BANNABLE)).optional().describe("techniques this film must not use; the linter finds them in the spec"),
+}).describe("hard rules of the brief: what the film may never do, one-take, hero element, loop, beat density");
+
 export const ConceptSchema = z.object({
   truth: z.string().optional().describe("one-line brand truth: <Brand> helps <who> <verb> <object>, feeling <adj>"),
   metaphor: z.string().optional().describe("the visual metaphor and its structure (juxtaposition | fusion | replacement)"),
@@ -943,6 +962,7 @@ export const ConceptSchema = z.object({
   colorScript: z.array(z.string()).optional(),
   niche: z.enum(NICHES).optional().describe("category, for the cliché blacklist (inferred when omitted)"),
   story: StorySchema.optional(),
+  direction: DirectionSchema.optional(),
 }).describe("director's concept (ignored by the renderer, required by the director workflow)");
 
 export const SpecSchema = z.object({

@@ -9,6 +9,7 @@ import { chartTiming, chartWords } from "../engine/kit/chart/model";
 import { diagramModel } from "../engine/kit/diagram/model";
 import { typingSchedule } from "../engine/kit/code/typing";
 import { storyIssues } from "./story";
+import { directionWarnings } from "./direction";
 import { motionSoundWarnings } from "../engine/audio/inspect";
 
 const HERO_TYPES = new Set(["logo", "device"]);
@@ -205,6 +206,13 @@ export const craftWarnings = (spec: Spec): string[] => {
     for (const i of storyIssues(spec)) if (i.severity !== "info") out.push(`story/${i.code}: ${i.message}`);
   } catch (e) {
     out.push(`story: checks skipped (${(e as Error).message})`);
+  }
+
+  // 11. Direction brief: banned techniques, one take, hero element, loop seam, beat density (src/core/direction.ts)
+  try {
+    out.push(...directionWarnings(spec));
+  } catch (e) {
+    out.push(`direction: checks skipped (${(e as Error).message})`);
   }
 
   // A footage edit's story is the speaker's: invented-film rules (concept, morphs/actors, auto sound, Story Engine,

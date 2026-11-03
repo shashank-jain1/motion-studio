@@ -11,6 +11,28 @@ const springLike = (decay: number, oscillations: number) => (t: number) => {
   return 1 - Math.cos(2 * Math.PI * oscillations * t) * Math.exp(-decay * t) * (1 - t);
 };
 
+/**
+ * Unit step response of a damped spring released from rest (closed form): `w` natural frequency (rad/s), `z` damping
+ * ratio. Not forced to settle, so a value whose target changes many times can be the SUM of one spring per change and
+ * still be a pure function of time (velocity carries through every retarget).
+ */
+export const springStep = (tau: number, w: number, z: number) => {
+  if (tau <= 0) return 0;
+  if (z >= 1) return 1 - Math.exp(-w * tau) * (1 + w * tau);
+  const wd = w * Math.sqrt(1 - z * z);
+  return 1 - Math.exp(-z * w * tau) * (Math.cos(wd * tau) + ((z * w) / wd) * Math.sin(wd * tau));
+};
+
+/** Physical spring eases → damping ratio. `physical` overshoots ~1.5% (UI-grade), `physicalLoose` ~12%. */
+export const PHYSICAL_EASES: Partial<Record<EaseName, number>> = { physical: 0.82, physicalLoose: 0.55 };
+/** Natural frequency that brings a spring of damping `z` within 1% of its target after `seconds`. */
+export const springOmega = (seconds: number, z: number) => 4.6 / (z * Math.max(1e-3, seconds));
+/** Normalised (0→1 over the segment) version for contexts that need a bounded ease; pinned to exactly 1 at t=1. */
+const physicalEase = (z: number) => {
+  const end = springStep(1, springOmega(1, z), z);
+  return (t: number) => springStep(t, springOmega(1, z), z) + (1 - end) * t * t * t;
+};
+
 export const EASING: Record<EaseName, (t: number) => number> = {
   linear: (t) => t,
   in: Easing.in(Easing.cubic),
@@ -43,6 +65,9 @@ export const EASING: Record<EaseName, (t: number) => number> = {
   m3Exit: Easing.bezier(0.3, 0, 0.8, 0.15),
   /** IBM Carbon expressive standard (hero moments) */
   carbonExpressive: Easing.bezier(0.4, 0.14, 0.3, 1),
+  /** closed-form springs that keep their velocity across keyframes (see springTrackValue) */
+  physical: physicalEase(0.82),
+  physicalLoose: physicalEase(0.55),
 };
 
 export const ease = (name: EaseName | undefined, t: number, fallback: EaseName = "outQuint") => {
@@ -79,7 +104,31 @@ export const KF_PROPS = ["x", "y", "z", "scale", "scaleX", "scaleY", "rotate", "
 export type KfProp = (typeof KF_PROPS)[number];
 
 /** One property's keyframes, pre-sorted: times, values, arrival eases. */
-export type KfTrack = { prop: KfProp; t: number[]; v: number[]; e: (EaseName | undefined)[] };
+export type KfTrack = { prop: KfProp; t: number[]; v: number[]; e: (EaseName | undefined)[]; phys?: boolean; s?: (number | undefined)[] };
+
+/** Does any segment of this track arrive with a physical spring? (then the whole track is evaluated by superposition) */
+export const hasPhysical = (e: (EaseName | undefined)[]) => e.some((x) => x !== undefined && PHYSICAL_EASES[x] !== undefined);
+
+/**
+ * A track as a sum of per-segment responses: v0 + Σ (v_i − v_{i−1})·g_i(t). For eased segments g_i is the eased
+ * progress over [t_{i−1}, t_i] (so an all-eased track equals plain piecewise interpolation). For a physical segment g_i
+ * is a spring released at t_{i−1} and tuned to settle by t_i (or after its own `settle` seconds) — its tail keeps running into the next segment, so a
+ * retarget mid-flight inherits the velocity instead of stopping dead (the "one spring per change" technique).
+ */
+export const springTrackValue = (
+  ts: number[], vs: number[], es: (EaseName | undefined)[], t: number, fallback: EaseName = "inOutQuint", settle?: (number | undefined)[],
+) => {
+  let v = vs[0];
+  for (let i = 1; i < ts.length; i++) {
+    const d = vs[i] - vs[i - 1];
+    if (d === 0) continue;
+    const t0 = ts[i - 1], seg = ts[i] - t0, z = es[i] !== undefined ? PHYSICAL_EASES[es[i]!] : undefined;
+    if (t <= t0) break;
+    if (z !== undefined) v += d * springStep(t - t0, springOmega(settle?.[i] ?? seg, z), z);
+    else v += d * (t >= ts[i] ? 1 : ease(es[i], (t - t0) / Math.max(1e-6, seg), fallback));
+  }
+  return v;
+};
 
 const trackCache = new WeakMap<Keyframe[], KfTrack[]>();
 
@@ -92,7 +141,8 @@ export const keyframeTracks = (kfs: Keyframe[]): KfTrack[] => {
   for (const prop of KF_PROPS) {
     const pts = sorted.filter((k) => k[prop] !== undefined);
     if (pts.length === 0) continue;
-    tracks.push({ prop, t: pts.map((k) => k.t), v: pts.map((k) => k[prop]!), e: pts.map((k) => k.ease) });
+    const e = pts.map((k) => k.ease);
+    tracks.push({ prop, t: pts.map((k) => k.t), v: pts.map((k) => k[prop]!), e, phys: hasPhysical(e), s: pts.map((k) => k.settle) });
   }
   trackCache.set(kfs, tracks);
   return tracks;
@@ -105,6 +155,7 @@ export const evalKeyframes = (kfs: Keyframe[] | undefined, t: number): Partial<T
   for (const tr of keyframeTracks(kfs)) {
     const n = tr.t.length;
     if (t <= tr.t[0]) { out[tr.prop] = tr.v[0]; continue; }
+    if (tr.phys) { out[tr.prop] = springTrackValue(tr.t, tr.v, tr.e, t, undefined, tr.s); continue; }
     if (t >= tr.t[n - 1]) { out[tr.prop] = tr.v[n - 1]; continue; }
     let i = 0;
     while (i < n - 2 && t > tr.t[i + 1]) i++;

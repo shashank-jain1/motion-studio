@@ -134,6 +134,10 @@ Press Start 2P, Righteous, Sora, Space Grotesk, Syne, Unbounded.
 
 **Eases:** linear in out inOut outBack inBack inOutBack outExpo inExpo inOutExpo outQuint inOutQuint outCirc outElastic outBounce spring snappy bouncy smooth,
 plus pro curves: `expoOut` (0.19,1,0.22,1) · `quintOut` · `snap` (0.15,0,0.1,1) · `m3Enter` · `m3Exit` · `carbonExpressive`.
+**Physical springs:** `physical` (damping 0.82, ≈1.5% overshoot) · `physicalLoose` (0.55, ≈12%). Closed-form and summed per
+segment: a spring is released at the previous key and settles by its own key — or after `settle` seconds if you set it on the
+key. A `settle` longer than the gap means the next key retargets it mid-flight and the motion keeps its velocity. Works on layer
+`animate` keys and camera keys. **Camera zoom** always interpolates in log space (steady perceived push).
 
 ## Common layer fields (every layer)
 

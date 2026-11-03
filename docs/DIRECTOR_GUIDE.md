@@ -383,3 +383,47 @@ uppercase micro-labels with wide tracking; motion that settles (spring with a sm
 → sharp; light sweeps across surfaces after they land; slow camera pushes; data that moves (packets, live tags, typing) so the
 frame is never dead. Use `surface: "glass"` on charts / diagrams, `variant: "editor"` with `theme: "midnight"` or `"carbon"` for
 code, and a `spotlight` / `mesh` background behind them.
+
+## 15. Direction briefs — the restrained, cinematic register
+
+§14 describes the glossy product register (glows, mesh, blur → sharp). The other register — the one people call "smooth and
+cinematic" — is built almost entirely from **constraints**. Pick one register per film; don't mix them. The research behind this
+is `docs/research/10-direction-briefs.md`.
+
+**Intake (before any spec).** Ask for the few inputs the film can't invent — the words on screen, the one accent color, the
+hero element, the track — and state the default you'll use for each if the user skips it. Then show a **storyboard on the beat
+grid** (every beat time, what changes on it) and only then write the spec.
+
+**Write the rules into `concept.direction`** so the linter holds you to them on every `set_spec`:
+
+```jsonc
+"direction": {
+  "oneTake": true,          // never cut: one scene, one world, a camera that travels (or expand / zoom-into / match only)
+  "hero": "dot",            // the ONE element that drives every change (an actor, or a layer id in every scene)
+  "loop": true,             // the last frame is the first: camera, hero, background, nothing animating in at frame 0
+  "everyBeat": true,        // something visibly starts changing on every beat (needs bpm or beats)
+  "banned": ["glow", "particle-bursts", "gradients", "bouncy-easing", "camera-shake", "crossfades", "blur-ins", "dead-time"]
+}
+```
+
+Bannable: glow · particles · particle-bursts · gradients · bouncy-easing · camera-shake · zoom-punch · rgb-split · light-leaks ·
+flashes · glitch · scanlines · hard-cuts · crossfades · generic-transitions · dead-time · blur-ins · 3d-flips. A ban list is the
+cheapest quality lever there is: it removes the moves that make a film look like a template.
+
+**The craft of the register**
+- **One world, one camera.** Lay every beat out in one big canvas (x/y stations) and travel between them with camera keyframes.
+  Camera zoom interpolates in log space, so 1 → 8× reads as one steady push. Each station fills the frame when you arrive.
+- **One element carries everything.** A dot becomes the cursor's target, the slider knob, the graph's marker, the logo's dot.
+  Its position is continuous for the whole film; every new state is that element changing size, radius or color.
+- **Springs, not curves.** Use `ease: "physical"` (≈1.5% overshoot, UI-grade) for anything that lands, `physicalLoose` only when
+  the brief allows bounce. Give a key a `settle` longer than the gap to the next key and the next key retargets the spring
+  mid-flight — it keeps its velocity instead of stopping dead. That's the difference between "keyframed" and "alive".
+- **Direct manipulation.** A cursor (`type: "cursor"` with `clicks`) causes every UI change; values follow the cursor while
+  it's held and spring back on release.
+- **Text that swaps inside a morphing container** gets its own exit and enter (exit first, enter ~0.1 s later) or the two words
+  overlap mid-morph.
+- **Sound by measured peak** on the grid, quiet under the music (`spec.sound` does this; keep `restraint` high).
+- **Motion blur** (`motionBlur` on the scene or the moving layers) on every fast move; never on text the camera is zooming.
+
+**Probe one frame per beat** with `preview_frames` before the full render, and fix anything off the grid, cramped or hard to
+read. Then check frame 0 against the last frame if `loop` is set.
