@@ -4,7 +4,10 @@
  */
 import { FORMATS, type Layer, type Spec } from "../engine/spec/schema";
 import { sceneTimeline } from "../engine/spec/preprocess";
-import { SAFE_ZONES } from "../engine/spec/reflow";
+import { SAFE_ZONES, estimateBox } from "../engine/spec/reflow";
+import { chartTiming, chartWords } from "../engine/kit/chart/model";
+import { diagramModel } from "../engine/kit/diagram/model";
+import { typingSchedule } from "../engine/kit/code/typing";
 import { storyIssues } from "./story";
 import { motionSoundWarnings } from "../engine/audio/inspect";
 
@@ -17,7 +20,39 @@ const words = (s: string) => s.split(/\s+/).filter(Boolean).length;
 const layerText = (l: Layer): string | null => {
   if (l.type === "text") return l.text; // slot alternatives show one at a time
   if (l.type === "card") return [l.title, l.body].filter(Boolean).join(" ") || null;
+  if (l.type === "chart") return chartWords(l) || null;
+  if (l.type === "diagram") return [l.title, ...l.nodes.map((n) => n.label)].filter(Boolean).join(" ") || null;
   return null;
+};
+
+/** v9 data / diagram / code layers: density and timing checks that keep them readable on a phone. */
+const v9Checks = (l: Layer, at: string, start: number, end: number, vertical: boolean, out: string[]) => {
+  if (l.type === "chart") {
+    const n = l.kind === "line" || l.kind === "area" ? Math.max(0, ...(l.series ?? []).map((s) => s.values.length)) : (l.data ?? []).length;
+    if ((l.kind === "line" || l.kind === "area") && !l.series?.length) out.push(`craft/chart ${at}: ${l.kind} chart without \`series\`.`);
+    if (l.kind !== "line" && l.kind !== "area" && !l.data?.length) out.push(`craft/chart ${at}: ${l.kind} chart without \`data\`.`);
+    const cap = l.kind === "bar" ? (vertical ? 8 : 12) : l.kind === "hbar" ? 8 : l.kind === "donut" || l.kind === "pie" ? 6 : l.kind === "rings" ? 4 : 60;
+    if (n > cap) out.push(`craft/chart ${at}: ${n} ${l.kind === "line" || l.kind === "area" ? "points" : "items"} — more than a viewer can read in motion (≤ ${cap}). Group the tail into “Other” or show the trend only.`);
+    const land = chartTiming(l).land;
+    if (end - start < land + 1.2) out.push(`craft/chart ${at}: the data lands at ${land.toFixed(1)}s but the layer leaves at ${(end - start).toFixed(1)}s — hold ≥ 1.2s after the last value lands.`);
+    if (l.highlight === undefined && (l.kind === "bar" || l.kind === "hbar") && n > 3) out.push(`craft/chart ${at}: no \`highlight\` — a chart in a film should make ONE point; accent the bar the story is about.`);
+  }
+  if (l.type === "diagram") {
+    if (l.nodes.length > (vertical ? 7 : 10)) out.push(`craft/diagram ${at}: ${l.nodes.length} nodes — too dense to follow (≤ ${vertical ? 7 : 10}); split it into two beats or group nodes.`);
+    try {
+      const m = diagramModel(l);
+      if (end - start < m.land + 1) out.push(`craft/diagram ${at}: the flow finishes at ${m.land.toFixed(1)}s but the layer leaves at ${(end - start).toFixed(1)}s — hold ≥ 1s after the last node lands.`);
+      if (m.scale < 0.7) out.push(`craft/diagram ${at}: the layout is shrunk to ${Math.round(m.scale * 100)}% to fit its box — labels get small; give it more room or fewer nodes.`);
+    } catch (e) { out.push(`craft/diagram ${at}: layout failed (${(e as Error).message}).`); }
+  }
+  if (l.type === "code") {
+    const sch = typingSchedule(l);
+    if (end - start < sch.end + 0.8) out.push(`craft/code ${at}: typing ends at ${sch.end.toFixed(1)}s but the layer leaves at ${(end - start).toFixed(1)}s — raise \`speed\`, trim the snippet, use reveal "lines", or hold longer.`);
+    const lines = l.code.split("\n");
+    if (lines.length > (vertical ? 14 : 20) && !l.maxLines) out.push(`craft/code ${at}: ${lines.length} lines on screen — show the 6–12 that matter (focus them) or set maxLines to scroll.`);
+    const longest = Math.max(...lines.map((s) => s.length));
+    if (longest > (vertical ? 42 : 80)) out.push(`craft/code ${at}: a ${longest}-character line — it will be tiny or clipped${vertical ? " on a phone (≤ 42 chars)" : " (≤ 80 chars)"}; wrap it.`);
+  }
 };
 
 export const craftWarnings = (spec: Spec): string[] => {
@@ -122,6 +157,8 @@ export const craftWarnings = (spec: Spec): string[] => {
         if (l.type === "text" && n > 9) out.push(`craft/text ${at}: ${n} words on one beat. Keep ≤ 7 words per text beat; split it across beats.`);
       }
 
+      v9Checks(l, at, start, end, vertical, out);
+
       // 7. Hero elements are revealed, not faded
       const isHero = HERO_TYPES.has(l.type) || (l.type === "text" && (l.fontSize ?? 120) >= 140);
       if (isHero && l.enter && ["fade", "blur-in"].includes(l.enter.type)) {
@@ -146,6 +183,17 @@ export const craftWarnings = (spec: Spec): string[] => {
         const x = l.x ?? 0, y = l.y ?? 0;
         if (y > z.b * sy || y < z.t * sy || x > z.r * sx || x < z.l * sx) {
           out.push(`craft/safe-zone ${at}: critical content at (${x}, ${y}) is outside the ${spec.format ?? "9:16"} safe zone (x ${z.l}…${z.r}, y ${z.t}…${z.b} from center). Platform UI will cover it.`);
+        }
+      }
+      // panels (chart / diagram / code) are big: check their edges, not just their center
+      if (vertical && (l.type === "chart" || l.type === "diagram" || l.type === "code")) {
+        const z = SAFE_ZONES[(spec.format ?? "9:16") as keyof typeof SAFE_ZONES] ?? SAFE_ZONES["9:16"];
+        const ref = FORMATS[(spec.format ?? "9:16") as keyof typeof FORMATS] ?? [1080, 1920];
+        const sx = W / ref[0], sy = H / ref[1];
+        const b = estimateBox(l as never, W, H), s = l.scale ?? 1;
+        const x = l.x ?? 0, y = l.y ?? 0, hw = (b.w * s) / 2, hh = (b.h * s) / 2;
+        if (y + hh > z.b * sy + 40 || y - hh < z.t * sy - 40 || x + hw > z.r * sx + 40 || x - hw < z.l * sx - 40) {
+          out.push(`craft/safe-zone ${at}: the ${l.type} spans (${Math.round(x - hw)}…${Math.round(x + hw)}, ${Math.round(y - hh)}…${Math.round(y + hh)}) — past the ${spec.format ?? "9:16"} safe zone (x ${z.l}…${z.r}, y ${z.t}…${z.b}). Scale it down or move it.`);
         }
       }
     });

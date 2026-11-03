@@ -13,6 +13,8 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import { traceToFile } from "./trace";
+import { elementFileName, loadScrape, saveScrape, scrapeSiteElements } from "./siteElements";
 import { spawn } from "node:child_process";
 import { z } from "zod/v4";
 import { FORMATS, type SpecInput } from "../engine/spec/schema";
@@ -764,9 +766,9 @@ export const TOOLS: ToolDef[] = [
   }),
   defineTool({
     name: "motion_recipes", title: "Motion recipes", scope: "global",
-    description: "Browse eight editable, choreographed shot recipes with sound anchors, energy and rendering cost. Use before designing premium motion; each recipe is a starting point to art-direct, not a whole film.",
+    description: "Browse twelve editable, choreographed shot recipes with sound anchors, energy and rendering cost (incl. data proof, how-it-works diagram, terminal ship, beat visualizer). Use before designing premium motion; each recipe is a starting point to art-direct, not a whole film.",
     shape: {},
-    handler: async () => ({ content: [json(MOTION_RECIPES)], summary: "8 motion recipes · 2D, 2.5D and WebGL" }),
+    handler: async () => ({ content: [json(MOTION_RECIPES)], summary: `${MOTION_RECIPES.length} motion recipes · 2D, 2.5D and WebGL` }),
   }),
   defineTool({
     name: "build_motion_scene", title: "Compose a motion shot", scope: "global",
@@ -1030,7 +1032,10 @@ export const TOOLS: ToolDef[] = [
       "Break an SVG logo asset into animatable parts: islands with holes (counters), icon vs wordmark groups, stagger orders, " +
       "palette with roles, geometry kit (stroke weight, corner radius, angles, symmetry) and a ranked list of logo reveal modes " +
       "(LogoLayer.mode) with reasons. Pass the brand's verb/values/industry to add meaning-driven scoring. Also returns an image " +
-      "of the parts colored by `order` (red = first … violet = last) and labelled with their part ids (\"svg:assets/x.svg#<id>\").",
+      "of the parts colored by `order` (red = first … violet = last) and labelled with their part ids (\"svg:assets/x.svg#<id>\"). " +
+      "PNG/WebP/JPG elements (stickers, mascots, icons, scraped site graphics) are TRACED to a vector first — assets/<name>.traced.svg " +
+      "(one part per color) or, with silhouette:true, assets/<name>.cutout.svg (one die-cut shape) — and that SVG is analyzed: use it " +
+      "as a `three` source (\"svg:assets/<name>.traced.svg\") to extrude the element in 3D, or with Morph / PathDraw / logo modes.",
     shape: {
       projectId: projectIdField,
       asset: z.string().describe('SVG asset path like "assets/logo.svg" (or just the filename)'),
@@ -1039,12 +1044,25 @@ export const TOOLS: ToolDef[] = [
       values: z.array(z.string()).optional().describe("brand adjectives, e.g. playful, premium, secure"),
       industry: z.string().optional().describe("e.g. fintech, food, logistics, media, saas, fashion"),
       force: z.boolean().optional().describe("re-analyze even if a cached .logo.json exists"),
+      silhouette: z.boolean().optional().describe("raster input: trace one die-cut silhouette instead of per-color parts"),
+      colors: z.number().int().min(1).max(12).optional().describe("raster input: max traced colors (default 6)"),
     },
     startSummary: (i) => `Analyzing logo ${stripAssets(i.asset)}`,
-    handler: async ({ projectId, asset, order, verb, values, industry, force }) => {
-      const info = await getAssetInfo(projectId, stripAssets(asset));
+    handler: async ({ projectId, asset, order, verb, values, industry, force, silhouette, colors }) => {
+      let info = await getAssetInfo(projectId, stripAssets(asset));
+      let traced: { from: string; colors: string[] } | null = null;
       if (path.extname(info.file).toLowerCase() !== ".svg") {
-        throw new Error(`${info.path} is not an SVG. Raster logos only support logo modes mask/pop/glitch (vectorize it to SVG to unlock the rest).`);
+        if (info.kind !== "image") throw new Error(`${info.path} is a ${info.kind}; analyze_logo needs an SVG or an image to trace.`);
+        const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "ms-trace-"));
+        try {
+          const src = path.join(tmp, path.basename(info.file));
+          fs.copyFileSync(info.file, src);
+          const t = await traceToFile(src, { silhouette, colors });
+          const added = await addAsset(projectId, { path: t.file, name: path.basename(t.file) });
+          traced = { from: info.path, colors: t.colors };
+          info = await getAssetInfo(projectId, stripAssets(added.path));
+          force = true;
+        } finally { fs.rmSync(tmp, { recursive: true, force: true }); }
       }
       const a = ensureLogoAnalysis(info.file, info.path, { force });
       const brief: LogoBrief = { verb, values, industry };
@@ -1057,7 +1075,8 @@ export const TOOLS: ToolDef[] = [
         console.error(`[motion-studio] logo preview failed: ${(e as Error).message}`);
       }
       const top = summary.suggestedModes[0]?.mode;
-      return { content, summary: `${plural(summary.parts, "part")}${top ? ` · best mode: ${top}` : ""}` };
+      if (traced) content.unshift(text(`Traced ${traced.from} → ${info.path} (${traced.colors.length} color${traced.colors.length === 1 ? "" : "s"}: ${traced.colors.join(" ")}). 3D: {"type":"three","source":"svg:${info.path}"}`));
+      return { content, summary: `${traced ? `traced → ${info.path} · ` : ""}${plural(summary.parts, "part")}${top ? ` · best mode: ${top}` : ""}` };
     },
   }),
 
@@ -1240,6 +1259,85 @@ export const TOOLS: ToolDef[] = [
         const asset = await addAsset(projectId, { path: file, name: path.basename(file) });
         return { content: [json({ asset: asset.path, kind: asset.kind, duration: asset.duration, width: asset.width, height: asset.height })], summary: `Imported ${asset.path}`, events: [{ type: "asset", projectId, asset: (({ file: _f, ...a }) => a)(asset) }] };
       } finally { fs.rmSync(tmp, { recursive: true, force: true }); }
+    },
+  }),
+  defineTool({
+    name: "scrape_site_elements", title: "Scrape a website's elements", scope: "project", hosted: "hidden",
+    description: "Render a website in headless Chrome (JS sites work), scroll it, and list every reusable visual element: inline SVG illustrations/icons (computed CSS colors baked in), <img> sources (full-resolution originals, not optimizer thumbnails), CSS background/mask images, favicons and og:image — ranked by prominence, with alt text and the section they sit in. Also returns the site's dominant colors and font families, and a numbered CONTACT SHEET — look at it, then import_site_elements the ids you want. Only for sites whose assets the user may use (their own brand / event / client).",
+    shape: { projectId: projectIdField, url: z.string().url(), max: z.number().int().min(5).max(120).optional().describe("max elements, default 60") },
+    startSummary: (i) => `Scraping ${String(i.url).slice(0, 60)}`,
+    handler: async ({ projectId, url, max }, ctx) => {
+      ctx.onProgress?.({ progress: 0, message: "Rendering the page" });
+      const { scrape, sheetJpeg } = await scrapeSiteElements(url, { max, signal: ctx.signal });
+      saveScrape(getProject(projectId).dir, scrape);
+      const rows = scrape.elements.map((e) => ({ id: e.id, kind: e.kind, size: `${e.width}x${e.height}`, label: e.label, context: e.context, source: e.source, score: e.score }));
+      const content: ToolContent[] = [json({ title: scrape.title, colors: scrape.colors, fonts: scrape.fonts, elements: rows })];
+      if (sheetJpeg) { content.push(text("Contact sheet (red number = element id):")); content.push(image(sheetJpeg)); }
+      return { content, summary: `${plural(scrape.elements.length, "element")} on ${new URL(scrape.url).host}` };
+    },
+  }),
+  defineTool({
+    name: "import_site_elements", title: "Import website elements", scope: "project", hosted: "hidden",
+    description: "Import elements found by scrape_site_elements (by id) into the project's assets. SVGs are analyzed as logos immediately; rasters (PNG/WebP/…) are traced to vectors with trace:true (one part per color; silhouette:true → one die-cut shape). Each result gives the ready-to-use sources: image layer src, and for vectors a `three` source (\"svg:assets/x.svg\") to EXTRUDE the element in 3D (materials, turntable, assemble, explode…), plus Morph / PathDraw / logo-mode use.",
+    shape: {
+      projectId: projectIdField,
+      ids: z.array(z.number().int()).min(1).max(30),
+      trace: z.boolean().optional().describe("trace raster elements to SVG for 3D / vector animation"),
+      silhouette: z.boolean().optional().describe("with trace: one die-cut silhouette instead of per-color parts"),
+    },
+    startSummary: (i) => `Importing ${plural((i.ids as number[]).length, "element")}`,
+    handler: async ({ projectId, ids, trace, silhouette }, ctx) => {
+      const proj = getProject(projectId);
+      const scrape = loadScrape(proj.dir);
+      if (!scrape) throw new Error("Run scrape_site_elements first.");
+      const host = new URL(scrape.url).host.replace(/^www\./, "").split(".")[0];
+      const results: Record<string, unknown>[] = [];
+      const events: ToolEvent[] = [];
+      for (const id of ids) {
+        const el = scrape.elements.find((e) => e.id === id);
+        if (!el) { results.push({ id, error: "no such element id" }); continue; }
+        const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "ms-site-"));
+        try {
+          let file: string;
+          const name = elementFileName(el, host);
+          if (el.svg) {
+            file = path.join(tmp, name);
+            fs.writeFileSync(file, el.svg);
+          } else if (el.url?.startsWith("data:")) {
+            const m = el.url.match(/^data:([^;,]+)(;base64)?,(.*)$/s);
+            if (!m) throw new Error("bad data URL");
+            file = path.join(tmp, name);
+            fs.writeFileSync(file, m[2] ? Buffer.from(m[3], "base64") : Buffer.from(decodeURIComponent(m[3])));
+          } else {
+            const dl = await safeDownload(el.url!, { maxBytes: 40 * 1024 * 1024, signal: ctx.signal });
+            const ext = /svg/.test(dl.contentType) ? "svg" : /png/.test(dl.contentType) ? "png" : /webp/.test(dl.contentType) ? "webp"
+              : /avif/.test(dl.contentType) ? "avif" : /gif/.test(dl.contentType) ? "gif" : /jpe?g/.test(dl.contentType) ? "jpg" : path.extname(name).slice(1);
+            file = path.join(tmp, name.replace(/\.[a-z0-9]+$/, `.${ext}`));
+            fs.copyFileSync(dl.file, file);
+            dl.cleanup();
+          }
+          const asset = await addAsset(projectId, { path: file, name: path.basename(file) });
+          events.push({ type: "asset", projectId, asset: (({ file: _f, ...a }) => a)(asset) });
+          const r: Record<string, unknown> = { id, asset: asset.path, kind: asset.kind, width: asset.width, height: asset.height, label: el.label };
+          if (path.extname(asset.file).toLowerCase() === ".svg") {
+            try { const a = ensureLogoAnalysis(asset.file, asset.path, { force: true }); r.parts = a.parts.length; r.three = `svg:${asset.path}`; }
+            catch (e) { r.note = `SVG kept as an image (not analyzable as shapes: ${(e as Error).message.slice(0, 80)})`; }
+          } else if (trace && asset.kind === "image") {
+            const src = path.join(tmp, path.basename(asset.file));
+            fs.copyFileSync(asset.file, src);
+            const t = await traceToFile(src, { silhouette });
+            const vec = await addAsset(projectId, { path: t.file, name: path.basename(t.file) });
+            const a = ensureLogoAnalysis(vec.file, vec.path, { force: true });
+            events.push({ type: "asset", projectId, asset: (({ file: _f, ...x }) => x)(vec) });
+            Object.assign(r, { traced: vec.path, parts: a.parts.length, colors: t.colors, three: `svg:${vec.path}` });
+          }
+          results.push(r);
+        } catch (e) {
+          results.push({ id, error: (e as Error).message.slice(0, 200) });
+        } finally { fs.rmSync(tmp, { recursive: true, force: true }); }
+      }
+      const ok = results.filter((r) => !r.error).length;
+      return { content: [json(results)], summary: `Imported ${ok}/${ids.length}`, events };
     },
   }),
   defineTool({

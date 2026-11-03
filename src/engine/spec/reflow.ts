@@ -28,6 +28,10 @@
  * The result has `format: target` (explicit width/height dropped).
  */
 import { FORMATS, type Spec } from "./schema";
+import { chartBox } from "../kit/chart/model";
+import { diagramModel } from "../kit/diagram/model";
+import { codeBox } from "../kit/code/typing";
+import { visualizerBox } from "../kit/visualizer/box";
 
 export type Format = keyof typeof FORMATS;
 export const FORMAT_LIST = Object.keys(FORMATS) as Format[];
@@ -151,6 +155,10 @@ export const estimateBox = (l: Any, W: number, H: number): Box => {
     case "morph": return { w: num(l.width) ? l.width : 400, h: num(l.height) ? l.height : 400 };
     case "cursor": return { w: (l.size ?? 36) * (l.label ? 3.5 : 1), h: (l.size ?? 36) * (l.label ? 1.5 : 1) };
     case "selection": return { w: l.width ?? 640, h: l.height ?? 180 };
+    case "chart": { const b = chartBox(l as never); return { w: b.w, h: b.h }; }
+    case "diagram": { try { const m = diagramModel(l as never); return { w: m.W, h: m.H }; } catch { return { w: l.width ?? 900, h: l.height ?? 600 }; } }
+    case "code": { const b = codeBox(l as never); return { w: b.w, h: b.h }; }
+    case "visualizer": { const b = visualizerBox(l as never); return { w: b.w, h: b.h }; }
     case "toggle": return { w: l.width ?? 280, h: l.height ?? 132 };
     case "group": {
       const kids: Any[] = Array.isArray(l.layers) ? l.layers : [];
@@ -188,7 +196,7 @@ const isFill = (l: Any, W: number, H: number): boolean => {
   }
 };
 
-const CRITICAL = new Set(["text", "logo", "counter", "card", "captions"]);
+const CRITICAL = new Set(["text", "logo", "counter", "card", "captions", "chart", "diagram", "code"]);
 const TEXTY = new Set(["text", "counter", "captions"]);
 const isCritical = (l: Any) => CRITICAL.has(l.type);
 

@@ -93,4 +93,4 @@ const adapted = reflowSpec(specFor(imported), "9:16");
 assert.equal(adapted.scenes[0].layers[0].gesture?.duration, 1, "format adaptation preserves timing");
 assert.ok(adapted.scenes[0].layers[0].gesture?.distance !== undefined, "default gesture distance must also reflow");
 assert.ok(ACCENT_ROLES.length > 5);
-console.log("Choreography: 24 gesture/fps contracts, 40 recipe/format contracts, measured motion, nested timing, imported peaks, conflicts, actors and beat anchors passed.");
+console.log(`Choreography: 24 gesture/fps contracts, ${MOTION_RECIPES.length * Object.keys(FORMATS).length} recipe/format contracts, measured motion, nested timing, imported peaks, conflicts, actors and beat anchors passed.`);

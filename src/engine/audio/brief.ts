@@ -92,7 +92,7 @@ export const shiftTo = (pc: number, targets: number[]) => {
 export const midiIn = (pc: number, lo: number) => lo + ((pc - lo) % 12 + 12) % 12;
 
 const PHYSICAL = new Set(["device", "card", "media", "image", "video", "three", "browser", "phone"]);
-const ABSTRACT = new Set(["shape", "morph", "particles", "counter", "chart", "path", "cloud", "gradient", "grid"]);
+const ABSTRACT = new Set(["shape", "morph", "particles", "counter", "chart", "diagram", "visualizer", "path", "cloud", "gradient", "grid"]);
 
 const walkLayers = (layers: Layer[], f: (l: Layer) => void) => {
   for (const l of layers) {
@@ -134,7 +134,7 @@ export const deriveBrief = (spec: Spec, slots: { start: number; end: number }[],
     if (t === "three") { add("metal"); add("glass"); }
     if (t === "morph") add("liquid", 0.8);
     if (t === "logo" && (l as any).mode === "liquid") add("liquid", 2);
-    if (t === "counter" || t === "chart") add("digital", 0.7);
+    if (t === "counter" || t === "chart" || t === "diagram" || t === "code") add("digital", 0.7);
     if (t === "particles") add("air", 0.5);
   });
   const realism: Realism = b.realism ?? (physical >= Math.max(2, abstract * 0.8) ? "hyper-real" : abstract > physical * 2 + 2 ? "abstract" : "mixed");

@@ -113,9 +113,55 @@ const LightLeak: React.FC<{ amount: number; t: number; W: number; H: number }> =
 
 // ---------------------------------------------------------------------------------------------
 
+type GradeLayer = { bg: string; blend: React.CSSProperties["mixBlendMode"]; o: number };
+/**
+ * Film grades as blend layers over the scene (they need the scene as backdrop: rendered inside the scene's own
+ * stacking context, before vignette/grain). Split-toning = cool shadows / warm highlights via soft-light gradients.
+ */
+const GRADES: Record<NonNullable<Fx["grade"]>, GradeLayer[]> = {
+  "teal-orange": [
+    { bg: "linear-gradient(160deg, #0e6f7a 0%, #0b3f52 45%, #c46a2b 100%)", blend: "soft-light", o: 0.55 },
+    { bg: "#ff9b4a", blend: "overlay", o: 0.08 },
+    { bg: "#06222b", blend: "lighten", o: 0.35 },
+  ],
+  "warm-film": [
+    { bg: "#ff9c4d", blend: "soft-light", o: 0.32 },
+    { bg: "#fff1d6", blend: "multiply", o: 0.22 },
+    { bg: "#1b130c", blend: "lighten", o: 0.6 },
+  ],
+  "golden-hour": [
+    { bg: "radial-gradient(ellipse 90% 70% at 70% 15%, #ffc46b 0%, #ff8a3d 45%, rgba(120,40,60,0.9) 100%)", blend: "soft-light", o: 0.6 },
+    { bg: "#ffb35c", blend: "overlay", o: 0.1 },
+  ],
+  "night-lake": [
+    { bg: "linear-gradient(180deg, #1a2f5a 0%, #0c3b4f 60%, #0a1a2c 100%)", blend: "soft-light", o: 0.6 },
+    { bg: "#0c1630", blend: "lighten", o: 0.45 },
+    { bg: "#ffcf8a", blend: "overlay", o: 0.05 },
+  ],
+  bleach: [
+    { bg: "#808080", blend: "saturation", o: 0.55 },
+    { bg: "#ffffff", blend: "soft-light", o: 0.25 },
+    { bg: "#1d2a2c", blend: "soft-light", o: 0.3 },
+  ],
+  noir: [
+    { bg: "#808080", blend: "saturation", o: 1 },
+    { bg: "#ffffff", blend: "soft-light", o: 0.3 },
+  ],
+};
+
+export const Grade: React.FC<{ grade: NonNullable<Fx["grade"]>; amount: number }> = ({ grade, amount }) => (
+  <>
+    {GRADES[grade].map((l, i) => (
+      <AbsoluteFill key={i} style={{ background: l.bg, mixBlendMode: l.blend, opacity: l.o * amount }} />
+    ))}
+  </>
+);
+
+// ---------------------------------------------------------------------------------------------
+
 const hasFx = (fx: Fx | undefined): fx is Fx =>
   !!fx &&
-  ((fx.grain ?? 0) > 0 || (fx.vignette ?? 0) > 0 || (fx.lightLeak ?? 0) > 0 || (fx.letterbox ?? 0) > 0 ||
+  (!!fx.grade || (fx.grain ?? 0) > 0 || (fx.vignette ?? 0) > 0 || (fx.lightLeak ?? 0) > 0 || (fx.letterbox ?? 0) > 0 ||
     (fx.scanlines ?? 0) > 0 || (fx.flashes?.length ?? 0) > 0);
 
 /** Finishing effects drawn on top of a scene. (`fx.chromatic` is applied separately with ChromaticWrap.) */
@@ -135,6 +181,7 @@ export const FxOverlay: React.FC<{ fx: Fx | undefined; t: number; duration: numb
 
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>
+      {fx.grade && <Grade grade={fx.grade} amount={clamp01(fx.gradeAmount ?? 0.7)} />}
       {leak > 0 && <LightLeak amount={leak} t={t} W={W} H={H} />}
 
       {vig > 0 && (

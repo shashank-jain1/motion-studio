@@ -24,6 +24,9 @@
  *               (80 ms apex spacing, one hit per 220 ms, ≤ 3 overlapping bodies).
  * Every cue is a bake recipe (bake.ts): its layers are mixed into ONE file whose apex lands on the event frame.
  */
+import { chartTiming } from "../kit/chart/model";
+import { diagramModel } from "../kit/diagram/model";
+import { typingSchedule } from "../kit/code/typing";
 import type { Layer, Scene, Spec } from "../spec/schema";
 import { FORMATS } from "../spec/schema";
 import { sceneIndexOf, type SceneSlot } from "../spec/preprocess";
@@ -233,6 +236,9 @@ class Events {
     if (!authored) switch (l.type) {
       case "text": this.text(l, g0, name, geo); break;
       case "counter": this.counter(l, g0, name, geo); break;
+      case "chart": this.chart(l, g0, end, name, geo); break;
+      case "diagram": this.diagram(l, g0, end, name, geo); break;
+      case "code": this.code(l, g0, end, name, geo); break;
       case "morph": this.morph(l, g0, name, geo); break;
       case "logo": this.logo(l, g0 + enDelay, name, geo); break;
       case "card": this.card(l, g0, landing, name, !!en, geo); break;
@@ -387,6 +393,48 @@ class Events {
     }
     ticks.forEach((t, k) => this.push({ ...geo, key: `${geo.key}.t${k}`, t: g0 + t, role: "tick", priority: 0.55, reason: `counter tick ${name}`, vol: 0.75 + 0.25 * (k / Math.max(1, ticks.length - 1)), size: 0.2 }));
     if (from !== to) this.push({ ...geo, t: g0 + reach, role: "ding", priority: 0.8, reason: `counter lands on ${to} ${name}`, size: 0.5 });
+  }
+
+  /** Charts: a soft tick as each bar / segment lands (one gesture), a ding when the highlight lands, pops on callouts. */
+  private chart(l: Extract<Layer, { type: "chart" }>, g0: number, end: number, name: string, geo: { x: number; scene: number; key: string }) {
+    const tm = chartTiming(l);
+    const at = (t: number) => g0 + t < end;
+    if (l.kind === "line" || l.kind === "area") {
+      tm.items.slice(0, 2).forEach((s, k) => { if (at(s.start)) this.push({ ...geo, key: `${geo.key}.s${k}`, t: g0 + s.start, role: "data", priority: 0.45, reason: `chart line draws ${name}`, align: "start", size: 0.35 }); });
+    } else if (l.kind === "rings") {
+      if (tm.items[0] && at(tm.items[0].start)) this.push({ ...geo, t: g0 + tm.items[0].start, role: "shimmer", priority: 0.42, reason: `rings fill ${name}`, align: "start", size: 0.4 });
+    } else {
+      const lands = tm.items.map((s) => (l.kind === "donut" || l.kind === "pie" ? s.start : s.start + (s.end - s.start) * 0.42)).filter(at);
+      const step = Math.max(1, Math.ceil(lands.length / 10));
+      lands.filter((_, i) => i % step === 0).forEach((t, k, arr) => this.push({ ...geo, key: `${geo.key}.t${k}`, t: g0 + t, role: "tick", priority: 0.5, reason: `chart item lands ${name}`, vol: 0.7 + 0.3 * (k / Math.max(1, arr.length - 1)), size: 0.22 }));
+    }
+    if ((l.highlight !== undefined || l.kind === "donut" || l.kind === "rings") && at(tm.land)) this.push({ ...geo, t: g0 + tm.land, role: "ding", priority: 0.6, reason: `chart lands ${name}`, size: 0.4 });
+    (l.annotate ?? []).forEach((a, k) => { const t = tm.land + 0.25 + (a.delay ?? k * 0.35); if (at(t)) this.push({ ...geo, key: `${geo.key}.a${k}`, t: g0 + t, role: "pop", priority: 0.48, reason: `chart callout ${name}`, size: 0.3 }); });
+  }
+
+  /** Diagrams: a light tick as each node arrives (one gesture), a pop on each focus beat. */
+  private diagram(l: Extract<Layer, { type: "diagram" }>, g0: number, end: number, name: string, geo: { x: number; scene: number; key: string }) {
+    let m: ReturnType<typeof diagramModel>;
+    try { m = diagramModel(l); } catch { return; }
+    const arrivals = m.nodes.map((n) => n.appear + 0.06).filter((t) => g0 + t < end).sort((a, b) => a - b);
+    let last = -Infinity, k = 0;
+    for (const t of arrivals) { if (t - last < 0.12 || k >= 10) continue; this.push({ ...geo, key: `${geo.key}.t${k}`, t: g0 + t, role: "tick", priority: 0.48, reason: `diagram node ${name}`, size: 0.25, mat: ["glass"] }); last = t; k++; }
+    (l.focus ?? []).forEach((f, i) => { if (g0 + f.at < end) this.push({ ...geo, key: `${geo.key}.f${i}`, t: g0 + f.at, role: "pop", priority: 0.5, reason: `diagram focus ${name}`, size: 0.3 }); });
+  }
+
+  /** Code: key clicks that follow the real typing schedule (≤ 16, one gesture), Enter on terminal commands. */
+  private code(l: Extract<Layer, { type: "code" }>, g0: number, end: number, name: string, geo: { x: number; scene: number; key: string }) {
+    const sch = typingSchedule(l);
+    const keys = sch.keys.filter((t) => g0 + t < end);
+    if (keys.length) {
+      const picks: number[] = [];
+      const every = Math.max(1, Math.ceil(keys.length / 16));
+      for (let i = 0; i < keys.length; i += every) if (!picks.length || keys[i] - picks[picks.length - 1] >= 0.075) picks.push(keys[i]);
+      picks.slice(0, 16).forEach((t, n) => this.push({ ...geo, key: `${geo.key}.k${n}`, t: g0 + t, role: "type", priority: 0.36, reason: `code typing ${name}` }));
+    } else if ((l.reveal ?? "type") === "lines" && g0 + (l.typingStart ?? 0.35) < end) {
+      this.push({ ...geo, t: g0 + (l.typingStart ?? 0.35), role: "data", priority: 0.4, reason: `code lines reveal ${name}`, align: "start", size: 0.3 });
+    }
+    sch.enters.filter((t) => g0 + t < end).slice(0, 4).forEach((t, i) => this.push({ ...geo, key: `${geo.key}.e${i}`, t: g0 + t, role: "click", priority: 0.52, reason: `terminal enter ${name}`, size: 0.3, mat: ["plastic"] }));
   }
 
   private morph(l: Extract<Layer, { type: "morph" }>, g0: number, name: string, geo: { x: number; scene: number; key: string }) {

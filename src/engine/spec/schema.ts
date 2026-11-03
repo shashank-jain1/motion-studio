@@ -534,12 +534,136 @@ export const LogoLayer = z.object({
 export const DEVICE_MODELS = ["iphone", "android", "browser", "tablet"] as const;
 
 /** Recursive layer types (device screens and groups hold child layers). */
+// --- Data, diagrams, code & music visuals (v9) ------------------------------------------------------------------------
+/** Shared look of the v9 panels: glass (frosted, hairline border), solid (theme card), outline, none (bare on the scene). */
+const Surface = z.enum(["glass", "solid", "outline", "none"]);
+/** Number formatting shared by chart values. */
+const NumberFormat = {
+  prefix: z.string().optional(), suffix: z.string().optional(),
+  decimals: z.number().int().min(0).max(4).optional(),
+  locale: z.string().optional().describe("e.g. en-IN for lakh grouping"),
+  format: z.enum(["standard", "compact", "percent"]).optional().describe("compact: 1.2K / 3.4M · percent: value is a fraction (0.42 → 42%)"),
+};
+
+export const ChartLayer = z.object({
+  ...commonLayer,
+  type: z.literal("chart"),
+  kind: z.enum(["bar", "hbar", "line", "area", "donut", "pie", "rings"]).describe("bar: columns · hbar: ranked rows · line / area: series over labels · donut / pie: parts of a whole · rings: concentric progress rings (value of max)"),
+  data: z.array(z.object({ label: z.string().optional(), value: z.number(), color: z.string().optional() })).max(40).optional()
+    .describe("bar / hbar / donut / pie / rings items"),
+  series: z.array(z.object({ name: z.string().optional(), values: z.array(z.number()).min(2).max(120), color: z.string().optional() })).max(6).optional()
+    .describe("line / area: one or more series over `labels`"),
+  labels: z.array(z.string()).max(120).optional().describe("line / area: x-axis labels (one per value)"),
+  title: z.string().optional(), subtitle: z.string().optional(),
+  delta: z.string().optional().describe("header badge, e.g. \"+32%\" (▲ for +, ▼ for −/-)"),
+  deltaGood: z.enum(["up", "down"]).optional().describe("which direction is good news (default up): render time −77% with deltaGood down shows green"),
+  min: z.number().optional(), max: z.number().optional().describe("value domain (default: 0 … a nice number above the data; rings: 100)"),
+  highlight: z.union([z.number().int(), z.string()]).optional().describe("item index or label: accent it, keep the rest neutral, and glow it once the data lands"),
+  annotate: z.array(z.object({ at: z.union([z.number().int(), z.string()]), text: z.string(), delay: z.number().optional() })).max(6).optional()
+    .describe("callouts pinned to an item / x label, shown after the data lands"),
+  ...NumberFormat,
+  values: z.enum(["auto", "end", "inside", "none"]).optional().describe("value labels on bars / rows (default auto)"),
+  grid: z.boolean().optional().describe("horizontal gridlines + y ticks (default true for bar / line / area)"),
+  legend: z.boolean().optional().describe("donut / pie / rings / multi-series: legend (default true)"),
+  center: z.string().optional().describe("donut / rings center caption; the center number is the total (or the highlighted item)"),
+  curve: z.enum(["smooth", "linear", "step"]).optional().describe("line / area interpolation (default smooth)"),
+  dots: z.boolean().optional().describe("line / area: data-point dots (default true when ≤ 16 points)"),
+  thickness: z.number().min(0.05).max(1).optional().describe("donut / rings stroke as a fraction of the radius (default 0.26 / 0.14)"),
+  radius: z.number().optional().describe("bar corner radius px (default 10)"),
+  colors: z.array(z.string()).optional().describe("palette for items / series (default: theme accents)"),
+  color: z.string().optional().describe("single color for all bars (default $accent)"),
+  surface: Surface.optional().describe("panel behind the chart (default none; glass reads premium on dark scenes)"),
+  stagger: z.number().min(0).optional().describe("seconds between items (default 0.07)"),
+  growDuration: z.number().positive().optional().describe("seconds each bar / segment / ring takes (default 0.9)"),
+  drawDuration: z.number().positive().optional().describe("line / area / donut sweep seconds (default 1.6)"),
+  ease: Ease.optional().describe("bars default spring (a small settle overshoot); lines inOut"),
+  fontSize: z.number().optional().describe("label size (default ≈ 4.2% of the box)"),
+  font: z.string().optional(),
+});
+
+export const DiagramLayer = z.object({
+  ...commonLayer,
+  type: z.literal("diagram"),
+  nodes: z.array(z.object({
+    id: z.string(), label: z.string(), sub: z.string().optional().describe("second line, muted"),
+    icon: z.string().optional().describe("emoji, assets/ image, or a short glyph like \"λ\""),
+    shape: z.enum(["card", "pill", "circle", "diamond", "chip"]).optional(),
+    color: z.string().optional().describe("node accent (icon tint, focus glow)"),
+    x: z.number().optional(), y: z.number().optional().describe("manual position, px from the diagram center (all nodes need x/y for manual layout)"),
+    at: z.number().optional().describe("seconds after layer start the node appears (default: flow order)"),
+    width: z.number().optional(),
+  })).min(1).max(24),
+  edges: z.array(z.object({
+    from: z.string(), to: z.string(), label: z.string().optional(),
+    style: z.enum(["solid", "dashed"]).optional(),
+    flow: z.boolean().optional().describe("animated data packets along the edge after it draws (default true)"),
+    color: z.string().optional(),
+    at: z.number().optional().describe("seconds after layer start the edge starts drawing (default: when its source has appeared)"),
+  })).max(40).optional(),
+  layout: z.enum(["right", "down", "radial", "manual"]).optional().describe("auto flow left→right (default), top→down, hub-and-spoke radial, or manual x/y"),
+  connector: z.enum(["curved", "orthogonal", "straight"]).optional().describe("edge routing (default curved)"),
+  gap: z.number().optional().describe("space between ranks px (default 120)"),
+  focus: z.array(z.object({
+    at: z.number(), nodes: z.array(z.string()).min(1), until: z.number().optional(),
+  })).max(12).optional().describe("story beats: at `at` the listed nodes light up (glow, scale) and the rest dims, until the next focus / `until`"),
+  surface: Surface.optional().describe("node style (default glass on dark, solid on light)"),
+  packets: z.number().int().min(0).max(6).optional().describe("data packets per edge (default 2; 0 = none)"),
+  speed: z.number().optional().describe("packet speed px/s (default 260)"),
+  stagger: z.number().min(0).optional().describe("seconds between nodes (default 0.22)"),
+  title: z.string().optional(),
+  fontSize: z.number().optional().describe("node label size (default 26)"),
+  font: z.string().optional(),
+  color: z.string().optional().describe("edge / packet color (default $accent)"),
+});
+
+export const CODE_THEMES = ["auto", "midnight", "carbon", "dawn", "neon"] as const;
+export const CODE_LANGUAGES = ["ts", "tsx", "js", "jsx", "python", "bash", "json", "html", "css", "go", "rust", "sql", "yaml", "swift", "kotlin", "java", "c", "cpp", "diff", "text"] as const;
+export const CodeLayer = z.object({
+  ...commonLayer,
+  type: z.literal("code"),
+  code: z.string().max(6000).describe("source text; for variant terminal, lines starting with the prompt (\"$ \") are typed commands, other lines are printed output"),
+  language: z.enum(CODE_LANGUAGES).optional().describe("syntax colors (default ts; terminal: bash)"),
+  variant: z.enum(["editor", "terminal", "card", "plain"]).optional().describe("editor: window + tab + line numbers · terminal: shell window · card: bare code panel · plain: just the code"),
+  title: z.string().optional().describe("editor tab filename / terminal title"),
+  theme: z.enum(CODE_THEMES).optional().describe("auto: midnight on dark scenes, dawn on light"),
+  reveal: z.enum(["type", "lines", "none"]).optional().describe("type: human typing with rhythm (default) · lines: line by line · none"),
+  speed: z.number().min(2).max(200).optional().describe("typing characters per second (default 60; terminal commands 40)"),
+  typingStart: z.number().min(0).optional().describe("seconds after layer start typing begins (default 0.35)"),
+  lineNumbers: z.boolean().optional().describe("default true for editor"),
+  prompt: z.string().optional().describe("terminal prompt marker (default \"$\")"),
+  focus: z.array(z.object({
+    lines: z.array(z.number().int().min(1)).min(1).describe("1-based line numbers; [a, b] with b > a + 1 is read as the range a…b"),
+    at: z.number(), until: z.number().optional(), color: z.string().optional(),
+  })).max(12).optional().describe("highlight lines from `at` (others dim)"),
+  diff: z.boolean().optional().describe("lines starting with + / - get added / removed styling (language diff implies it)"),
+  caret: z.boolean().optional().describe("blinking caret (default true while typing)"),
+  maxLines: z.number().int().min(3).optional().describe("visible rows before it scrolls to follow the caret (default: fits the height)"),
+  fontSize: z.number().optional().describe("default 26"),
+  font: z.string().optional().describe("default $mono"),
+  surface: Surface.optional().describe("default solid (glass for card)"),
+});
+
+export const VisualizerLayer = z.object({
+  ...commonLayer,
+  type: z.literal("visualizer"),
+  style: z.enum(["bars", "mirror", "wave", "circle", "orb", "dots"]).describe("bars: spectrum + reflection · mirror: bars above and below a center line · wave: layered oscilloscope · circle: radial spectrum ring · orb: liquid blob that breathes with the bass · dots: LED matrix"),
+  src: z.string().optional().describe("audio asset to react to (default the film's music, spec.audio)"),
+  bars: z.number().int().min(8).max(160).optional().describe("bands (default 48; circle 96; dots 24)"),
+  colors: z.array(z.string()).optional().describe("gradient low → high (default theme accents)"),
+  sensitivity: z.number().min(0.2).max(4).optional().describe("gain (default 1)"),
+  smoothing: z.boolean().optional().describe("temporal smoothing (default true)"),
+  glow: z.boolean().optional().describe("soft bloom (default true)"),
+  thickness: z.number().optional().describe("bar / line thickness px"),
+  radius: z.number().optional().describe("circle / orb base radius px"),
+});
+
 export type Layer =
   | z.infer<typeof TextLayer> | z.infer<typeof MediaLayer> | z.infer<typeof ShapeLayer> | z.infer<typeof PathLayer>
   | z.infer<typeof ParticlesLayer> | z.infer<typeof CardLayer> | z.infer<typeof CounterLayer> | z.infer<typeof CaptionsLayer>
   | z.infer<typeof CloudLayer> | z.infer<typeof ShaderLayer> | z.infer<typeof LottieLayer> | z.infer<typeof CustomLayer>
   | z.infer<typeof MorphLayer> | z.infer<typeof LogoLayer> | z.infer<typeof ThreeLayer>
   | z.infer<typeof CursorLayer> | z.infer<typeof SelectionLayer> | z.infer<typeof ToggleLayer>
+  | z.infer<typeof ChartLayer> | z.infer<typeof DiagramLayer> | z.infer<typeof CodeLayer> | z.infer<typeof VisualizerLayer>
   | DeviceLayerT | GroupLayerT;
 
 const commonLayerSchema = z.object(commonLayer);
@@ -576,6 +700,7 @@ export const LayerSchema: z.ZodType<Layer> = z.lazy(() =>
   z.discriminatedUnion("type", [
     TextLayer, MediaLayer, ShapeLayer, PathLayer, ParticlesLayer, CardLayer, CounterLayer,
     CaptionsLayer, CloudLayer, ShaderLayer, LottieLayer, CustomLayer, MorphLayer, LogoLayer, ThreeLayer, CursorLayer, SelectionLayer, ToggleLayer, DeviceLayer, GroupLayer,
+    ChartLayer, DiagramLayer, CodeLayer, VisualizerLayer,
   ]),
 ) as z.ZodType<Layer>;
 
@@ -668,6 +793,9 @@ export const FxSchema = z.object({
   chromatic: z.number().optional().describe("px of RGB split"),
   lightLeak: z.number().optional().describe("0..1"),
   letterbox: z.number().optional().describe("bar height as fraction of height, e.g. 0.1"),
+  grade: z.enum(["teal-orange", "warm-film", "golden-hour", "night-lake", "bleach", "noir"]).optional()
+    .describe("film color grade over the whole scene (blend layers): teal-orange blockbuster · warm-film 35mm · golden-hour · night-lake (cool blue dusk) · bleach (bleach-bypass, desaturated contrast) · noir (b&w)"),
+  gradeAmount: z.number().min(0).max(1).optional().describe("grade strength, default 0.7"),
   scanlines: z.number().optional(),
   flashes: z.array(z.object({ at: z.number(), color: z.string().optional(), duration: z.number().optional(), intensity: z.number().optional() })).optional(),
 });

@@ -1,3 +1,4 @@
+import { FilmOffset } from "../core/filmClock";
 import React, { useId, useMemo } from "react";
 import { Sequence, useCurrentFrame, useVideoConfig } from "remotion";
 import { CameraMotionBlur } from "@remotion/motion-blur";
@@ -36,6 +37,9 @@ type InstanceProps = {
  *   vblur wrapper (rotated by the motion angle, SVG blur along its local x) → counter-rotated perspective box → transformed layer.
  * The wrappers are always present (stable DOM, no remounts); they only get a transform/filter while moving fast.
  */
+/** SHADOW_PREMIUM's three layers as shape-following drop-shadows. */
+const SHADOW_PREMIUM_FILTER = "drop-shadow(0 2px 4px rgba(0,0,0,0.06)) drop-shadow(0 12px 24px rgba(0,0,0,0.10)) drop-shadow(0 40px 80px rgba(0,0,0,0.18))";
+
 const LayerInstance: React.FC<InstanceProps> = ({ layer, tr, t, duration, vblur, stretch, fid, isCopy }) => {
   const color = useColor();
 
@@ -43,10 +47,14 @@ const LayerInstance: React.FC<InstanceProps> = ({ layer, tr, t, duration, vblur,
   const presetDir = tr.dirBlurX > 0.5 || tr.dirBlurY > 0.5;
   if (presetDir) filters.push(`url(#db${fid})`);
   if (tr.blur > 0.05) filters.push(`blur(${tr.blur}px)`);
-  if (layer.shadow) {
-    filters.push(typeof layer.shadow === "string" && layer.shadow.startsWith("drop-shadow") ? color(layer.shadow) : "drop-shadow(0 18px 30px rgba(0,0,0,0.22)) drop-shadow(0 4px 8px rgba(0,0,0,0.12))");
-  }
-  const boxShadow = typeof layer.shadow === "string" && !layer.shadow.startsWith("drop-shadow") ? (layer.shadow === "premium" ? SHADOW_PREMIUM : color(layer.shadow)) : undefined;
+  // Shadows follow the SHAPE (rounded cards, pills, glyphs, PNG alpha): drop-shadow filters. A CSS box-shadow sits on the
+  // layer's rectangular wrapper and shows as a square halo behind anything rounded, so it is only used when the spec
+  // passes an explicit box-shadow string.
+  let boxShadow: string | undefined;
+  if (layer.shadow === true) filters.push("drop-shadow(0 18px 30px rgba(0,0,0,0.22)) drop-shadow(0 4px 8px rgba(0,0,0,0.12))");
+  else if (layer.shadow === "premium") filters.push(SHADOW_PREMIUM_FILTER);
+  else if (typeof layer.shadow === "string" && layer.shadow.startsWith("drop-shadow")) filters.push(color(layer.shadow));
+  else if (typeof layer.shadow === "string") boxShadow = color(layer.shadow);
 
   const inner: React.CSSProperties = {
     position: "absolute",
@@ -176,7 +184,7 @@ export const LayerList: React.FC<{ layers: Layer[]; sceneDuration?: number }> = 
         const dur = durationOf(layer);
         return (
           <Sequence key={layer.id ?? i} from={Math.round(start * fps)} durationInFrames={Math.max(1, Math.round(dur * fps))} layout="none" name={layer.id ?? `${layer.type}-${i}`}>
-            <LayerHost layer={layer} duration={dur} index={i} start={start} layerIndex={layerIndex} />
+            <FilmOffset add={Math.round(start * fps)}><LayerHost layer={layer} duration={dur} index={i} start={start} layerIndex={layerIndex} /></FilmOffset>
           </Sequence>
         );
       })}

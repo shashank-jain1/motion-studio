@@ -11,6 +11,10 @@ export const MOTION_RECIPES = [
   { id: "ribbon-flight", title: "Ribbon flight", use: "An object follows a curved path with delayed echoes", energy: 0.7, cost: "2D" },
   { id: "particle-forge", title: "Particle forge", use: "Seeded 3D particles form extruded type or an SVG logo", energy: 1, cost: "WebGL" },
   { id: "chrome-echo", title: "Chrome echo", use: "Extruded type with depth echoes, a camera orbit and controlled bloom", energy: 0.8, cost: "WebGL" },
+  { id: "data-proof", title: "Data proof", use: "A glass bar chart grows, one bar carries the story and a callout lands on it", energy: 0.55, cost: "2D" },
+  { id: "how-it-works", title: "How it works", use: "A flow diagram assembles node by node, packets start moving, the clever step lights up", energy: 0.5, cost: "2D" },
+  { id: "terminal-ship", title: "Terminal ship", use: "A command is typed, output prints, the ✓ line is the payoff", energy: 0.6, cost: "2D" },
+  { id: "beat-visualizer", title: "Beat visualizer", use: "A liquid orb breathes with the film's music behind the hero word", energy: 0.75, cost: "2D" },
 ] as const;
 export type MotionRecipeId = typeof MOTION_RECIPES[number]["id"];
 export type RecipeOptions = {
@@ -113,6 +117,40 @@ export const buildMotionScene = (o: RecipeOptions): Scene => {
         post: { bloom: 0.25, vignette: 0.2 },
         accents: [{ at: 0.55, role: "move", material: "metal-thin" }, { at: d, role: "impact", importance: "structural", material: "metal" }],
       });
+      break;
+    }
+    case "data-proof": {
+      const vertical = h > w;
+      const cw = Math.min(w * (vertical ? 0.88 : 0.6), 1180 * k * (vertical ? 1.4 : 1)), chH = Math.min(h * (vertical ? 0.42 : 0.56), 640 * k * (vertical ? 1.3 : 1));
+      layers.push(title({ id: "hero-type", preset: "blur-rise", fontSize: Math.min(110 * k * (vertical ? 1.3 : 1), w * 0.1), y: -chH / 2 - inset * 1.3, maxWidth: w - inset * 2 }));
+      layers.push({ type: "chart", id: "proof", kind: "bar", surface: "glass", width: cw, height: chH, y: inset * 0.6, start: 0.25,
+        title: o.subtitle ?? "Weekly active", delta: "+128%", format: "compact", highlight: 5, color: accent,
+        data: [{ label: "W1", value: 1200 }, { label: "W2", value: 1700 }, { label: "W3", value: 1550 }, { label: "W4", value: 2300 }, { label: "W5", value: 2100 }, { label: "W6", value: 4300 }],
+        annotate: [{ at: 5, text: "Launch" }] } as Layer);
+      break;
+    }
+    case "how-it-works": {
+      const vertical = h > w;
+      layers.push(title({ id: "hero-type", preset: "blur-rise", fontSize: Math.min(96 * k * (vertical ? 1.3 : 1), w * 0.09), y: -h * (vertical ? 0.3 : 0.3), maxWidth: w - inset * 2 }));
+      layers.push({ type: "diagram", id: "flow", layout: vertical ? "down" : "right", width: w - inset * 2, height: h * (vertical ? 0.5 : 0.48), y: h * 0.06, start: 0.2,
+        fontSize: Math.max(16, 26 * k * (vertical ? 1.25 : 1)), color: accent,
+        nodes: [{ id: "in", label: "Input", sub: "one line", icon: "✍️" }, { id: "core", label: "The clever part", sub: "your product", icon: "⚡" }, { id: "out", label: "Result", sub: "in seconds", icon: "✓" }],
+        edges: [{ from: "in", to: "core" }, { from: "core", to: "out" }], focus: [{ at: Math.min(1.9, duration - 0.6), nodes: ["core"] }] } as Layer);
+      break;
+    }
+    case "terminal-ship": {
+      const vertical = h > w;
+      const fs = Math.max(14, 26 * k * (vertical ? 1.2 : 1));
+      layers.push({ type: "code", id: "terminal", variant: "terminal", title: "zsh", fontSize: fs, y: vertical ? -h * 0.05 : inset * 0.3, start: 0.1, speed: 46,
+        code: "$ npm run ship\n→ building 214 modules\n✓ tests passed (1,284)\n✓ deployed to production", typingStart: 0.2 } as Layer);
+      layers.push(title({ id: "hero-type", preset: "blur-rise", fontSize: Math.min(100 * k * (vertical ? 1.3 : 1), w * 0.1), y: vertical ? -h * 0.3 : -h * 0.32, start: 0, maxWidth: w - inset * 2 }));
+      break;
+    }
+    case "beat-visualizer": {
+      const R = Math.min(w, h) * 0.62;
+      layers.push({ type: "visualizer", id: "orb", style: "orb", width: R, height: R, colors: [accent, fg], sound: false } as Layer);
+      layers.push(title({ id: "hero-type", preset: "blur-rise", fontSize: Math.min(180 * k, w * 0.15), start: 0.1, color: fg,
+        accents: [{ at: 0.35, role: "impact", importance: "hero", material: "air" }] }));
       break;
     }
     default: throw new Error(`Unknown motion recipe: ${o.recipe}`);

@@ -17,6 +17,10 @@ import { Morph } from "../kit/Morph";
 import { Logo } from "../kit/Logo";
 import { ThreeView } from "../kit/three";
 import { Cursor, Selection, Toggle } from "../kit/Interaction";
+import { Chart } from "../kit/Chart";
+import { Diagram } from "../kit/Diagram";
+import { Code } from "../kit/Code";
+import { Visualizer } from "../kit/Visualizer";
 import { ContainerProvider, useContainer } from "../core/container";
 import { CUSTOM } from "../custom";
 import { LayerList } from "./LayerList";
@@ -65,5 +69,9 @@ export const renderLayerContent = (layer: Layer, t: number, duration: number): R
     case "cursor": return <Cursor layer={layer} t={t} />;
     case "selection": return <Selection layer={layer} t={t} />;
     case "toggle": return <Toggle layer={layer} t={t} />;
+    case "chart": return <Chart layer={layer} t={t} duration={duration} />;
+    case "diagram": return <Diagram layer={layer} t={t} duration={duration} />;
+    case "code": return <Code layer={layer} t={t} duration={duration} />;
+    case "visualizer": return <Visualizer layer={layer} t={t} duration={duration} />;
   }
 };

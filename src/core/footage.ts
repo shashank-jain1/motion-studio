@@ -212,7 +212,7 @@ export const detectShots = async (file: string, opts: { threshold?: number; fps?
 };
 
 /** Concatenated payloads of an AVI's video chunks ("00db"/"00dc") of exactly `size` bytes. */
-const aviFrames = (avi: Buffer, size: number): Buffer => {
+export const aviFrames = (avi: Buffer, size: number): Buffer => {
   const out: Buffer[] = [];
   for (let i = avi.indexOf("movi"); i >= 0 && i + 8 <= avi.length;) {
     const id = avi.toString("latin1", i, i + 4);

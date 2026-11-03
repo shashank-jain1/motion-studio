@@ -38,6 +38,14 @@ import * as Newsreader from "@remotion/google-fonts/Newsreader";
 import * as IBMPlexMono from "@remotion/google-fonts/IBMPlexMono";
 import * as TiroDevanagariHindi from "@remotion/google-fonts/TiroDevanagariHindi";
 import * as Mukta from "@remotion/google-fonts/Mukta";
+import * as RozhaOne from "@remotion/google-fonts/RozhaOne";
+import * as YatraOne from "@remotion/google-fonts/YatraOne";
+import * as Teko from "@remotion/google-fonts/Teko";
+import * as Eczar from "@remotion/google-fonts/Eczar";
+import * as Kalam from "@remotion/google-fonts/Kalam";
+import * as Baloo2 from "@remotion/google-fonts/Baloo2";
+import * as AnekDevanagari from "@remotion/google-fonts/AnekDevanagari";
+import * as Khand from "@remotion/google-fonts/Khand";
 import { cancelRender, continueRender, delayRender } from "remotion";
 import { FONT_NAMES } from "./fontCatalog";
 import { canonicalFontFamily, customFontIdentity, facesForFamily, type FontFaceDefinition } from "./fontIdentity";
@@ -57,6 +65,7 @@ export const FONTS: Record<(typeof FONT_NAMES)[number], FontModule> = {
   "Playfair Display": PlayfairDisplay, "Poppins": Poppins, "Press Start 2P": PressStart2P, "Righteous": Righteous,
   "Sora": Sora, "Space Grotesk": SpaceGrotesk, "Syne": Syne, "Unbounded": Unbounded,
   "Newsreader": Newsreader, "IBM Plex Mono": IBMPlexMono, "Tiro Devanagari Hindi": TiroDevanagariHindi, "Mukta": Mukta,
+  "Rozha One": RozhaOne, "Yatra One": YatraOne, "Teko": Teko, "Eczar": Eczar, "Kalam": Kalam, "Baloo 2": Baloo2, "Anek Devanagari": AnekDevanagari, "Khand": Khand,
 };
 
 const loaded = new Map<string, string>();
