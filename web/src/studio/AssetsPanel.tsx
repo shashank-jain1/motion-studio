@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { api, uploadAsset, type Asset, type LogoSummary } from "../api";
+import { api, apiUrl, uploadAsset, type Asset, type LogoSummary } from "../api";
 import { useStudio } from "./context";
 import { useToast } from "../components/Toast";
 import { Lightbox, Skeleton } from "../components/ui";
@@ -26,7 +26,7 @@ export const AssetsPanel = () => {
       setUploads((u) => [...u, { key, name: file.name, progress: 0 }]);
       try {
         const info = await uploadAsset(id, file, (p) => setUploads((u) => u.map((x) => (x.key === key ? { ...x, progress: p } : x))));
-        const a: Asset = { ...info, url: info.url ?? `/files/${id}/${info.path}` };
+        const a: Asset = { ...info, url: info.url ?? apiUrl(`/files/${id}/${info.path}`) };
         setAssets((list) => [...list.filter((x) => x.path !== a.path), a]);
         setUploads((u) => u.filter((x) => x.key !== key));
         if (info.logo) toast.success("Logo analyzed", `${basename(info.path)} · ${info.logo.parts ?? "?"} parts — the director can animate each one`);

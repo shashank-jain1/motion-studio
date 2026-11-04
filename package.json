@@ -33,6 +33,7 @@
     "web": "vite --config web/vite.config.ts",
     "dev": "concurrently -k -n server,web -c blue,magenta \"pnpm server\" \"pnpm web\"",
     "build:web": "vite build --config web/vite.config.ts",
+    "build": "vite build --config web/vite.config.ts --mode hostinger --outDir ../build",
     "start": "pnpm build:web && pnpm server",
     "deploy:lambda": "tsx scripts/deploy-lambda.ts"
   },

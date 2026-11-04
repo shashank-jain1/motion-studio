@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Thumbnail } from "@remotion/player";
 import { SpecVideo } from "../../../src/engine/render/SpecVideo";
-import { api, templateBase } from "../api";
+import { api, filesBase, templateBase } from "../api";
 import { analyzeSpec, type ParsedInfo } from "../lib/specInfo";
 import { fmtTC } from "../lib/format";
 import { useInView } from "./ui";
@@ -55,7 +55,7 @@ export const SpecThumb = ({ projectId, template, poster: posterUrl, scrub, onInf
     return () => { alive = false; };
   }, [seen, projectId, template]); // eslint-disable-line react-hooks/exhaustive-deps
   const inputProps = useMemo(() => (info
-    ? { spec: info.raw as never, assetBase: template ? templateBase(template) : `${location.origin}/files/${projectId}`, projectId: template ? `tpl-${template}` : projectId }
+    ? { spec: info.raw as never, assetBase: template ? templateBase(template) : filesBase(projectId ?? ""), projectId: template ? `tpl-${template}` : projectId }
     : null), [info, projectId, template]);
   const poster = info ? posterFrame(info) : 0;
   const frame = info && hover != null ? Math.round(hover * (info.durationInFrames - 1)) : poster;

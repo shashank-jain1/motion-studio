@@ -1,0 +1,12 @@
+[Unit]
+Description=Cloudflare Tunnel for the Motion Studio API
+After=network-online.target motion-studio.service
+Wants=network-online.target
+
+[Service]
+ExecStart=@CLOUDFLARED@ --no-autoupdate --config %h/.cloudflared/motion-studio.yml tunnel run
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target

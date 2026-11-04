@@ -7,10 +7,12 @@
  */
 import "../core/env"; // .env first: config below reads process.env at load
 import fs from "node:fs";
+import crypto from "node:crypto";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { Hono, type Context } from "hono";
 import { HTTPException } from "hono/http-exception";
+import { cors } from "hono/cors";
 import { streamSSE } from "hono/streaming";
 import { serve } from "@hono/node-server";
 import { ROOT, PROJECTS_DIR, LIBRARY_DIR } from "../core/paths";
@@ -25,7 +27,7 @@ import { clearChat, fileUrl, getChat, isRunning, runChat, stopChat, type ChatEve
 import { fileResponse, safeResolve } from "./files";
 import { HttpError, parseMultipart } from "./multipart";
 import { getSettings, putSettings } from "./settings";
-import { HOST, IS_HOSTED, MODE, PORT, PUBLIC_HOST, PUBLIC_ORIGIN, PUBLIC_URL, RENDER_BACKEND, SIGNUP } from "./config";
+import { FILES_ORIGIN, HOST, IS_HOSTED, MODE, PORT, PUBLIC_HOST, PUBLIC_ORIGIN, PUBLIC_URL, RENDER_BACKEND, SIGNUP, WEB_ORIGIN, getSecret } from "./config";
 import {
   assertProjectOwner,
   authenticate,
@@ -61,7 +63,7 @@ const ID_RE = /^[a-z0-9][a-z0-9-]{0,80}$/;
 const extraList = (v: string | undefined) => (v ?? "").split(",").map((s) => s.trim()).filter(Boolean);
 const ALLOWED_HOSTS = new Set(["127.0.0.1", "localhost", "[::1]", "::1", PUBLIC_HOST, ...extraList(process.env.MOTION_STUDIO_ALLOWED_HOSTS)]);
 /** Hosted: state-changing browser requests must come from the public origin. Local: any local origin (Vite on :5173). */
-const ALLOWED_ORIGINS = new Set([PUBLIC_ORIGIN, ...extraList(process.env.MOTION_STUDIO_ALLOWED_ORIGINS)]);
+const ALLOWED_ORIGINS = new Set([PUBLIC_ORIGIN, ...(WEB_ORIGIN ? [WEB_ORIGIN] : []), ...extraList(process.env.MOTION_STUDIO_ALLOWED_ORIGINS)]);
 /** Bearer-authenticated, non-cookie endpoints (remote MCP / OAuth token endpoints): no Origin check. */
 const ORIGIN_EXEMPT = /^\/(mcp|oauth\/(token|register|revoke))(\/|$)/;
 
@@ -125,6 +127,19 @@ app.use("*", async (c, next) => {
     if (!c.res.headers.has("X-Frame-Options")) c.header("X-Frame-Options", "DENY");
   }
 });
+
+// A web app hosted elsewhere (MOTION_STUDIO_WEB_ORIGIN) calls the API cross-origin with the session cookie.
+if (WEB_ORIGIN) app.use("/api/*", cors({ origin: WEB_ORIGIN, credentials: true, maxAge: 600 }));
+/** Lets that web app read public files and keyed project files from script (fonts, Lottie, audio prefetch). */
+const WEB_CORS: Record<string, string> = WEB_ORIGIN ? { "Access-Control-Allow-Origin": WEB_ORIGIN, Vary: "Origin" } : {};
+
+/**
+ * Cookie-free base URL of a project's files: the web Player's assetBase. FontFace, fetch and Remotion's prefetch can't
+ * send the session cookie to another origin, so the path carries a key (HMAC of the project id, from the owner-only
+ * project endpoints) instead. Rotating the server secret revokes every key.
+ */
+const filesKey = (id: string) => crypto.createHmac("sha256", getSecret()).update(`files:${id}`).digest("base64url").slice(0, 32);
+const filesBase = (id: string) => `${FILES_ORIGIN}/k/${filesKey(id)}/${encodeURIComponent(id)}`;
 
 app.onError((e, c) => {
   if (e instanceof HttpError) return c.json({ error: e.message }, e.status as 400);
@@ -230,7 +245,7 @@ const versioned = (url: string, abs: string) => {
 
 // ---------------------------------------------------------------- shapes
 
-type ProjectCard = { id: string; name: string; format: string; createdAt: string; updatedAt: string; hasSpec: boolean; thumbnail?: string; durationSeconds?: number };
+type ProjectCard = { id: string; name: string; format: string; createdAt: string; updatedAt: string; hasSpec: boolean; filesBase: string; thumbnail?: string; durationSeconds?: number };
 
 const cleanValidation = (v: ValidationResult) => {
   const { written: _w, ...rest } = v;
@@ -247,7 +262,7 @@ const safeTimeline = (spec: SpecInput | null): Timeline | null => {
 };
 
 const card = (p: { id: string; name: string; format: string; createdAt: string; updatedAt: string; hasSpec: boolean; dir: string }): ProjectCard => {
-  const out: ProjectCard = { id: p.id, name: p.name, format: p.format, createdAt: p.createdAt, updatedAt: p.updatedAt, hasSpec: p.hasSpec };
+  const out: ProjectCard = { id: p.id, name: p.name, format: p.format, createdAt: p.createdAt, updatedAt: p.updatedAt, hasSpec: p.hasSpec, filesBase: filesBase(p.id) };
   const thumb = path.join(p.dir, "thumb.jpg");
   if (fs.existsSync(thumb)) out.thumbnail = versioned(fileUrl(p.id, "thumb.jpg"), thumb);
   if (p.hasSpec) {
@@ -312,7 +327,7 @@ app.post("/api/projects", async (c) => {
 
 // ---------------------------------------------------------------- templates
 
-app.get("/api/templates", (c) => c.json(listTemplates()));
+app.get("/api/templates", (c) => c.json(listTemplates().map((t) => (t.poster ? { ...t, poster: FILES_ORIGIN + t.poster } : t))));
 
 app.get("/api/templates/:slug", (c) => {
   const t = getTemplate(c.req.param("slug"));
@@ -335,6 +350,7 @@ app.get("/api/projects/:id", async (c) => {
   const assets = (await listAssets(p.id)).map((a) => assetOut(p.id, a));
   return c.json({
     project: { id: p.id, name: p.name, format: p.format, createdAt: p.createdAt, updatedAt: meta?.updatedAt ?? p.createdAt },
+    filesBase: filesBase(p.id),
     spec,
     assets,
     renders: listRenders(p.id).map((r) => renderInfo(p.id, r)),
@@ -761,21 +777,14 @@ app.get("/templates/:slug/*", (c) => {
     return c.json({ error: "Bad path" }, 400);
   }
   const abs = templateFile(slug, rel);
-  const sandbox: Record<string, string> = { "Cache-Control": "public, max-age=300", "X-Content-Type-Options": "nosniff", ...(IS_HOSTED ? { "Content-Security-Policy": "sandbox; default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'" } : {}) };
+  const sandbox: Record<string, string> = { "Cache-Control": "public, max-age=300", "X-Content-Type-Options": "nosniff", ...WEB_CORS, ...(IS_HOSTED ? { "Content-Security-Policy": "sandbox; default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'" } : {}) };
   return (abs && fileResponse(abs, c.req.raw, sandbox)) || c.json({ error: "Not found" }, 404);
 });
 
 // ---------------------------------------------------------------- files
 
-app.get("/files/:projectId/*", (c) => {
-  const id = c.req.param("projectId");
-  if (!ID_RE.test(id)) return c.json({ error: "Not found" }, 404);
-  try {
-    assertProjectOwner(userOf(c), id);
-  } catch {
-    return c.json({ error: "Not found" }, 404);
-  }
-  const prefix = `/files/${id}/`;
+/** A project file under `prefix` (`/files/<id>/` or `/k/<key>/<id>/`), after the caller checked access. */
+const serveProjectFile = (c: Context, id: string, prefix: string, extra: Record<string, string> = {}) => {
   let rel: string;
   try {
     rel = decodeURIComponent(c.req.path.slice(c.req.path.indexOf(prefix) + prefix.length));
@@ -787,7 +796,27 @@ app.get("/files/:projectId/*", (c) => {
   if (!abs) return c.json({ error: "Forbidden" }, 403);
   // User files are never rendered as active documents on our origin (an uploaded SVG / HTML can't script the app).
   const sandbox: Record<string, string> = IS_HOSTED ? { "Content-Security-Policy": "sandbox; default-src 'none'; img-src 'self' data:; media-src 'self'; style-src 'unsafe-inline'", "X-Content-Type-Options": "nosniff" } : {};
-  return fileResponse(abs, c.req.raw, sandbox) ?? c.json({ error: "Not found" }, 404);
+  return fileResponse(abs, c.req.raw, { ...sandbox, ...extra }) ?? c.json({ error: "Not found" }, 404);
+};
+
+app.get("/files/:projectId/*", (c) => {
+  const id = c.req.param("projectId");
+  if (!ID_RE.test(id)) return c.json({ error: "Not found" }, 404);
+  try {
+    assertProjectOwner(userOf(c), id);
+  } catch {
+    return c.json({ error: "Not found" }, 404);
+  }
+  return serveProjectFile(c, id, `/files/${id}/`);
+});
+
+/** Keyed project files (see filesBase): no session needed, readable from the web app's origin. */
+app.get("/k/:key/:projectId/*", (c) => {
+  const { key, projectId: id } = c.req.param();
+  if (!ID_RE.test(id) || !fs.existsSync(path.join(PROJECTS_DIR, id))) return c.json({ error: "Not found" }, 404);
+  const want = Buffer.from(filesKey(id)), got = Buffer.from(key);
+  if (got.length !== want.length || !crypto.timingSafeEqual(got, want)) return c.json({ error: "Not found" }, 404);
+  return serveProjectFile(c, id, `/k/${key}/${id}/`, { ...WEB_CORS, "Cache-Control": "private, max-age=300" });
 });
 
 // ---------------------------------------------------------------- web app (production build)

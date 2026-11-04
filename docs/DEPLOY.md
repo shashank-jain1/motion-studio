@@ -99,6 +99,32 @@ For each render, the project's `assets/` and `glyphs.json` are synced to the Rem
 project's `renders/`. If Lambda is selected but not configured, render requests fail at once with an error that says
 what is missing.
 
+## Static frontend + home server (no VPS)
+
+The web app can live on any static host (e.g. Hostinger) while the API, renders and projects run on a machine you
+own, published by a Cloudflare Tunnel (no open ports). Example: the app at `https://motionstudio.example.com`, the API
+at `https://motionstudio-api.example.com`.
+
+- **Same site.** Both hostnames must share a registrable domain, so the SameSite=Lax session cookie still flows. Use
+  first-level subdomains: Cloudflare's free certificate covers `*.example.com`, not `*.motionstudio.example.com`.
+- **Frontend.** `npm run build` builds the app with `VITE_API_ORIGIN` from `web/.env.hostinger` into `build/`
+  (with an `.htaccess` SPA fallback). On the static host: build command `npm run build`, output directory `build`.
+- **Server.** Set `MOTION_STUDIO_WEB_ORIGIN` to the app's origin. It gets credentialed CORS on `/api`, file URLs become
+  absolute, and "Open in Motion Studio" links point at the app. The Player loads project files from
+  `/k/<key>/<project>/…`, where the key is an HMAC of the project id that only the owner's project endpoints return,
+  because FontFace and `fetch` don't send cookies across origins. Rotating `MOTION_STUDIO_SECRET` revokes every key.
+  Sign-in and OAuth consent for Claude connectors stay on the API host (it serves `web/dist` too).
+- **Run it.** Move the domain's DNS to Cloudflare (free; the static host keeps hosting the app: keep its records
+  DNS-only). Then:
+  ```bash
+  deploy/home-server/install.sh server                                   # API as a systemd user service on :4320
+  cloudflared tunnel login                                               # once, in a browser
+  deploy/home-server/install.sh tunnel motionstudio-api.example.com      # tunnel + DNS record + service
+  ```
+  Settings live in `~/.config/motion-studio/server.env`; logs: `journalctl --user -u motion-studio -f`.
+- **Limits.** Cloudflare caps request bodies at 100 MB on the free plan, so larger uploads fail. The site is down
+  whenever the machine is off.
+
 ## Updating and backups
 
 ```bash

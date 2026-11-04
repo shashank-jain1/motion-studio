@@ -3,12 +3,12 @@
  * their ToolContext.policy with toolPolicyFor(user).
  */
 import type { ToolPolicy, RenderRecord, PendingRender, RenderJobStatus } from "../core/tools";
-import { IS_HOSTED, MAX_URL_DOWNLOAD_BYTES, PUBLIC_URL } from "./config";
+import { IS_HOSTED, MAX_URL_DOWNLOAD_BYTES, WEB_URL } from "./config";
 import { listUserProjectIds, ownsProject, recordProjectOwner, type User } from "./auth";
 import { enqueueRenderJob, getJobFor, isTerminal, listJobs, waitForJob, type Job } from "./jobs";
 
 /** Deep link to a project in the web app. */
-export const projectUrl = (projectId: string) => `${PUBLIC_URL}/p/${encodeURIComponent(projectId)}`;
+export const projectUrl = (projectId: string) => `${WEB_URL}/p/${encodeURIComponent(projectId)}`;
 
 const recordOf = (job: Job): RenderRecord | undefined => {
   if (!job.output) return undefined;
@@ -31,7 +31,7 @@ const statusOf = (job: Job): RenderJobStatus => ({
 });
 
 export type ScopeOptions = {
-  /** Append "Open in Motion Studio: <PUBLIC_URL>/p/<id>" to project tool results. */
+  /** Append "Open in Motion Studio: <web app>/p/<id>" to project tool results. */
   links?: boolean;
   /**
    * render_video waits at most this long, then answers "Still rendering, job <id>" (poll with render_status) and the job

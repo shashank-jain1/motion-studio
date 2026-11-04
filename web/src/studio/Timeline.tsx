@@ -1,6 +1,7 @@
 import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Thumbnail } from "@remotion/player";
 import { SpecVideo } from "../../../src/engine/render/SpecVideo";
+import { filesBase } from "../api";
 import { useStudio } from "./context";
 import { IconFit, IconMagnet, IconMinus, IconPlus } from "../components/Icons";
 import { fmtTC } from "../lib/format";
@@ -269,7 +270,7 @@ export const TimelinePanel = () => {
 const ClipThumbs = memo(({ info, id, start, end, width }: { info: ParsedInfo; id: string; start: number; end: number; width: number }) => {
   const thumbW = Math.max(8, Math.round(THUMB_H * (info.width / info.height)));
   const n = Math.max(0, Math.min(4, Math.floor((width - 4) / thumbW)));
-  const inputProps = useMemo(() => ({ spec: info.raw as never, assetBase: `${location.origin}/files/${id}`, projectId: id }), [info, id]);
+  const inputProps = useMemo(() => ({ spec: info.raw as never, assetBase: filesBase(id), projectId: id }), [info, id]);
   if (!n) return null;
   const times = n === 1 ? [(start + end) / 2] : Array.from({ length: n }, (_, k) => start + ((k + 0.5) / n) * (end - start));
   return (
