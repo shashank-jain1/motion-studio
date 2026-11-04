@@ -13,6 +13,7 @@ export const EASES = [
   "outElastic", "outBounce",
   "spring", "snappy", "bouncy", "smooth",
   "expoOut", "quintOut", "snap", "m3Enter", "m3Exit", "carbonExpressive",
+  "physical", "physicalLoose",
 ] as const;
 export const Ease = z.enum(EASES);
 
@@ -32,6 +33,7 @@ export const Keyframe = z.object({
   opacity: z.number().optional(),
   blur: z.number().optional(),
   ease: Ease.optional().describe("Easing used to arrive at this keyframe from the previous one"),
+  settle: z.number().positive().optional().describe("physical eases only: seconds the spring takes to settle (default: the gap to this keyframe). Longer than the gap = the next keyframe retargets it mid-flight and it keeps its velocity"),
 });
 export type Keyframe = z.infer<typeof Keyframe>;
 
@@ -214,6 +216,13 @@ export const ShapeLayer = z.object({
   glow: z.union([z.boolean(), z.string()]).optional(),
   draw: z.boolean().optional().describe("animate the outline drawing on (ring/polygon/star/line)"),
   drawDuration: z.number().optional(),
+  glide: z.object({
+    stops: z.array(z.object({
+      at: z.number().min(0), x: z.number().optional(), y: z.number().optional(), width: z.number().optional(), height: z.number().optional(),
+    })).min(1).max(32).describe("local seconds: the box moves to x/y (px from the layer center) and resizes; unspecified fields keep the previous stop's"),
+    lead: z.number().positive().optional().describe("settle seconds of the leading edge, default 0.32"),
+    trail: z.number().positive().optional().describe("settle seconds of the trailing edge, default 0.6"),
+  }).optional().describe("liquid indicator (rect/circle/blob): the edges ride different springs, so the leading edge pulls ahead and the shape stretches as it travels, then settles"),
 });
 
 export const PathLayer = z.object({
@@ -253,6 +262,8 @@ export const CursorLayer = z.object({
   kind: z.enum(["pointer", "pen"]).optional(),
   size: z.number().min(8).max(200).optional(), color: z.string().optional(), label: z.string().optional(),
   clicks: z.array(z.number().min(0)).max(32).optional().describe("local click seconds: press/ripple and automatic click SFX share this clock"),
+  drags: z.array(z.object({ at: z.number().min(0), until: z.number().min(0) })).max(16).optional()
+    .describe("press-and-hold intervals (local seconds): the pointer stays pressed; a slider bound to this cursor follows it while held and springs back on release"),
 });
 export const SelectionLayer = z.object({
   ...commonLayer, type: z.literal("selection"),
@@ -266,6 +277,24 @@ export const ToggleLayer = z.object({
   stateDuration: z.number().min(0.05).max(2).optional(),
   states: z.array(z.object({ at: z.number().min(0), on: z.boolean() })).max(32).default([])
     .describe("state changes at local seconds; automatic click SFX uses the same second"),
+});
+
+export const SliderLayer = z.object({
+  ...commonLayer, type: z.literal("slider"),
+  value: z.number().optional().describe("starting value 0..1, default 0"),
+  values: z.array(z.object({ at: z.number().min(0), value: z.number() })).max(32).optional()
+    .describe("value changes at local seconds; each springs from wherever the knob is (velocity carried)"),
+  cursor: z.string().optional().describe("id of a sibling cursor layer: while its `drags` hold, the value follows the pointer's x across the track; on release it springs back inside 0..1"),
+  stretch: z.boolean().optional().describe("rubber-band past the ends while dragged (the track stretches and thins), default true"),
+  thickness: z.number().min(2).max(80).optional().describe("track height px, default 12"),
+  knob: z.number().min(0).max(160).optional().describe("knob diameter px (0 = none), default 36"),
+  color: z.string().optional().describe("fill, default $accent"), trackColor: z.string().optional(), knobColor: z.string().optional(),
+  bubble: z.object({
+    min: z.number().optional(), max: z.number().optional(), decimals: z.number().int().min(0).max(4).optional(),
+    prefix: z.string().optional(), suffix: z.string().optional(), show: z.enum(["always", "drag"]).optional(),
+    group: z.boolean().optional().describe("thousands separators (8,720), default true"),
+  }).optional().describe("value bubble above the knob: min + value·(max−min), default 0–100"),
+  settle: z.number().positive().optional().describe("spring settle seconds after a release or value change, default 0.45"),
 });
 
 export const ParticlesLayer = z.object({
@@ -662,7 +691,7 @@ export type Layer =
   | z.infer<typeof ParticlesLayer> | z.infer<typeof CardLayer> | z.infer<typeof CounterLayer> | z.infer<typeof CaptionsLayer>
   | z.infer<typeof CloudLayer> | z.infer<typeof ShaderLayer> | z.infer<typeof LottieLayer> | z.infer<typeof CustomLayer>
   | z.infer<typeof MorphLayer> | z.infer<typeof LogoLayer> | z.infer<typeof ThreeLayer>
-  | z.infer<typeof CursorLayer> | z.infer<typeof SelectionLayer> | z.infer<typeof ToggleLayer>
+  | z.infer<typeof CursorLayer> | z.infer<typeof SelectionLayer> | z.infer<typeof ToggleLayer> | z.infer<typeof SliderLayer>
   | z.infer<typeof ChartLayer> | z.infer<typeof DiagramLayer> | z.infer<typeof CodeLayer> | z.infer<typeof VisualizerLayer>
   | DeviceLayerT | GroupLayerT;
 
@@ -699,7 +728,7 @@ export type GroupLayerT = Common & {
 export const LayerSchema: z.ZodType<Layer> = z.lazy(() =>
   z.discriminatedUnion("type", [
     TextLayer, MediaLayer, ShapeLayer, PathLayer, ParticlesLayer, CardLayer, CounterLayer,
-    CaptionsLayer, CloudLayer, ShaderLayer, LottieLayer, CustomLayer, MorphLayer, LogoLayer, ThreeLayer, CursorLayer, SelectionLayer, ToggleLayer, DeviceLayer, GroupLayer,
+    CaptionsLayer, CloudLayer, ShaderLayer, LottieLayer, CustomLayer, MorphLayer, LogoLayer, ThreeLayer, CursorLayer, SelectionLayer, ToggleLayer, SliderLayer, DeviceLayer, GroupLayer,
     ChartLayer, DiagramLayer, CodeLayer, VisualizerLayer,
   ]),
 ) as z.ZodType<Layer>;
@@ -758,6 +787,7 @@ export const CameraSchema = z.object({
     rotateX: z.number().optional(),
     rotateY: z.number().optional(),
     ease: Ease.optional(),
+    settle: z.number().positive().optional().describe("physical eases: spring settle seconds (default: gap to this key)"),
   })).optional(),
   shake: z.object({ amount: z.number().optional(), speed: z.number().optional(), start: z.number().optional(), duration: z.number().optional() }).optional(),
   punch: z.array(z.number()).optional().describe("seconds at which to do a quick zoom punch (great on beats)"),
@@ -933,6 +963,22 @@ export const StorySchema = z.object({
   }).optional(),
 }).describe("Story Engine record (docs/STORY_ENGINE.md): checked by the craft linter and check_story");
 
+/** Techniques a direction brief can ban (each one has a detector in src/core/direction.ts). */
+export const BANNABLE = [
+  "glow", "particles", "particle-bursts", "gradients", "bouncy-easing", "camera-shake", "zoom-punch", "rgb-split",
+  "light-leaks", "flashes", "glitch", "scanlines", "hard-cuts", "crossfades", "generic-transitions", "dead-time",
+  "blur-ins", "3d-flips",
+] as const;
+
+/** A direction brief's hard rules (docs/DIRECTOR_GUIDE.md "Direction brief"): checked by the craft linter. */
+export const DirectionSchema = z.object({
+  oneTake: z.boolean().optional().describe("one continuous take: never cut — one scene with a camera moving through one world, or only content-aware transitions (expand / zoom-into / match)"),
+  hero: z.string().optional().describe("id of the ONE element (actor or layer) that travels through every scene and drives each change"),
+  loop: z.boolean().optional().describe("seamless loop: the last frame equals the first (camera, hero, background)"),
+  everyBeat: z.boolean().optional().describe("something visibly changes on every beat (needs bpm or beats)"),
+  banned: z.array(z.enum(BANNABLE)).optional().describe("techniques this film must not use; the linter finds them in the spec"),
+}).describe("hard rules of the brief: what the film may never do, one-take, hero element, loop, beat density");
+
 export const ConceptSchema = z.object({
   truth: z.string().optional().describe("one-line brand truth: <Brand> helps <who> <verb> <object>, feeling <adj>"),
   metaphor: z.string().optional().describe("the visual metaphor and its structure (juxtaposition | fusion | replacement)"),
@@ -943,6 +989,7 @@ export const ConceptSchema = z.object({
   colorScript: z.array(z.string()).optional(),
   niche: z.enum(NICHES).optional().describe("category, for the cliché blacklist (inferred when omitted)"),
   story: StorySchema.optional(),
+  direction: DirectionSchema.optional(),
 }).describe("director's concept (ignored by the renderer, required by the director workflow)");
 
 export const SpecSchema = z.object({

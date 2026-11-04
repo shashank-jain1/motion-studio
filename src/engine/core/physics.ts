@@ -14,7 +14,7 @@ import type { Keyframe, Layer } from "../spec/schema";
 import { gestureTransform } from "./choreography";
 import {
   type EaseName, type KfProp, type KfTrack, type Stretch, type Transform,
-  EASING, addInto, clamp01, identity, keyframeTracks, loopTransform, presetTransform,
+  EASING, addInto, clamp01, identity, keyframeTracks, loopTransform, presetTransform, springTrackValue,
 } from "./animate";
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -178,6 +178,13 @@ export const applyKeyframes = (
     const n = tr.t.length;
     let val: number;
     let i: number; // segment (i -> i+1) containing t; -1 before the first key; n-1 after the last
+    if (tr.phys && t > tr.t[0]) {
+      // physical springs carry their own overshoot/settle: no anticipation, no Ebberts inertia on top
+      const v = springTrackValue(tr.t, tr.v, tr.e, t, undefined, tr.s);
+      if (tr.prop === "scale" || tr.prop === "scaleX" || tr.prop === "scaleY" || tr.prop === "opacity") out[tr.prop] *= v;
+      else out[tr.prop] += v;
+      continue;
+    }
     if (t <= tr.t[0]) { val = tr.v[0]; i = -1; } else if (t >= tr.t[n - 1]) { val = tr.v[n - 1]; i = n - 1; } else {
       i = 0;
       while (i < n - 2 && t > tr.t[i + 1]) i++;

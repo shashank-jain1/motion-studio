@@ -28,6 +28,25 @@ export const PUBLIC_ORIGIN = (() => {
 export const PUBLIC_HOST = new URL(PUBLIC_URL).hostname;
 export const SECURE_COOKIES = PUBLIC_URL.startsWith("https://");
 
+/**
+ * Origin of a web app hosted elsewhere (web/dist on a static host, e.g. https://studio.example.com with this server at
+ * https://studio-api.example.com). Must be same-site with PUBLIC_URL so the Lax session cookie still flows. Enables
+ * credentialed CORS for it, and file URLs become absolute on PUBLIC_URL. Empty: the web app is served from here.
+ */
+export const WEB_ORIGIN = (() => {
+  const v = process.env.MOTION_STUDIO_WEB_ORIGIN?.trim();
+  if (!v) return "";
+  try {
+    return new URL(v).origin;
+  } catch {
+    throw new Error(`MOTION_STUDIO_WEB_ORIGIN is not a valid URL: ${v}`);
+  }
+})();
+/** Prefix of every file URL handed to the web app: "" (same origin) unless it is hosted elsewhere. */
+export const FILES_ORIGIN = WEB_ORIGIN ? PUBLIC_ORIGIN : "";
+/** Where "Open in Motion Studio" links point. */
+export const WEB_URL = WEB_ORIGIN || PUBLIC_URL;
+
 export const DATA_DIR = path.resolve(process.env.MOTION_STUDIO_DATA || path.join(ROOT, "data"));
 export const DB_FILE = path.join(DATA_DIR, "motion-studio.db");
 export const LAMBDA_CONFIG_FILE = path.join(DATA_DIR, "lambda.json");

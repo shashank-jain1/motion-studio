@@ -244,6 +244,10 @@ class Events {
       case "card": this.card(l, g0, landing, name, !!en, geo); break;
       case "cursor":
         (l.clicks ?? []).forEach((at, i) => { if (g0 + interactionFrame(at, this.fps) < end) this.push({ ...geo, key: `${key}.click${i}`, t: g0 + interactionFrame(at, this.fps), role: "click", priority: 0.65, locked: true, reason: `cursor press ${name}`, size: 0.18, mat: ["plastic"] }); });
+        (l.drags ?? []).forEach((d, i) => {
+          if (g0 + d.at < end) this.push({ ...geo, key: `${key}.grab${i}`, t: g0 + d.at, role: "click", priority: 0.6, locked: true, reason: `cursor grab ${name}`, size: 0.16, mat: ["plastic"] });
+          if (g0 + d.until < end) this.push({ ...geo, key: `${key}.release${i}`, t: g0 + d.until, role: "click", priority: 0.45, locked: true, reason: `cursor release ${name}`, size: 0.1, mat: ["plastic"] });
+        });
         break;
       case "toggle": {
         let on = l.initial ?? false;

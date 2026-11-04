@@ -35,6 +35,11 @@ projects/*/assets/*.transcript.json
 .env
 .env.*
 !.env.example
+!web/.env.hostinger
 
 # macOS Finder metadata
 .DS_Store
+evals/results/
+
+# static web build for Hostinger (npm run build)
+/build/

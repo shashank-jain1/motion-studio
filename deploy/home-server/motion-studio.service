@@ -1,0 +1,17 @@
+[Unit]
+Description=Motion Studio API
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+WorkingDirectory=@REPO@
+EnvironmentFile=%h/.config/motion-studio/server.env
+ExecStart=@REPO@/node_modules/.bin/tsx src/server/index.ts
+Restart=on-failure
+RestartSec=5
+# Renders run headless Chrome in this cgroup: keep them from starving the desktop.
+MemoryHigh=8G
+MemoryMax=10G
+
+[Install]
+WantedBy=default.target

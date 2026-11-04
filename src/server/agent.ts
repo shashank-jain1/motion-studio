@@ -19,6 +19,7 @@ import type { BetaMessageStreamParams } from "@anthropic-ai/sdk/resources/beta/m
 import { getProject, listAssets, readSpec, validateSpec } from "../core/projects";
 import { callTool, describeToolCall, listRenders, parseToolInput, readDoc, specSummary, toolsFor, type Timeline, type ToolPolicy, type ToolResult } from "../core/tools";
 import { agentSettings, FALLBACK_MODELS, keySource, makeClient } from "./settings";
+import { FILES_ORIGIN } from "./config";
 
 type MessageParam = Anthropic.Beta.BetaMessageParam;
 type ContentBlock = Anthropic.Beta.BetaContentBlock;
@@ -62,7 +63,7 @@ const FALLBACK_BETA = "server-side-fallback-2026-07-01";
 const EXCLUDED_TOOLS = ["get_guide"];
 const IMAGE_MARKER = "@file:";
 
-export const fileUrl = (projectId: string, rel: string) => `/files/${encodeURIComponent(projectId)}/${rel.split("/").map(encodeURIComponent).join("/")}`;
+export const fileUrl = (projectId: string, rel: string) => `${FILES_ORIGIN}/files/${encodeURIComponent(projectId)}/${rel.split("/").map(encodeURIComponent).join("/")}`;
 
 // ---------------------------------------------------------------- system prompt (stable per project)
 

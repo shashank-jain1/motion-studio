@@ -1,0 +1,55 @@
+{
+  "note": "Original evaluation briefs for the in-app director, written for Motion Studio (not taken from any third-party gallery). Each covers one category of code-driven motion. Inputs are pre-filled so runs are non-interactive.",
+  "briefs": [
+    {
+      "id": "ui-one-element", "tag": "Product UI", "format": "1:1", "seconds": 12,
+      "brief": "A 12-second square UI motion loop for a note-taking app called Margin. One rounded rectangle never leaves the frame: it is a 'New note' button, then a loading ring, then a checkmark, then a slider the cursor drags to 80%, then a tab bar whose indicator glides between three tabs, then the button again. Warm off-white canvas, black components, one green accent (#1f9d55), Geist. 120 BPM: something changes on every beat.",
+      "direction": { "oneTake": true, "loop": true, "everyBeat": true, "banned": ["glow", "particle-bursts", "gradients", "bouncy-easing", "crossfades", "dead-time"] }
+    },
+    {
+      "id": "kinetic-manifesto", "tag": "Kinetic type", "format": "9:16", "seconds": 10,
+      "brief": "A 10-second vertical kinetic-type manifesto for a bike repair co-op called Spoke & Hub: 'Fix it. / Ride it. / Pass it on.' Each phrase is set huge and travels into the next by a match on a shared letter. Ink black on newsprint cream, one red accent. Cuts on downbeats at 100 BPM.",
+      "direction": { "banned": ["glow", "particles", "blur-ins", "camera-shake"] }
+    },
+    {
+      "id": "chart-proof", "tag": "Charts", "format": "16:9", "seconds": 12,
+      "brief": "A 12-second data story for a solar startup, Lumen Grid: monthly household bill drops from $142 to $38 after install. A bar chart draws itself, the last bar is highlighted, then the number $104 saved per month lands as big type and the chart collapses into the logo dot. Dark slate canvas, one amber accent, IBM Plex Mono for numbers.",
+      "direction": { "hero": "dot", "banned": ["glow", "gradients", "particle-bursts"] }
+    },
+    {
+      "id": "diagram-how-it-works", "tag": "Diagrams", "format": "16:9", "seconds": 14,
+      "brief": "Explain in 14 seconds how a webhook relay called Hookline works: an event leaves a payment service, Hookline queues it, retries twice on failure, and delivers it to three customer endpoints. One packet travels the whole film. Light canvas, hairline strokes, one violet accent.",
+      "direction": { "oneTake": true, "hero": "packet", "banned": ["glow", "rgb-split", "glitch"] }
+    },
+    {
+      "id": "code-launch", "tag": "Code", "format": "16:9", "seconds": 12,
+      "brief": "A 12-second launch spot for a CLI called tidy that formats SQL. A terminal types `tidy query.sql`, the messy query snaps into a clean layout line by line, and the closing card reads 'tidy — SQL that reads like prose'. Charcoal editor, one lime accent, JetBrains Mono.",
+      "direction": { "banned": ["glow", "scanlines", "glitch", "crossfades"] }
+    },
+    {
+      "id": "music-visual", "tag": "Music", "format": "1:1", "seconds": 10,
+      "brief": "A 10-second square visual for a lo-fi single called 'Night Bus' by Paper Lanterns: a single circle breathes with the kick, the title type sits beside it in a serif italic, and the circle becomes the 'o' in 'Lanterns' at the end. Deep navy, one warm orange accent, 84 BPM.",
+      "direction": { "hero": "circle", "loop": true, "banned": ["particles", "glow", "light-leaks", "flashes"] }
+    },
+    {
+      "id": "shapes-identity", "tag": "Shapes", "format": "16:9", "seconds": 8,
+      "brief": "An 8-second identity sting for an architecture studio called Fold: a square folds along a diagonal into a triangle, the triangle unfolds into the letter F, and the wordmark resolves. Concrete gray, one blue accent, crisp springs with almost no overshoot.",
+      "direction": { "oneTake": true, "banned": ["bouncy-easing", "glow", "gradients", "3d-flips"] }
+    },
+    {
+      "id": "phone-feature", "tag": "Phone", "format": "9:16", "seconds": 12,
+      "brief": "A 12-second vertical feature film for a budgeting app called Penny: a phone shows the home screen, the cursor drags a spending-limit slider past its maximum and it springs back to $500, a toggle turns on 'Round-ups', and a toast confirms 'Saved $14 this week'. Off-white, one teal accent.",
+      "direction": { "banned": ["glow", "particle-bursts", "camera-shake", "crossfades"] }
+    },
+    {
+      "id": "3d-reveal", "tag": "3D", "format": "16:9", "seconds": 10,
+      "brief": "A 10-second product reveal for a ceramic pour-over dripper called Still: the camera glides around a softly lit 3D object on a matte floor, focus racks from the rim to the logo, and the end card holds the name with a one-line promise 'Slow is the point.' Warm stone palette, no saturated colors.",
+      "direction": { "oneTake": true, "banned": ["glow", "particles", "rgb-split", "flashes"] }
+    },
+    {
+      "id": "photo-story", "tag": "Photos", "format": "4:5", "seconds": 12,
+      "brief": "A 12-second 4:5 photo story for a bakery called Rise: three photo cards (dough, oven, loaf — use shapes as stand-ins if no images exist) each push in slowly, the next card grows out of a detail of the previous one, and the end card reads 'Baked before you wake'. Flour white, one rust accent.",
+      "direction": { "banned": ["crossfades", "glow", "particles", "blur-ins"] }
+    }
+  ]
+}

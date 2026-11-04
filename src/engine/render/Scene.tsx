@@ -3,7 +3,7 @@ import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
 import { noise2D } from "@remotion/noise";
 import { CameraMotionBlur } from "@remotion/motion-blur";
 import type { Scene } from "../spec/schema";
-import { ease, lerp } from "../core/animate";
+import { springTrackValue } from "../core/animate";
 import { CameraProvider, ContainerProvider } from "../core/container";
 import { BackgroundView } from "../kit/Background";
 import { FxOverlay } from "../kit/Fx";
@@ -20,16 +20,12 @@ export const evalCamera = (kfs: CamKf[] | undefined, t: number) => {
   for (const prop of CAM_PROPS) {
     const pts = sorted.filter((k) => k[prop] !== undefined);
     if (!pts.length) continue;
-    if (t <= pts[0].t) { out[prop] = pts[0][prop]!; continue; }
-    const last = pts[pts.length - 1];
-    if (t >= last.t) { out[prop] = last[prop]!; continue; }
-    for (let i = 0; i < pts.length - 1; i++) {
-      const a = pts[i], b = pts[i + 1];
-      if (t >= a.t && t <= b.t) {
-        out[prop] = lerp(a[prop]!, b[prop]!, ease(b.ease, (t - a.t) / Math.max(1e-6, b.t - a.t), "inOutQuint"));
-        break;
-      }
-    }
+    // Zoom is perceived multiplicatively: interpolate log(zoom) so 1→8× travels at one steady perceived speed
+    // (linear zoom crawls, then rushes at the end).
+    const log = prop === "zoom";
+    const vs = pts.map((k) => (log ? Math.log(Math.max(1e-3, k[prop]!)) : k[prop]!));
+    const v = t <= pts[0].t ? vs[0] : springTrackValue(pts.map((k) => k.t), vs, pts.map((k) => k.ease), t, "inOutQuint", pts.map((k) => k.settle));
+    out[prop] = log ? Math.exp(v) : v;
   }
   return out;
 };

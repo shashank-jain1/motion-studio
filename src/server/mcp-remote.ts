@@ -25,7 +25,7 @@ import { PROJECTS_DIR } from "../core/paths";
 import { listProjects } from "../core/projects";
 import { TOOLS, callTool, type ToolContent, type ToolDef, type ToolResult } from "../core/tools";
 import { listUserProjectIds, ownsProject, recordProjectOwner, userFromBearer, type User } from "./auth";
-import { IS_HOSTED } from "./config";
+import { IS_HOSTED, WEB_ORIGIN } from "./config";
 import { toolPolicyFor } from "./scope";
 
 /** render_video over MCP answers after at most this long; the job keeps rendering (poll render_status). */
@@ -82,7 +82,7 @@ const jsonRpcError = (c: Context, status: 400 | 404, code: number, message: stri
 
 const text = (t: string): ToolContent => ({ type: "text", text: t });
 const errorResult = (msg: string): ToolResult => ({ content: [text(msg)], isError: true });
-const projectLink = (id: string) => `${publicUrl()}/p/${encodeURIComponent(id)}`;
+const projectLink = (id: string) => `${WEB_ORIGIN || publicUrl()}/p/${encodeURIComponent(id)}`;
 const notFoundMsg = (id: string) => `Project "${id}" not found. Use list_projects to see your projects.`;
 
 /** Hosted mode: server paths in tool output become studio URLs (the /files route is owner-scoped). */

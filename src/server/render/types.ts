@@ -2,6 +2,7 @@
 import type { Spec } from "../../engine/spec/schema";
 import type { RenderRecord } from "../../core/tools";
 import type { Format } from "../../engine/spec/reflow";
+import { FILES_ORIGIN } from "../config";
 
 export type RenderInfo = { file: string; url: string; quality: "draft" | "final"; createdAt: string; sizeBytes: number; seconds?: number; width?: number; height?: number; format?: Format; /** music credit the license requires */ credits?: string };
 
@@ -20,7 +21,7 @@ export type RenderBackend = {
   render(job: RenderJob, spec: Spec, onProgress: (p: RenderProgressUpdate) => void, signal: AbortSignal): Promise<RenderOutput>;
 };
 
-export const fileUrl = (projectId: string, rel: string) => `/files/${encodeURIComponent(projectId)}/${rel.split("/").map(encodeURIComponent).join("/")}`;
+export const fileUrl = (projectId: string, rel: string) => `${FILES_ORIGIN}/files/${encodeURIComponent(projectId)}/${rel.split("/").map(encodeURIComponent).join("/")}`;
 
 export const toRenderOutput = (projectId: string, r: RenderRecord): RenderOutput => ({
   file: r.file,

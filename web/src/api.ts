@@ -1,10 +1,18 @@
 /** Typed client for docs/WEB_API.md. */
 
+/**
+ * Server origin when the web app is hosted elsewhere (VITE_API_ORIGIN at build time, e.g. https://studio-api.example.com;
+ * the server sets MOTION_STUDIO_WEB_ORIGIN to match). Empty: same origin (the server or Vite's proxy serves the app).
+ */
+export const API_ORIGIN = ((import.meta.env.VITE_API_ORIGIN as string | undefined) ?? "").replace(/\/+$/, "");
+/** Server path → URL the browser can load (absolute when the API lives on another origin). */
+export const apiUrl = (p: string) => (p.startsWith("/") ? API_ORIGIN + p : p);
+
 export type Format = "16:9" | "9:16" | "1:1" | "4:5" | "21:9";
 
 export type ProjectCard = {
   id: string; name: string; format: Format; createdAt: string; updatedAt: string;
-  hasSpec: boolean; thumbnail?: string; durationSeconds?: number;
+  hasSpec: boolean; filesBase?: string; thumbnail?: string; durationSeconds?: number;
 };
 export type AssetInfo = {
   path: string; kind: "image" | "video" | "audio" | "lottie" | "font" | "other"; sizeBytes: number;
@@ -44,6 +52,8 @@ export type LogoSummary = {
 };
 export type ProjectState = {
   project: { id: string; name: string; format: Format; createdAt: string; updatedAt: string };
+  /** cookie-free base URL of the project's files (the Player's assetBase) */
+  filesBase?: string;
   spec: Record<string, unknown> | null;
   assets: Asset[];
   renders: RenderInfo[];
@@ -88,11 +98,11 @@ export class ApiError extends Error {
 }
 
 async function req<T>(method: string, url: string, body?: unknown, signal?: AbortSignal): Promise<T> {
-  const init: RequestInit = { method, signal, headers: {} };
+  const init: RequestInit = { method, signal, headers: {}, credentials: "include" };
   if (body instanceof FormData) init.body = body;
   else if (body !== undefined) { init.body = JSON.stringify(body); (init.headers as Record<string, string>)["content-type"] = "application/json"; }
   let res: Response;
-  try { res = await fetch(url, init); } catch (e) {
+  try { res = await fetch(apiUrl(url), init); } catch (e) {
     if ((e as Error).name === "AbortError") throw e;
     throw new ApiError("Can't reach the Motion Studio server — is `pnpm server` running?", 0);
   }
@@ -108,14 +118,19 @@ async function req<T>(method: string, url: string, body?: unknown, signal?: Abor
 }
 
 const P = (id: string) => `/api/projects/${encodeURIComponent(id)}`;
+/** filesBase per project, remembered from the project endpoints (the Player and thumbnails load right after them). */
+const filesBases = new Map<string, string>();
+const remember = <T extends { filesBase?: string }>(id: string, x: T) => { if (x.filesBase) filesBases.set(id, x.filesBase); return x; };
+/** The Player's assetBase for a project. */
+export const filesBase = (id: string) => apiUrl(filesBases.get(id) ?? `/files/${encodeURIComponent(id)}`);
 const base = (p: string) => p.split("/").pop() ?? p;
 
 export const api = {
-  projects: () => req<ProjectCard[]>("GET", "/api/projects"),
+  projects: () => req<ProjectCard[]>("GET", "/api/projects").then((cs) => cs.map((c) => remember(c.id, c))),
   createProject: (name: string, format?: Format, template?: string) => req<ProjectCard>("POST", "/api/projects", { name, format, ...(template ? { template } : {}) }),
   templates: () => req<TemplateMeta[]>("GET", "/api/templates"),
   template: (slug: string) => req<TemplateMeta & { spec: Record<string, unknown> }>("GET", `/api/templates/${encodeURIComponent(slug)}`),
-  project: (id: string, signal?: AbortSignal) => req<ProjectState>("GET", P(id), undefined, signal),
+  project: (id: string, signal?: AbortSignal) => req<ProjectState>("GET", P(id), undefined, signal).then((s) => remember(id, s)),
   deleteProject: (id: string) => req<{ ok: true }>("DELETE", P(id)),
   saveSpec: (id: string, spec: unknown) => req<ValidationResult & { timeline?: Timeline }>("PUT", `${P(id)}/spec`, { spec }),
   versions: (id: string, signal?: AbortSignal) => req<{ versions: SpecVersion[] }>("GET", `${P(id)}/versions`, undefined, signal),
@@ -147,7 +162,7 @@ export const api = {
   oauthDecision: async (params: Record<string, string>, approve: boolean): Promise<{ redirect: string }> => {
     let res: Response;
     try {
-      res = await fetch("/oauth/authorize/decision", { method: "POST", credentials: "include", headers: { "content-type": "application/json" }, body: JSON.stringify({ ...params, approve }) });
+      res = await fetch(apiUrl("/oauth/authorize/decision"), { method: "POST", credentials: "include", headers: { "content-type": "application/json" }, body: JSON.stringify({ ...params, approve }) });
     } catch { throw new ApiError("Can't reach the Motion Studio server", 0); }
     const data = await res.json().catch(() => null) as { redirect?: string; error?: string; error_description?: string } | null;
     if (!res.ok || !data?.redirect) throw new ApiError(data?.error_description ?? data?.error ?? `HTTP ${res.status}`, res.status);
@@ -160,7 +175,8 @@ export const api = {
 export const uploadAsset = (id: string, file: File, onProgress?: (p: number) => void) =>
   new Promise<AssetInfo & { url?: string; logo?: LogoSummary; logoError?: string }>((resolve, reject) => {
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", `${P(id)}/assets`);
+    xhr.open("POST", apiUrl(`${P(id)}/assets`));
+    xhr.withCredentials = true;
     xhr.upload.onprogress = (e) => e.lengthComputable && onProgress?.(e.loaded / e.total);
     xhr.onload = () => {
       let data: { error?: string } | null = null;
@@ -181,7 +197,7 @@ export const uploadAsset = (id: string, file: File, onProgress?: (p: number) => 
 export async function postSSE(url: string, body: unknown, onEvent: (event: string, data: any) => void, signal?: AbortSignal): Promise<void> { // eslint-disable-line @typescript-eslint/no-explicit-any
   let res: Response;
   try {
-    res = await fetch(url, { method: "POST", headers: { "content-type": "application/json", accept: "text/event-stream" }, body: JSON.stringify(body), signal });
+    res = await fetch(apiUrl(url), { method: "POST", credentials: "include", headers: { "content-type": "application/json", accept: "text/event-stream" }, body: JSON.stringify(body), signal });
   } catch (e) {
     if ((e as Error).name === "AbortError") throw e;
     throw new ApiError("Can't reach the Motion Studio server", 0);
@@ -230,7 +246,7 @@ export async function postSSE(url: string, body: unknown, onEvent: (event: strin
  * `progress {progress, stage}` until `done {job}` / `error {job}`. Returns a close() function.
  */
 export function followJob(jid: string, h: { onProgress?: (p: { progress: number; stage?: string; position?: number; status?: JobStatus }) => void; onDone?: (job: Job) => void; onError?: (job: Job | null, message: string) => void }) {
-  const es = new EventSource(`/api/jobs/${encodeURIComponent(jid)}/events`);
+  const es = new EventSource(apiUrl(`/api/jobs/${encodeURIComponent(jid)}/events`), { withCredentials: true });
   let closed = false;
   const close = () => { closed = true; es.close(); };
   const parse = (e: MessageEvent) => { try { return JSON.parse(e.data); } catch { return null; } };
@@ -249,4 +265,4 @@ export function followJob(jid: string, h: { onProgress?: (p: { progress: number;
 export const chatUrl = (id: string) => `${P(id)}/chat`;
 export const renderUrl = (id: string) => `${P(id)}/render`;
 /** Public base URL of a template's files (poster, assets, glyphs) — the Player's assetBase for template thumbnails. */
-export const templateBase = (slug: string) => `${location.origin}/templates/${encodeURIComponent(slug)}`;
+export const templateBase = (slug: string) => `${API_ORIGIN || location.origin}/templates/${encodeURIComponent(slug)}`;

@@ -3,7 +3,7 @@ import { Player, type PlayerRef } from "@remotion/player";
 import { SpecVideo } from "../../../src/engine/render/SpecVideo";
 import { FORMATS } from "../../../src/engine/spec/schema";
 import { SAFE_ZONES, adaptTargets, reflowSpec, type Format } from "../../../src/engine/spec/reflow";
-import { api } from "../api";
+import { api, filesBase } from "../api";
 import { useToast } from "../components/Toast";
 import { useStudio } from "./context";
 import { useBus, type SafeMode } from "./bus";
@@ -83,7 +83,7 @@ export const PlayerPane = () => {
     }
   }, [info, fmt, master]);
   const playerSpec = view?.spec ?? null;
-  const inputProps = useMemo(() => ({ spec: playerSpec as never, assetBase: `${location.origin}/files/${id}`, projectId: id }), [playerSpec, id]);
+  const inputProps = useMemo(() => ({ spec: playerSpec as never, assetBase: filesBase(id), projectId: id }), [playerSpec, id]);
 
   const fit = useMemo(() => {
     if (!view || !box.w || !box.h) return null;

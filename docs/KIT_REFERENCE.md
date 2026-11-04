@@ -34,6 +34,29 @@ These native layers work inside scenes/groups/device screens and in the Player a
 
 Cursor `kind` is `pointer` or `pen`; position anchors the **tip**. A press contracts the cursor and emits a ripple. Toggle states are sorted, no-op changes stay silent, and interrupted thumb motion continues from its current value. Cursor clicks and real toggle changes generate picture-locked SFX at their first visible frame (nested starts round independently). Mute the accompanying pointer when a toggle owns the same click. `sound: false` mutes the layer; `accents: []` suppresses automatic scoring; authored accents replace inference.
 
+### Direct manipulation: drags, sliders, gliding indicators
+
+```jsonc
+{ "type": "cursor", "id": "ptr", "drags": [{ "at": 0.8, "until": 2.3 }],          // press-and-hold intervals
+  "animate": [{ "t": 0.7, "x": -245, "y": 160 }, { "t": 2.0, "x": 520, "y": 160, "ease": "inOut" }, { "t": 2.3, "x": 520, "y": 160 }] }
+{ "type": "slider", "id": "vol", "y": 160, "width": 700, "value": 0.15, "cursor": "ptr",
+  "bubble": { "min": 0, "max": 100, "suffix": "%", "show": "always" }, "stretch": true, "settle": 0.45 }
+{ "type": "slider", "width": 520, "values": [{ "at": 0.4, "value": 0.8 }, { "at": 1.1, "value": 0.35 }] }   // no cursor: springs between values
+{ "type": "shape", "shape": "circle", "width": 220, "height": 64, "y": -330,
+  "glide": { "stops": [{ "at": 0, "x": -230 }, { "at": 0.6, "x": 0 }, { "at": 1.4, "x": 230, "width": 260 }], "lead": 0.32, "trail": 0.6 } }
+```
+
+- **Slider bound to a cursor** (`cursor`: a sibling cursor's id, same scene/group): while one of the cursor's `drags` holds,
+  the value IS the pointer tip's x projected on the track; past either end it rubber-bands (at most +0.3) while the track
+  stretches and thins; on release it springs back inside 0..1 from wherever it was let go. Put the pointer on the knob
+  before the drag starts (the knob jumps to the pointer on grab). The cursor stays pressed for the whole hold; grab and
+  release get automatic click SFX.
+- **Slider `values`** retarget a spring; a new value mid-flight keeps the knob's velocity.
+- **`glide`** (shape rect/circle/blob) is the liquid tab indicator: the leading edge rides a fast spring (`lead`) and the
+  trailing edge a slow one (`trail`), so the shape stretches toward where it's going and settles. Stops are px from the
+  layer center; `width`/`height` change the size (circle → pill).
+- **Toggle** thumbs use the same two-edge trick automatically.
+
 Closed `path` layers support `fill`, `fillAt` (default: end of drawing), `fillDuration` (0.25 default), and a tool follower:
 
 ```jsonc
@@ -134,6 +157,10 @@ Press Start 2P, Righteous, Sora, Space Grotesk, Syne, Unbounded.
 
 **Eases:** linear in out inOut outBack inBack inOutBack outExpo inExpo inOutExpo outQuint inOutQuint outCirc outElastic outBounce spring snappy bouncy smooth,
 plus pro curves: `expoOut` (0.19,1,0.22,1) · `quintOut` · `snap` (0.15,0,0.1,1) · `m3Enter` · `m3Exit` · `carbonExpressive`.
+**Physical springs:** `physical` (damping 0.82, ≈1.5% overshoot) · `physicalLoose` (0.55, ≈12%). Closed-form and summed per
+segment: a spring is released at the previous key and settles by its own key — or after `settle` seconds if you set it on the
+key. A `settle` longer than the gap means the next key retargets it mid-flight and the motion keeps its velocity. Works on layer
+`animate` keys and camera keys. **Camera zoom** always interpolates in log space (steady perceived push).
 
 ## Common layer fields (every layer)
 
