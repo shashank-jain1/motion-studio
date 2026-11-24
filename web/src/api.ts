@@ -82,7 +82,8 @@ export type Settings = {
 };
 
 export type User = { id: string; email: string; name: string };
-export type Me = { user: User | null; mode: "local" | "hosted"; publicUrl?: string; signup?: boolean };
+export type Me = { user: User | null; mode: "local" | "hosted"; publicUrl?: string; signup?: boolean; admin?: boolean };
+export type WaitlistEntry = { email: string; note: string; createdAt: string };
 export type ApiToken = { id: string; name: string; prefix: string; createdAt: string; lastUsedAt?: string | null };
 export type NewToken = { token: string; id: string; name: string; prefix: string };
 export type JobStatus = "queued" | "running" | "done" | "error" | "canceled";
@@ -169,6 +170,10 @@ export const api = {
     return { redirect: data.redirect };
   },
   saveSettings: (s: { model?: string; effort?: string; apiKey?: string; geminiApiKey?: string }) => req<Settings>("PUT", "/api/settings", s),
+  /** Product-site waitlist (public); `website` is the bot trap and must stay empty. */
+  joinWaitlist: (email: string, note: string, website = "") => req<{ ok: true }>("POST", "/api/waitlist", { email, note, website }),
+  waitlist: () => req<WaitlistEntry[]>("GET", "/api/waitlist"),
+  removeFromWaitlist: (email: string) => req<{ ok: boolean }>("DELETE", `/api/waitlist/${encodeURIComponent(email)}`),
 };
 
 /** Multipart upload with progress (XHR — fetch has no upload progress). */

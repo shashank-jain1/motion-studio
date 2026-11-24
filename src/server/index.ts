@@ -49,6 +49,7 @@ import {
   validateSignup,
   type User,
 } from "./auth";
+import { joinWaitlist, listWaitlist, removeFromWaitlist, validateWaitlist } from "./waitlist";
 import { adaptTargets, type Format } from "../engine/spec/reflow";
 import { createProjectFromTemplate, getTemplate, listTemplates, templateFile } from "../core/templates";
 import { cancelJob, cancelProjectJobs, enqueueRenderJob, getJobFor, initJobs, isTerminal, listJobs, subscribe, type Job, type JobEvent } from "./jobs";
@@ -191,6 +192,16 @@ app.post("/api/auth/logout", (c) => {
   return c.json({ ok: true });
 });
 
+// Product-site waitlist. Same answer whether or not the email was already on it; `website` is a bot trap.
+app.post("/api/waitlist", async (c) => {
+  rateLimit(c, "waitlist");
+  const body = await readJson<{ email?: unknown; note?: unknown; website?: unknown }>(c);
+  if (typeof body.website === "string" && body.website) return c.json({ ok: true });
+  const { email, note } = validateWaitlist(body);
+  joinWaitlist(email, note);
+  return c.json({ ok: true });
+});
+
 // Everything else under /api and /files needs a user (local mode: always the local owner).
 app.use("/api/*", async (c, next) => {
   requireUser(c);
@@ -326,6 +337,20 @@ app.post("/api/projects", async (c) => {
 });
 
 // ---------------------------------------------------------------- templates
+
+const requireAdmin = (c: Context) => {
+  const user = userOf(c);
+  if (!isAdmin(user)) throw new HttpError(403, "Only the studio's operator can see the waitlist");
+  return user;
+};
+app.get("/api/waitlist", (c) => {
+  requireAdmin(c);
+  return c.json(listWaitlist());
+});
+app.delete("/api/waitlist/:email", (c) => {
+  requireAdmin(c);
+  return c.json({ ok: removeFromWaitlist(c.req.param("email")) });
+});
 
 app.get("/api/templates", (c) => c.json(listTemplates().map((t) => (t.poster ? { ...t, poster: FILES_ORIGIN + t.poster } : t))));
 

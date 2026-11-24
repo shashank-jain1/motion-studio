@@ -81,6 +81,14 @@ type UiMessage = { id: string, role: "user" | "assistant", createdAt: string,
 | `GET /api/settings` | — | `{ model, effort, hasApiKey: boolean, keySource: "env"\|"profile"\|"settings"\|"none", models: string[] }` |
 | `PUT /api/settings` | `{ model?, effort?, apiKey? }` | same as GET. The key is stored in `~/.config/motion-studio/config.json` (mode 600), never returned. |
 
+## Waitlist (product site)
+
+| Method & path | Body | Returns |
+|---|---|---|
+| `POST /api/waitlist` | `{ email, note?, website? }` | `{ ok: true }`. Public, rate-limited per IP. Same answer whether or not the email was already listed; a non-empty `website` (bot trap) is dropped silently. `note` ≤ 280 chars. |
+| `GET /api/waitlist` | — | `[{ email, note, createdAt }]`, newest first. Operator only (`isAdmin`), 403 otherwise. |
+| `DELETE /api/waitlist/:email` | — | `{ ok: boolean }`. Operator only. |
+
 ## Engine in the browser
 
 ```ts

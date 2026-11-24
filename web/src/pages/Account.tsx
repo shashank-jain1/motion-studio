@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { api, type ApiToken, type ConnectInfo, type Job, type NewToken, type ProjectCard } from "../api";
+import { api, type ApiToken, type ConnectInfo, type Job, type NewToken, type ProjectCard, type WaitlistEntry } from "../api";
 import { useAuth } from "../auth";
 import { AppBar } from "../components/AppBar";
 import { CopyButton, Dialog, SlateStripe, TallyDot } from "../components/ui";
@@ -20,6 +20,8 @@ const SECTIONS = [
 
 export const Account = () => {
   const loc = useLocation();
+  const { me } = useAuth();
+  const sections = useMemo(() => (me?.admin ? [...SECTIONS, { id: "waitlist", label: "Waitlist" }] : SECTIONS), [me?.admin]);
   const [current, setCurrent] = useState<string>("profile");
   const [freshToken, setFreshToken] = useState<NewToken | null>(null);
   useEffect(() => { document.title = "Account — Motion Studio"; }, []);
@@ -33,9 +35,9 @@ export const Account = () => {
       const vis = es.filter((e) => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
       if (vis) setCurrent(vis.target.id);
     }, { rootMargin: "-20% 0px -60% 0px" });
-    SECTIONS.forEach((s) => { const el = document.getElementById(s.id); if (el) io.observe(el); });
+    sections.forEach((s) => { const el = document.getElementById(s.id); if (el) io.observe(el); });
     return () => io.disconnect();
-  }, []);
+  }, [sections]);
 
   return (
     <div className="page account">
@@ -44,7 +46,7 @@ export const Account = () => {
         <nav className="account-nav" aria-label="Account sections">
           <div className="label">Index</div>
           <ol>
-            {SECTIONS.map((s, i) => (
+            {sections.map((s, i) => (
               <li key={s.id}>
                 <a href={`#${s.id}`} className={current === s.id ? "is-active" : ""} aria-current={current === s.id ? "location" : undefined}>
                   <span className="mono">{String(i + 1).padStart(2, "0")}</span>{s.label}
@@ -59,6 +61,7 @@ export const Account = () => {
           <Section n={3} id="tokens" title="API tokens" sub="Personal access tokens for Claude Code, scripts and CI. Each token can do anything you can do in the studio."><Tokens onCreated={setFreshToken} /></Section>
           <Section n={4} id="connect" title="Connect to Claude" sub="Direct videos from claude.ai or Claude Code. Motion Studio is a remote MCP server."><Connect token={freshToken} /></Section>
           <Section n={5} id="queue" title="Render queue" sub="Every render across your projects — started here, by the director, or over MCP."><Queue /></Section>
+          {me?.admin && <Section n={6} id="waitlist" title="Waitlist" sub="People who asked for access on the product site. Only you, the studio's operator, see this list."><Waitlist /></Section>}
         </main>
       </div>
     </div>
@@ -284,6 +287,51 @@ const Queue = () => {
           ))}
         </tbody>
       </table>
+    </div>
+  );
+};
+
+const Waitlist = () => {
+  const toast = useToast();
+  const [list, setList] = useState<WaitlistEntry[] | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+  const [remove, setRemove] = useState<WaitlistEntry | null>(null);
+  const load = useCallback(() => { api.waitlist().then((l) => { setList(l); setErr(null); }).catch((e) => { setErr(e.message); setList([]); }); }, []);
+  useEffect(load, [load]);
+  const doRemove = async (w: WaitlistEntry) => {
+    setRemove(null);
+    try { await api.removeFromWaitlist(w.email); load(); } catch (e) { toast.error("Couldn't remove", (e as Error).message); }
+  };
+  return (
+    <div className="tokens">
+      {list && list.length > 0 && (
+        <div className="row gap">
+          <span className="label"><span className="mono">{list.length}</span> waiting</span>
+          <span className="spacer" />
+          <CopyButton text={list.map((w) => w.email).join(", ")} label="Copy emails" />
+        </div>
+      )}
+      {err && <div className="callout error"><IconAlert size={14} /><span className="mono">{err}</span></div>}
+      <table className="table">
+        <thead><tr><th>Email</th><th>What they'd make</th><th className="num">Joined</th><th aria-label="Actions" /></tr></thead>
+        <tbody>
+          {!list && <tr><td colSpan={4}><div className="skeleton" style={{ height: 14, width: "40%" }} /></td></tr>}
+          {list && list.length === 0 && !err && <tr className="empty-row"><td colSpan={4}><span className="dim">Nobody yet. Emails left on the product site's waitlist show up here.</span></td></tr>}
+          {list?.map((w) => (
+            <tr key={w.email}>
+              <td className="mono">{w.email}</td>
+              <td>{w.note || <span className="dim">—</span>}</td>
+              <td className="num mono" title={w.createdAt}>{fmtDate(w.createdAt)}</td>
+              <td className="act"><button className="btn ghost xs danger-hover" onClick={() => setRemove(w)}><IconTrash size={12} />Remove</button></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <Dialog open={!!remove} onClose={() => setRemove(null)} title="Remove from waitlist?" label="Destructive" width={440}
+        subtitle={remove ? <><span className="mono">{remove.email}</span> is deleted from the list. They can sign up for the waitlist again.</> : null}
+        footer={<><button className="btn ghost" onClick={() => setRemove(null)}>Cancel</button><button className="btn danger" onClick={() => remove && void doRemove(remove)}><IconTrash size={14} />Remove</button></>}>
+        <></>
+      </Dialog>
     </div>
   );
 };

@@ -93,7 +93,10 @@ collapse to ≤1ms, the hero player pauses on its poster frame.
 ## Screens
 
 - `/login`, `/signup`: 5/7 split — Swiss form left (big index numbers, hairline fields), live engine hero right.
-- `/`: hero strip (live Player of `hero-spec.ts`) + reel wall of project cards (live `Thumbnail`, hover-scrub by x).
+- `/` signed in: hero strip (live Player of `hero-spec.ts`) + reel wall of project cards (live `Thumbnail`, hover-scrub by x).
+- `/` signed out (or API down), `/about`: product site (`site/Landing.tsx`) — hero reel, spec strip, screening room
+  (starter templates bundled into the build and played live, EDL list), how it works with the playing film's real spec,
+  engine grid, Claude connector, waitlist. Works with no API except the waitlist form.
 - `/p/:id`: Director (script) · Viewer (crop marks, safe zones, deck transport) · Inspector; NLE timeline below.
 - `/account`: Profile · Director settings · API tokens · Connect to Claude · Render queue (left index nav).
 - `/connect/authorize`: consent card with slate band; Approve (Tally) / Deny.
