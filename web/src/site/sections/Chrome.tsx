@@ -1,34 +1,11 @@
 /**
- * Site chrome: a film-leader countdown on first visit (per tab), a viewfinder cursor that labels what it's over,
+ * Site chrome: a viewfinder cursor that labels what it's over,
  * magnetic primary buttons, and a nav whose readout treats the page as a film — scroll position as timecode.
  */
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Wordmark } from "../../components/AppBar";
 import { finePointer, onFrame, reducedMotion } from "../motion";
-
-const SEEN = "ms-site-leader";
-
-export const Leader = ({ onDone }: { onDone: () => void }) => {
-  const [n, setN] = useState(3);
-  const [out, setOut] = useState(false);
-  useEffect(() => {
-    let skip = false;
-    try { skip = sessionStorage.getItem(SEEN) === "1"; } catch { /* storage off */ }
-    if (skip || reducedMotion()) { onDone(); return; }
-    try { sessionStorage.setItem(SEEN, "1"); } catch { /* storage off */ }
-    const ts = [setTimeout(() => setN(2), 420), setTimeout(() => setN(1), 840), setTimeout(() => setOut(true), 1260), setTimeout(onDone, 1900)];
-    return () => ts.forEach(clearTimeout);
-  }, [onDone]);
-  return (
-    <div className={`leader ${out ? "is-out" : ""}`} aria-hidden>
-      <div className="leader-cross" />
-      <div className="leader-ring"><svg viewBox="0 0 100 100"><circle key={n} cx="50" cy="50" r="44" /></svg></div>
-      <div key={n} className="leader-n mono">{n}</div>
-      <div className="leader-meta mono"><span>MOTION/STUDIO</span><span>REEL 01</span><span>30 FPS</span></div>
-    </div>
-  );
-};
 
 export const Cursor = () => {
   const el = useRef<HTMLDivElement>(null);
