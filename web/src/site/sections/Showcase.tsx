@@ -3,21 +3,16 @@
  * features as a pinned horizontal reel of cards, each with a small looping demo drawn in CSS.
  */
 import { useRef } from "react";
-import { FILMS, splitTitle } from "../films";
+import { FILMS, filmLoop, filmPoster, type SiteFilm } from "../films";
 import { span, useOnScreen, usePinProgress } from "../motion";
 
-const media = (slug: string) => `/site/media/${slug}.mp4`;
-
-const Tile = ({ slug, title, play }: { slug: string; title: string; play: boolean }) => {
-  const t = splitTitle(title);
-  return (
-    <figure className="sh-wall-tile">
-      <video src={media(slug)} poster={`/site/templates/${slug}/poster.jpg`} muted loop playsInline preload="none" autoPlay={play}
-        ref={(v) => { if (!v) return; if (play) void v.play().catch(() => undefined); else v.pause(); }} />
-      <figcaption><span className="label">{t.kind}</span><span className="serif-line sm">{t.name}</span></figcaption>
-    </figure>
-  );
-};
+const Tile = ({ film, play }: { film: SiteFilm; play: boolean }) => (
+  <figure className="sh-wall-tile">
+    <video src={filmLoop(film.slug)} poster={filmPoster(film.slug)} muted loop playsInline preload="none" autoPlay={play}
+      ref={(v) => { if (!v) return; if (play) void v.play().catch(() => undefined); else v.pause(); }} />
+    <figcaption><span className="label">{film.kicker}</span><span className="serif-line sm">{film.title}</span></figcaption>
+  </figure>
+);
 
 export const Wall = () => {
   const sec = useRef<HTMLElement>(null);
@@ -29,22 +24,23 @@ export const Wall = () => {
     el.style.setProperty("--drift", String(p));
     el.style.transform = `rotateX(${42 - p * 22}deg) rotateZ(${-14 + p * 8}deg) translateY(${(0.5 - p) * 20}vh) scale(${1.05 + p * 0.25})`;
   }, 0.1);
-  const rows = [FILMS.slice(0, 4), FILMS.slice(4, 8), [...FILMS.slice(2, 6)]];
+  const at = (...i: number[]) => i.map((k) => FILMS[k % FILMS.length]);
+  const rows = [at(0, 1, 2, 3), at(4, 0, 3, 1), at(2, 4, 1, 0)];
   return (
     <section ref={sec} className="sh-wall" id="films" aria-labelledby="wall-t">
       <div ref={onRef} className="sh-wall-pin">
         <div ref={plane} className="sh-wall-plane" aria-hidden>
           {rows.map((r, i) => (
             <div key={i} className={`sh-wall-row ${i % 2 ? "rev" : ""}`} style={{ "--row": i } as React.CSSProperties}>
-              {[...r, ...r].map((f, j) => <Tile key={`${f.slug}-${j}`} slug={f.slug} title={f.title} play={on} />)}
+              {[...r, ...r].map((f, j) => <Tile key={`${f.slug}-${j}`} film={f} play={on} />)}
             </div>
           ))}
         </div>
         <div className="sh-wall-copy site-wrap">
-          <span className="label">06 · Starter films</span>
-          <h2 id="wall-t" className="sec-title">Eight films to <em>start from.</em></h2>
-          <p>App launches, fintech, product drops, food, real estate, events, SaaS, creators. Open one in the studio and brief your own version.</p>
-          <ul className="sr-only">{FILMS.map((f) => <li key={f.slug}>{f.title}: {f.description}</li>)}</ul>
+          <span className="label">06 · Made with Motion Studio</span>
+          <h2 id="wall-t" className="sec-title">Every film here was <em>directed, not edited.</em></h2>
+          <p>A launch film, a product demo, a data explainer, a vertical reel and a Claude session — each written as a Scene Spec through the studio's tools and rendered by the engine. No timeline editor touched them.</p>
+          <ul className="sr-only">{FILMS.map((f) => <li key={f.slug}>{f.title} ({f.kicker}): {f.blurb}</li>)}</ul>
         </div>
       </div>
     </section>

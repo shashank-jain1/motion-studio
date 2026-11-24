@@ -11,7 +11,7 @@ import type { ParsedInfo } from "../../lib/specInfo";
 import { filmBase, loadFilmAs } from "../films";
 import { span, usePinProgress } from "../motion";
 
-const SLUG = "fintech";
+const SLUG = "studio";
 const MAX_TRACKS = 9;
 
 type Clip = { label: string; kind: string; start: number; end: number; track: number };
@@ -48,7 +48,7 @@ export const Playhead = () => {
   const intro = useRef<HTMLDivElement>(null);
   const [info, setInfo] = useState<ParsedInfo | null>(null);
   const [frame, setFrame] = useState(0);
-  useEffect(() => { void loadFilmAs(SLUG, "16:9").then(setInfo); }, []);
+  useEffect(() => { void loadFilmAs(SLUG).then(setInfo); }, []);
   const clips = useMemo(() => (info ? clipsOf(info) : []), [info]);
   const tracks = Math.max(1, ...clips.map((c) => c.track + 1));
   const inputProps = useMemo(() => (info ? { spec: info.raw as never, assetBase: filmBase(SLUG), projectId: `site-${SLUG}-scrub`, libraryBase: "" } : null), [info]);

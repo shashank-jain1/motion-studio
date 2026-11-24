@@ -1,5 +1,4 @@
-import fs from "node:fs";
-import { defineConfig, type Plugin, type ProxyOptions } from "vite";
+import { defineConfig, type ProxyOptions } from "vite";
 import react from "@vitejs/plugin-react";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
@@ -37,37 +36,9 @@ const proxy: Record<string, ProxyOptions> = {
   "/.well-known": { target },
 };
 
-/**
- * The product site plays the starter templates without the API (it must work while the server is down), so their public
- * files (poster.jpg, glyphs.json, assets/*: the same set /templates/<slug>/* serves) ship with the web app under
- * /site/templates/<slug>/. Specs and metadata are bundled by web/src/site/films.ts.
- */
-const siteTemplates = (): Plugin => {
-  const root = path.join(repoRoot, "templates");
-  const files = () => fs.readdirSync(root, { withFileTypes: true }).filter((d) => d.isDirectory()).flatMap((d) => {
-    const dir = path.join(root, d.name);
-    const assets = fs.existsSync(path.join(dir, "assets")) ? fs.readdirSync(path.join(dir, "assets")).map((f) => `assets/${f}`) : [];
-    return ["poster.jpg", "glyphs.json", ...assets].filter((rel) => fs.existsSync(path.join(dir, rel))).map((rel) => `${d.name}/${rel}`);
-  });
-  return {
-    name: "site-templates",
-    configureServer(server) {
-      server.middlewares.use("/site/templates/", (req, res, next) => {
-        const rel = decodeURIComponent((req.url ?? "").split("?")[0].replace(/^\//, ""));
-        if (!files().includes(rel)) return next();
-        res.setHeader("Content-Type", rel.endsWith(".jpg") ? "image/jpeg" : rel.endsWith(".svg") ? "image/svg+xml" : "application/json");
-        fs.createReadStream(path.join(root, rel)).pipe(res);
-      });
-    },
-    generateBundle() {
-      for (const rel of files()) this.emitFile({ type: "asset", fileName: `site/templates/${rel}`, source: fs.readFileSync(path.join(root, rel)) });
-    },
-  };
-};
-
 export default defineConfig({
   root: webRoot,
-  plugins: [react(), siteTemplates(), ...(useMock ? [mockApi(repoRoot)] : [])],
+  plugins: [react(), ...(useMock ? [mockApi(repoRoot)] : [])],
   resolve: { dedupe: ["react", "react-dom", "remotion", "@remotion/player", "zod"] },
   server: {
     port: 5173,
