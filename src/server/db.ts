@@ -115,6 +115,14 @@ const MIGRATIONS: string[] = [
   `
   ALTER TABLE jobs ADD COLUMN format TEXT;
   `,
+  // 4: product-site waitlist (emails people leave while sign-up is closed)
+  `
+  CREATE TABLE waitlist (
+    email TEXT PRIMARY KEY COLLATE NOCASE,
+    note TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL
+  );
+  `,
 ];
 
 const open = (): DB => {

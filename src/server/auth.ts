@@ -99,7 +99,7 @@ export const localOwner = (): User => {
   return (localOwnerMemo = u);
 };
 
-const EMAIL_RE = /^[^\s@]{1,64}@[^\s@]{1,190}\.[^\s@]{2,}$/;
+export const EMAIL_RE = /^[^\s@]{1,64}@[^\s@]{1,190}\.[^\s@]{2,}$/;
 
 export const validateSignup = (body: { email?: unknown; password?: unknown; name?: unknown }) => {
   if (typeof body.email !== "string" || !EMAIL_RE.test(body.email.trim())) throw new HTTPException(400, { message: "A valid email is required" });
