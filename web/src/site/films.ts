@@ -1,46 +1,52 @@
 /**
- * The starter templates as the product site's films: metadata bundled, specs loaded on demand, public files served from
- * /site/templates/<slug>/ (copied into the build by the site-templates plugin in web/vite.config.ts). No API involved.
+ * The product site's films: five films about Motion Studio, directed through the studio's own tools and rendered by the
+ * engine (projects/site-film-*). Each has its Scene Spec here (./specs, audio stripped: the page is silent) for the live
+ * engine sections, and a muted MP4 loop in web/public/site/media for the video sections.
  */
 import type { Format } from "../api";
 import { analyzeSpec, type ParsedInfo } from "../lib/specInfo";
 import { parseSpec } from "../../../src/engine/render/SpecVideo";
 import { reflowSpec } from "../../../src/engine/spec/reflow";
 
-export type Film = {
-  slug: string; title: string; niche: string; description: string; format: Format;
-  formats: Format[]; durationSeconds: number; tags: string[]; order: number;
+export type SiteFilm = { slug: string; title: string; kicker: string; blurb: string; format: Format; seconds: number };
+
+export const FILMS: SiteFilm[] = [
+  { slug: "brief-it", title: "Brief it", kicker: "Launch film", format: "16:9", seconds: 16.1,
+    blurb: "A prompt is typed, the camera flies into the send dot, the spec writes itself and the film builds in the viewer." },
+  { slug: "studio", title: "The studio", kicker: "Product demo", format: "16:9", seconds: 19.4,
+    blurb: "A note to the director, a scrub of the playhead, 16:9 flipped to 9:16, three formats exported. One take." },
+  { slug: "kit", title: "The kit, in numbers", kicker: "Data explainer", format: "16:9", seconds: 17.8,
+    blurb: "The pipeline as a diagram, the kit as a chart, 347 sounds counted, every format rendered from a terminal." },
+  { slug: "formats", title: "One spec, every format", kicker: "Social reel", format: "9:16", seconds: 11.4,
+    blurb: "Beat-locked at 120 BPM: words slam on the beat, then one frame springs through all five formats." },
+  { slug: "claude", title: "Direct it from Claude", kicker: "Connector", format: "16:9", seconds: 14.8,
+    blurb: "Tool calls tick off in a chat, the director catches its own collision, and the finished reel plays." },
+];
+
+const specs = import.meta.glob<Record<string, unknown>>("./specs/*.json", { import: "default" });
+
+/** Muted MP4 loop of a film (16:9 renders; the vertical reel also has its 16:9 reflow). */
+export const filmLoop = (slug: string) => `/site/media/${slug}.mp4`;
+export const filmPoster = (slug: string) => `/site/media/${slug}.jpg`;
+/** The specs use no asset files; the base only has to be absolute for the engine's resolver. */
+export const filmBase = (_slug: string) => `${location.origin}/site/media`;
+
+/** A film's raw spec (cached). */
+export const loadRaw = (slug: string) => {
+  const load = specs[`./specs/${slug}.json`];
+  return load ? load() : Promise.reject(new Error(`no spec for ${slug}`));
 };
 
-type Meta = Omit<Film, "slug" | "formats" | "order"> & { formats?: Format[]; order?: number };
-const metas = import.meta.glob<Meta>("../../../templates/*/template.json", { eager: true, import: "default" });
-const specs = import.meta.glob<Record<string, unknown>>("../../../templates/*/spec.json", { import: "default" });
-const slugOf = (p: string) => p.split("/").at(-2)!;
-
-export const FILMS: Film[] = Object.entries(metas)
-  .map(([p, m]) => ({ ...m, slug: slugOf(p), formats: m.formats ?? [m.format], tags: m.tags ?? [], order: m.order ?? 99 }))
-  .sort((a, b) => a.order - b.order);
-
-/** "Event: most nights blur" → { kind: "Event", name: "most nights blur" } */
-export const splitTitle = (t: string) => {
-  const i = t.indexOf(":");
-  return i < 0 ? { kind: "", name: t } : { kind: t.slice(0, i).trim(), name: t.slice(i + 1).trim() };
-};
-
-export const filmBase = (slug: string) => `${location.origin}/site/templates/${encodeURIComponent(slug)}`;
-
-const reflowed = new Map<string, Promise<ParsedInfo | null>>();
-/** A film adapted to another format by the engine's reflow (the same adaptation a multi-format render uses). */
-export const loadFilmAs = (slug: string, format: Format) => {
-  const key = `${slug}@${format}`;
-  let p = reflowed.get(key);
+const cache = new Map<string, Promise<ParsedInfo | null>>();
+/** A film as the engine plays it, optionally adapted to another format by the engine's reflow. */
+export const loadFilmAs = (slug: string, format?: Format) => {
+  const key = `${slug}@${format ?? "master"}`;
+  let p = cache.get(key);
   if (!p) {
-    const f = FILMS.find((x) => x.slug === slug);
-    const load = specs[`../../../templates/${slug}/spec.json`];
-    p = f && load
-      ? load().then((raw) => analyzeSpec(reflowSpec(parseSpec({ ...raw, format: f.format }), format) as unknown as Record<string, unknown>)).catch((e) => { console.warn(`[site] ${key}: ${(e as Error).message}`); return null; })
-      : Promise.resolve(null);
-    reflowed.set(key, p);
+    p = loadRaw(slug)
+      .then((raw) => analyzeSpec(format ? (reflowSpec(parseSpec(raw), format) as unknown as Record<string, unknown>) : raw))
+      .catch((e) => { console.warn(`[site] ${key}: ${(e as Error).message}`); return null; });
+    cache.set(key, p);
   }
   return p;
 };

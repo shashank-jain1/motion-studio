@@ -6,16 +6,16 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Thumbnail } from "@remotion/player";
 import { SpecVideo } from "../../../../src/engine/render/SpecVideo";
 import { analyzeSpec, type ParsedInfo } from "../../lib/specInfo";
-import { filmBase, FILMS } from "../films";
+import { filmBase, loadRaw } from "../films";
 import { clamp, span, useFilmClock, useOnScreen, usePinProgress } from "../motion";
 
-const SLUG = "app-launch";
-const specUrl = import.meta.glob<Record<string, unknown>>("../../../../templates/app-launch/spec.json", { import: "default" });
+const SLUG = "kit";
+const SCENE = 1; // "kit": the chart, the counter, the donut
 
 type Scene = { id?: string; duration?: unknown; background?: unknown; camera?: unknown; layers: Record<string, unknown>[] };
 
 const STEPS = [
-  { k: "Brief", d: "“A storm of notifications collapses into one calm dot.”" },
+  { k: "Brief", d: "“Show what the director works with, as a chart. Real numbers.”" },
   { k: "Spec", d: "The director writes scenes and layers: plain JSON you can read and edit." },
   { k: "Look", d: "It renders frames, looks at them, fixes collisions and dead time." },
   { k: "Render", d: "MP4s for every platform, score and sound mixed in." },
@@ -28,11 +28,12 @@ export const Build = () => {
   const [n, setN] = useState(0); // layers shown
   const [typed, setTyped] = useState(0); // characters typed
   const [onRef, on] = useOnScreen<HTMLDivElement>(0.05);
-  const film = FILMS.find((f) => f.slug === SLUG);
 
   useEffect(() => {
-    const load = Object.values(specUrl)[0];
-    void load?.().then((raw) => setBase({ raw, scene: (raw.scenes as Scene[])[0] }));
+    void loadRaw(SLUG).then((raw) => {
+      const { transition: _t, ...scene } = (raw.scenes as (Scene & { transition?: unknown })[])[SCENE];
+      setBase({ raw, scene });
+    });
   }, []);
 
   const blocks = useMemo(() => {
@@ -54,12 +55,12 @@ export const Build = () => {
   useEffect(() => { if (code.current) code.current.scrollTop = code.current.scrollHeight; }, [typed]);
 
   const info: ParsedInfo | null = useMemo(() => {
-    if (!base || !film) return null;
+    if (!base) return null;
     try {
       const { actors: _a, sound: _s, sfx: _x, ...rest } = base.raw;
       return analyzeSpec({ ...rest, format: "16:9", scenes: [{ ...base.scene, layers: base.scene.layers.slice(0, n) }] });
     } catch { return null; }
-  }, [base, film, n]);
+  }, [base, n]);
   const frame = useFilmClock(info?.durationInFrames ?? 1, info?.fps ?? 30, on && !!info);
   const inputProps = useMemo(() => (info ? { spec: info.raw as never, assetBase: filmBase(SLUG), projectId: `site-build-${n}`, libraryBase: "" } : null), [info, n]);
   const stepIdx = Math.min(3, Math.floor(clamp(typed / Math.max(1, cuts.at(-1) ?? 1)) * 3.999));
@@ -80,7 +81,7 @@ export const Build = () => {
           </ol>
         </header>
         <div className="build-code">
-          <div className="build-bar"><span className="label">spec.json</span><span className="mono dim">scene 01 · {n}/{base?.scene.layers.length ?? 0} layers</span></div>
+          <div className="build-bar"><span className="label">spec.json</span><span className="mono dim">scene 02 · {n}/{base?.scene.layers.length ?? 0} layers</span></div>
           <pre ref={code} className="mono" aria-label="Scene Spec being written"><code>{full.slice(0, typed)}<i className="build-caret" /></code></pre>
         </div>
         <div className="build-film">

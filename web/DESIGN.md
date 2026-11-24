@@ -96,9 +96,10 @@ collapse to ≤1ms, the hero player pauses on its poster frame.
 - `/` signed in: hero strip (live Player of `hero-spec.ts`) + reel wall of project cards (live `Thumbnail`, hover-scrub by x).
 - `/` signed out (or API down), `/about`: product site (`site/`). The page is a film: leader countdown → title sequence
   (showreel inside giant MOTION letters, scroll dives into the I) → scroll-scrubbed engine under a live NLE → kinetic type
-  → live format morph (reflowSpec) → spec that types itself into a film → 3D wall of template loops → engine reel →
+  → live format morph (reflowSpec) → spec that types itself into a film → 3D wall of the site films → engine reel →
   Claude terminal → waitlist → cursor-reactive wordmark. Pinned sections write styles per frame (`site/motion.ts`);
-  template loops and the showreel are engine renders in `public/site/media`. Works with no API except the waitlist.
+  its five films (projects/site-film-*: launch, studio demo, data explainer, vertical reel, Claude) ship as specs in
+  `site/specs` for the live sections and as muted engine renders in `public/site/media`. Works with no API except the waitlist.
 - `/p/:id`: Director (script) · Viewer (crop marks, safe zones, deck transport) · Inspector; NLE timeline below.
 - `/account`: Profile · Director settings · API tokens · Connect to Claude · Render queue (left index nav).
 - `/connect/authorize`: consent card with slate band; Approve (Tally) / Deny.

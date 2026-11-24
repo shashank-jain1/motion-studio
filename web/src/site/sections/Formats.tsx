@@ -10,7 +10,7 @@ import type { ParsedInfo } from "../../lib/specInfo";
 import { filmBase, loadFilmAs } from "../films";
 import { clamp, onFrame, useFilmClock, useOnScreen, usePinProgress } from "../motion";
 
-const SLUG = "event";
+const SLUG = "formats";
 const STEPS: { f: Format; w: number; h: number; where: string }[] = [
   { f: "16:9", w: 1920, h: 1080, where: "YouTube · web · keynotes" },
   { f: "1:1", w: 1080, h: 1080, where: "Feed posts · LinkedIn" },

@@ -1,0 +1,570 @@
+{
+  "title": "Motion Studio — The kit, in numbers",
+  "format": "16:9",
+  "fps": 30,
+  "theme": {
+    "fonts": {
+      "display": "Geist",
+      "body": "Geist",
+      "mono": "IBM Plex Mono"
+    },
+    "colors": {
+      "bg": "#0D0D0B",
+      "fg": "#ECE8DF",
+      "accent": "#FF3D1F",
+      "muted": "#8E897D",
+      "card": "#151512"
+    }
+  },
+  "fx": {
+    "grain": 0.04
+  },
+  "concept": {
+    "truth": "Real numbers: the kit the director works with.",
+    "motif": "the tally highlight",
+    "verb": "count",
+    "direction": {
+      "banned": [
+        "glow",
+        "bouncy-easing",
+        "camera-shake",
+        "rgb-split",
+        "glitch"
+      ]
+    }
+  },
+  "sound": {
+    "palette": "tech",
+    "intensity": 0.5,
+    "music": {
+      "bpm": 121,
+      "beats": [
+        0.203,
+        0.699,
+        1.195,
+        1.691,
+        2.187,
+        2.683,
+        3.179,
+        3.674,
+        4.17,
+        4.666,
+        5.162,
+        5.658,
+        6.154,
+        6.65,
+        7.145,
+        7.641,
+        8.137,
+        8.633,
+        9.129,
+        9.625,
+        10.121,
+        10.617,
+        11.112,
+        11.608,
+        12.104,
+        12.6,
+        13.096,
+        13.592,
+        14.088,
+        14.583,
+        15.079,
+        15.575,
+        16.071,
+        16.567,
+        17.063,
+        17.559
+      ],
+      "key": "D minor",
+      "keyConfidence": 1
+    }
+  },
+  "scenes": [
+    {
+      "id": "pipeline",
+      "duration": 6.6,
+      "background": [
+        {
+          "type": "solid",
+          "color": "#0D0D0B"
+        },
+        {
+          "type": "grid",
+          "color": "rgba(236,232,223,0.035)",
+          "base": "transparent",
+          "size": 80
+        }
+      ],
+      "camera": {
+        "keyframes": [
+          {
+            "t": 0,
+            "zoom": 1.08
+          },
+          {
+            "t": 6.6,
+            "zoom": 1,
+            "ease": "physical",
+            "settle": 7
+          }
+        ]
+      },
+      "layers": [
+        {
+          "type": "text",
+          "text": "01 · How it works",
+          "font": "$mono",
+          "weight": 500,
+          "fontSize": 18,
+          "letterSpacing": 0.12,
+          "uppercase": true,
+          "color": "#8E897D",
+          "x": 0,
+          "y": -470,
+          "preset": "none",
+          "start": 0.1,
+          "enter": {
+            "type": "fade",
+            "duration": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "A brief becomes a film in five moves.",
+          "font": "$display",
+          "weight": 650,
+          "fontSize": 64,
+          "color": "#ECE8DF",
+          "y": -400,
+          "start": 0.1,
+          "preset": "mask-up",
+          "by": "word",
+          "letterSpacing": -0.02
+        },
+        {
+          "type": "diagram",
+          "id": "flow",
+          "y": 70,
+          "width": 1780,
+          "height": 640,
+          "layout": "right",
+          "connector": "curved",
+          "surface": "none",
+          "fontSize": 42,
+          "gap": 70,
+          "color": "#FF3D1F",
+          "start": 0.5,
+          "stagger": 0.22,
+          "nodes": [
+            {
+              "id": "brief",
+              "label": "Brief",
+              "sub": "a few lines",
+              "icon": "✎",
+              "shape": "card",
+              "width": 300
+            },
+            {
+              "id": "director",
+              "label": "Director",
+              "sub": "Claude",
+              "icon": "◆",
+              "shape": "card",
+              "width": 300
+            },
+            {
+              "id": "spec",
+              "label": "Spec",
+              "sub": "plain JSON",
+              "icon": "{ }",
+              "shape": "card",
+              "width": 300
+            },
+            {
+              "id": "look",
+              "label": "Look",
+              "sub": "preview frames",
+              "icon": "◎",
+              "shape": "card",
+              "width": 300
+            },
+            {
+              "id": "render",
+              "label": "Render",
+              "sub": "MP4 · 5 formats",
+              "icon": "▶",
+              "shape": "card",
+              "width": 300
+            }
+          ],
+          "edges": [
+            {
+              "from": "brief",
+              "to": "director"
+            },
+            {
+              "from": "director",
+              "to": "spec"
+            },
+            {
+              "from": "spec",
+              "to": "look"
+            },
+            {
+              "from": "look",
+              "to": "director",
+              "label": "fix what's off",
+              "style": "dashed"
+            },
+            {
+              "from": "look",
+              "to": "render"
+            }
+          ],
+          "focus": [
+            {
+              "at": 2.6,
+              "nodes": [
+                "brief",
+                "director"
+              ]
+            },
+            {
+              "at": 3.5,
+              "nodes": [
+                "spec"
+              ]
+            },
+            {
+              "at": 4.3,
+              "nodes": [
+                "look",
+                "director"
+              ]
+            },
+            {
+              "at": 5.4,
+              "nodes": [
+                "render"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "kit",
+      "duration": 6.4,
+      "transition": {
+        "type": "slice",
+        "slices": 6,
+        "direction": "up",
+        "duration": 0.7
+      },
+      "background": [
+        {
+          "type": "solid",
+          "color": "#0D0D0B"
+        }
+      ],
+      "camera": {
+        "keyframes": [
+          {
+            "t": 0,
+            "zoom": 1,
+            "x": 0
+          },
+          {
+            "t": 6.4,
+            "zoom": 1.05,
+            "x": 60,
+            "ease": "physical",
+            "settle": 7
+          }
+        ]
+      },
+      "layers": [
+        {
+          "type": "text",
+          "text": "02 · The kit",
+          "font": "$mono",
+          "weight": 500,
+          "fontSize": 18,
+          "letterSpacing": 0.12,
+          "uppercase": true,
+          "color": "#8E897D",
+          "x": -520,
+          "y": -440,
+          "preset": "none",
+          "start": 0.1,
+          "enter": {
+            "type": "fade",
+            "duration": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "What the director works with.",
+          "font": "$display",
+          "weight": 650,
+          "fontSize": 54,
+          "color": "#ECE8DF",
+          "y": -370,
+          "start": 0.15,
+          "preset": "mask-up",
+          "by": "word",
+          "letterSpacing": -0.02,
+          "x": -280
+        },
+        {
+          "type": "chart",
+          "kind": "hbar",
+          "x": -330,
+          "y": 70,
+          "width": 1000,
+          "height": 560,
+          "surface": "none",
+          "values": "end",
+          "data": [
+            {
+              "label": "MCP tools",
+              "value": 47
+            },
+            {
+              "label": "Transitions",
+              "value": 29
+            },
+            {
+              "label": "Easing curves",
+              "value": 27
+            },
+            {
+              "label": "Layer types",
+              "value": 25
+            },
+            {
+              "label": "Video formats",
+              "value": 5
+            }
+          ],
+          "highlight": "MCP tools",
+          "fontSize": 30,
+          "start": 0.6,
+          "stagger": 0.12,
+          "growDuration": 0.9,
+          "annotate": [
+            {
+              "at": 0,
+              "text": "everything Claude can call"
+            }
+          ]
+        },
+        {
+          "type": "shape",
+          "shape": "rect",
+          "width": 2,
+          "height": 640,
+          "color": "#2A2925",
+          "x": 330,
+          "y": 40,
+          "start": 0.4,
+          "enter": {
+            "type": "unfold-y",
+            "duration": 0.6
+          }
+        },
+        {
+          "type": "text",
+          "text": "Sound library",
+          "font": "$mono",
+          "weight": 500,
+          "fontSize": 18,
+          "letterSpacing": 0.12,
+          "uppercase": true,
+          "color": "#8E897D",
+          "x": 640,
+          "y": -230,
+          "preset": "none",
+          "start": 1.2,
+          "enter": {
+            "type": "fade",
+            "duration": 0.4
+          }
+        },
+        {
+          "type": "counter",
+          "from": 0,
+          "to": 347,
+          "countDuration": 1.6,
+          "countDelay": 1.3,
+          "ease": "outQuint",
+          "font": "$display",
+          "weight": 700,
+          "fontSize": 210,
+          "color": "#ECE8DF",
+          "x": 640,
+          "y": -90
+        },
+        {
+          "type": "chart",
+          "kind": "donut",
+          "x": 640,
+          "y": 250,
+          "width": 560,
+          "height": 360,
+          "surface": "none",
+          "values": "none",
+          "legend": true,
+          "center": "sounds",
+          "data": [
+            {
+              "label": "recorded",
+              "value": 289,
+              "color": "#ECE8DF"
+            },
+            {
+              "label": "synthesized",
+              "value": 58,
+              "color": "#FF3D1F"
+            }
+          ],
+          "fontSize": 26,
+          "thickness": 0.28,
+          "start": 2.4
+        }
+      ]
+    },
+    {
+      "id": "ship",
+      "duration": 6.2,
+      "transition": {
+        "type": "slice",
+        "slices": 6,
+        "direction": "up",
+        "duration": 0.7
+      },
+      "background": [
+        {
+          "type": "solid",
+          "color": "#0D0D0B"
+        },
+        {
+          "type": "spotlight",
+          "base": "transparent",
+          "color": "#2a1410",
+          "x": 300,
+          "y": 0,
+          "size": 1.1
+        }
+      ],
+      "camera": {
+        "keyframes": [
+          {
+            "t": 0,
+            "zoom": 1.04
+          },
+          {
+            "t": 6.2,
+            "zoom": 1,
+            "ease": "physical",
+            "settle": 7
+          }
+        ]
+      },
+      "layers": [
+        {
+          "type": "text",
+          "text": "03 · Every platform",
+          "font": "$mono",
+          "weight": 500,
+          "fontSize": 18,
+          "letterSpacing": 0.12,
+          "uppercase": true,
+          "color": "#8E897D",
+          "x": -440,
+          "y": -440,
+          "preset": "none",
+          "start": 0.1,
+          "enter": {
+            "type": "fade",
+            "duration": 0.4
+          }
+        },
+        {
+          "type": "code",
+          "code": "$ motion render roast-launch --all-formats\n→ bundling engine · 4 scenes · 15.0s\n✓ 16:9  1920×1080  final  4.1 MB\n✓ 9:16  1080×1920  final  3.8 MB\n✓ 1:1   1080×1080  final  3.2 MB\n✓ 4:5   1080×1350  final  3.4 MB\n✓ 21:9  2520×1080  final  4.6 MB\ndone · 5 files · score + sound mixed",
+          "language": "bash",
+          "variant": "terminal",
+          "title": "motion — render",
+          "theme": "carbon",
+          "reveal": "type",
+          "speed": 80,
+          "typingStart": 0.3,
+          "fontSize": 31,
+          "width": 1060,
+          "height": 560,
+          "x": -330,
+          "y": 20,
+          "enter": {
+            "type": "reveal-up",
+            "duration": 0.6
+          }
+        },
+        {
+          "type": "text",
+          "text": "One spec.",
+          "font": "$display",
+          "weight": 700,
+          "fontSize": 108,
+          "color": "#ECE8DF",
+          "x": 560,
+          "y": -90,
+          "start": 3.6,
+          "preset": "mask-up"
+        },
+        {
+          "type": "text",
+          "text": "Every format.",
+          "font": "Instrument Serif",
+          "italic": true,
+          "weight": 400,
+          "fontSize": 118,
+          "color": "#FF3D1F",
+          "x": 560,
+          "y": 30,
+          "start": 4,
+          "preset": "mask-up"
+        },
+        {
+          "type": "text",
+          "text": "Motion Studio",
+          "font": "$mono",
+          "weight": 500,
+          "fontSize": 20,
+          "letterSpacing": 0.12,
+          "uppercase": true,
+          "color": "#8E897D",
+          "x": 560,
+          "y": 150,
+          "preset": "none",
+          "start": 4.6,
+          "enter": {
+            "type": "fade",
+            "duration": 0.5
+          }
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "src": "assets/music-tech-v0-121bpm-18s.wav",
+    "volume": 0.8,
+    "fadeOut": 0.4,
+    "credit": {
+      "source": "Motion Studio",
+      "license": "Original score composed for this film (procedural; no third-party rights)",
+      "commercial": true
+    }
+  }
+}
