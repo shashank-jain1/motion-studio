@@ -1,9 +1,11 @@
 /**
- * The starter templates as the product site's films: metadata bundled, specs loaded per film, public files served from
+ * The starter templates as the product site's films: metadata bundled, specs loaded on demand, public files served from
  * /site/templates/<slug>/ (copied into the build by the site-templates plugin in web/vite.config.ts). No API involved.
  */
 import type { Format } from "../api";
 import { analyzeSpec, type ParsedInfo } from "../lib/specInfo";
+import { parseSpec } from "../../../src/engine/render/SpecVideo";
+import { reflowSpec } from "../../../src/engine/spec/reflow";
 
 export type Film = {
   slug: string; title: string; niche: string; description: string; format: Format;
@@ -26,15 +28,19 @@ export const splitTitle = (t: string) => {
 };
 
 export const filmBase = (slug: string) => `${location.origin}/site/templates/${encodeURIComponent(slug)}`;
-export const filmPoster = (slug: string) => `${filmBase(slug)}/poster.jpg`;
 
-const cache = new Map<string, Promise<ParsedInfo | null>>();
-export const loadFilm = (f: Film) => {
-  let p = cache.get(f.slug);
+const reflowed = new Map<string, Promise<ParsedInfo | null>>();
+/** A film adapted to another format by the engine's reflow (the same adaptation a multi-format render uses). */
+export const loadFilmAs = (slug: string, format: Format) => {
+  const key = `${slug}@${format}`;
+  let p = reflowed.get(key);
   if (!p) {
-    const load = specs[`../../../templates/${f.slug}/spec.json`];
-    p = load ? load().then((spec) => analyzeSpec({ ...spec, format: f.format })).catch(() => null) : Promise.resolve(null);
-    cache.set(f.slug, p);
+    const f = FILMS.find((x) => x.slug === slug);
+    const load = specs[`../../../templates/${slug}/spec.json`];
+    p = f && load
+      ? load().then((raw) => analyzeSpec(reflowSpec(parseSpec({ ...raw, format: f.format }), format) as unknown as Record<string, unknown>)).catch((e) => { console.warn(`[site] ${key}: ${(e as Error).message}`); return null; })
+      : Promise.resolve(null);
+    reflowed.set(key, p);
   }
   return p;
 };
